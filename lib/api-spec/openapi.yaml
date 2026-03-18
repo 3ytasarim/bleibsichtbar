@@ -1,22 +1,30 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Bleibsichtbar Agency API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: projects
+    description: Project management
+  - name: blog
+    description: Blog post management
+  - name: references
+    description: Client references/testimonials
+  - name: contact
+    description: Contact form
+  - name: auth
+    description: Admin authentication
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +32,354 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: adminLogin
+      tags: [auth]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: adminLogout
+      tags: [auth]
+      summary: Admin logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /projects:
+    get:
+      operationId: getProjects
+      tags: [projects]
+      summary: Get all projects
+      parameters:
+        - name: published
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+    post:
+      operationId: createProject
+      tags: [projects]
+      summary: Create a project (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProject"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    put:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProject"
+      responses:
+        "200":
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Delete a project (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /blog:
+    get:
+      operationId: getBlogPosts
+      tags: [blog]
+      summary: Get all blog posts
+      parameters:
+        - name: published
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogPost"
+    post:
+      operationId: createBlogPost
+      tags: [blog]
+      summary: Create a blog post (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBlogPost"
+      responses:
+        "201":
+          description: Created blog post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+
+  /blog/{id}:
+    get:
+      operationId: getBlogPost
+      tags: [blog]
+      summary: Get a blog post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Blog post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+    put:
+      operationId: updateBlogPost
+      tags: [blog]
+      summary: Update a blog post (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBlogPost"
+      responses:
+        "200":
+          description: Updated blog post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+    delete:
+      operationId: deleteBlogPost
+      tags: [blog]
+      summary: Delete a blog post (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /references:
+    get:
+      operationId: getReferences
+      tags: [references]
+      summary: Get all references
+      parameters:
+        - name: published
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of references
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reference"
+    post:
+      operationId: createReference
+      tags: [references]
+      summary: Create a reference (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReference"
+      responses:
+        "201":
+          description: Created reference
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reference"
+
+  /references/{id}:
+    put:
+      operationId: updateReference
+      tags: [references]
+      summary: Update a reference (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReference"
+      responses:
+        "200":
+          description: Updated reference
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reference"
+    delete:
+      operationId: deleteReference
+      tags: [references]
+      summary: Delete a reference (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /contact:
+    post:
+      operationId: submitContact
+      tags: [contact]
+      summary: Submit contact form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactRequest"
+      responses:
+        "200":
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +390,285 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+
+    AuthUser:
+      type: object
+      properties:
+        username:
+          type: string
+        isAdmin:
+          type: boolean
+      required:
+        - username
+        - isAdmin
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        clientName:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+        published:
+          type: boolean
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - description
+        - category
+        - tags
+        - published
+        - sortOrder
+        - createdAt
+        - updatedAt
+
+    CreateProject:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        clientName:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+        published:
+          type: boolean
+        sortOrder:
+          type: integer
+      required:
+        - title
+        - description
+        - category
+        - tags
+        - published
+        - sortOrder
+
+    BlogPost:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        excerpt:
+          type: string
+        content:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        author:
+          type: string
+        published:
+          type: boolean
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - slug
+        - excerpt
+        - content
+        - author
+        - published
+        - createdAt
+        - updatedAt
+
+    CreateBlogPost:
+      type: object
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+        excerpt:
+          type: string
+        content:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        author:
+          type: string
+        published:
+          type: boolean
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - title
+        - slug
+        - excerpt
+        - content
+        - author
+        - published
+
+    Reference:
+      type: object
+      properties:
+        id:
+          type: integer
+        clientName:
+          type: string
+        clientTitle:
+          type: string
+          nullable: true
+        company:
+          type: string
+        logoUrl:
+          type: string
+          nullable: true
+        testimonial:
+          type: string
+          nullable: true
+        rating:
+          type: integer
+          nullable: true
+        published:
+          type: boolean
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - clientName
+        - company
+        - published
+        - sortOrder
+        - createdAt
+
+    CreateReference:
+      type: object
+      properties:
+        clientName:
+          type: string
+        clientTitle:
+          type: string
+          nullable: true
+        company:
+          type: string
+        logoUrl:
+          type: string
+          nullable: true
+        testimonial:
+          type: string
+          nullable: true
+        rating:
+          type: integer
+          nullable: true
+        published:
+          type: boolean
+        sortOrder:
+          type: integer
+      required:
+        - clientName
+        - company
+        - published
+        - sortOrder
+
+    ContactRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          nullable: true
+        company:
+          type: string
+          nullable: true
+        message:
+          type: string
+        service:
+          type: string
+          nullable: true
+      required:
+        - name
+        - email
+        - message

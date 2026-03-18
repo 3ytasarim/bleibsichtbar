@@ -1,0 +1,19 @@
+packages:
+  "framer-motion": "For page transitions, scroll animations, and the animated timeline component"
+  "react-hook-form": "For robust form state management in contact and admin forms"
+  "@hookform/resolvers": "For Zod validation integration with react-hook-form"
+  "date-fns": "For formatting dates in blog posts and admin tables"
+  "clsx": "For conditional class merging"
+  "tailwind-merge": "For merging tailwind classes safely"
+
+images:
+  - path: "artifacts/bleibsichtbar/public/images/hero-abstract.png"
+    description: "A very subtle, minimal abstract gradient background in light grey and white with extremely soft light blue leaks, highly professional and corporate, lots of negative space"
+    aspect_ratio: "16:9"
+  - path: "artifacts/bleibsichtbar/public/images/social-media-bg.png"
+    description: "Abstract geometric composition with soft 3D shapes in white and light grey, professional corporate style for a marketing agency background"
+    aspect_ratio: "16:9"
+
+notes:
+  - "The app uses @workspace/api-client-react for all data fetching."
+  - "Authentication is session/cookie based. /api/auth/me returns 401 if unauthenticated."

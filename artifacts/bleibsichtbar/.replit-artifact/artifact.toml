@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Bleibsichtbar - Social Media Agentur"
+version = "1.0.0"
+id = "artifacts/bleibsichtbar"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 22470
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/bleibsichtbar run dev"
+
+[services.env]
+PORT = "22470"
+BASE_PATH = "/"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/bleibsichtbar", "run", "build"]
+publicDir = "artifacts/bleibsichtbar/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
