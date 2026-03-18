@@ -168,34 +168,33 @@ const CODE_BLOCKS = [
 ];
 
 const COL_CONFIG = [
-  { speed: "38s", opacity: 0.055, delay: "0s",   fontSize: "11px" },
-  { speed: "52s", opacity: 0.04,  delay: "-12s",  fontSize: "10px" },
-  { speed: "44s", opacity: 0.06,  delay: "-6s",   fontSize: "11px" },
-  { speed: "60s", opacity: 0.035, delay: "-22s",  fontSize: "10px" },
-  { speed: "46s", opacity: 0.055, delay: "-34s",  fontSize: "11px" },
-  { speed: "55s", opacity: 0.04,  delay: "-18s",  fontSize: "10px" },
+  { speed: "38s", opacity: 0.18, delay: "0s",   fontSize: "11px" },
+  { speed: "52s", opacity: 0.13, delay: "-12s",  fontSize: "10px" },
+  { speed: "44s", opacity: 0.20, delay: "-6s",   fontSize: "11px" },
+  { speed: "60s", opacity: 0.11, delay: "-22s",  fontSize: "10px" },
+  { speed: "46s", opacity: 0.17, delay: "-34s",  fontSize: "11px" },
+  { speed: "55s", opacity: 0.13, delay: "-18s",  fontSize: "10px" },
 ];
 
 function CodeRainBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
-      <div className="flex h-full w-full gap-3 px-2">
+      <div className="flex h-full w-full gap-2">
         {COL_CONFIG.map((cfg, colIdx) => {
           const block = CODE_BLOCKS[colIdx % CODE_BLOCKS.length];
           const lines = [...block, ...block, ...block, ...block];
           return (
             <div key={colIdx} className="flex-1 overflow-hidden" style={{ opacity: cfg.opacity }}>
               <div
-                className="animate-code-scroll whitespace-pre font-mono leading-relaxed"
+                className="animate-code-scroll whitespace-pre font-mono"
                 style={{
                   "--code-dur": cfg.speed,
                   animationDelay: cfg.delay,
                   fontSize: cfg.fontSize,
-                  color: "#7dd3fc",
-                  lineHeight: "1.65",
+                  color: "#93c5fd",
+                  lineHeight: "1.7",
                 } as React.CSSProperties}
               >
-                {/* doubled for seamless loop (animation moves -50%) */}
                 {[...lines, ...lines].map((line, i) => (
                   <div key={i} className="truncate">{line || "\u00A0"}</div>
                 ))}
@@ -204,9 +203,12 @@ function CodeRainBackground() {
           );
         })}
       </div>
-      {/* Gradient overlay so content stays readable */}
+      {/* Soft dark vignette – keeps text readable without killing the code */}
       <div className="absolute inset-0"
-        style={{ background: "linear-gradient(to right, rgba(10,22,40,0.55) 0%, rgba(10,22,40,0.25) 40%, rgba(10,22,40,0.25) 60%, rgba(10,22,40,0.7) 100%)" }} />
+        style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(10,22,40,0.35) 0%, rgba(10,22,40,0.1) 60%, rgba(10,22,40,0.45) 100%)" }} />
+      {/* Bottom fade */}
+      <div className="absolute inset-x-0 bottom-0 h-24"
+        style={{ background: "linear-gradient(to top, rgba(10,22,40,0.9), transparent)" }} />
     </div>
   );
 }
