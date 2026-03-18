@@ -749,69 +749,109 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── Portfolio ─────────────────────────────────────────────────────── */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={fadeUp} className="text-center mb-16">
-            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-4">Portfolio</p>
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-              Einblick in unsere <span className="text-accent">bisherigen Projekte</span>
-            </h2>
-          </motion.div>
+      {/* ─── Referenzen / Projekte ─────────────────────────────────────────── */}
+      <section className="py-28 bg-gray-50 relative overflow-hidden">
+        {/* Subtle background texture */}
+        <div className="absolute inset-0 opacity-30 pointer-events-none"
+          style={{ backgroundImage: "radial-gradient(circle at 20% 50%, rgba(249,115,22,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(10,22,40,0.05) 0%, transparent 50%)" }}
+        />
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            variants={stagger}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {portfolio.map((p, i) => (
-              <motion.div key={i} variants={fadeUp}>
-                <Link href="/projekte" className="block group">
-                  <div className="aspect-[4/3] rounded-2xl relative overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]">
-                    <img
-                      src={p.img}
-                      alt={p.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/60 transition-colors duration-300" />
-                    <div className="absolute bottom-0 inset-x-0 p-6">
-                      <span className="inline-block bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-2">{p.cat}</span>
-                      <h3 className="text-white font-display font-bold text-lg leading-snug">{p.title}</h3>
-                    </div>
-                    <div className="absolute top-4 right-4 w-9 h-9 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
-                      <ArrowRight className="w-4 h-4 text-white" />
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mt-12">
-            <motion.div className="inline-block" whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}>
+          {/* Section header */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={stagger}
+            className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+            <div>
+              <motion.p variants={fadeUp} className="text-accent font-semibold tracking-widest uppercase text-sm mb-3">
+                Unsere Referenzen
+              </motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-black leading-tight" style={{ color: "#0a1628" }}>
+                Einblick in unsere{" "}
+                <span className="text-accent">bisherigen Projekte</span>
+              </motion.h2>
+            </div>
+            <motion.div variants={fadeUp}>
               <Link
                 href="/projekte"
-                className="group relative inline-flex items-center gap-2.5 px-9 py-4 rounded-full font-bold text-base overflow-hidden"
-                style={{ transition: "all 0.25s ease", border: "2px solid rgba(10,22,40,0.15)", background: "transparent", color: "#0a1628" } as React.CSSProperties}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLAnchorElement).style.background = "#0a1628";
-                  (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "#0a1628";
-                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 24px rgba(10,22,40,0.18)";
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
-                  (e.currentTarget as HTMLAnchorElement).style.color = "#0a1628";
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(10,22,40,0.15)";
-                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
-                }}
+                className="group hidden md:inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border rounded-full px-7 py-3 transition-all duration-300 hover:bg-[#0a1628] hover:text-white hover:border-[#0a1628]"
+                style={{ color: "#0a1628", borderColor: "rgba(10,22,40,0.2)" }}
               >
-                Alle Projekte ansehen
+                Alle ansehen
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </motion.div>
+          </motion.div>
+
+          {/* Bento-grid layout */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={stagger}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[280px] gap-4"
+          >
+            {portfolio.map((p, i) => {
+              const isFeatured = i === 0;
+              return (
+                <motion.div
+                  key={i}
+                  variants={fadeUp}
+                  className={isFeatured ? "md:col-span-2 lg:col-span-2" : ""}
+                >
+                  <Link href="/projekte" className="block h-full group">
+                    <div className="relative w-full h-full rounded-3xl overflow-hidden"
+                      style={{ boxShadow: "0 4px 24px rgba(10,22,40,0.10)" }}>
+
+                      {/* Image */}
+                      <img
+                        src={p.img}
+                        alt={p.title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      />
+
+                      {/* Gradient overlay — slides up on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628]/90 via-[#0a1628]/30 to-transparent transition-opacity duration-400" />
+
+                      {/* Top-right arrow */}
+                      <div className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
+
+                      {/* Category pill */}
+                      <div className="absolute top-5 left-5">
+                        <span className="inline-flex items-center gap-1.5 bg-accent text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
+                          {p.cat}
+                        </span>
+                      </div>
+
+                      {/* Bottom content — slides up */}
+                      <div className="absolute bottom-0 inset-x-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-400">
+                        <h3 className="text-white font-display font-bold leading-snug"
+                          style={{ fontSize: isFeatured ? "1.35rem" : "1.05rem" }}>
+                          {p.title}
+                        </h3>
+                        <div className="flex items-center gap-1.5 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75">
+                          <span className="text-accent text-xs font-semibold">Projekt ansehen</span>
+                          <ArrowRight className="w-3 h-3 text-accent" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Mobile CTA */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mt-10 md:hidden">
+            <Link
+              href="/projekte"
+              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border rounded-full px-8 py-3 hover:bg-[#0a1628] hover:text-white hover:border-[#0a1628] transition-all duration-300"
+              style={{ color: "#0a1628", borderColor: "rgba(10,22,40,0.2)" }}
+            >
+              Alle Projekte ansehen
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </motion.div>
         </div>
       </section>
