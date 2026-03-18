@@ -11,6 +11,7 @@ import MarketingAds from "./pages/MarketingAds";
 import KIAutomatisierungen from "./pages/KIAutomatisierungen";
 import Analyse from "./pages/Analyse";
 import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import References from "./pages/References";
@@ -51,6 +52,7 @@ function Router() {
       <Route path="/ki-automatisierungen" component={KIAutomatisierungen} />
       <Route path="/analyse" component={Analyse} />
       <Route path="/projekte" component={Projects} />
+      <Route path="/projekte/:id" component={ProjectDetail} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:id" component={BlogPost} />
       <Route path="/referenzen" component={References} />

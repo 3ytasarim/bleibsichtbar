@@ -13,6 +13,8 @@ export interface Project {
   category: string;
   imageUrl?: string | null;
   clientName?: string | null;
+  websiteUrl?: string | null;
+  galleryImages: string[];
   tags: string[];
   published: boolean;
   sortOrder: number;

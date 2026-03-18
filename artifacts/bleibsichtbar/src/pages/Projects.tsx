@@ -163,13 +163,15 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
           )}
           {!project.clientName && <div className="mb-5" />}
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            className="bg-black text-white text-xs font-black px-7 py-2.5 rounded-full uppercase tracking-widest shadow-lg hover:bg-gray-900 transition-colors"
-          >
-            Ansehen →
-          </motion.button>
+          <Link href={`/projekte/${project.id}`}>
+            <motion.span
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-block bg-black text-white text-xs font-black px-7 py-2.5 rounded-full uppercase tracking-widest shadow-lg hover:bg-gray-900 transition-colors cursor-pointer"
+            >
+              Ansehen →
+            </motion.span>
+          </Link>
         </div>
       </motion.div>
     </motion.div>

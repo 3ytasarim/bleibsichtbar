@@ -9,6 +9,8 @@ export const projectsTable = pgTable("projects", {
   category: text("category").notNull(),
   imageUrl: text("image_url"),
   clientName: text("client_name"),
+  websiteUrl: text("website_url"),
+  galleryImages: text("gallery_images").array().notNull().default([]),
   tags: text("tags").array().notNull().default([]),
   published: boolean("published").notNull().default(false),
   sortOrder: integer("sort_order").notNull().default(0),
