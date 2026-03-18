@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
 import { useGetProjects } from "@workspace/api-client-react";
@@ -362,181 +362,223 @@ const fadeUp = {
 };
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
-// ─── Case Study Row ─────────────────────────────────────────────────────────────
-function CaseStudyPhoneGroup({ project, allProjects, index }: { project: any; allProjects: any[]; index: number }) {
-  const prevImg = allProjects[(index - 1 + allProjects.length) % allProjects.length]?.imageUrl;
-  const nextImg = allProjects[(index + 1) % allProjects.length]?.imageUrl;
+// ─── Case Study Carousel ────────────────────────────────────────────────────────
+function PhoneFrame({ project, size, rotate, opacity, zIndex, onClick }: {
+  project: any; size: "sm" | "lg"; rotate: number; opacity: number; zIndex: number; onClick?: () => void;
+}) {
+  const isLg = size === "lg";
+  const w = isLg ? 195 : 145;
+  const screenW = isLg ? 185 : 135;
+  const screenH = isLg ? 350 : 260;
+  const radius = isLg ? "2.8rem" : "2.2rem";
+  const screenRadius = isLg ? "2.4rem" : "1.9rem";
+  const pad = isLg ? "5px" : "4px";
 
   return (
-    <div className="relative flex items-end justify-center" style={{ height: 420, minWidth: 340 }}>
-      {/* Left ghost phone */}
-      <motion.div
-        initial={{ opacity: 0, x: -30, rotate: -8 }}
-        whileInView={{ opacity: 1, x: 0, rotate: -10 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute left-0 bottom-0 z-10"
-        style={{ width: 140, opacity: 0.55 }}
+    <div
+      onClick={onClick}
+      className={`relative flex-shrink-0 transition-all duration-500 ${onClick ? "cursor-pointer" : ""}`}
+      style={{ width: w, zIndex, transform: `rotate(${rotate}deg)`, opacity }}
+    >
+      {isLg && (
+        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-40 h-14 blur-2xl rounded-full opacity-50 pointer-events-none" style={{ background: "#f97316" }} />
+      )}
+      <div
+        className="rounded-[2.8rem] bg-[#161616]"
+        style={{
+          borderRadius: radius,
+          boxShadow: isLg
+            ? "0 50px 120px -10px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.08)"
+            : "0 20px 60px -10px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
+          padding: pad,
+        }}
       >
-        <div className="rounded-[2.2rem] bg-[#161616] shadow-2xl" style={{ padding: "4px" }}>
-          <div className="rounded-[1.9rem] overflow-hidden bg-black" style={{ width: 132, height: 240 }}>
-            {prevImg ? (
-              <img src={prevImg} alt="" className="w-full h-full object-cover opacity-70" />
-            ) : (
-              <div className="w-full h-full bg-gray-800" />
-            )}
-            <div className="absolute inset-0 bg-black/40" />
-          </div>
-          <div className="flex justify-center pt-1.5 pb-1">
-            <div className="w-10 h-[2.5px] bg-[#333] rounded-full" />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Center main phone */}
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.75, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-20"
-        style={{ width: 195 }}
-      >
-        {/* Ambient glow */}
-        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-40 h-14 blur-2xl rounded-full opacity-40 pointer-events-none" style={{ background: "#f97316" }} />
-        <div className="rounded-[2.8rem] bg-[#161616] shadow-[0_50px_120px_-10px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.08)]" style={{ padding: "5px" }}>
+        {isLg && <>
           <div className="absolute -left-[3px] top-[88px] w-[3px] h-7 bg-[#2a2a2a] rounded-l-full" />
           <div className="absolute -left-[3px] top-[122px] w-[3px] h-[46px] bg-[#2a2a2a] rounded-l-full" />
           <div className="absolute -left-[3px] top-[175px] w-[3px] h-[46px] bg-[#2a2a2a] rounded-l-full" />
           <div className="absolute -right-[3px] top-[140px] w-[3px] h-[60px] bg-[#2a2a2a] rounded-r-full" />
-          <div className="rounded-[2.4rem] overflow-hidden bg-black relative" style={{ width: 185, height: 348 }}>
+        </>}
+        <div
+          className="overflow-hidden bg-black relative"
+          style={{ borderRadius: screenRadius, width: screenW, height: screenH }}
+        >
+          {isLg && (
             <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-[68px] h-[22px] bg-black rounded-full z-30 flex items-center justify-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-[#1e1e1e]" />
               <div className="w-[6px] h-[6px] rounded-full bg-[#1e1e1e] opacity-60" />
             </div>
-            {project.imageUrl ? (
-              <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900" />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+          )}
+          {project?.imageUrl ? (
+            <img src={project.imageUrl} alt={project?.title ?? ""} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+          {isLg && (
             <div className="absolute bottom-4 left-0 right-0 px-4 z-10">
-              <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{project.category}</span>
-              <p className="text-white text-xs font-bold leading-snug line-clamp-2 mt-0.5">{project.title}</p>
+              <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{project?.category}</span>
+              <p className="text-white text-xs font-bold leading-snug line-clamp-2 mt-0.5">{project?.title}</p>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none rounded-[2.4rem]" />
-          </div>
-          <div className="flex justify-center pt-2 pb-1">
-            <div className="w-[52px] h-[3px] bg-[#444] rounded-full" />
-          </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none" style={{ borderRadius: screenRadius }} />
         </div>
-      </motion.div>
-
-      {/* Right ghost phone */}
-      <motion.div
-        initial={{ opacity: 0, x: 30, rotate: 8 }}
-        whileInView={{ opacity: 1, x: 0, rotate: 10 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute right-0 bottom-0 z-10"
-        style={{ width: 140, opacity: 0.55 }}
-      >
-        <div className="rounded-[2.2rem] bg-[#161616] shadow-2xl" style={{ padding: "4px" }}>
-          <div className="rounded-[1.9rem] overflow-hidden bg-black" style={{ width: 132, height: 240 }}>
-            {nextImg ? (
-              <img src={nextImg} alt="" className="w-full h-full object-cover opacity-70" />
-            ) : (
-              <div className="w-full h-full bg-gray-800" />
-            )}
-          </div>
-          <div className="flex justify-center pt-1.5 pb-1">
-            <div className="w-10 h-[2.5px] bg-[#333] rounded-full" />
-          </div>
+        <div className="flex justify-center" style={{ paddingTop: isLg ? "8px" : "6px", paddingBottom: isLg ? "4px" : "3px" }}>
+          <div className={`bg-[#444] rounded-full ${isLg ? "w-[52px] h-[3px]" : "w-9 h-[2.5px]"}`} />
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
 
-function CaseStudyRow({ project, index, allProjects }: { project: any; index: number; allProjects: any[] }) {
+function CaseStudyCarousel({ projects }: { projects: any[] }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const n = projects.length;
+
+  useEffect(() => {
+    if (isPaused || n === 0) return;
+    const t = setInterval(() => setActiveIdx(i => (i + 1) % n), 3800);
+    return () => clearInterval(t);
+  }, [isPaused, n]);
+
+  if (n === 0) return null;
+
+  const active = projects[activeIdx];
+  const prev   = projects[(activeIdx - 1 + n) % n];
+  const next   = projects[(activeIdx + 1) % n];
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5 }}
-      className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+    <div
+      className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Left: Text content */}
-      <motion.div
-        initial={{ opacity: 0, x: -40 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        className={index % 2 === 1 ? "lg:order-2" : ""}
-      >
-        {/* Category + client */}
-        <div className="flex items-center gap-3 mb-5">
-          <span className="text-xs font-black text-accent uppercase tracking-widest">{project.category}</span>
-          {project.clientName && (
-            <>
-              <span className="w-1 h-1 rounded-full bg-white/20" />
-              <span className="text-xs text-white/40 font-medium">{project.clientName}</span>
-            </>
-          )}
-        </div>
-
-        {/* Title */}
-        <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-black text-white leading-tight mb-6">
-          {project.title}
-        </h3>
-
-        {/* Divider */}
-        <div className="w-12 h-1 bg-accent rounded-full mb-6" />
-
-        {/* Description */}
-        {project.description && (
-          <p className="text-white/60 text-base leading-relaxed mb-8 max-w-lg">
-            {project.description}
-          </p>
-        )}
-
-        {/* Tags */}
-        {project.tags && project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
-            {project.tags.map((tag: string) => (
-              <span key={tag} className="text-[11px] font-semibold text-white/50 border border-white/15 px-3 py-1 rounded-full">
-                {tag}
-              </span>
-            ))}
+      {/* ── Left: animated project content ── */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeIdx}
+          initial={{ opacity: 0, x: -24 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 24 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* Category + client */}
+          <div className="flex items-center gap-3 mb-5">
+            <span className="text-xs font-black text-accent uppercase tracking-widest">{active.category}</span>
+            {active.clientName && (
+              <>
+                <span className="w-1 h-1 rounded-full bg-white/20" />
+                <span className="text-xs text-white/40 font-medium">{active.clientName}</span>
+              </>
+            )}
           </div>
-        )}
 
-        {/* CTA button */}
-        <Link href={`/projekte/${project.id}`}>
-          <motion.span
-            whileHover={{ x: 4 }}
-            className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-white border border-white/25 hover:border-accent hover:text-accent px-7 py-3 rounded-full transition-colors cursor-pointer"
+          <h3 className="text-3xl md:text-4xl lg:text-[2.8rem] font-display font-black text-white leading-tight mb-5">
+            {active.title}
+          </h3>
+
+          <div className="w-12 h-1 bg-accent rounded-full mb-6" />
+
+          {active.description && (
+            <p className="text-white/60 text-base leading-relaxed mb-8 max-w-md">
+              {active.description}
+            </p>
+          )}
+
+          {active.tags && active.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-8">
+              {active.tags.map((tag: string) => (
+                <span key={tag} className="text-[11px] font-semibold text-white/50 border border-white/15 px-3 py-1 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Buttons row */}
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href={`/projekte/${active.id}`}>
+              <motion.span
+                whileHover={{ x: 4 }}
+                className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-white border border-white/30 hover:border-accent hover:text-accent px-7 py-3 rounded-full transition-colors cursor-pointer"
+              >
+                Fallstudie ansehen
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </motion.span>
+            </Link>
+
+            {/* Dot nav */}
+            <div className="flex gap-2">
+              {projects.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveIdx(i)}
+                  className={`rounded-full transition-all duration-300 ${i === activeIdx ? "w-6 h-2 bg-accent" : "w-2 h-2 bg-white/20 hover:bg-white/40"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* ── Right: 3 phones ── */}
+      <div className="flex items-end justify-center gap-4 md:gap-6">
+        {/* Left ghost phone */}
+        <motion.div
+          key={`prev-${activeIdx}`}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-4"
+        >
+          <PhoneFrame
+            project={prev}
+            size="sm"
+            rotate={-10}
+            opacity={0.55}
+            zIndex={10}
+            onClick={() => setActiveIdx((activeIdx - 1 + n) % n)}
+          />
+        </motion.div>
+
+        {/* Center main phone */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`center-${activeIdx}`}
+            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -10 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            style={{ zIndex: 20 }}
           >
-            Fallstudie ansehen
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </motion.span>
-        </Link>
-      </motion.div>
+            <PhoneFrame project={active} size="lg" rotate={0} opacity={1} zIndex={20} />
+          </motion.div>
+        </AnimatePresence>
 
-      {/* Right: Phone group */}
-      <motion.div
-        initial={{ opacity: 0, x: 40 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-        className={`flex justify-center ${index % 2 === 1 ? "lg:order-1" : ""}`}
-      >
-        <CaseStudyPhoneGroup project={project} allProjects={allProjects} index={index} />
-      </motion.div>
-    </motion.div>
+        {/* Right ghost phone */}
+        <motion.div
+          key={`next-${activeIdx}`}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-4"
+        >
+          <PhoneFrame
+            project={next}
+            size="sm"
+            rotate={10}
+            opacity={0.55}
+            zIndex={10}
+            onClick={() => setActiveIdx((activeIdx + 1) % n)}
+          />
+        </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -802,11 +844,11 @@ export default function SocialMedia() {
         </div>
       </section>
 
-      {/* FALLSTUDIEN / CASE STUDIES */}
+      {/* FALLSTUDIEN / CASE STUDIES CAROUSEL */}
       {allProjects.length > 0 && (
         <section className="bg-[#0a1628] overflow-hidden">
           {/* Section Header */}
-          <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-24 pb-12">
+          <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-20 pb-4">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
               <div>
                 <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">
@@ -817,7 +859,7 @@ export default function SocialMedia() {
                 </motion.h2>
               </div>
               <motion.p variants={fadeUp} className="text-white/50 text-base max-w-xs leading-relaxed">
-                Echte Ergebnisse für echte Kunden — klicken Sie sich durch eine Auswahl unserer Projekte.
+                Klicken Sie durch die iPhones, um eine Auswahl unserer Projekte zu sehen.
               </motion.p>
             </motion.div>
             <motion.div
@@ -825,19 +867,12 @@ export default function SocialMedia() {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-              className="mt-10 h-px bg-white/10"
+              className="mt-8 h-px bg-white/10"
             />
           </div>
 
-          {/* Case Study Rows */}
-          <div className="divide-y divide-white/8">
-            {allProjects.map((project, i) => (
-              <CaseStudyRow key={project.id} project={project} index={i} allProjects={allProjects} />
-            ))}
-          </div>
-
-          {/* Bottom padding */}
-          <div className="pb-16" />
+          {/* Single Carousel */}
+          <CaseStudyCarousel projects={allProjects} />
         </section>
       )}
 
