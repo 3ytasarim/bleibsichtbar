@@ -740,9 +740,28 @@ export default function Home() {
           </motion.div>
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mt-12">
-            <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-2 hover:bg-primary hover:text-white hover:border-primary transition-all">
-              <Link href="/projekte">Alle Projekte ansehen <ArrowRight className="ml-2 w-4 h-4" /></Link>
-            </Button>
+            <motion.div className="inline-block" whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 400, damping: 22 }}>
+              <Link
+                href="/projekte"
+                className="group relative inline-flex items-center gap-2.5 px-9 py-4 rounded-full font-bold text-base overflow-hidden"
+                style={{ transition: "all 0.25s ease", border: "2px solid rgba(10,22,40,0.15)", background: "transparent", color: "#0a1628" } as React.CSSProperties}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLAnchorElement).style.background = "#0a1628";
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#fff";
+                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "#0a1628";
+                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 24px rgba(10,22,40,0.18)";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#0a1628";
+                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(10,22,40,0.15)";
+                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
+                }}
+              >
+                Alle Projekte ansehen
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
