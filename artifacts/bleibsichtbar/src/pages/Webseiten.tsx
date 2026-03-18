@@ -363,14 +363,14 @@ export default function Webseiten() {
       </section>
 
       {/* LEISTUNGEN ÜBERBLICK */}
-      <section className="py-28 bg-[#07111f] relative overflow-hidden">
+      <section className="py-28 bg-white relative overflow-hidden">
         {/* Subtle grid background */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(10,22,40,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(10,22,40,0.04) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
         }} />
         {/* Top glow blob */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-accent/10 blur-[100px] pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-accent/8 blur-[100px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           {/* Section header */}
@@ -389,7 +389,7 @@ export default function Webseiten() {
             </motion.div>
             <motion.h2
               variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
-              className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight"
+              className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-primary leading-tight"
             >
               Alles aus{" "}
               <span className="relative inline-block">
@@ -403,7 +403,7 @@ export default function Webseiten() {
             </motion.h2>
             <motion.p
               variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, delay: 0.1 } } }}
-              className="mt-5 text-white/50 text-lg max-w-xl mx-auto"
+              className="mt-5 text-gray-500 text-lg max-w-xl mx-auto"
             >
               Professionelle Webauftritte, die überzeugen — vom ersten Pixel bis zum laufenden Betrieb.
             </motion.p>
@@ -420,32 +420,31 @@ export default function Webseiten() {
                 key={i}
                 variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } } }}
                 whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-                className="group relative bg-white/[0.04] border border-white/10 rounded-2xl p-7 overflow-hidden cursor-default"
-                style={{ backdropFilter: "blur(8px)" }}
+                className="group relative bg-white border border-gray-100 rounded-2xl p-7 overflow-hidden cursor-default shadow-sm hover:shadow-lg transition-shadow duration-300"
               >
                 {/* Hover glow */}
                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(249,115,22,0.12) 0%, transparent 70%)" }} />
+                  style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(249,115,22,0.07) 0%, transparent 70%)" }} />
                 {/* Top border accent */}
-                <div className="absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-transparent via-accent/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+                <div className="absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-transparent via-accent/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
 
                 {/* Number badge */}
-                <div className="absolute top-6 right-6 w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-white/30 group-hover:text-accent/70 transition-colors">{String(i + 1).padStart(2, "0")}</span>
+                <div className="absolute top-6 right-6 w-7 h-7 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-gray-400 group-hover:text-accent transition-colors">{String(i + 1).padStart(2, "0")}</span>
                 </div>
 
                 {/* Icon */}
                 <motion.div
                   whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
-                  className="w-12 h-12 rounded-xl bg-accent/15 text-accent flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-all duration-300 shadow-sm"
+                  className="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-all duration-300 shadow-sm"
                 >
                   {l.icon}
                 </motion.div>
 
-                <h3 className="text-lg font-display font-bold text-white mb-3 group-hover:text-accent transition-colors duration-300 leading-snug pr-6">
+                <h3 className="text-lg font-display font-bold text-primary mb-3 group-hover:text-accent transition-colors duration-300 leading-snug pr-6">
                   {l.title}
                 </h3>
-                <p className="text-white/50 text-sm leading-relaxed group-hover:text-white/65 transition-colors duration-300">
+                <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-600 transition-colors duration-300">
                   {l.desc}
                 </p>
 
@@ -455,7 +454,7 @@ export default function Webseiten() {
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.15 * i, ease: "easeOut" }}
-                  className="absolute bottom-0 left-7 right-7 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent origin-left"
+                  className="absolute bottom-0 left-7 right-7 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent origin-left"
                 />
               </motion.div>
             ))}
