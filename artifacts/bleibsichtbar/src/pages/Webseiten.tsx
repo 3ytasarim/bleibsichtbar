@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
 import { Monitor, Zap, Smartphone, Search, Palette, RefreshCw, CheckCircle2, ArrowRight } from "lucide-react";
 
 const fadeUp = {
@@ -59,9 +60,7 @@ export default function Webseiten() {
     <PublicLayout>
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-1/4 w-[700px] h-[700px] bg-accent rounded-full blur-[150px]" />
-        </div>
+        <AnimatedHeroBackground />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -79,7 +78,7 @@ export default function Webseiten() {
                 <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold">
                   <Link href="/kontakt">Webseite anfragen</Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white hover:bg-white/10">
+                <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white bg-transparent hover:bg-white/10">
                   <Link href="/projekte">Projekte ansehen</Link>
                 </Button>
               </div>

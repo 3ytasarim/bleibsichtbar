@@ -3,9 +3,10 @@ import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
 import {
   Camera, Edit3, Users, BarChart3, MessageSquare, TrendingUp,
-  CheckCircle2, Instagram, ChevronRight, Clock, Repeat2
+  CheckCircle2, Clock,
 } from "lucide-react";
 
 const fadeUp = {
@@ -57,30 +58,30 @@ export default function SocialMedia() {
     <PublicLayout>
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500 rounded-full blur-[100px]" />
-        </div>
+        <AnimatedHeroBackground />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div custom={0} variants={heroFadeUp} initial="hidden" animate="visible">
             <span className="inline-block bg-white/10 border border-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6 tracking-wide">
               Social Media Management
             </span>
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
-              Mehr Reichweite.<br />
-              <span className="text-accent">Mehr Kunden.</span>
-            </h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
-              Wir bauen eine starke Präsenz auf, die Vertrauen schafft und neue Kunden bringt. Strategie, Content und Betreuung aus einer Hand.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold">
-                <a href="#analysebogen">Jetzt Analysebogen ausfüllen</a>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white hover:bg-white/10">
-                <Link href="/kontakt">Kostenlos beraten lassen</Link>
-              </Button>
-            </div>
+          </motion.div>
+          <motion.h1 custom={1} variants={heroFadeUp} initial="hidden" animate="visible"
+            className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
+            Mehr Reichweite.<br />
+            <span className="text-accent">Mehr Kunden.</span>
+          </motion.h1>
+          <motion.p custom={2} variants={heroFadeUp} initial="hidden" animate="visible"
+            className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
+            Wir bauen eine starke Präsenz auf, die Vertrauen schafft und neue Kunden bringt. Strategie, Content und Betreuung aus einer Hand.
+          </motion.p>
+          <motion.div custom={3} variants={heroFadeUp} initial="hidden" animate="visible"
+            className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold">
+              <a href="#analysebogen">Jetzt Analysebogen ausfüllen</a>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white bg-transparent hover:bg-white/10">
+              <Link href="/kontakt">Kostenlos beraten lassen</Link>
+            </Button>
           </motion.div>
         </div>
       </section>
