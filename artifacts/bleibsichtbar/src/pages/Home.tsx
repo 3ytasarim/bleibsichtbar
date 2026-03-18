@@ -278,12 +278,36 @@ const stats = [
 
 // ─── Portfolio ───────────────────────────────────────────────────────────────
 const portfolio = [
-  { title: "Atmosphäre & Markenauftritt", cat: "Branding", grad: "from-rose-400 to-orange-500" },
-  { title: "Autohaus Content Produktion", cat: "Content", grad: "from-slate-600 to-slate-900" },
-  { title: "Business- & Imagefotografie", cat: "Fotografie", grad: "from-blue-500 to-indigo-700" },
-  { title: "Immobilienvermarktung", cat: "Marketing", grad: "from-emerald-400 to-teal-700" },
-  { title: "Food Content", cat: "Social Media", grad: "from-amber-400 to-red-500" },
-  { title: "Menü und Werbefotografie", cat: "Fotografie", grad: "from-purple-500 to-pink-600" },
+  {
+    title: "Atmosphäre & Markenauftritt",
+    cat: "Branding",
+    img: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80&fit=crop",
+  },
+  {
+    title: "Autohaus Content Produktion",
+    cat: "Content Production",
+    img: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80&fit=crop",
+  },
+  {
+    title: "Business- & Imagefotografie",
+    cat: "Fotografie",
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&fit=crop",
+  },
+  {
+    title: "Immobilienvermarktung",
+    cat: "Marketing",
+    img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80&fit=crop",
+  },
+  {
+    title: "Food Content",
+    cat: "Social Media",
+    img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80&fit=crop",
+  },
+  {
+    title: "Menü und Werbefotografie",
+    cat: "Fotografie",
+    img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80&fit=crop",
+  },
 ];
 
 // ─── Animated Counter ─────────────────────────────────────────────────────────
@@ -601,13 +625,18 @@ export default function Home() {
             {portfolio.map((p, i) => (
               <motion.div key={i} variants={fadeUp}>
                 <Link href="/projekte" className="block group">
-                  <div className={`aspect-[4/3] rounded-2xl bg-gradient-to-br ${p.grad} relative overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]`}>
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                  <div className="aspect-[4/3] rounded-2xl relative overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]">
+                    <img
+                      src={p.img}
+                      alt={p.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/60 transition-colors duration-300" />
                     <div className="absolute bottom-0 inset-x-0 p-6">
-                      <span className="inline-block bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1 rounded-full mb-2">{p.cat}</span>
+                      <span className="inline-block bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-2">{p.cat}</span>
                       <h3 className="text-white font-display font-bold text-lg leading-snug">{p.title}</h3>
                     </div>
-                    <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+                    <div className="absolute top-4 right-4 w-9 h-9 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
                       <ArrowRight className="w-4 h-4 text-white" />
                     </div>
                   </div>
