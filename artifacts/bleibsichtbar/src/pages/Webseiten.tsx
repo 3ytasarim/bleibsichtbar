@@ -4,6 +4,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
+import { CtaBanner } from "@/components/shared/CtaBanner";
 import { useGetProjects } from "@workspace/api-client-react";
 import { Monitor, Zap, Smartphone, Search, Palette, RefreshCw, CheckCircle2, ArrowRight } from "lucide-react";
 
@@ -744,66 +745,14 @@ export default function Webseiten() {
         </section>
       )}
 
-      {/* CTA */}
-      <section className="relative py-28 overflow-hidden" style={{ background: "linear-gradient(135deg, #060f1e 0%, #0a1628 50%, #07111f 100%)" }}>
-        {/* Animated glow orbs */}
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-24 left-1/4 w-96 h-96 rounded-full bg-accent/20 blur-[120px] pointer-events-none"
-        />
-        <motion.div
-          animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.2, 0.1] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-24 right-1/4 w-80 h-80 rounded-full bg-blue-500/15 blur-[100px] pointer-events-none"
-        />
-        {/* Subtle grid */}
-        <div className="absolute inset-0 pointer-events-none opacity-20"
-          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
-            variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
-          >
-            <motion.p
-              variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-              className="text-accent font-bold text-sm tracking-widest uppercase mb-5"
-            >
-              Jetzt durchstarten
-            </motion.p>
-            <motion.h2
-              variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
-              className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-6 leading-tight"
-            >
-              Bereit für Ihre neue{" "}
-              <span className="text-accent">Webseite?</span>
-            </motion.h2>
-            <motion.p
-              variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-              className="text-xl text-white/60 mb-12 max-w-xl mx-auto leading-relaxed"
-            >
-              Lassen Sie uns gemeinsam einen digitalen Auftritt entwickeln, der Ihr Unternehmen von seiner besten Seite zeigt.
-            </motion.p>
-            <motion.div
-              variants={{ hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } } }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            >
-              {/* Pulsing ring around button */}
-              <div className="relative">
-                <motion.div
-                  animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
-                  className="absolute inset-0 rounded-full bg-accent/40"
-                />
-                <Button asChild size="lg" className="relative rounded-full px-10 bg-accent hover:bg-accent/90 text-white font-bold text-lg shadow-2xl shadow-accent/30">
-                  <Link href="/kontakt">Jetzt kostenlos anfragen <ArrowRight className="ml-2 w-5 h-5 inline" /></Link>
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+      <CtaBanner
+        label="Jetzt durchstarten"
+        heading="Bereit für Ihre neue"
+        headingAccent="Webseite?"
+        subtext="Lassen Sie uns gemeinsam einen digitalen Auftritt entwickeln, der Ihr Unternehmen von seiner besten Seite zeigt."
+        buttonText="Jetzt kostenlos anfragen"
+        buttonHref="/kontakt"
+      />
     </PublicLayout>
   );
 }

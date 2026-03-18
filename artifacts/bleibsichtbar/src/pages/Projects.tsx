@@ -3,6 +3,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useGetProjects } from "@workspace/api-client-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
+import { CtaBanner } from "@/components/shared/CtaBanner";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { ArrowRight, Globe, Folder } from "lucide-react";
@@ -279,38 +280,14 @@ export default function Projects() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative py-24 overflow-hidden" style={{ background: "linear-gradient(135deg, #060f1e 0%, #0a1628 50%, #07111f 100%)" }}>
-        <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.12, 0.22, 0.12] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 left-1/3 w-80 h-80 rounded-full bg-accent/20 blur-[100px] pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none opacity-20"
-          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
-
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center relative z-10">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}
-            variants={{ visible: { transition: { staggerChildren: 0.14 } } }}>
-            <motion.p variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-              className="text-accent font-bold text-sm tracking-widest uppercase mb-4">
-              Ihr Projekt als nächstes?
-            </motion.p>
-            <motion.h2 variants={{ hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
-              className="text-3xl md:text-5xl font-display font-bold text-white mb-5 leading-tight">
-              Lassen Sie uns etwas{" "}<span className="text-accent">Großartiges</span> schaffen.
-            </motion.h2>
-            <motion.div variants={{ hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } } }}>
-              <div className="relative inline-block">
-                <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.35, 0, 0.35] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
-                  className="absolute inset-0 rounded-full bg-accent/40" />
-                <Button asChild size="lg" className="relative rounded-full px-10 bg-accent hover:bg-accent/90 text-white font-bold text-lg shadow-2xl shadow-accent/30">
-                  <Link href="/kontakt">Jetzt Kontakt aufnehmen <ArrowRight className="ml-2 w-5 h-5 inline" /></Link>
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+      <CtaBanner
+        label="Ihr Projekt als nächstes?"
+        heading="Lassen Sie uns etwas"
+        headingAccent="Großartiges schaffen."
+        subtext="Kontaktieren Sie uns und wir zeigen Ihnen, wie wir Ihr Projekt zum Erfolg führen können."
+        buttonText="Jetzt Kontakt aufnehmen"
+        buttonHref="/kontakt"
+      />
     </PublicLayout>
   );
 }
