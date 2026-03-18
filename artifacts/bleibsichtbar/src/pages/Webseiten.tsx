@@ -12,56 +12,94 @@ const WEB_RE = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|landin
 function MultiDeviceShowcase({ src, alt }: { src?: string; alt: string }) {
   const img = src || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80";
   return (
-    <div className="flex items-end gap-3 justify-center w-full">
+    <div className="relative flex items-end justify-center gap-5 px-4 pb-6 pt-4">
+      {/* Ambient glow behind devices */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-48 h-24 rounded-full blur-3xl opacity-30" style={{ background: "radial-gradient(circle, #f97316 0%, transparent 70%)" }} />
+      </div>
+
       {/* Desktop Monitor */}
-      <div className="flex flex-col items-center flex-1 min-w-0 max-w-[300px]">
-        <div className="w-full bg-gray-800 rounded-xl p-[5px] border border-gray-700 shadow-2xl ring-1 ring-white/10">
-          <div className="flex items-center gap-1 px-2 py-1.5 bg-gray-900 rounded-t-lg">
-            {["#ff5f57","#ffbd2e","#28c840"].map(c => (
-              <div key={c} className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: c }} />
-            ))}
-            <div className="flex-1 mx-2 h-2.5 bg-gray-700/60 rounded-full" />
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
+        className="flex flex-col items-center flex-1 min-w-0"
+        style={{ maxWidth: "300px" }}
+      >
+        {/* Monitor body */}
+        <div className="w-full rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.9)] ring-1 ring-white/10 overflow-hidden"
+          style={{ background: "linear-gradient(160deg,#222 0%,#141414 100%)" }}>
+          {/* Browser bar */}
+          <div className="flex items-center gap-2 px-3 py-2.5" style={{ background: "#1a1a1a" }}>
+            <div className="flex gap-1.5 shrink-0">
+              {["#ff5f57","#ffbd2e","#28c840"].map(c => (
+                <div key={c} className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ background: c }} />
+              ))}
+            </div>
+            <div className="flex-1 flex items-center bg-[#2d2d2d] rounded-full h-5 px-3 gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 shrink-0" />
+              <div className="flex-1 h-1 bg-[#444] rounded-full" />
+            </div>
           </div>
-          <div className="rounded-b-lg overflow-hidden" style={{ aspectRatio: "16/9" }}>
+          {/* Screen */}
+          <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
             <img src={img} alt={alt} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none" />
           </div>
         </div>
-        <div className="w-10 h-2.5 bg-gray-700 rounded-b-sm" />
-        <div className="w-16 h-1 bg-gray-600 rounded-full" />
-        <span className="text-white/40 text-[10px] mt-1 font-medium">Desktop</span>
-      </div>
+        {/* Stand */}
+        <div className="w-9 h-4 rounded-b" style={{ background: "linear-gradient(180deg,#1a1a1a,#0f0f0f)" }} />
+        <div className="w-20 h-[3px] rounded-full" style={{ background: "#1a1a1a" }} />
+        <span className="text-white/30 text-[9px] mt-2 font-semibold uppercase tracking-widest">Desktop</span>
+      </motion.div>
 
-      {/* Tablet */}
-      <div className="flex flex-col items-center shrink-0 w-[88px]">
-        <div className="bg-gray-900 rounded-[1.4rem] border-[5px] border-gray-800 shadow-xl ring-1 ring-white/10">
-          <div className="flex justify-center py-1.5">
-            <div className="w-5 h-1 bg-gray-700 rounded-full" />
+      {/* iPad */}
+      <motion.div
+        animate={{ y: [0, -8, 0] }}
+        transition={{ repeat: Infinity, duration: 3.8, delay: 0.6, ease: "easeInOut" }}
+        className="flex flex-col items-center shrink-0 z-10"
+      >
+        <div className="rounded-[1.6rem] shadow-[0_20px_60px_rgba(0,0,0,0.85)] ring-1 ring-white/[0.07]"
+          style={{ background: "#161616", padding: "4px", width: "90px" }}>
+          <div className="flex justify-center py-2">
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#2a2a2a" }} />
           </div>
-          <div className="overflow-hidden rounded-sm" style={{ aspectRatio: "3/4" }}>
+          <div className="rounded-lg overflow-hidden relative" style={{ aspectRatio: "3/4" }}>
             <img src={img} alt={alt} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] to-transparent pointer-events-none" />
           </div>
-          <div className="flex justify-center py-1.5">
-            <div className="w-4 h-4 rounded-full border-2 border-gray-700" />
+          <div className="flex justify-center py-2.5">
+            <div className="w-5 h-5 rounded-full border-2" style={{ borderColor: "#2a2a2a" }} />
           </div>
         </div>
-        <span className="text-white/40 text-[10px] mt-1 font-medium">Tablet</span>
-      </div>
+        <span className="text-white/30 text-[9px] mt-2 font-semibold uppercase tracking-widest">Tablet</span>
+      </motion.div>
 
-      {/* Phone */}
-      <div className="flex flex-col items-center shrink-0 w-[58px]">
-        <div className="bg-gray-900 rounded-[1rem] border-[4px] border-gray-800 shadow-xl ring-1 ring-white/10">
-          <div className="flex justify-center h-3">
-            <div className="w-6 h-3 bg-gray-800 rounded-b-lg" />
-          </div>
-          <div className="overflow-hidden" style={{ aspectRatio: "9/16" }}>
-            <img src={img} alt={alt} className="w-full h-full object-cover" />
-          </div>
-          <div className="flex justify-center py-1">
-            <div className="w-5 h-0.5 bg-gray-600 rounded-full" />
+      {/* iPhone */}
+      <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{ repeat: Infinity, duration: 3.2, delay: 1.1, ease: "easeInOut" }}
+        className="flex flex-col items-center shrink-0 z-20"
+      >
+        <div className="rounded-[1.3rem] shadow-[0_20px_60px_rgba(0,0,0,0.85)] ring-1 ring-white/[0.07]"
+          style={{ background: "#161616", padding: "4px", width: "56px" }}>
+          {/* Side buttons */}
+          <div className="relative">
+            <div className="absolute -left-[3px] top-[20px] w-[3px] h-5 rounded-l-full" style={{ background: "#222" }} />
+            <div className="absolute -left-[3px] top-[48px] w-[3px] h-[32px] rounded-l-full" style={{ background: "#222" }} />
+            <div className="absolute -right-[3px] top-[38px] w-[3px] h-[38px] rounded-r-full" style={{ background: "#222" }} />
+            <div className="rounded-[1rem] overflow-hidden relative bg-black" style={{ width: "48px", height: "90px" }}>
+              {/* Dynamic Island */}
+              <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-[26px] h-[8px] rounded-full z-10" style={{ background: "#000" }} />
+              <img src={img} alt={alt} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] to-transparent pointer-events-none" />
+            </div>
+            <div className="flex justify-center pt-1 pb-0.5">
+              <div className="w-[18px] h-[2px] rounded-full" style={{ background: "#333" }} />
+            </div>
           </div>
         </div>
-        <span className="text-white/40 text-[10px] mt-1 font-medium">Mobile</span>
-      </div>
+        <span className="text-white/30 text-[9px] mt-2 font-semibold uppercase tracking-widest">Mobile</span>
+      </motion.div>
     </div>
   );
 }
@@ -264,43 +302,65 @@ export default function Webseiten() {
 
       {/* PROJEKTE SHOWCASE */}
       {webProjects.length > 0 && (
-        <section className="py-24 bg-primary text-white overflow-hidden relative">
-          <AnimatedHeroBackground />
+        <section className="py-28 text-white overflow-hidden relative"
+          style={{ background: "radial-gradient(ellipse 110% 80% at 50% 40%, #0d1f3c 0%, #070e1d 55%, #020810 100%)" }}>
+          {/* Decorative ambient orbs */}
+          <div className="absolute top-1/4 left-10 w-80 h-80 rounded-full blur-[140px] opacity-15 pointer-events-none" style={{ background: "#f97316" }} />
+          <div className="absolute bottom-1/4 right-10 w-72 h-72 rounded-full blur-[120px] opacity-10 pointer-events-none" style={{ background: "#3b82f6" }} />
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-16">
-                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Referenzprojekte</p>
-                <h2 className="text-4xl md:text-5xl font-display font-bold text-white">
+              <motion.div variants={fadeUp} className="text-center mb-20">
+                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">Referenzprojekte</p>
+                <h2 className="text-4xl md:text-6xl font-display font-bold text-white">
                   Webseiten, die <span className="text-accent">überzeugen</span>
                 </h2>
-                <p className="text-white/70 text-lg mt-4 max-w-xl mx-auto">
+                <p className="text-white/60 text-lg mt-5 max-w-xl mx-auto">
                   Vollständig responsiv – auf Desktop, Tablet und Smartphone perfekt.
                 </p>
               </motion.div>
 
-              <div className="space-y-16">
+              <div className="space-y-10">
                 {webProjects.map((project, i) => (
                   <motion.div key={project.id} variants={fadeUp}
-                    className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm hover:bg-white/10 transition-colors">
-                    <div className="grid lg:grid-cols-2 gap-10 items-center">
-                      <div className={i % 2 === 1 ? "lg:order-2" : ""}>
+                    className="group relative rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-[0_30px_80px_rgba(0,0,0,0.5)]"
+                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                    {/* Hover gradient border effect */}
+                    <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.06) 0%, transparent 60%)" }} />
+
+                    <div className="grid lg:grid-cols-2 gap-0 items-stretch">
+                      {/* Device showcase panel */}
+                      <div className={`relative flex items-center justify-center p-8 md:p-10 ${i % 2 === 1 ? "lg:order-2" : ""}`}
+                        style={{ background: "rgba(0,0,0,0.25)" }}>
                         <MultiDeviceShowcase src={project.imageUrl ?? undefined} alt={project.title} />
+                        {/* Panel separator */}
+                        <div className={`hidden lg:block absolute top-8 bottom-8 w-px ${i % 2 === 1 ? "left-0" : "right-0"}`}
+                          style={{ background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.1) 30%, rgba(255,255,255,0.1) 70%, transparent)" }} />
                       </div>
-                      <div className={i % 2 === 1 ? "lg:order-1" : ""}>
-                        <span className="inline-block bg-accent/20 text-accent text-xs font-bold px-3 py-1 rounded-full mb-4">
-                          {project.category}
-                        </span>
-                        <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">
+
+                      {/* Info panel */}
+                      <div className={`flex flex-col justify-center p-8 md:p-12 ${i % 2 === 1 ? "lg:order-1" : ""}`}>
+                        <div className="flex items-center gap-3 mb-5">
+                          <span className="inline-flex items-center bg-accent/15 text-accent text-xs font-bold px-3.5 py-1.5 rounded-full border border-accent/20">
+                            {project.category}
+                          </span>
+                          {project.clientName && (
+                            <span className="text-white/30 text-sm">·</span>
+                          )}
+                          {project.clientName && (
+                            <span className="text-white/50 text-sm font-medium">{project.clientName}</span>
+                          )}
+                        </div>
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-white mb-4 leading-tight">
                           {project.title}
                         </h3>
-                        {project.clientName && (
-                          <p className="text-white/50 font-medium mb-4">{project.clientName}</p>
-                        )}
-                        <p className="text-white/70 leading-relaxed text-lg">{project.description}</p>
+                        <p className="text-white/60 leading-relaxed text-base md:text-lg">{project.description}</p>
                         {project.tags && project.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mt-6">
+                          <div className="flex flex-wrap gap-2 mt-7">
                             {project.tags.map(tag => (
-                              <span key={tag} className="bg-white/10 text-white/70 text-xs px-3 py-1 rounded-full border border-white/10">
+                              <span key={tag} className="text-[11px] font-semibold text-white/50 px-3 py-1 rounded-full"
+                                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                                 {tag}
                               </span>
                             ))}
