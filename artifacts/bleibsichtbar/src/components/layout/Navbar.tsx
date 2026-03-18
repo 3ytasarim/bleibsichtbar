@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 const links = [
   { name: "Startseite", path: "/" },
   { name: "Leistungen", path: "/services" },
-  { name: "Social Media", path: "/services/social-media" },
   { name: "Projekte", path: "/projekte" },
   { name: "Referenzen", path: "/referenzen" },
   { name: "Blog", path: "/blog" },
@@ -20,55 +19,55 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location]);
+
+  const isHeroPage = location === "/";
 
   return (
     <>
       <header
         className={cn(
-          "fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b",
-          isScrolled 
-            ? "bg-white/80 backdrop-blur-lg border-border/50 py-4 shadow-sm" 
-            : "bg-transparent border-transparent py-6"
+          "fixed top-0 inset-x-0 z-50 transition-all duration-300",
+          isScrolled
+            ? "bg-white/95 backdrop-blur-xl border-b border-gray-100 py-3 shadow-sm"
+            : isHeroPage
+            ? "bg-transparent border-transparent py-6"
+            : "bg-white/95 backdrop-blur-xl border-b border-gray-100 py-4"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2 group">
-              <div className="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center font-display font-bold text-xl group-hover:bg-accent transition-colors">
+            <Link href="/" className="flex items-center space-x-2.5 group">
+              <div className="w-9 h-9 bg-primary text-white rounded-xl flex items-center justify-center font-display font-bold text-lg group-hover:bg-accent transition-colors duration-200">
                 B
               </div>
-              <span className="font-display font-bold text-xl tracking-tight">
+              <span className={cn("font-display font-bold text-xl tracking-tight transition-colors", isScrolled || !isHeroPage ? "text-foreground" : "text-white")}>
                 Bleibsichtbar<span className="text-accent">.</span>
               </span>
             </Link>
 
-            {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center space-x-8">
               {links.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   className={cn(
-                    "text-sm font-medium transition-colors hover:text-accent relative",
-                    location === link.path ? "text-accent" : "text-foreground/80"
+                    "text-sm font-medium transition-all hover:text-accent relative py-1",
+                    location === link.path ? "text-accent" : isScrolled || !isHeroPage ? "text-foreground/80" : "text-white/90"
                   )}
                 >
                   {link.name}
                   {location === link.path && (
-                    <motion.div 
-                      layoutId="nav-indicator"
-                      className="absolute -bottom-2 left-0 right-0 h-0.5 bg-accent rounded-full"
+                    <motion.div
+                      layoutId="nav-underline"
+                      className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-accent rounded-full"
                     />
                   )}
                 </Link>
@@ -76,15 +75,15 @@ export function Navbar() {
             </nav>
 
             <div className="hidden lg:flex items-center">
-              <Button asChild variant="default" className="rounded-full px-6">
+              <Button asChild variant="default" className="rounded-full px-6 font-semibold shadow-md hover:shadow-lg transition-shadow">
                 <Link href="/kontakt">Kontakt aufnehmen</Link>
               </Button>
             </div>
 
-            {/* Mobile Toggle */}
             <button
-              className="lg:hidden p-2 text-foreground"
+              className={cn("lg:hidden p-2 rounded-lg transition-colors", isScrolled || !isHeroPage ? "text-foreground" : "text-white")}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Menü öffnen"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -92,33 +91,39 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-white pt-24 px-4 pb-6 overflow-y-auto"
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-white pt-24 px-6 pb-8 overflow-y-auto"
           >
-            <div className="flex flex-col space-y-4">
-              {links.map((link) => (
-                <Link
+            <nav className="flex flex-col space-y-2">
+              {links.map((link, i) => (
+                <motion.div
                   key={link.path}
-                  href={link.path}
-                  className={cn(
-                    "text-2xl font-display font-bold py-4 border-b border-border",
-                    location === link.path ? "text-accent" : "text-foreground"
-                  )}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    href={link.path}
+                    className={cn(
+                      "block text-2xl font-display font-bold py-4 border-b border-gray-100 hover:text-accent transition-colors",
+                      location === link.path ? "text-accent" : "text-foreground"
+                    )}
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
               ))}
-              <div className="pt-8">
-                <Button asChild variant="accent" size="lg" className="w-full">
-                  <Link href="/kontakt">Kontakt aufnehmen</Link>
-                </Button>
-              </div>
+            </nav>
+            <div className="pt-8">
+              <Button asChild variant="default" size="lg" className="w-full rounded-full text-lg font-semibold">
+                <Link href="/kontakt">Kontakt aufnehmen</Link>
+              </Button>
             </div>
           </motion.div>
         )}

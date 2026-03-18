@@ -1,29 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
-import { ArrowRight, BarChart3, Users, Zap, CheckCircle2, Heart, MessageCircle, Share2, Bookmark, TrendingUp } from "lucide-react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import {
+  ArrowRight, BarChart3, Users, Zap, CheckCircle2,
+  Heart, MessageCircle, Share2, Bookmark, TrendingUp,
+  Monitor, Brain, Target, Clock, ChevronRight, Globe, Star
+} from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { PhoneMockup } from "@/components/shared/PhoneMockup";
 import { MarqueeClients } from "@/components/shared/MarqueeClients";
-import { useGetProjects, useGetReferences } from "@workspace/api-client-react";
 
-function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    let start = 0;
-    const duration = 2000;
-    const step = target / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(Math.floor(start));
-    }, 16);
-    return () => clearInterval(timer);
-  }, [target]);
-  return <span>{count.toLocaleString("de-DE")}{suffix}</span>;
-}
-
+// ─── Social Media Phone ───────────────────────────────────────────────────────
 function SocialMediaPhone() {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(2847);
@@ -31,17 +19,17 @@ function SocialMediaPhone() {
 
   const InstagramIcon = ({ size }: { size: string }) => (
     <svg viewBox="0 0 24 24" className={`${size} fill-white`} xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
     </svg>
   );
   const TikTokIcon = ({ size }: { size: string }) => (
     <svg viewBox="0 0 24 24" className={`${size} fill-white`} xmlns="http://www.w3.org/2000/svg">
-      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.3 6.3 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.16 8.16 0 004.77 1.52V6.75a4.85 4.85 0 01-1-.06z"/>
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.3 6.3 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.16 8.16 0 004.77 1.52V6.75a4.85 4.85 0 01-1-.06z" />
     </svg>
   );
   const LinkedInIcon = ({ size }: { size: string }) => (
     <svg viewBox="0 0 24 24" className={`${size} fill-white`} xmlns="http://www.w3.org/2000/svg">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
     </svg>
   );
 
@@ -76,9 +64,23 @@ function SocialMediaPhone() {
 
   const current = posts[activePost];
 
+  const [counter, setCounter] = useState(0);
+  useEffect(() => {
+    setCounter(0);
+    const end = 998;
+    const duration = 1500;
+    const step = Math.ceil(end / (duration / 16));
+    const t = setInterval(() => {
+      setCounter(c => {
+        if (c + step >= end) { clearInterval(t); return end; }
+        return c + step;
+      });
+    }, 16);
+    return () => clearInterval(t);
+  }, [activePost]);
+
   return (
     <div className="pt-8 p-3 space-y-3 select-none">
-      {/* App header */}
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center space-x-2">
           <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${current.gradient} flex items-center justify-center overflow-hidden`}>
@@ -96,7 +98,6 @@ function SocialMediaPhone() {
         </div>
       </div>
 
-      {/* Post visual */}
       <motion.div
         key={activePost}
         initial={{ opacity: 0, scale: 0.95 }}
@@ -106,7 +107,7 @@ function SocialMediaPhone() {
       >
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <motion.div
-            animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+            animate={{ scale: [1, 1.08, 1], rotate: [0, 4, -4, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             className="mb-2"
           >
@@ -115,76 +116,59 @@ function SocialMediaPhone() {
           <div className="text-xs font-bold opacity-90">{current.label} Content</div>
           <div className="text-[10px] opacity-60 mt-1">Bleibsichtbar Agency</div>
         </div>
-        {/* Animated sparkles */}
         {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white rounded-full"
-            style={{ left: `${15 + i * 18}%`, top: `${20 + (i % 3) * 20}%` }}
-            animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
-            transition={{ duration: 2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
+            animate={{
+              x: [Math.random() * 200 - 100, Math.random() * 200 - 100],
+              y: [Math.random() * 160 - 80, Math.random() * 160 - 80],
+              opacity: [0, 1, 0],
+              scale: [0, 1.5, 0],
+            }}
+            transition={{ duration: 2 + i, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
+            style={{ left: "50%", top: "50%" }}
           />
         ))}
       </motion.div>
 
-      {/* Engagement row */}
-      <div className="flex items-center justify-between px-1">
+      <div className="flex items-center justify-between px-2 py-1">
         <div className="flex items-center space-x-3">
-          <button
-            onClick={() => { setLiked(l => !l); setLikes(n => liked ? n - 1 : n + 1); }}
-            className="flex items-center space-x-1"
-          >
-            <motion.div whileTap={{ scale: 1.5 }} transition={{ type: "spring", stiffness: 400 }}>
-              <Heart className={`w-5 h-5 transition-colors ${liked ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
-            </motion.div>
-            <span className="text-[10px] font-semibold text-gray-600">{likes.toLocaleString("de-DE")}</span>
+          <button onClick={() => { setLiked(l => !l); setLikes(n => liked ? n - 1 : n + 1); }} className="flex items-center space-x-1 group">
+            <Heart className={`w-4 h-4 transition-all ${liked ? "fill-red-500 text-red-500 scale-110" : "text-gray-600 group-hover:text-red-400"}`} />
+            <span className="text-[10px] text-gray-600 font-medium">{likes.toLocaleString("de")}</span>
           </button>
           <div className="flex items-center space-x-1">
-            <MessageCircle className="w-4 h-4 text-gray-400" />
-            <span className="text-[10px] text-gray-500">342</span>
+            <MessageCircle className="w-4 h-4 text-gray-600" />
+            <span className="text-[10px] text-gray-600">342</span>
           </div>
           <div className="flex items-center space-x-1">
-            <Share2 className="w-4 h-4 text-gray-400" />
-            <span className="text-[10px] text-gray-500">89</span>
+            <Share2 className="w-4 h-4 text-gray-600" />
+            <span className="text-[10px] text-gray-600">89</span>
           </div>
         </div>
-        <Bookmark className="w-4 h-4 text-gray-400" />
+        <Bookmark className="w-4 h-4 text-gray-600" />
       </div>
 
-      {/* Stats bar */}
       <div className="grid grid-cols-2 gap-2">
-        <div className="bg-primary/5 rounded-xl p-3 border border-primary/10">
-          <div className="flex items-center space-x-1 mb-1">
-            <TrendingUp className="w-3 h-3 text-primary" />
+        <div className="bg-white rounded-xl p-2.5 border border-gray-100 shadow-sm">
+          <div className="flex items-center space-x-1 mb-1.5">
+            <TrendingUp className="w-3 h-3 text-accent" />
             <span className="text-[9px] text-gray-500 font-medium">Reichweite</span>
           </div>
-          <div className="text-sm font-bold text-primary">
-            <AnimatedCounter target={150} suffix="%" />
-          </div>
+          <div className="text-base font-bold text-gray-900">46%</div>
           <div className="mt-1.5 h-1 bg-gray-100 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-primary rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: "75%" }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-            />
+            <motion.div className="h-full bg-accent rounded-full" initial={{ width: 0 }} animate={{ width: "46%" }} transition={{ duration: 1.2, ease: "easeOut" }} />
           </div>
         </div>
-        <div className="bg-accent/5 rounded-xl p-3 border border-accent/20">
-          <div className="flex items-center space-x-1 mb-1">
-            <Users className="w-3 h-3 text-accent" />
+        <div className="bg-white rounded-xl p-2.5 border border-gray-100 shadow-sm">
+          <div className="flex items-center space-x-1 mb-1.5">
+            <Users className="w-3 h-3 text-blue-500" />
             <span className="text-[9px] text-gray-500 font-medium">Follower</span>
           </div>
-          <div className="text-sm font-bold text-accent">
-            +<AnimatedCounter target={3200} />
-          </div>
-          <div className="mt-1.5 h-1 bg-gray-100 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-accent rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: "60%" }}
-              transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
-            />
+          <div className="text-base font-bold text-green-600">+{counter.toLocaleString("de")}</div>
+          <div className="mt-1 h-1 bg-gray-100 rounded-full overflow-hidden">
+            <motion.div className="h-full bg-green-400 rounded-full" initial={{ width: 0 }} animate={{ width: "72%" }} transition={{ duration: 1.4, ease: "easeOut" }} />
           </div>
         </div>
       </div>
@@ -192,218 +176,462 @@ function SocialMediaPhone() {
   );
 }
 
-export default function Home() {
-  const { data: projects = [] } = useGetProjects({ published: true });
-  const { data: references = [] } = useGetReferences({ published: true });
+// ─── Hero Slides ──────────────────────────────────────────────────────────────
+const heroSlides = [
+  {
+    headline: ["Sichtbarkeit", "beginnt mit uns"],
+    sub: "Digitale Präsenz, die Kunden überzeugt und messbar mehr Umsatz generiert.",
+    cta: "Jetzt starten",
+    ctaLink: "/kontakt",
+    bg: "from-slate-900 via-[#0a1628] to-slate-900",
+    pill: "Ihre Agentur für digitale Sichtbarkeit",
+  },
+  {
+    headline: ["Webseiten,", "die überzeugen."],
+    sub: "Moderne, schnelle Websites, die nicht nur gut aussehen, sondern Anfragen generieren.",
+    cta: "Website anfragen",
+    ctaLink: "/kontakt",
+    bg: "from-slate-900 via-[#0d1f3c] to-slate-900",
+    pill: "Webseiten Optimierung & Design",
+  },
+  {
+    headline: ["Smarte KI-", "Lösungen für Sie"],
+    sub: "Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI.",
+    cta: "Mehr erfahren",
+    ctaLink: "/services",
+    bg: "from-slate-900 via-[#0a2218] to-slate-900",
+    pill: "KI & Automatisierung",
+  },
+];
 
-  const recentProjects = projects.slice(0, 3);
-  const featuredReferences = references.slice(0, 3);
+// ─── Services ────────────────────────────────────────────────────────────────
+const services = [
+  {
+    icon: Users,
+    title: "Social Media Management",
+    desc: "Wir bauen eine starke Präsenz auf, die Vertrauen schafft und neue Kunden bringt. Strategie, Content und Betreuung aus einer Hand.",
+    color: "from-pink-500 to-rose-600",
+  },
+  {
+    icon: Brain,
+    title: "KI & Automatisierung",
+    desc: "Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI. Mehr Effizienz, weniger Aufwand, mehr Wachstum.",
+    color: "from-violet-500 to-purple-700",
+  },
+  {
+    icon: Monitor,
+    title: "Webseiten Optimierung & Design",
+    desc: "Moderne Webseiten, die nicht nur gut aussehen, sondern Anfragen generieren. Schnell, professionell und zugeschnitten.",
+    color: "from-blue-500 to-indigo-700",
+  },
+  {
+    icon: Target,
+    title: "Strategie & Beratung",
+    desc: "Wir analysieren Ihr Unternehmen und entwickeln eine digitale Strategie, die wirklich zu Ihnen passt.",
+    color: "from-orange-400 to-amber-600",
+  },
+  {
+    icon: BarChart3,
+    title: "Performance Marketing & Ads",
+    desc: "Gezielte Werbung bei Google, damit Kunden Sie genau dann finden, wenn sie suchen. Messbare Ergebnisse statt Streuverlust.",
+    color: "from-green-500 to-emerald-700",
+  },
+  {
+    icon: Clock,
+    title: "Langfristige Betreuung",
+    desc: "Wir begleiten Unternehmen langfristig – von der ersten Idee bis zur laufenden Optimierung.",
+    color: "from-slate-500 to-gray-700",
+  },
+];
+
+// ─── Process Steps ───────────────────────────────────────────────────────────
+const steps = [
+  {
+    num: "01",
+    title: "Analyse",
+    desc: "Wir analysieren Ihr Unternehmen, Ihre Zielgruppe und Ihren aktuellen Auftritt – und definieren eine klare Strategie für nachhaltige Sichtbarkeit.",
+  },
+  {
+    num: "02",
+    title: "Strategie",
+    desc: "Wir entwickeln einen strukturierten Content-Plan mit klarer Linie, Design und Wiedererkennungswert – abgestimmt auf Ihre Marke und Ziele.",
+  },
+  {
+    num: "03",
+    title: "Umsetzung",
+    desc: "Wir erstellen hochwertige Inhalte und betreuen Ihre Kanäle professionell und zuverlässig. Einheitlich, modern und markengerecht.",
+  },
+  {
+    num: "04",
+    title: "Optimierung",
+    desc: "Wir analysieren die Performance laufend und entwickeln Inhalte gezielt weiter. So entstehen planbare Sichtbarkeit und neue Anfragen.",
+  },
+];
+
+// ─── Stats ───────────────────────────────────────────────────────────────────
+const stats = [
+  { value: 5, suffix: "+", label: "Jahre Erfahrung" },
+  { value: 200, suffix: "+", label: "Betreute Projekte & Anfragen" },
+  { value: 4, suffix: "", label: "Bereiche: Web · Social · Ads · KI" },
+  { value: 1, suffix: "", label: "Ziel – Mehr Kunden für Sie" },
+];
+
+// ─── Portfolio ───────────────────────────────────────────────────────────────
+const portfolio = [
+  { title: "Atmosphäre & Markenauftritt", cat: "Branding", grad: "from-rose-400 to-orange-500" },
+  { title: "Autohaus Content Produktion", cat: "Content", grad: "from-slate-600 to-slate-900" },
+  { title: "Business- & Imagefotografie", cat: "Fotografie", grad: "from-blue-500 to-indigo-700" },
+  { title: "Immobilienvermarktung", cat: "Marketing", grad: "from-emerald-400 to-teal-700" },
+  { title: "Food Content", cat: "Social Media", grad: "from-amber-400 to-red-500" },
+  { title: "Menü und Werbefotografie", cat: "Fotografie", grad: "from-purple-500 to-pink-600" },
+];
+
+// ─── Animated Counter ─────────────────────────────────────────────────────────
+function Counter({ value, suffix }: { value: number; suffix: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!inView) return;
+    const duration = 1800;
+    const steps = 60;
+    const increment = value / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= value) { setCount(value); clearInterval(timer); return; }
+      setCount(Math.floor(current));
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [inView, value]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+// ─── Fade-in wrapper ──────────────────────────────────────────────────────────
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+const stagger = {
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+export default function Home() {
+  const [slide, setSlide] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setSlide(s => (s + 1) % heroSlides.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  const current = heroSlides[slide];
 
   return (
     <PublicLayout>
-      {/* HERO SECTION */}
-      <section className="relative pt-24 pb-32 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={`${import.meta.env.BASE_URL}images/hero-abstract.png`} 
-            alt="Background" 
-            className="w-full h-full object-cover opacity-60"
+      {/* ─── Hero ────────────────────────────────────────────────────────── */}
+      <div className="relative min-h-screen flex items-center overflow-hidden -mt-20">
+        {/* Animated bg */}
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={slide}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className={`absolute inset-0 bg-gradient-to-br ${current.bg}`}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/80 to-white" />
-        </div>
+        </AnimatePresence>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="inline-flex items-center space-x-2 bg-primary/5 text-primary px-4 py-2 rounded-full text-sm font-medium mb-8">
-                <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse"></span>
-                <span>Ihre Agentur für messbare Ergebnisse</span>
-              </div>
-              <h1 className="text-5xl lg:text-7xl font-display font-extrabold leading-tight mb-6">
-                Wir machen Ihre Marke <span className="text-accent relative">
-                  sichtbar
-                  <svg className="absolute w-full h-3 -bottom-1 left-0 text-accent/30" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="none"/></svg>
-                </span>
-              </h1>
-              <p className="text-xl text-muted-foreground mb-10 max-w-lg leading-relaxed">
-                Professionelles Social Media Marketing, das nicht nur gut aussieht, sondern messbar mehr Kunden und Umsatz generiert.
-              </p>
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <Button asChild size="lg" variant="default" className="text-lg">
-                  <Link href="/kontakt">Jetzt starten</Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="text-lg bg-white/50 backdrop-blur-sm">
-                  <Link href="/services">Unsere Leistungen</Link>
-                </Button>
-              </div>
-              
-              <div className="mt-12 flex items-center space-x-8 text-sm font-medium text-muted-foreground">
-                <div className="flex items-center"><CheckCircle2 className="w-5 h-5 text-accent mr-2"/> Datengetrieben</div>
-                <div className="flex items-center"><CheckCircle2 className="w-5 h-5 text-accent mr-2"/> Transparent</div>
-                <div className="flex items-center"><CheckCircle2 className="w-5 h-5 text-accent mr-2"/> Zielorientiert</div>
-              </div>
-            </motion.div>
+        {/* Grid overlay */}
+        <div className="absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px)", backgroundSize: "60px 60px" }}
+        />
 
-            <div className="relative hidden lg:flex justify-center items-center">
-              <div className="absolute w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
-              <PhoneMockup className="rotate-[-5deg] hover:rotate-0 transition-transform duration-500">
+        {/* Glow orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+            {/* Left */}
+            <div className="space-y-8">
+              <AnimatePresence mode="wait">
+                <motion.div key={slide} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.6 }}>
+                  {/* Pill */}
+                  <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-8">
+                    <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                    <span className="text-white/90 text-sm font-medium">{current.pill}</span>
+                  </div>
+
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-[1.05] tracking-tight">
+                    {current.headline.map((line, i) => (
+                      <span key={i} className="block">
+                        {i === 1 ? <span className="text-accent">{line}</span> : line}
+                      </span>
+                    ))}
+                  </h1>
+
+                  <p className="text-xl text-white/70 max-w-lg leading-relaxed mt-6">
+                    {current.sub}
+                  </p>
+
+                  <div className="flex flex-wrap gap-4 mt-8">
+                    <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-white rounded-full px-8 py-6 text-lg font-semibold shadow-lg shadow-accent/30 hover:shadow-xl hover:shadow-accent/40 transition-all">
+                      <Link href={current.ctaLink}>
+                        {current.cta}
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </Link>
+                    </Button>
+                    <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-6 text-lg font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm">
+                      <Link href="/services">Leistungen ansehen</Link>
+                    </Button>
+                  </div>
+
+                  {/* Trust badges */}
+                  <div className="flex flex-wrap items-center gap-6 mt-10 pt-8 border-t border-white/10">
+                    {["Datengetrieben", "Transparent", "Zielorientiert"].map(badge => (
+                      <div key={badge} className="flex items-center space-x-2 text-white/70">
+                        <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
+                        <span className="text-sm font-medium">{badge}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Right — Phone */}
+            <div className="flex justify-center lg:justify-end relative">
+              <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
+              <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
                 <SocialMediaPhone />
               </PhoneMockup>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* STATS SECTION */}
-      <section className="bg-primary text-primary-foreground py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-white/10">
-            {[
-              { label: "Erfolgreiche Projekte", value: "250+" },
-              { label: "Generierter Umsatz", value: "€5M+" },
-              { label: "Zufriedene Kunden", value: "98%" },
-              { label: "Jahre Erfahrung", value: "7+" }
-            ].map((stat, i) => (
-              <div key={i} className="px-4">
-                <div className="text-3xl md:text-5xl font-display font-bold text-accent mb-2">{stat.value}</div>
-                <div className="text-sm md:text-base text-primary-foreground/70">{stat.label}</div>
-              </div>
+          {/* Slide indicators */}
+          <div className="flex items-center justify-center space-x-3 mt-8">
+            {heroSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setSlide(i)}
+                className={`transition-all duration-500 rounded-full ${i === slide ? "w-8 h-2 bg-accent" : "w-2 h-2 bg-white/30 hover:bg-white/50"}`}
+              />
             ))}
           </div>
         </div>
+
+        {/* Scroll hint */}
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
+          </svg>
+        </motion.div>
+      </div>
+
+      {/* ─── Problem Statement ─────────────────────────────────────────────── */}
+      <section className="py-24 bg-[#0a0f1e] text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-30"
+          style={{ backgroundImage: "radial-gradient(circle at 20% 50%, rgba(234,88,12,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(59,130,246,0.1) 0%, transparent 50%)" }}
+        />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+          >
+            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-6">Die entscheidende Frage</p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold leading-tight mb-8">
+              Wie viele Kunden verlieren Sie, weil Ihr Unternehmen{" "}
+              <span className="text-accent">online nicht sichtbar</span> ist?
+            </h2>
+            <p className="text-xl text-white/60 max-w-3xl mx-auto leading-relaxed">
+              Digitale Sichtbarkeit entsteht dort, wo Entscheidungen getroffen werden – auf Webseiten, Social Media und bei Google. Wir sorgen dafür, dass Ihr Unternehmen genau dort gefunden wird, wo Kunden suchen.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15, delayChildren: 0.2 } } }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16"
+          >
+            {[
+              { icon: Globe, label: "Social Media", val: "70%", desc: "der Kaufentscheidungen werden durch Social Media beeinflusst" },
+              { icon: Monitor, label: "Webseite", val: "3 Sek.", desc: "haben Sie, um einen Besucher zu überzeugen – oder zu verlieren" },
+              { icon: Target, label: "Google Ads", val: "200%", desc: "höherer ROI mit gezielten Performance-Kampagnen möglich" },
+            ].map((item, i) => (
+              <motion.div key={i} variants={fadeUp} className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                <item.icon className="w-8 h-8 text-accent mb-4" />
+                <div className="text-3xl font-bold text-white mb-2">{item.val}</div>
+                <div className="text-sm font-semibold text-accent mb-2">{item.label}</div>
+                <div className="text-white/50 text-sm leading-relaxed">{item.desc}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </section>
 
-      {/* CLIENTS MARQUEE */}
-      <MarqueeClients />
-
-      {/* SERVICES OVERVIEW */}
+      {/* ─── Services ──────────────────────────────────────────────────────── */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">Was wir für Sie tun können</h2>
-            <p className="text-lg text-muted-foreground">Ein ganzheitlicher Ansatz für Ihre digitale Präsenz. Wir verbinden kreativen Content mit knallharter Performance.</p>
-          </div>
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={fadeUp} className="text-center mb-16">
+            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-4">Was wir tun</p>
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
+              Unsere Leistungen im <span className="text-accent">Überblick</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Maßgeschneiderte digitale Lösungen für Unternehmen, die online wachsen wollen.
+            </p>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Social Media Management",
-                desc: "Ganzheitliche Betreuung Ihrer Kanäle von der Strategie bis zum fertigen Post.",
-                icon: <Users className="w-8 h-8 text-accent" />,
-                link: "/services/social-media"
-              },
-              {
-                title: "Performance Marketing",
-                desc: "Datengetriebene Werbekampagnen, die genau Ihre Zielgruppe erreichen.",
-                icon: <Zap className="w-8 h-8 text-accent" />,
-                link: "/services"
-              },
-              {
-                title: "Content Creation",
-                desc: "Hochwertige Fotos, Videos und Texte, die Ihre Marke im besten Licht zeigen.",
-                icon: <BarChart3 className="w-8 h-8 text-accent" />,
-                link: "/services"
-              }
-            ].map((service, i) => (
-              <motion.div 
-                key={i}
-                whileHover={{ y: -10 }}
-                className="bg-white p-8 rounded-3xl shadow-lg border border-border/50 transition-all"
-              >
-                <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mb-6">
-                  {service.icon}
-                </div>
-                <h3 className="text-2xl font-bold font-display mb-4">{service.title}</h3>
-                <p className="text-muted-foreground mb-6 leading-relaxed">{service.desc}</p>
-                <Link href={service.link} className="inline-flex items-center text-primary font-bold hover:text-accent transition-colors">
-                  Mehr erfahren <ArrowRight className="w-4 h-4 ml-2" />
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={stagger}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {services.map((s, i) => (
+              <motion.div key={i} variants={fadeUp}>
+                <Link href="/services" className="block group h-full">
+                  <div className="h-full border border-gray-100 rounded-2xl p-7 hover:border-gray-200 hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1">
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+                      <s.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold font-display mb-3 group-hover:text-accent transition-colors">{s.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-4">{s.desc}</p>
+                    <div className="flex items-center text-accent text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                      Mehr erfahren <ChevronRight className="w-4 h-4 ml-1" />
+                    </div>
+                  </div>
                 </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─── Process ───────────────────────────────────────────────────────── */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={fadeUp} className="text-center mb-16">
+            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-4">Unser Prozess</p>
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
+              Der Weg zu mehr <span className="text-accent">Sichtbarkeit</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Wir analysieren Ihr Unternehmen, entwickeln eine klare Strategie und setzen alles strukturiert für Sie um.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+            {/* Connector line */}
+            <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-accent/20 via-accent to-accent/20" />
+
+            {steps.map((step, i) => (
+              <motion.div
+                key={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.12 } } }}
+                className="relative text-center"
+              >
+                <div className="w-20 h-20 bg-white border-2 border-accent/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg relative z-10">
+                  <span className="text-2xl font-display font-bold text-accent">{step.num}</span>
+                </div>
+                <h3 className="text-xl font-display font-bold mb-3">{step.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* RECENT PROJECTS PREVIEW */}
-      {recentProjects.length > 0 && (
-        <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-end mb-12">
-              <div>
-                <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">Aktuelle Projekte</h2>
-                <p className="text-lg text-muted-foreground">Ergebnisse, die für sich selbst sprechen.</p>
-              </div>
-              <Button asChild variant="outline" className="hidden md:flex">
-                <Link href="/projekte">Alle ansehen</Link>
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {recentProjects.map(project => (
-                <Link key={project.id} href={`/projekte`} className="group block">
-                  <div className="rounded-3xl overflow-hidden mb-4 relative aspect-[4/3] bg-gray-100">
-                    {project.imageUrl && (
-                      <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    )}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="bg-white text-primary px-6 py-3 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform">Fallstudie ansehen</span>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold font-display">{project.title}</h3>
-                  <p className="text-muted-foreground">{project.category}</p>
-                </Link>
-              ))}
-            </div>
-            
-            <div className="mt-8 text-center md:hidden">
-              <Button asChild variant="outline" className="w-full">
-                <Link href="/projekte">Alle Projekte ansehen</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* TESTIMONIALS */}
-      {featuredReferences.length > 0 && (
-        <section className="py-24 bg-primary/5">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">Das sagen unsere Kunden</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredReferences.map(ref => (
-                <div key={ref.id} className="bg-white p-8 rounded-3xl shadow-sm border border-border">
-                  <div className="flex items-center space-x-1 mb-6 text-accent">
-                    {[...Array(ref.rating || 5)].map((_, i) => (
-                      <svg key={i} className="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                    ))}
-                  </div>
-                  <p className="text-lg italic mb-6">"{ref.testimonial}"</p>
-                  <div className="flex items-center">
-                    {ref.logoUrl ? (
-                      <img src={ref.logoUrl} alt={ref.company} className="w-12 h-12 rounded-full object-cover mr-4 bg-gray-100" />
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-4">
-                        {ref.clientName.charAt(0)}
-                      </div>
-                    )}
-                    <div>
-                      <div className="font-bold">{ref.clientName}</div>
-                      <div className="text-sm text-muted-foreground">{ref.clientTitle && `${ref.clientTitle}, `}{ref.company}</div>
-                    </div>
-                  </div>
+      {/* ─── Stats ─────────────────────────────────────────────────────────── */}
+      <section className="py-20 bg-primary text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="text-center"
+              >
+                <div className="text-5xl md:text-6xl font-display font-bold text-accent mb-3">
+                  <Counter value={s.value} suffix={s.suffix} />
                 </div>
-              ))}
-            </div>
+                <div className="text-white/60 text-sm font-medium">{s.label}</div>
+              </motion.div>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
+      {/* ─── Portfolio ─────────────────────────────────────────────────────── */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={fadeUp} className="text-center mb-16">
+            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-4">Portfolio</p>
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
+              Einblick in unsere <span className="text-accent">bisherigen Projekte</span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={stagger}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {portfolio.map((p, i) => (
+              <motion.div key={i} variants={fadeUp}>
+                <Link href="/projekte" className="block group">
+                  <div className={`aspect-[4/3] rounded-2xl bg-gradient-to-br ${p.grad} relative overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02]`}>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                    <div className="absolute bottom-0 inset-x-0 p-6">
+                      <span className="inline-block bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1 rounded-full mb-2">{p.cat}</span>
+                      <h3 className="text-white font-display font-bold text-lg leading-snug">{p.title}</h3>
+                    </div>
+                    <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+                      <ArrowRight className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mt-12">
+            <Button asChild variant="outline" size="lg" className="rounded-full px-8 border-2 hover:bg-primary hover:text-white hover:border-primary transition-all">
+              <Link href="/projekte">Alle Projekte ansehen <ArrowRight className="ml-2 w-4 h-4" /></Link>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─── Client Marquee ────────────────────────────────────────────────── */}
+      <section className="py-20 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
+          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-muted-foreground text-sm font-medium tracking-widest uppercase">
+            Unternehmen, die uns vertrauen
+          </motion.p>
+        </div>
+        <MarqueeClients />
+      </section>
     </PublicLayout>
   );
 }

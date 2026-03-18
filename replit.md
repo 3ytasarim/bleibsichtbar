@@ -38,6 +38,27 @@ artifacts-monorepo/
 
 ## Project: Bleibsichtbar Agency Website
 
+### Site Structure (v2 – redesigned to match real bleibsichtbar.com)
+
+**Navigation:** Startseite | Leistungen | Projekte | Referenzen | Blog | [Kontakt aufnehmen button]
+
+**Pages:**
+- `/` – Home: Full-screen dark hero slider (3 slides), problem statement, 6 services grid, 4-step process, stats counters, portfolio preview, client marquee
+- `/services` – 6 real services: Social Media Management, KI & Automatisierung, Webseiten Optimierung & Design, Strategie & Beratung, Performance Marketing & Ads, Langfristige Betreuung
+- `/projekte` – DB-driven project portfolio
+- `/referenzen` – Infinite-scroll reference slider
+- `/blog` – Blog listing + `/blog/:id`
+- `/kontakt` – Contact page
+- `/admin/*` – Password-protected admin panel (CRUD for projects/blog/references)
+
+**Key design decisions:**
+- Navbar transparent + white text on dark hero pages; solid white on other pages
+- Real site's 6 services match exactly (analysed from bleibsichtbar.com)
+- Hero slides: "Sichtbarkeit beginnt mit uns", "Webseiten die überzeugen", "KI-Lösungen"
+- Portfolio projects use real names from the actual site
+
+## Project: Bleibsichtbar Agency Website
+
 A professional social media agency website for **Bleibsichtbar** (bleibsichtbar.com).
 
 ### Features
