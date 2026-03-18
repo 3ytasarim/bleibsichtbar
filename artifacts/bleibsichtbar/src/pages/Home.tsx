@@ -43,7 +43,7 @@ function SocialMediaPhone() {
   const current = posts[activePost];
 
   return (
-    <div className="p-3 space-y-3 select-none">
+    <div className="pt-8 p-3 space-y-3 select-none">
       {/* App header */}
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center space-x-2">
