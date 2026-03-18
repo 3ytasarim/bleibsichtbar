@@ -1,19 +1,23 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { db, projectsTable } from "@workspace/db";
-import { eq, asc } from "drizzle-orm";
+import { eq, and, asc } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth.js";
 
 const router: IRouter = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    let query = db.select().from(projectsTable).orderBy(asc(projectsTable.sortOrder));
     const published = req.query.published;
-    if (published === "true") {
-      const projects = await db.select().from(projectsTable).where(eq(projectsTable.published, true)).orderBy(asc(projectsTable.sortOrder));
-      return res.json(projects);
-    }
-    const projects = await query;
+    const category = req.query.category as string | undefined;
+
+    const conditions = [];
+    if (published === "true") conditions.push(eq(projectsTable.published, true));
+    if (category) conditions.push(eq(projectsTable.category, category));
+
+    const projects = conditions.length > 0
+      ? await db.select().from(projectsTable).where(and(...conditions)).orderBy(asc(projectsTable.sortOrder))
+      : await db.select().from(projectsTable).orderBy(asc(projectsTable.sortOrder));
+
     res.json(projects);
   } catch (err) {
     res.status(500).json({ message: "Serverfehler" });

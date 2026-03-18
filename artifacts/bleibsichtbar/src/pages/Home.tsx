@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   ArrowRight, BarChart3, Users, Zap, CheckCircle2,
   Heart, MessageCircle, Share2, Bookmark, TrendingUp,
-  Monitor, Brain, Target, Clock, ChevronRight, Globe, Star
+  Monitor, Brain, Target, Clock, ChevronRight, ChevronLeft, Globe, Star
 } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { PhoneMockup } from "@/components/shared/PhoneMockup";
 import { MarqueeClients } from "@/components/shared/MarqueeClients";
+import { useGetProjects } from "@workspace/api-client-react";
 
 // ─── Like Notification Bubble ─────────────────────────────────────────────────
 interface LikeNotif { id: number; name: string; }
@@ -323,36 +324,6 @@ const stats = [
   { value: 1, suffix: "", label: "Ziel – Mehr Kunden für Sie" },
 ];
 
-// ─── Portfolio ───────────────────────────────────────────────────────────────
-const portfolio = [
-  {
-    title: "Studio Content Produktion",
-    brand: "Reichweiten-Kampagne",
-    cat: "Content Production",
-    img: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&q=80&fit=crop",
-    followers: "25k",
-    likes: "323k",
-    views: "93M",
-  },
-  {
-    title: "Product & Lifestyle Shoots",
-    brand: "Brand-Kooperation",
-    cat: "Social Media",
-    img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80&fit=crop",
-    followers: "111k",
-    likes: "782k",
-    views: "33M",
-  },
-  {
-    title: "Influencer Marketing",
-    brand: "Performance-Ads",
-    cat: "Marketing Ads",
-    img: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80&fit=crop",
-    followers: "37k",
-    likes: "38k",
-    views: "1.4M",
-  },
-];
 
 // ─── Animated Counter ─────────────────────────────────────────────────────────
 function Counter({ value, suffix }: { value: number; suffix: string }) {
@@ -386,6 +357,203 @@ const stagger = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1 } },
 };
+
+// ─── Social Media Slider ───────────────────────────────────────────────────────
+const CARDS_PER_VIEW = 3;
+
+function SocialMediaSlider() {
+  const { data: allProjects = [], isLoading } = useGetProjects({ published: true });
+  const projects = allProjects.filter(p =>
+    p.category?.toLowerCase().includes("social")
+  );
+
+  const totalSlides = Math.max(0, projects.length - CARDS_PER_VIEW + 1);
+  const [current, setCurrent] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const next = useCallback(() => setCurrent(c => (c + 1) % totalSlides), [totalSlides]);
+  const prev = useCallback(() => setCurrent(c => (c - 1 + totalSlides) % totalSlides), [totalSlides]);
+
+  useEffect(() => {
+    if (projects.length > CARDS_PER_VIEW) {
+      timerRef.current = setInterval(next, 5000);
+    }
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [next, projects.length]);
+
+  const visible = projects.slice(current, current + CARDS_PER_VIEW);
+
+  const FALLBACK = [
+    {
+      id: -1, title: "Studio Content Produktion", clientName: "Reichweiten-Kampagne", category: "Social Media",
+      imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&q=80&fit=crop",
+      statFollowers: "25k", statLikes: "323k", statViews: "93M",
+    },
+    {
+      id: -2, title: "Product & Lifestyle Shoots", clientName: "Brand-Kooperation", category: "Social Media",
+      imageUrl: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80&fit=crop",
+      statFollowers: "111k", statLikes: "782k", statViews: "33M",
+    },
+    {
+      id: -3, title: "Influencer Marketing", clientName: "Performance-Kampagne", category: "Social Media",
+      imageUrl: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80&fit=crop",
+      statFollowers: "37k", statLikes: "38k", statViews: "1.4M",
+    },
+  ] as any[];
+
+  const displayProjects = projects.length === 0 && !isLoading ? FALLBACK : (projects.length > 0 ? projects : []);
+  const displayVisible = displayProjects.length > CARDS_PER_VIEW ? displayProjects.slice(current, current + CARDS_PER_VIEW) : displayProjects;
+  const displayTotal = Math.max(0, displayProjects.length - CARDS_PER_VIEW + 1);
+  const showControls = displayProjects.length > CARDS_PER_VIEW;
+
+  return (
+    <section className="py-28 relative overflow-hidden" style={{ background: "#06090f" }}>
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: "radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%), radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.3) 0%, transparent 100%), radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.25) 0%, transparent 100%), radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.2) 0%, transparent 100%)",
+      }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none blur-[120px]"
+        style={{ background: "radial-gradient(ellipse, rgba(249,115,22,0.08) 0%, transparent 70%)" }} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+          <div>
+            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-3">Unsere Referenzen</p>
+            <h2 className="text-4xl md:text-5xl font-display font-black leading-tight text-white">
+              Einblick in unsere{" "}
+              <span className="text-accent">bisherigen Projekte</span>
+            </h2>
+          </div>
+          <Link
+            href="/projekte"
+            className="group hidden md:inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border rounded-full px-7 py-3 transition-all duration-300 text-white hover:bg-white hover:text-[#0a1628]"
+            style={{ borderColor: "rgba(255,255,255,0.25)" }}
+          >
+            Alle ansehen <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+          </Link>
+        </div>
+
+        {/* Cards */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[0, 1, 2].map(i => (
+              <div key={i} className="rounded-3xl bg-white/5 animate-pulse" style={{ height: 480 }} />
+            ))}
+          </div>
+        ) : (
+          <div className="relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-5"
+              >
+                {displayVisible.map((p: any, i: number) => (
+                  <motion.div
+                    key={p.id ?? i}
+                    whileHover={{ y: -8, scale: 1.01 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                  >
+                    <Link href={p.id > 0 ? `/projekte/${p.id}` : "/projekte"} className="block group">
+                      <div
+                        className="relative rounded-3xl overflow-hidden"
+                        style={{ height: 480, boxShadow: "0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07)" }}
+                      >
+                        <img
+                          src={p.imageUrl || "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80&fit=crop"}
+                          alt={p.title}
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)" }} />
+                        <div className="absolute top-4 left-4 z-10">
+                          <span className="inline-flex items-center bg-accent text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
+                            {p.category}
+                          </span>
+                        </div>
+                        <div className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-y-1 group-hover:translate-y-0">
+                          <ArrowRight className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="absolute bottom-0 inset-x-0 p-5 z-10">
+                          {p.clientName && (
+                            <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-1">{p.clientName}</p>
+                          )}
+                          <h3 className="text-white font-display font-bold text-lg leading-snug mb-4">{p.title}</h3>
+                          {(p.statFollowers || p.statLikes || p.statViews) && (
+                            <div className="flex items-center gap-4 pt-4 border-t border-white/15">
+                              {p.statFollowers && (
+                                <div className="flex items-center gap-1.5">
+                                  <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+                                  <span className="text-white text-xs font-bold">{p.statFollowers}</span>
+                                </div>
+                              )}
+                              {p.statLikes && (
+                                <div className="flex items-center gap-1.5">
+                                  <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                  <span className="text-white text-xs font-bold">{p.statLikes}</span>
+                                </div>
+                              )}
+                              {p.statViews && (
+                                <div className="flex items-center gap-1.5">
+                                  <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                  <span className="text-white text-xs font-bold">{p.statViews}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Slider controls */}
+            {showControls && (
+              <div className="flex items-center justify-center gap-4 mt-10">
+                <button
+                  onClick={prev}
+                  className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: displayTotal }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrent(i)}
+                      className={`rounded-full transition-all duration-300 ${i === current ? "w-6 h-2 bg-accent" : "w-2 h-2 bg-white/30 hover:bg-white/60"}`}
+                    />
+                  ))}
+                </div>
+                <button
+                  onClick={next}
+                  className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-12">
+          <Link
+            href="/projekte"
+            className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border rounded-full px-8 py-3 text-white transition-all duration-300 hover:bg-white hover:text-[#0a1628]"
+            style={{ borderColor: "rgba(255,255,255,0.25)" }}
+          >
+            Alle Projekte ansehen <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const [slide, setSlide] = useState(0);
@@ -746,135 +914,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── Referenzen / Projekte ─────────────────────────────────────────── */}
-      <section className="py-28 relative overflow-hidden" style={{ background: "#06090f" }}>
-        {/* Starfield / space effect */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: "radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%), radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.3) 0%, transparent 100%), radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.25) 0%, transparent 100%), radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.2) 0%, transparent 100%), radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.35) 0%, transparent 100%)",
-        }} />
-        {/* Accent glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none blur-[120px]"
-          style={{ background: "radial-gradient(ellipse, rgba(249,115,22,0.08) 0%, transparent 70%)" }} />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-          {/* Section header */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={stagger}
-            className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
-            <div>
-              <motion.p variants={fadeUp} className="text-accent font-semibold tracking-widest uppercase text-sm mb-3">
-                Unsere Referenzen
-              </motion.p>
-              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-black leading-tight text-white">
-                Einblick in unsere{" "}
-                <span className="text-accent">bisherigen Projekte</span>
-              </motion.h2>
-            </div>
-            <motion.div variants={fadeUp}>
-              <Link
-                href="/projekte"
-                className="group hidden md:inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border rounded-full px-7 py-3 transition-all duration-300 text-white hover:bg-white hover:text-[#0a1628]"
-                style={{ borderColor: "rgba(255,255,255,0.25)" }}
-              >
-                Alle ansehen
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-              </Link>
-            </motion.div>
-          </motion.div>
-
-          {/* Phone-card grid — 3 tall cards side by side */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
-            variants={stagger}
-            className="grid grid-cols-1 md:grid-cols-3 gap-5"
-          >
-            {portfolio.map((p, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                whileHover={{ y: -8, scale: 1.01 }}
-                transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              >
-                <Link href="/projekte" className="block group">
-                  <div
-                    className="relative rounded-3xl overflow-hidden"
-                    style={{
-                      height: 480,
-                      boxShadow: "0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07)",
-                    }}
-                  >
-                    {/* Image */}
-                    <img
-                      src={p.img}
-                      alt={p.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-
-                    {/* Strong dark overlay */}
-                    <div className="absolute inset-0" style={{
-                      background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%)"
-                    }} />
-
-                    {/* Category pill — top left */}
-                    <div className="absolute top-4 left-4 z-10">
-                      <span className="inline-flex items-center bg-accent text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
-                        {p.cat}
-                      </span>
-                    </div>
-
-                    {/* Arrow — top right on hover */}
-                    <div className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-y-1 group-hover:translate-y-0">
-                      <ArrowRight className="w-4 h-4 text-white" />
-                    </div>
-
-                    {/* Bottom content */}
-                    <div className="absolute bottom-0 inset-x-0 p-5 z-10">
-                      <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-1">{p.brand}</p>
-                      <h3 className="text-white font-display font-bold text-lg leading-snug mb-4">{p.title}</h3>
-
-                      {/* Stats bar */}
-                      <div className="flex items-center gap-4 pt-4 border-t border-white/15">
-                        <div className="flex items-center gap-1.5">
-                          <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-                          </svg>
-                          <span className="text-white text-xs font-bold">{p.followers}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                          </svg>
-                          <span className="text-white text-xs font-bold">{p.likes}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                          </svg>
-                          <span className="text-white text-xs font-bold">{p.views}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* CTA */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center mt-12">
-            <Link
-              href="/projekte"
-              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border rounded-full px-8 py-3 text-white transition-all duration-300 hover:bg-white hover:text-[#0a1628]"
-              style={{ borderColor: "rgba(255,255,255,0.25)" }}
-            >
-              Alle Projekte ansehen
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+      {/* ─── Social Media Projekte Slider ──────────────────────────────────── */}
+      <SocialMediaSlider />
 
       {/* ─── Client Marquee ────────────────────────────────────────────────── */}
       <MarqueeClients />

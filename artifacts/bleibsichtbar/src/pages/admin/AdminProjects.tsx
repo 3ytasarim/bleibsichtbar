@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AdminLayout } from "@/components/layout/AdminLayout";
@@ -7,7 +7,7 @@ import { SimpleModal } from "@/components/admin/SimpleModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit2, Trash2, Check, X, ImagePlus, Minus, Globe, Images } from "lucide-react";
+import { Plus, Edit2, Trash2, Check, X, ImagePlus, Minus, Globe, Images, Users, Heart, Eye } from "lucide-react";
 import { useGetProjects, useCreateProject, useUpdateProject, useDeleteProject, type Project } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -21,6 +21,9 @@ const projectSchema = z.object({
   tags: z.string().transform(val => val.split(",").map(t => t.trim()).filter(Boolean)),
   published: z.boolean().default(true),
   sortOrder: z.coerce.number().default(0),
+  statFollowers: z.string().optional().nullable(),
+  statLikes: z.string().optional().nullable(),
+  statViews: z.string().optional().nullable(),
 });
 
 type FormValues = z.input<typeof projectSchema>;
@@ -36,15 +39,18 @@ export default function AdminProjects() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [galleryImages, setGalleryImages] = useState<string[]>([""]);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(projectSchema),
     defaultValues: { published: true, sortOrder: 0, tags: "" }
   });
 
+  const watchedCategory = useWatch({ control, name: "category" });
+  const isSocialMedia = watchedCategory?.toLowerCase().includes("social");
+
   const openCreate = () => {
     setEditingId(null);
     setGalleryImages([""]);
-    reset({ title: "", description: "", category: "", imageUrl: "", clientName: "", websiteUrl: "", tags: "", published: true, sortOrder: 0 });
+    reset({ title: "", description: "", category: "", imageUrl: "", clientName: "", websiteUrl: "", tags: "", published: true, sortOrder: 0, statFollowers: "", statLikes: "", statViews: "" });
     setIsModalOpen(true);
   };
 
@@ -61,7 +67,10 @@ export default function AdminProjects() {
       websiteUrl: (project as any).websiteUrl || "",
       tags: project.tags.join(", "),
       published: project.published,
-      sortOrder: project.sortOrder
+      sortOrder: project.sortOrder,
+      statFollowers: (project as any).statFollowers || "",
+      statLikes: (project as any).statLikes || "",
+      statViews: (project as any).statViews || "",
     });
     setIsModalOpen(true);
   };
@@ -88,6 +97,9 @@ export default function AdminProjects() {
       clientName: data.clientName || null,
       websiteUrl: data.websiteUrl || null,
       galleryImages: cleanGallery,
+      statFollowers: data.statFollowers || null,
+      statLikes: data.statLikes || null,
+      statViews: data.statViews || null,
     };
 
     if (editingId) {
@@ -272,6 +284,36 @@ export default function AdminProjects() {
               <Input {...register("sortOrder")} type="number" placeholder="0" />
             </div>
           </div>
+
+          {/* Social Media Stats — only for Social Media category */}
+          {isSocialMedia && (
+            <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-4">
+              <p className="text-sm font-semibold text-orange-700 mb-3 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-accent inline-block" />
+                Social Media Statistiken (für Anasayfa-Slider)
+              </p>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="text-xs font-medium mb-1 block flex items-center gap-1">
+                    <Users className="w-3 h-3" /> Follower
+                  </label>
+                  <Input {...register("statFollowers")} placeholder="z.B. 25k" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium mb-1 block flex items-center gap-1">
+                    <Heart className="w-3 h-3" /> Likes
+                  </label>
+                  <Input {...register("statLikes")} placeholder="z.B. 323k" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium mb-1 block flex items-center gap-1">
+                    <Eye className="w-3 h-3" /> Aufrufe
+                  </label>
+                  <Input {...register("statViews")} placeholder="z.B. 93M" />
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
