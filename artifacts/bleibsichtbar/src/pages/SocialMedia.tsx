@@ -362,6 +362,184 @@ const fadeUp = {
 };
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
+// ─── Case Study Row ─────────────────────────────────────────────────────────────
+function CaseStudyPhoneGroup({ project, allProjects, index }: { project: any; allProjects: any[]; index: number }) {
+  const prevImg = allProjects[(index - 1 + allProjects.length) % allProjects.length]?.imageUrl;
+  const nextImg = allProjects[(index + 1) % allProjects.length]?.imageUrl;
+
+  return (
+    <div className="relative flex items-end justify-center" style={{ height: 420, minWidth: 340 }}>
+      {/* Left ghost phone */}
+      <motion.div
+        initial={{ opacity: 0, x: -30, rotate: -8 }}
+        whileInView={{ opacity: 1, x: 0, rotate: -10 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute left-0 bottom-0 z-10"
+        style={{ width: 140, opacity: 0.55 }}
+      >
+        <div className="rounded-[2.2rem] bg-[#161616] shadow-2xl" style={{ padding: "4px" }}>
+          <div className="rounded-[1.9rem] overflow-hidden bg-black" style={{ width: 132, height: 240 }}>
+            {prevImg ? (
+              <img src={prevImg} alt="" className="w-full h-full object-cover opacity-70" />
+            ) : (
+              <div className="w-full h-full bg-gray-800" />
+            )}
+            <div className="absolute inset-0 bg-black/40" />
+          </div>
+          <div className="flex justify-center pt-1.5 pb-1">
+            <div className="w-10 h-[2.5px] bg-[#333] rounded-full" />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Center main phone */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.75, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-20"
+        style={{ width: 195 }}
+      >
+        {/* Ambient glow */}
+        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-40 h-14 blur-2xl rounded-full opacity-40 pointer-events-none" style={{ background: "#f97316" }} />
+        <div className="rounded-[2.8rem] bg-[#161616] shadow-[0_50px_120px_-10px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.08)]" style={{ padding: "5px" }}>
+          <div className="absolute -left-[3px] top-[88px] w-[3px] h-7 bg-[#2a2a2a] rounded-l-full" />
+          <div className="absolute -left-[3px] top-[122px] w-[3px] h-[46px] bg-[#2a2a2a] rounded-l-full" />
+          <div className="absolute -left-[3px] top-[175px] w-[3px] h-[46px] bg-[#2a2a2a] rounded-l-full" />
+          <div className="absolute -right-[3px] top-[140px] w-[3px] h-[60px] bg-[#2a2a2a] rounded-r-full" />
+          <div className="rounded-[2.4rem] overflow-hidden bg-black relative" style={{ width: 185, height: 348 }}>
+            <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-[68px] h-[22px] bg-black rounded-full z-30 flex items-center justify-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#1e1e1e]" />
+              <div className="w-[6px] h-[6px] rounded-full bg-[#1e1e1e] opacity-60" />
+            </div>
+            {project.imageUrl ? (
+              <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute bottom-4 left-0 right-0 px-4 z-10">
+              <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{project.category}</span>
+              <p className="text-white text-xs font-bold leading-snug line-clamp-2 mt-0.5">{project.title}</p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none rounded-[2.4rem]" />
+          </div>
+          <div className="flex justify-center pt-2 pb-1">
+            <div className="w-[52px] h-[3px] bg-[#444] rounded-full" />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Right ghost phone */}
+      <motion.div
+        initial={{ opacity: 0, x: 30, rotate: 8 }}
+        whileInView={{ opacity: 1, x: 0, rotate: 10 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute right-0 bottom-0 z-10"
+        style={{ width: 140, opacity: 0.55 }}
+      >
+        <div className="rounded-[2.2rem] bg-[#161616] shadow-2xl" style={{ padding: "4px" }}>
+          <div className="rounded-[1.9rem] overflow-hidden bg-black" style={{ width: 132, height: 240 }}>
+            {nextImg ? (
+              <img src={nextImg} alt="" className="w-full h-full object-cover opacity-70" />
+            ) : (
+              <div className="w-full h-full bg-gray-800" />
+            )}
+          </div>
+          <div className="flex justify-center pt-1.5 pb-1">
+            <div className="w-10 h-[2.5px] bg-[#333] rounded-full" />
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+function CaseStudyRow({ project, index, allProjects }: { project: any; index: number; allProjects: any[] }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.5 }}
+      className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+    >
+      {/* Left: Text content */}
+      <motion.div
+        initial={{ opacity: 0, x: -40 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        className={index % 2 === 1 ? "lg:order-2" : ""}
+      >
+        {/* Category + client */}
+        <div className="flex items-center gap-3 mb-5">
+          <span className="text-xs font-black text-accent uppercase tracking-widest">{project.category}</span>
+          {project.clientName && (
+            <>
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span className="text-xs text-white/40 font-medium">{project.clientName}</span>
+            </>
+          )}
+        </div>
+
+        {/* Title */}
+        <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-black text-white leading-tight mb-6">
+          {project.title}
+        </h3>
+
+        {/* Divider */}
+        <div className="w-12 h-1 bg-accent rounded-full mb-6" />
+
+        {/* Description */}
+        {project.description && (
+          <p className="text-white/60 text-base leading-relaxed mb-8 max-w-lg">
+            {project.description}
+          </p>
+        )}
+
+        {/* Tags */}
+        {project.tags && project.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-8">
+            {project.tags.map((tag: string) => (
+              <span key={tag} className="text-[11px] font-semibold text-white/50 border border-white/15 px-3 py-1 rounded-full">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* CTA button */}
+        <Link href={`/projekte/${project.id}`}>
+          <motion.span
+            whileHover={{ x: 4 }}
+            className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-white border border-white/25 hover:border-accent hover:text-accent px-7 py-3 rounded-full transition-colors cursor-pointer"
+          >
+            Fallstudie ansehen
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </motion.span>
+        </Link>
+      </motion.div>
+
+      {/* Right: Phone group */}
+      <motion.div
+        initial={{ opacity: 0, x: 40 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+        className={`flex justify-center ${index % 2 === 1 ? "lg:order-1" : ""}`}
+      >
+        <CaseStudyPhoneGroup project={project} allProjects={allProjects} index={index} />
+      </motion.div>
+    </motion.div>
+  );
+}
+
 const services = [
   { icon: <Edit3 className="w-6 h-6" />, title: "Feedposts", desc: "Regelmäßige, hochwertige Beiträge, die Ihre Marke authentisch präsentieren und Reichweite aufbauen." },
   { icon: <Camera className="w-6 h-6" />, title: "Reels & Videos", desc: "Kurze, packende Videoinhalte für Instagram, TikTok und YouTube – produziert und geschnitten." },
@@ -624,55 +802,42 @@ export default function SocialMedia() {
         </div>
       </section>
 
-      {/* SOCIAL MEDIA PROJEKTE - TELEFON GALERIE */}
-      {socialProjects.length > 0 && (
-        <section className="py-28 text-white overflow-hidden relative" style={{ background: "radial-gradient(ellipse 120% 80% at 50% 50%, #0d1f3c 0%, #060e1e 60%, #000 100%)" }}>
-          {/* Decorative orbs */}
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 rounded-full blur-[120px] opacity-20 pointer-events-none" style={{ background: "#f97316" }} />
-          <div className="absolute top-1/3 right-1/4 w-72 h-72 rounded-full blur-[100px] opacity-15 pointer-events-none" style={{ background: "#3b82f6" }} />
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-16">
-                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unsere Arbeit</p>
-                <h2 className="text-4xl md:text-6xl font-display font-bold text-white">
-                  Social Media <span className="text-accent">Projekte</span>
-                </h2>
-                <p className="text-white/60 text-lg mt-5 max-w-xl mx-auto">
-                  Echter Content, echter Erfolg – Einblicke in unsere Kundenprojekte.
-                </p>
-              </motion.div>
-
-              <div className="relative">
-                {/* Left edge fade */}
-                <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#060e1e] to-transparent z-10" />
-                {/* Right edge fade */}
-                <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-28 bg-gradient-to-l from-[#060e1e] to-transparent z-10" />
-
-                {/* Outer wrapper keeps overflow-x scroll but doesn't clip y */}
-                <div className="overflow-x-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-                  <div
-                    className="flex gap-10 pb-10 pt-16 px-8"
-                    style={{ minWidth: "max-content" }}
-                  >
-                    {socialProjects.map((project, i) => (
-                      <PhoneCard key={project.id} project={project} index={i} />
-                    ))}
-                  </div>
-                </div>
+      {/* FALLSTUDIEN / CASE STUDIES */}
+      {allProjects.length > 0 && (
+        <section className="bg-[#0a1628] overflow-hidden">
+          {/* Section Header */}
+          <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-24 pb-12">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+              <div>
+                <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">
+                  Ergebnisse die überzeugen
+                </motion.p>
+                <motion.h2 variants={fadeUp} className="text-4xl md:text-6xl font-display font-black text-white leading-tight">
+                  Unsere <span className="text-accent">Projekte</span>
+                </motion.h2>
               </div>
-
-              {/* Scroll hint */}
-              <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mt-2">
-                <div className="flex gap-1">
-                  {socialProjects.slice(0, 5).map((_, i) => (
-                    <div key={i} className={`h-1 rounded-full ${i === 0 ? "w-6 bg-accent" : "w-2 bg-white/20"}`} />
-                  ))}
-                </div>
-                <span className="text-white/30 text-xs">Scrollen für mehr</span>
-              </motion.div>
+              <motion.p variants={fadeUp} className="text-white/50 text-base max-w-xs leading-relaxed">
+                Echte Ergebnisse für echte Kunden — klicken Sie sich durch eine Auswahl unserer Projekte.
+              </motion.p>
             </motion.div>
+            <motion.div
+              initial={{ scaleX: 0, originX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+              className="mt-10 h-px bg-white/10"
+            />
           </div>
+
+          {/* Case Study Rows */}
+          <div className="divide-y divide-white/8">
+            {allProjects.map((project, i) => (
+              <CaseStudyRow key={project.id} project={project} index={i} allProjects={allProjects} />
+            ))}
+          </div>
+
+          {/* Bottom padding */}
+          <div className="pb-16" />
         </section>
       )}
 
