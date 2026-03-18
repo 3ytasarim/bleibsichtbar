@@ -12,110 +12,36 @@ const WEB_RE = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|landin
 function MultiDeviceShowcase({ src, alt }: { src?: string; alt: string }) {
   const img = src || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80";
   return (
-    <div className="relative flex items-end justify-center gap-5 px-4 pb-6 pt-4">
-      {/* Ambient glow behind devices */}
+    <div className="relative w-full px-2 py-4">
+      {/* Ambient glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-48 h-24 rounded-full blur-3xl opacity-30" style={{ background: "radial-gradient(circle, #f97316 0%, transparent 70%)" }} />
+        <div className="w-64 h-20 rounded-full blur-3xl opacity-20" style={{ background: "#f97316" }} />
       </div>
 
-      {/* Desktop Monitor */}
+      {/* Browser window */}
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
-        className="flex flex-col items-center flex-1 min-w-0"
-        style={{ maxWidth: "300px" }}
+        className="relative w-full rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.9)] ring-1 ring-white/10 overflow-hidden"
+        style={{ background: "linear-gradient(160deg,#222 0%,#141414 100%)" }}
       >
-        {/* Monitor body */}
-        <div className="w-full rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.9)] ring-1 ring-white/10 overflow-hidden"
-          style={{ background: "linear-gradient(160deg,#222 0%,#141414 100%)" }}>
-          {/* Browser bar */}
-          <div className="flex items-center gap-2 px-3 py-2.5" style={{ background: "#1a1a1a" }}>
-            <div className="flex gap-1.5 shrink-0">
-              {["#ff5f57","#ffbd2e","#28c840"].map(c => (
-                <div key={c} className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ background: c }} />
-              ))}
-            </div>
-            <div className="flex-1 flex items-center bg-[#2d2d2d] rounded-full h-5 px-3 gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 shrink-0" />
-              <div className="flex-1 h-1 bg-[#444] rounded-full" />
-            </div>
+        {/* Browser chrome */}
+        <div className="flex items-center gap-2 px-3 py-2.5" style={{ background: "#1a1a1a" }}>
+          <div className="flex gap-1.5 shrink-0">
+            {["#ff5f57","#ffbd2e","#28c840"].map(c => (
+              <div key={c} className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ background: c }} />
+            ))}
           </div>
-          {/* Screen */}
-          <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
-            <img src={img} alt={alt} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none" />
+          <div className="flex-1 flex items-center bg-[#2d2d2d] rounded-full h-5 px-3 gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/60 shrink-0" />
+            <div className="flex-1 h-1 bg-[#444] rounded-full" />
           </div>
         </div>
-        {/* Stand */}
-        <div className="w-9 h-4 rounded-b" style={{ background: "linear-gradient(180deg,#1a1a1a,#0f0f0f)" }} />
-        <div className="w-20 h-[3px] rounded-full" style={{ background: "#1a1a1a" }} />
-        <span className="text-white/30 text-[9px] mt-2 font-semibold uppercase tracking-widest">Desktop</span>
-      </motion.div>
-
-      {/* iPad — Landscape orientation */}
-      <motion.div
-        animate={{ y: [0, -8, 0] }}
-        transition={{ repeat: Infinity, duration: 3.8, delay: 0.6, ease: "easeInOut" }}
-        className="flex flex-col items-center shrink-0 z-10"
-      >
-        {/* Landscape iPad body — wide, short */}
-        <div className="relative shadow-[0_22px_65px_rgba(0,0,0,0.88)] ring-1 ring-white/[0.07]"
-          style={{ background: "linear-gradient(160deg,#1e1e1e 0%,#131313 100%)", borderRadius: "18px", width: "168px" }}>
-
-          {/* Top-edge volume buttons (in landscape these are on the short top side) */}
-          <div className="absolute top-[-2.5px] left-[44px] w-[18px] h-[2.5px] rounded-t-full" style={{ background: "#2e2e2e" }} />
-          <div className="absolute top-[-2.5px] left-[66px] w-[18px] h-[2.5px] rounded-t-full" style={{ background: "#2e2e2e" }} />
-          {/* Top-edge power button */}
-          <div className="absolute top-[-2.5px] right-[30px] w-[22px] h-[2.5px] rounded-t-full" style={{ background: "#2e2e2e" }} />
-
-          {/* Left bezel — camera (when landscape, camera is on left short edge) */}
-          <div className="absolute -left-[2px] top-1/2 -translate-y-1/2 flex flex-col items-center gap-0.5">
-            <div className="w-[2px] h-[10px] rounded-l-full" style={{ background: "#2a2a2a" }} />
-          </div>
-
-          {/* Screen — 4:3 landscape ratio with even bezels */}
-          <div className="overflow-hidden relative"
-            style={{ aspectRatio: "4/3", margin: "10px 12px", borderRadius: "5px", background: "#000" }}>
-            <img src={img} alt={alt} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] to-transparent pointer-events-none" />
-          </div>
-
-          {/* Right side — classic iPad home button (in landscape, it's on right edge) */}
-          <div className="absolute right-[-3px] top-1/2 -translate-y-1/2">
-            <div className="w-[18px] h-[18px] rounded-full border-[1.5px] flex items-center justify-center"
-              style={{ borderColor: "#2e2e2e", background: "#191919" }}>
-              <div className="w-[6px] h-[6px] rounded-[1.5px]" style={{ background: "#2a2a2a" }} />
-            </div>
-          </div>
+        {/* Screenshot */}
+        <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
+          <img src={img} alt={alt} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none" />
         </div>
-        <span className="text-white/30 text-[9px] mt-3 font-semibold uppercase tracking-widest">Tablet</span>
-      </motion.div>
-
-      {/* iPhone */}
-      <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ repeat: Infinity, duration: 3.2, delay: 1.1, ease: "easeInOut" }}
-        className="flex flex-col items-center shrink-0 z-20"
-      >
-        <div className="rounded-[1.3rem] shadow-[0_20px_60px_rgba(0,0,0,0.85)] ring-1 ring-white/[0.07]"
-          style={{ background: "#161616", padding: "4px", width: "56px" }}>
-          {/* Side buttons */}
-          <div className="relative">
-            <div className="absolute -left-[3px] top-[20px] w-[3px] h-5 rounded-l-full" style={{ background: "#222" }} />
-            <div className="absolute -left-[3px] top-[48px] w-[3px] h-[32px] rounded-l-full" style={{ background: "#222" }} />
-            <div className="absolute -right-[3px] top-[38px] w-[3px] h-[38px] rounded-r-full" style={{ background: "#222" }} />
-            <div className="rounded-[1rem] overflow-hidden relative bg-black" style={{ width: "48px", height: "90px" }}>
-              {/* Dynamic Island */}
-              <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-[26px] h-[8px] rounded-full z-10" style={{ background: "#000" }} />
-              <img src={img} alt={alt} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] to-transparent pointer-events-none" />
-            </div>
-            <div className="flex justify-center pt-1 pb-0.5">
-              <div className="w-[18px] h-[2px] rounded-full" style={{ background: "#333" }} />
-            </div>
-          </div>
-        </div>
-        <span className="text-white/30 text-[9px] mt-2 font-semibold uppercase tracking-widest">Mobile</span>
       </motion.div>
     </div>
   );
