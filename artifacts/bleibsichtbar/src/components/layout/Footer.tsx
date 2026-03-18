@@ -16,6 +16,80 @@ const schema = z.object({
 });
 type FormValues = z.infer<typeof schema>;
 
+const fieldVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.45, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
+
+const inputBase: React.CSSProperties = {
+  background: "rgba(15, 30, 65, 0.7)",
+  border: "1.5px solid rgba(255,255,255,0.09)",
+  backdropFilter: "blur(8px)",
+  transition: "border-color 0.2s, box-shadow 0.2s",
+};
+
+function FooterField({
+  field,
+  placeholder,
+  type = "text",
+  index,
+  error,
+  rows,
+}: {
+  field: React.InputHTMLAttributes<HTMLInputElement> & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+  placeholder: string;
+  type?: string;
+  index: number;
+  error?: string;
+  rows?: number;
+}) {
+  const focusStyle = {
+    borderColor: "rgba(255,107,53,0.65)",
+    boxShadow: "0 0 0 3px rgba(255,107,53,0.12)",
+  };
+  const blurStyle = {
+    borderColor: "rgba(255,255,255,0.09)",
+    boxShadow: "none",
+  };
+
+  return (
+    <motion.div custom={index} variants={fieldVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+      {rows ? (
+        <textarea
+          {...(field as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          placeholder={placeholder}
+          rows={rows}
+          className="w-full px-5 py-4 rounded-2xl text-sm text-white placeholder-white/30 outline-none resize-none"
+          style={inputBase}
+          onFocus={e => Object.assign(e.target.style, focusStyle)}
+          onBlur={e => Object.assign(e.target.style, blurStyle)}
+        />
+      ) : (
+        <input
+          {...(field as React.InputHTMLAttributes<HTMLInputElement>)}
+          type={type}
+          placeholder={placeholder}
+          className="w-full px-5 py-4 rounded-2xl text-sm text-white placeholder-white/30 outline-none"
+          style={inputBase}
+          onFocus={e => Object.assign(e.target.style, focusStyle)}
+          onBlur={e => Object.assign(e.target.style, blurStyle)}
+        />
+      )}
+      {error && (
+        <motion.p
+          initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
+          className="text-red-400 text-xs mt-1.5 pl-1"
+        >
+          {error}
+        </motion.p>
+      )}
+    </motion.div>
+  );
+}
+
 function FooterContactForm() {
   const { mutate, isPending, isSuccess } = useSubmitContact();
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
@@ -27,82 +101,55 @@ function FooterContactForm() {
 
   if (isSuccess) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
-        <CheckCircle2 className="w-14 h-14 text-accent" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
+        className="flex flex-col items-center justify-center gap-4 py-14 text-center"
+      >
+        <motion.div
+          initial={{ scale: 0 }} animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+        >
+          <CheckCircle2 className="w-16 h-16 text-accent" />
+        </motion.div>
         <h3 className="text-2xl font-display font-bold text-white">Vielen Dank!</h3>
-        <p className="text-white/60 max-w-sm">Wir melden uns in Kürze bei Ihnen.</p>
-        <button onClick={() => reset()} className="mt-4 text-sm text-accent hover:text-white transition-colors">
+        <p className="text-white/55 max-w-xs text-sm">Wir melden uns in Kürze bei Ihnen.</p>
+        <button onClick={() => reset()} className="mt-3 text-sm text-accent/70 hover:text-accent transition-colors">
           Weitere Nachricht senden
         </button>
-      </div>
+      </motion.div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-      {/* Anfrage */}
-      <div>
-        <input
-          {...register("name")}
-          placeholder="Anfrage"
-          className="w-full px-4 py-3.5 rounded-xl text-sm text-white placeholder-white/30 outline-none transition-all"
-          style={{
-            background: "rgba(255,255,255,0.07)",
-            border: "1px solid rgba(255,255,255,0.1)",
-          }}
-          onFocus={e => (e.target.style.borderColor = "rgba(255,107,53,0.5)")}
-          onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.1)")}
-        />
-        {errors.name && <p className="text-red-400 text-xs mt-1 pl-1">{errors.name.message}</p>}
-      </div>
+      <FooterField field={register("name")} placeholder="Anfrage" index={0} error={errors.name?.message} />
+      <FooterField field={register("email")} placeholder="E-Mail" type="email" index={1} error={errors.email?.message} />
 
-      {/* E-Mail */}
-      <div>
-        <input
-          {...register("email")}
-          type="email"
-          placeholder="E-Mail"
-          className="w-full px-4 py-3.5 rounded-xl text-sm text-white placeholder-white/30 outline-none transition-all"
-          style={{
-            background: "rgba(255,255,255,0.07)",
-            border: "1px solid rgba(255,255,255,0.1)",
-          }}
-          onFocus={e => (e.target.style.borderColor = "rgba(255,107,53,0.5)")}
-          onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.1)")}
-        />
-        {errors.email && <p className="text-red-400 text-xs mt-1 pl-1">{errors.email.message}</p>}
-      </div>
-
-      {/* Nachricht */}
-      <div>
-        <textarea
-          {...register("message")}
-          placeholder="Nachricht"
-          rows={4}
-          className="w-full px-4 py-3.5 rounded-xl text-sm text-white placeholder-white/30 outline-none resize-none transition-all"
-          style={{
-            background: "rgba(255,255,255,0.07)",
-            border: "1px solid rgba(255,255,255,0.1)",
-          }}
-          onFocus={e => (e.target.style.borderColor = "rgba(255,107,53,0.5)")}
-          onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.1)")}
-        />
-        {errors.message && <p className="text-red-400 text-xs mt-1 pl-1">{errors.message.message}</p>}
-      </div>
+      <FooterField field={register("message")} placeholder="Nachricht" index={2} error={errors.message?.message} rows={5} />
 
       {/* Submit */}
-      <button
-        type="submit"
-        disabled={isPending}
-        className="flex items-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-95 disabled:opacity-60 mt-1"
-        style={{ background: "linear-gradient(135deg, #ff6b35, #e85d2c)" }}
+      <motion.div
+        custom={3}
+        variants={fieldVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
       >
-        {isPending ? (
-          <><Loader2 className="w-4 h-4 animate-spin" /> Wird gesendet…</>
-        ) : (
-          <>Kostenlos Anfragen <ArrowRight className="w-4 h-4" /></>
-        )}
-      </button>
+        <motion.button
+          type="submit"
+          disabled={isPending}
+          whileHover={{ scale: 1.03, boxShadow: "0 8px 28px rgba(255,107,53,0.35)" }}
+          whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-sm text-white disabled:opacity-60"
+          style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
+        >
+          {isPending ? (
+            <><Loader2 className="w-4 h-4 animate-spin" /> Wird gesendet…</>
+          ) : (
+            <>Kostenlos Anfragen <ArrowRight className="w-4 h-4" /></>
+          )}
+        </motion.button>
+      </motion.div>
     </form>
   );
 }
@@ -125,10 +172,21 @@ export function Footer() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
             {/* Left — Heading + description */}
-            <div>
-              <p className="text-xs font-bold tracking-widest uppercase text-accent/80 mb-5">
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="text-xs font-bold tracking-widest uppercase text-accent/80 mb-5"
+              >
                 // Kontakt
-              </p>
+              </motion.p>
               <h2
                 className="font-display font-black text-white leading-tight mb-5"
                 style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)" }}
@@ -137,10 +195,16 @@ export function Footer() {
                 <em className="not-italic text-accent">über</em> Ihr Projekt<br />
                 sprechen
               </h2>
-              <p className="text-white/50 text-sm leading-relaxed max-w-sm">
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+                className="text-white/50 text-sm leading-relaxed max-w-sm"
+              >
                 Ob neue Website, mehr Sichtbarkeit oder KI-Automatisierung — wir beraten Sie ehrlich und zeigen Ihnen, wie Ihr Unternehmen endlich sinnvoll ist. Kostenlos &amp; unverbindlich.
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
 
             {/* Right — Form */}
             <div>
