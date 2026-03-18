@@ -4,7 +4,67 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
+import { useGetProjects } from "@workspace/api-client-react";
 import { Monitor, Zap, Smartphone, Search, Palette, RefreshCw, CheckCircle2, ArrowRight } from "lucide-react";
+
+const WEB_RE = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|landing/i;
+
+function MultiDeviceShowcase({ src, alt }: { src?: string; alt: string }) {
+  const img = src || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80";
+  return (
+    <div className="flex items-end gap-3 justify-center w-full">
+      {/* Desktop Monitor */}
+      <div className="flex flex-col items-center flex-1 min-w-0 max-w-[300px]">
+        <div className="w-full bg-gray-800 rounded-xl p-[5px] border border-gray-700 shadow-2xl ring-1 ring-white/10">
+          <div className="flex items-center gap-1 px-2 py-1.5 bg-gray-900 rounded-t-lg">
+            {["#ff5f57","#ffbd2e","#28c840"].map(c => (
+              <div key={c} className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: c }} />
+            ))}
+            <div className="flex-1 mx-2 h-2.5 bg-gray-700/60 rounded-full" />
+          </div>
+          <div className="rounded-b-lg overflow-hidden" style={{ aspectRatio: "16/9" }}>
+            <img src={img} alt={alt} className="w-full h-full object-cover" />
+          </div>
+        </div>
+        <div className="w-10 h-2.5 bg-gray-700 rounded-b-sm" />
+        <div className="w-16 h-1 bg-gray-600 rounded-full" />
+        <span className="text-white/40 text-[10px] mt-1 font-medium">Desktop</span>
+      </div>
+
+      {/* Tablet */}
+      <div className="flex flex-col items-center shrink-0 w-[88px]">
+        <div className="bg-gray-900 rounded-[1.4rem] border-[5px] border-gray-800 shadow-xl ring-1 ring-white/10">
+          <div className="flex justify-center py-1.5">
+            <div className="w-5 h-1 bg-gray-700 rounded-full" />
+          </div>
+          <div className="overflow-hidden rounded-sm" style={{ aspectRatio: "3/4" }}>
+            <img src={img} alt={alt} className="w-full h-full object-cover" />
+          </div>
+          <div className="flex justify-center py-1.5">
+            <div className="w-4 h-4 rounded-full border-2 border-gray-700" />
+          </div>
+        </div>
+        <span className="text-white/40 text-[10px] mt-1 font-medium">Tablet</span>
+      </div>
+
+      {/* Phone */}
+      <div className="flex flex-col items-center shrink-0 w-[58px]">
+        <div className="bg-gray-900 rounded-[1rem] border-[4px] border-gray-800 shadow-xl ring-1 ring-white/10">
+          <div className="flex justify-center h-3">
+            <div className="w-6 h-3 bg-gray-800 rounded-b-lg" />
+          </div>
+          <div className="overflow-hidden" style={{ aspectRatio: "9/16" }}>
+            <img src={img} alt={alt} className="w-full h-full object-cover" />
+          </div>
+          <div className="flex justify-center py-1">
+            <div className="w-5 h-0.5 bg-gray-600 rounded-full" />
+          </div>
+        </div>
+        <span className="text-white/40 text-[10px] mt-1 font-medium">Mobile</span>
+      </div>
+    </div>
+  );
+}
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -56,6 +116,9 @@ const includes = [
 ];
 
 export default function Webseiten() {
+  const { data: allProjects = [] } = useGetProjects({ published: true });
+  const webProjects = allProjects.filter(p => WEB_RE.test(p.category ?? ""));
+
   return (
     <PublicLayout>
       {/* HERO */}
@@ -198,6 +261,60 @@ export default function Webseiten() {
           </div>
         </div>
       </section>
+
+      {/* PROJEKTE SHOWCASE */}
+      {webProjects.length > 0 && (
+        <section className="py-24 bg-primary text-white overflow-hidden relative">
+          <AnimatedHeroBackground />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+              <motion.div variants={fadeUp} className="text-center mb-16">
+                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Referenzprojekte</p>
+                <h2 className="text-4xl md:text-5xl font-display font-bold text-white">
+                  Webseiten, die <span className="text-accent">überzeugen</span>
+                </h2>
+                <p className="text-white/70 text-lg mt-4 max-w-xl mx-auto">
+                  Vollständig responsiv – auf Desktop, Tablet und Smartphone perfekt.
+                </p>
+              </motion.div>
+
+              <div className="space-y-16">
+                {webProjects.map((project, i) => (
+                  <motion.div key={project.id} variants={fadeUp}
+                    className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                    <div className="grid lg:grid-cols-2 gap-10 items-center">
+                      <div className={i % 2 === 1 ? "lg:order-2" : ""}>
+                        <MultiDeviceShowcase src={project.imageUrl ?? undefined} alt={project.title} />
+                      </div>
+                      <div className={i % 2 === 1 ? "lg:order-1" : ""}>
+                        <span className="inline-block bg-accent/20 text-accent text-xs font-bold px-3 py-1 rounded-full mb-4">
+                          {project.category}
+                        </span>
+                        <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">
+                          {project.title}
+                        </h3>
+                        {project.clientName && (
+                          <p className="text-white/50 font-medium mb-4">{project.clientName}</p>
+                        )}
+                        <p className="text-white/70 leading-relaxed text-lg">{project.description}</p>
+                        {project.tags && project.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-6">
+                            {project.tags.map(tag => (
+                              <span key={tag} className="bg-white/10 text-white/70 text-xs px-3 py-1 rounded-full border border-white/10">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="py-24 bg-primary text-white">

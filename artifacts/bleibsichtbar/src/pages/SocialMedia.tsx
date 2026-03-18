@@ -4,10 +4,48 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
+import { useGetProjects } from "@workspace/api-client-react";
 import {
   Camera, Edit3, Users, BarChart3, MessageSquare, TrendingUp,
   CheckCircle2, Clock,
 } from "lucide-react";
+
+const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
+
+function PhoneCard({ project }: { project: any }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="group shrink-0 flex flex-col items-center"
+      style={{ width: "160px" }}
+    >
+      <div className="relative">
+        <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-2xl border-[6px] border-gray-800 ring-1 ring-white/10 transition-transform duration-300 group-hover:-translate-y-2">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-4 bg-gray-900 rounded-b-2xl z-10" />
+          <div className="rounded-[1.4rem] overflow-hidden" style={{ aspectRatio: "9/16", width: "130px", height: "231px" }}>
+            {project.imageUrl ? (
+              <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-500 text-xs">Kein Bild</div>
+            )}
+          </div>
+          <div className="flex justify-center py-1.5">
+            <div className="w-10 h-0.5 bg-gray-600 rounded-full" />
+          </div>
+        </div>
+        <div className="absolute -inset-3 bg-accent/10 rounded-[2.5rem] blur-xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+      <div className="mt-4 text-center px-2">
+        <p className="text-white font-semibold text-sm leading-tight line-clamp-2">{project.title}</p>
+        {project.clientName && <p className="text-white/40 text-xs mt-1">{project.clientName}</p>}
+        <span className="inline-block mt-2 text-[10px] bg-accent/20 text-accent px-2 py-0.5 rounded-full font-medium">{project.category}</span>
+      </div>
+    </motion.div>
+  );
+}
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -35,6 +73,9 @@ const steps = [
 const platforms = ["Instagram", "TikTok", "YouTube", "Facebook", "LinkedIn"];
 
 export default function SocialMedia() {
+  const { data: allProjects = [] } = useGetProjects({ published: true });
+  const socialProjects = allProjects.filter(p => SOCIAL_RE.test(p.category ?? ""));
+
   const [form, setForm] = useState({
     company: "", platforms: [] as string[], feedposts: "", reels: "", stories: "",
     contentDay: "", hasWebsite: "", ads: "", wishes: "", goals: "",
@@ -146,6 +187,35 @@ export default function SocialMedia() {
           </div>
         </div>
       </section>
+
+      {/* SOCIAL MEDIA PROJEKTE - TELEFON GALERIE */}
+      {socialProjects.length > 0 && (
+        <section className="py-24 bg-primary text-white overflow-hidden relative">
+          <AnimatedHeroBackground />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+              <motion.div variants={fadeUp} className="text-center mb-14">
+                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unsere Arbeit</p>
+                <h2 className="text-4xl md:text-5xl font-display font-bold text-white">
+                  Social Media <span className="text-accent">Projekte</span>
+                </h2>
+                <p className="text-white/70 text-lg mt-4 max-w-xl mx-auto">
+                  Echter Content, echter Erfolg – Einblicke in unsere Kundenprojekte.
+                </p>
+              </motion.div>
+
+              <div className="relative">
+                <div className="flex gap-8 overflow-x-auto pb-8 -mx-4 px-4" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.15) transparent" }}>
+                  {socialProjects.map((project, i) => (
+                    <PhoneCard key={project.id} project={project} />
+                  ))}
+                </div>
+                <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-primary to-transparent" />
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* ANALYSEBOGEN */}
       <section id="analysebogen" className="py-24 bg-white">
