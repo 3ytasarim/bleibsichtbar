@@ -1,7 +1,6 @@
 import React from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
-import { ContactSection } from "../shared/ContactSection";
 
 export function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -10,7 +9,6 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-grow pt-20">
         {children}
       </main>
-      <ContactSection />
       <Footer />
     </div>
   );
