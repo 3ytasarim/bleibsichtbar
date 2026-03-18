@@ -58,17 +58,35 @@ function MultiDeviceShowcase({ src, alt }: { src?: string; alt: string }) {
         transition={{ repeat: Infinity, duration: 3.8, delay: 0.6, ease: "easeInOut" }}
         className="flex flex-col items-center shrink-0 z-10"
       >
-        <div className="rounded-[1.6rem] shadow-[0_20px_60px_rgba(0,0,0,0.85)] ring-1 ring-white/[0.07]"
-          style={{ background: "#161616", padding: "4px", width: "90px" }}>
-          <div className="flex justify-center py-2">
-            <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#2a2a2a" }} />
+        <div className="relative shadow-[0_22px_65px_rgba(0,0,0,0.88)] ring-1 ring-white/[0.08]"
+          style={{ background: "linear-gradient(145deg,#1d1d1d 0%,#131313 100%)", borderRadius: "20px", width: "118px" }}>
+
+          {/* Right side power button */}
+          <div className="absolute -right-[2.5px] top-7 w-[2.5px] h-[28px] rounded-r-full" style={{ background: "#2e2e2e" }} />
+          {/* Left volume buttons */}
+          <div className="absolute -left-[2.5px] top-10 w-[2.5px] h-5 rounded-l-full" style={{ background: "#2e2e2e" }} />
+          <div className="absolute -left-[2.5px] top-[72px] w-[2.5px] h-5 rounded-l-full" style={{ background: "#2e2e2e" }} />
+
+          {/* Top bezel — camera dot centered */}
+          <div className="flex items-center justify-center" style={{ height: "28px" }}>
+            <div className="w-[9px] h-[9px] rounded-full flex items-center justify-center"
+              style={{ background: "#222", boxShadow: "inset 0 0 0 2px #2d2d2d" }}>
+              <div className="w-[4px] h-[4px] rounded-full" style={{ background: "#111" }} />
+            </div>
           </div>
-          <div className="rounded-lg overflow-hidden relative" style={{ aspectRatio: "3/4" }}>
+
+          {/* Screen — thin side bezels, 3:4 ratio */}
+          <div className="overflow-hidden rounded-[3px] relative" style={{ aspectRatio: "3/4", margin: "0 8px", background: "#000" }}>
             <img src={img} alt={alt} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] to-transparent pointer-events-none" />
           </div>
-          <div className="flex justify-center py-2.5">
-            <div className="w-5 h-5 rounded-full border-2" style={{ borderColor: "#2a2a2a" }} />
+
+          {/* Bottom bezel — classic iPad home button */}
+          <div className="flex items-center justify-center" style={{ height: "30px" }}>
+            <div className="w-[19px] h-[19px] rounded-full border-[1.5px] flex items-center justify-center"
+              style={{ borderColor: "#303030" }}>
+              <div className="w-[7px] h-[7px] rounded-[2px]" style={{ background: "#2a2a2a" }} />
+            </div>
           </div>
         </div>
         <span className="text-white/30 text-[9px] mt-2 font-semibold uppercase tracking-widest">Tablet</span>
