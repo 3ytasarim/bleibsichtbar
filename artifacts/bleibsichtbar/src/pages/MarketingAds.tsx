@@ -153,15 +153,28 @@ export default function MarketingAds() {
       </section>
 
       {/* WHY US */}
-      <section className="py-24 bg-primary text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="py-28 bg-white relative overflow-hidden">
+        {/* subtle decorative orbs */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.07) 0%, transparent 70%)" }} />
+        <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(10,22,40,0.06) 0%, transparent 70%)" }} />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={stagger}
+            className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Left: text + checklist */}
             <div>
-              <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">Warum Bleibsichtbar <span className="text-accent">für Ihre Ads?</span></h2>
-              <p className="text-white/80 text-lg mb-10">
+              <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">
+                Ihre Vorteile
+              </motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-black mb-6 leading-tight" style={{ color: "#0a1628" }}>
+                Warum Bleibsichtbar{" "}
+                <span className="text-accent">für Ihre Ads?</span>
+              </motion.h2>
+              <motion.p variants={fadeUp} className="text-gray-500 text-lg mb-10 leading-relaxed">
                 Wir arbeiten nicht mit Schablonen. Jede Kampagne wird individuell auf Ihr Unternehmen, Ihre Zielgruppe und Ihr Budget abgestimmt.
-              </p>
-              <div className="space-y-4">
+              </motion.p>
+              <motion.div variants={stagger} className="space-y-4">
                 {[
                   "Keine Mindestlaufzeit – faire Konditionen",
                   "Wöchentliche Optimierung aller Kampagnen",
@@ -169,21 +182,67 @@ export default function MarketingAds() {
                   "Monatliches Reporting mit klaren KPIs",
                   "Direkte Kommunikation mit Ihrem Ansprechpartner",
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-accent shrink-0" />
-                    <span className="text-white/90">{item}</span>
-                  </div>
+                  <motion.div
+                    key={i}
+                    variants={fadeUp}
+                    className="flex items-center gap-4 group"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent transition-colors duration-300">
+                      <CheckCircle2 className="w-4 h-4 text-accent group-hover:text-white transition-colors duration-300" />
+                    </div>
+                    <span className="text-gray-700 font-medium">{item}</span>
+                  </motion.div>
                 ))}
+              </motion.div>
+            </div>
+
+            {/* Right: floating CTA card */}
+            <motion.div
+              variants={fadeUp}
+              whileHover={{ y: -6, boxShadow: "0 32px 64px -12px rgba(10,22,40,0.18)" }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="relative rounded-3xl overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, #0a1628 0%, #1a2f52 100%)",
+                boxShadow: "0 20px 48px -8px rgba(10,22,40,0.22)",
+              }}
+            >
+              {/* card glow accent top-right */}
+              <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.25) 0%, transparent 70%)" }} />
+
+              <div className="relative p-10 z-10">
+                <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center mb-6">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-display font-bold text-white mb-4 leading-snug">
+                  Kostenlose<br />Kampagnen-Analyse
+                </h3>
+                <p className="text-white/60 mb-8 leading-relaxed">
+                  Wir analysieren Ihre bestehenden Kampagnen oder planen Ihre erste – kostenlos und unverbindlich.
+                </p>
+
+                {/* Mini stats */}
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  {[
+                    { value: "3–8x", label: "ROAS" },
+                    { value: "24h", label: "Reaktion" },
+                  ].map((s) => (
+                    <div key={s.label} className="bg-white/8 rounded-xl p-4 border border-white/10">
+                      <div className="text-2xl font-black text-accent mb-1">{s.value}</div>
+                      <div className="text-xs text-white/50 font-medium uppercase tracking-wider">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <Button asChild size="lg" className="w-full rounded-full bg-accent hover:bg-accent/90 text-white font-bold text-base">
+                  <Link href="/kontakt">
+                    Jetzt anfragen <ArrowRight className="ml-2 w-4 h-4 inline" />
+                  </Link>
+                </Button>
               </div>
-            </div>
-            <div className="bg-white/10 rounded-3xl p-8 border border-white/20">
-              <h3 className="text-2xl font-display font-bold mb-6">Kostenlose Kampagnen-Analyse</h3>
-              <p className="text-white/70 mb-8">Wir analysieren Ihre bestehenden Kampagnen oder planen Ihre erste – kostenlos und unverbindlich.</p>
-              <Button asChild size="lg" className="w-full rounded-full bg-accent hover:bg-accent/90 text-white font-bold">
-                <Link href="/kontakt">Jetzt anfragen <ArrowRight className="ml-2 w-5 h-5 inline" /></Link>
-              </Button>
-            </div>
-          </div>
+            </motion.div>
+
+          </motion.div>
         </div>
       </section>
     </PublicLayout>
