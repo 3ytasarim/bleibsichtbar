@@ -11,6 +11,51 @@ import { Button } from "@/components/ui/button";
 import { PhoneMockup } from "@/components/shared/PhoneMockup";
 import { MarqueeClients } from "@/components/shared/MarqueeClients";
 
+// ─── Like Notification Bubble ─────────────────────────────────────────────────
+interface LikeNotif { id: number; name: string; }
+
+function LikeNotifications() {
+  const [notifs, setNotifs] = useState<LikeNotif[]>([]);
+  const idRef = useRef(0);
+  const names = ["Max M.", "Sarah K.", "Thomas B.", "Anna L.", "Felix R.", "Julia W.", "Kevin S."];
+
+  useEffect(() => {
+    const show = () => {
+      const name = names[Math.floor(Math.random() * names.length)];
+      const id = idRef.current++;
+      setNotifs(prev => [...prev.slice(-2), { id, name }]);
+      setTimeout(() => setNotifs(prev => prev.filter(n => n.id !== id)), 2400);
+    };
+    show();
+    const t = setInterval(show, 2000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="flex flex-col-reverse items-center gap-1.5 pointer-events-none">
+      <AnimatePresence mode="popLayout">
+        {notifs.map(n => (
+          <motion.div
+            key={n.id}
+            layout
+            initial={{ opacity: 0, y: 16, scale: 0.88 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.92 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="bg-white/95 backdrop-blur-sm rounded-full pl-1.5 pr-3 py-1 flex items-center gap-1.5 shadow-md border border-gray-100/80"
+          >
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-pink-400 to-red-500 flex items-center justify-center text-[8px] font-bold text-white shrink-0">
+              {n.name[0]}
+            </div>
+            <Heart className="w-2.5 h-2.5 fill-red-500 text-red-500 shrink-0" />
+            <span className="text-[9px] text-gray-700 font-semibold whitespace-nowrap">{n.name} hat geliked</span>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // ─── Social Media Phone ───────────────────────────────────────────────────────
 function SocialMediaPhone() {
   const [liked, setLiked] = useState(false);
@@ -64,23 +109,14 @@ function SocialMediaPhone() {
 
   const current = posts[activePost];
 
-  const [counter, setCounter] = useState(0);
+  const [counter, setCounter] = useState(385);
   useEffect(() => {
-    setCounter(0);
-    const end = 998;
-    const duration = 1500;
-    const step = Math.ceil(end / (duration / 16));
-    const t = setInterval(() => {
-      setCounter(c => {
-        if (c + step >= end) { clearInterval(t); return end; }
-        return c + step;
-      });
-    }, 16);
+    const t = setInterval(() => setCounter(c => c + 1), 2500);
     return () => clearInterval(t);
-  }, [activePost]);
+  }, []);
 
   return (
-    <div className="pt-8 p-3 space-y-3 select-none">
+    <div className="pt-8 p-3 space-y-3 select-none pb-4">
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center space-x-2">
           <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${current.gradient} flex items-center justify-center overflow-hidden`}>
@@ -171,6 +207,11 @@ function SocialMediaPhone() {
             <motion.div className="h-full bg-green-400 rounded-full" initial={{ width: 0 }} animate={{ width: "72%" }} transition={{ duration: 1.4, ease: "easeOut" }} />
           </div>
         </div>
+      </div>
+
+      {/* Instagram-style like notifications */}
+      <div className="pt-1">
+        <LikeNotifications />
       </div>
     </div>
   );
