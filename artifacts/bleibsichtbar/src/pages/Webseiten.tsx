@@ -463,92 +463,142 @@ export default function Webseiten() {
       </section>
 
       {/* PROJEKT CHECKLISTE */}
-      <section className="py-28 bg-gray-50 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ backgroundImage: "radial-gradient(circle at 80% 50%, rgba(249,115,22,0.06) 0%, transparent 60%)" }} />
+      <section className="py-28 bg-white relative overflow-hidden">
+        {/* Soft decorative blobs */}
+        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-accent/5 blur-[100px] pointer-events-none" />
+        <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[100px] pointer-events-none" />
+
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
 
             {/* Left – illustration */}
             <motion.div
-              initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.7 }}
-              className="flex justify-center"
+              initial={{ opacity: 0, scale: 0.88 }} whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut" }}
+              className="flex justify-center order-2 lg:order-1"
             >
-              <motion.div
-                animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="relative"
-              >
-                {/* Glow halo behind illustration */}
-                <div className="absolute inset-0 rounded-full bg-accent/10 blur-[60px] scale-110 pointer-events-none" />
-                <img
+              <div className="relative flex items-center justify-center">
+                {/* Rotating ring */}
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+                  className="absolute w-[340px] h-[340px] rounded-full border border-dashed border-accent/20"
+                />
+                {/* Static ring */}
+                <div className="absolute w-[290px] h-[290px] rounded-full border border-gray-100" />
+                {/* Glow */}
+                <div className="absolute w-48 h-48 rounded-full bg-accent/10 blur-[50px]" />
+                {/* Floating illustration */}
+                <motion.img
                   src="/brain-lightbulb.png"
                   alt="Webseiten Projekt Prozess"
-                  className="relative w-72 md:w-80 drop-shadow-2xl"
+                  animate={{ y: [0, -14, 0] }}
+                  transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative w-64 md:w-72 drop-shadow-2xl"
                 />
-              </motion.div>
+                {/* Orbiting dot 1 */}
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  className="absolute w-[290px] h-[290px]"
+                  style={{ transformOrigin: "center" }}
+                >
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-accent shadow-[0_0_10px_rgba(249,115,22,0.6)]" />
+                </motion.div>
+                {/* Orbiting dot 2 */}
+                <motion.div
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                  className="absolute w-[340px] h-[340px]"
+                >
+                  <div className="absolute bottom-4 right-4 w-2.5 h-2.5 rounded-full bg-primary/40 border border-primary/20" />
+                </motion.div>
+              </div>
             </motion.div>
 
             {/* Right – checklist */}
             <motion.div
               initial="hidden" whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-              variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
+              viewport={{ once: true, margin: "-40px" }}
+              variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
+              className="order-1 lg:order-2"
             >
               <motion.div
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-                className="mb-8"
+                variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55 } } }}
+                className="mb-10"
               >
-                <span className="text-accent font-bold text-sm tracking-widest uppercase">Unser Projektvorgehen</span>
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-primary mt-2 leading-tight">
+                <span className="inline-flex items-center gap-2 bg-accent/8 border border-accent/20 text-accent text-xs font-bold px-4 py-1.5 rounded-full tracking-widest uppercase mb-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  Unser Projektvorgehen
+                </span>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary mt-3 leading-tight">
                   Webseiten{" "}
-                  <span className="text-accent">Projekt&shy;prozess</span>
+                  <span className="relative inline-block">
+                    <span className="text-accent">Projektprozess</span>
+                    <motion.span
+                      initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
+                      transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
+                      className="absolute -bottom-0.5 left-0 right-0 h-[2px] bg-accent/40 origin-left rounded-full"
+                    />
+                  </span>
                 </h2>
-                <p className="text-gray-500 mt-3 text-base leading-relaxed">
+                <p className="text-gray-500 mt-4 text-base leading-relaxed">
                   Von der ersten Anfrage bis zur Veröffentlichung — transparent, strukturiert und termingerecht.
                 </p>
               </motion.div>
 
-              <div className="space-y-3">
-                {[
-                  "Kundenanfrage aufnehmen",
-                  "Zielanalyse und Lösungsvorschläge erarbeiten",
-                  "Arbeitsablauf gemeinsam präsentieren",
-                  "Angebot erstellen und freigeben",
-                  "Erstentwurf und Seitenstruktur festlegen",
-                  "Kodierung und visuelles Design abstimmen",
-                  "Inhalte und Texte einpflegen",
-                  "Testphase und Qualitätsprüfung",
-                  "Fehlerbehebung und Optimierung",
-                  "Projektabnahme durch den Kunden",
-                  "Webseite veröffentlichen",
-                ].map((step, i) => (
-                  <motion.div
-                    key={i}
-                    variants={{ hidden: { opacity: 0, x: 24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
-                    className="flex items-center gap-3 group"
-                  >
-                    {/* Check icon */}
-                    <div className="w-6 h-6 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:border-accent transition-all duration-300">
-                      <svg className="w-3 h-3 text-accent group-hover:text-white transition-colors" fill="none" viewBox="0 0 12 12">
-                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    {/* Step number */}
-                    <span className="text-[11px] font-bold text-gray-400 w-5 shrink-0">{String(i + 1).padStart(2, "0")}</span>
-                    {/* Text */}
-                    <span className="text-gray-700 text-sm font-medium group-hover:text-primary transition-colors">{step}</span>
-                  </motion.div>
-                ))}
+              <div className="relative">
+                {/* Vertical timeline line */}
+                <motion.div
+                  initial={{ scaleY: 0 }} whileInView={{ scaleY: 1 }} viewport={{ once: true }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                  className="absolute left-[11px] top-0 bottom-0 w-px bg-gradient-to-b from-accent/30 via-accent/10 to-transparent origin-top"
+                />
+
+                <div className="space-y-2">
+                  {[
+                    "Kundenanfrage aufnehmen",
+                    "Zielanalyse und Lösungsvorschläge erarbeiten",
+                    "Arbeitsablauf gemeinsam präsentieren",
+                    "Angebot erstellen und freigeben",
+                    "Erstentwurf und Seitenstruktur festlegen",
+                    "Kodierung und visuelles Design abstimmen",
+                    "Inhalte und Texte einpflegen",
+                    "Testphase und Qualitätsprüfung",
+                    "Fehlerbehebung und Optimierung",
+                    "Projektabnahme durch den Kunden",
+                    "Webseite veröffentlichen",
+                  ].map((step, i) => (
+                    <motion.div
+                      key={i}
+                      variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
+                      className="flex items-center gap-4 group pl-1 py-1.5"
+                    >
+                      {/* Timeline dot */}
+                      <div className="w-5 h-5 rounded-full bg-white border-2 border-accent/30 flex items-center justify-center shrink-0 group-hover:border-accent group-hover:bg-accent transition-all duration-300 z-10">
+                        <svg className="w-2.5 h-2.5 text-accent/60 group-hover:text-white transition-colors" fill="none" viewBox="0 0 10 10">
+                          <path d="M2 5l2.5 2.5 3.5-3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      {/* Number */}
+                      <span className="text-[10px] font-black text-gray-300 group-hover:text-accent/60 transition-colors w-4 shrink-0 tabular-nums">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      {/* Text */}
+                      <span className="text-gray-600 text-sm font-medium group-hover:text-primary transition-colors leading-snug">
+                        {step}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
 
               <motion.div
-                variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.3 } } }}
-                className="mt-8"
+                variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.2 } } }}
+                className="mt-10"
               >
-                <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold shadow-lg shadow-accent/20">
-                  <Link href="/kontakt">Jetzt Projekt starten</Link>
+                <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-shadow">
+                  <Link href="/kontakt">Jetzt Projekt starten <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
                 </Button>
               </motion.div>
             </motion.div>
@@ -695,17 +745,63 @@ export default function Webseiten() {
       )}
 
       {/* CTA */}
-      <section className="py-24 bg-primary text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-            Bereit für Ihre neue <span className="text-accent">Webseite?</span>
-          </h2>
-          <p className="text-xl text-white/80 mb-10">
-            Lassen Sie uns gemeinsam einen digitalen Auftritt entwickeln, der Ihr Unternehmen von seiner besten Seite zeigt.
-          </p>
-          <Button asChild size="lg" className="rounded-full px-10 bg-accent hover:bg-accent/90 text-white font-bold text-lg">
-            <Link href="/kontakt">Jetzt kostenlos anfragen <ArrowRight className="ml-2 w-5 h-5 inline" /></Link>
-          </Button>
+      <section className="relative py-28 overflow-hidden" style={{ background: "linear-gradient(135deg, #060f1e 0%, #0a1628 50%, #07111f 100%)" }}>
+        {/* Animated glow orbs */}
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-24 left-1/4 w-96 h-96 rounded-full bg-accent/20 blur-[120px] pointer-events-none"
+        />
+        <motion.div
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-24 right-1/4 w-80 h-80 rounded-full bg-blue-500/15 blur-[100px] pointer-events-none"
+        />
+        {/* Subtle grid */}
+        <div className="absolute inset-0 pointer-events-none opacity-20"
+          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true }}
+            variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+          >
+            <motion.p
+              variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+              className="text-accent font-bold text-sm tracking-widest uppercase mb-5"
+            >
+              Jetzt durchstarten
+            </motion.p>
+            <motion.h2
+              variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
+              className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-6 leading-tight"
+            >
+              Bereit für Ihre neue{" "}
+              <span className="text-accent">Webseite?</span>
+            </motion.h2>
+            <motion.p
+              variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+              className="text-xl text-white/60 mb-12 max-w-xl mx-auto leading-relaxed"
+            >
+              Lassen Sie uns gemeinsam einen digitalen Auftritt entwickeln, der Ihr Unternehmen von seiner besten Seite zeigt.
+            </motion.p>
+            <motion.div
+              variants={{ hidden: { opacity: 0, scale: 0.9 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } } }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+              {/* Pulsing ring around button */}
+              <div className="relative">
+                <motion.div
+                  animate={{ scale: [1, 1.35, 1], opacity: [0.4, 0, 0.4] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+                  className="absolute inset-0 rounded-full bg-accent/40"
+                />
+                <Button asChild size="lg" className="relative rounded-full px-10 bg-accent hover:bg-accent/90 text-white font-bold text-lg shadow-2xl shadow-accent/30">
+                  <Link href="/kontakt">Jetzt kostenlos anfragen <ArrowRight className="ml-2 w-5 h-5 inline" /></Link>
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </PublicLayout>
