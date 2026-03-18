@@ -52,44 +52,43 @@ function MultiDeviceShowcase({ src, alt }: { src?: string; alt: string }) {
         <span className="text-white/30 text-[9px] mt-2 font-semibold uppercase tracking-widest">Desktop</span>
       </motion.div>
 
-      {/* iPad */}
+      {/* iPad — Landscape orientation */}
       <motion.div
         animate={{ y: [0, -8, 0] }}
         transition={{ repeat: Infinity, duration: 3.8, delay: 0.6, ease: "easeInOut" }}
         className="flex flex-col items-center shrink-0 z-10"
       >
-        <div className="relative shadow-[0_22px_65px_rgba(0,0,0,0.88)] ring-1 ring-white/[0.08]"
-          style={{ background: "linear-gradient(145deg,#1d1d1d 0%,#131313 100%)", borderRadius: "20px", width: "118px" }}>
+        {/* Landscape iPad body — wide, short */}
+        <div className="relative shadow-[0_22px_65px_rgba(0,0,0,0.88)] ring-1 ring-white/[0.07]"
+          style={{ background: "linear-gradient(160deg,#1e1e1e 0%,#131313 100%)", borderRadius: "18px", width: "168px" }}>
 
-          {/* Right side power button */}
-          <div className="absolute -right-[2.5px] top-7 w-[2.5px] h-[28px] rounded-r-full" style={{ background: "#2e2e2e" }} />
-          {/* Left volume buttons */}
-          <div className="absolute -left-[2.5px] top-10 w-[2.5px] h-5 rounded-l-full" style={{ background: "#2e2e2e" }} />
-          <div className="absolute -left-[2.5px] top-[72px] w-[2.5px] h-5 rounded-l-full" style={{ background: "#2e2e2e" }} />
+          {/* Top-edge volume buttons (in landscape these are on the short top side) */}
+          <div className="absolute top-[-2.5px] left-[44px] w-[18px] h-[2.5px] rounded-t-full" style={{ background: "#2e2e2e" }} />
+          <div className="absolute top-[-2.5px] left-[66px] w-[18px] h-[2.5px] rounded-t-full" style={{ background: "#2e2e2e" }} />
+          {/* Top-edge power button */}
+          <div className="absolute top-[-2.5px] right-[30px] w-[22px] h-[2.5px] rounded-t-full" style={{ background: "#2e2e2e" }} />
 
-          {/* Top bezel — camera dot centered */}
-          <div className="flex items-center justify-center" style={{ height: "28px" }}>
-            <div className="w-[9px] h-[9px] rounded-full flex items-center justify-center"
-              style={{ background: "#222", boxShadow: "inset 0 0 0 2px #2d2d2d" }}>
-              <div className="w-[4px] h-[4px] rounded-full" style={{ background: "#111" }} />
-            </div>
+          {/* Left bezel — camera (when landscape, camera is on left short edge) */}
+          <div className="absolute -left-[2px] top-1/2 -translate-y-1/2 flex flex-col items-center gap-0.5">
+            <div className="w-[2px] h-[10px] rounded-l-full" style={{ background: "#2a2a2a" }} />
           </div>
 
-          {/* Screen — thin side bezels, 3:4 ratio */}
-          <div className="overflow-hidden rounded-[3px] relative" style={{ aspectRatio: "3/4", margin: "0 8px", background: "#000" }}>
+          {/* Screen — 4:3 landscape ratio with even bezels */}
+          <div className="overflow-hidden relative"
+            style={{ aspectRatio: "4/3", margin: "10px 12px", borderRadius: "5px", background: "#000" }}>
             <img src={img} alt={alt} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] to-transparent pointer-events-none" />
           </div>
 
-          {/* Bottom bezel — classic iPad home button */}
-          <div className="flex items-center justify-center" style={{ height: "30px" }}>
-            <div className="w-[19px] h-[19px] rounded-full border-[1.5px] flex items-center justify-center"
-              style={{ borderColor: "#303030" }}>
-              <div className="w-[7px] h-[7px] rounded-[2px]" style={{ background: "#2a2a2a" }} />
+          {/* Right side — classic iPad home button (in landscape, it's on right edge) */}
+          <div className="absolute right-[-3px] top-1/2 -translate-y-1/2">
+            <div className="w-[18px] h-[18px] rounded-full border-[1.5px] flex items-center justify-center"
+              style={{ borderColor: "#2e2e2e", background: "#191919" }}>
+              <div className="w-[6px] h-[6px] rounded-[1.5px]" style={{ background: "#2a2a2a" }} />
             </div>
           </div>
         </div>
-        <span className="text-white/30 text-[9px] mt-2 font-semibold uppercase tracking-widest">Tablet</span>
+        <span className="text-white/30 text-[9px] mt-3 font-semibold uppercase tracking-widest">Tablet</span>
       </motion.div>
 
       {/* iPhone */}
