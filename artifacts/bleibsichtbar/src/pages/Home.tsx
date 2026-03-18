@@ -600,42 +600,92 @@ export default function Home() {
       </section>
 
       {/* ─── Services ──────────────────────────────────────────────────────── */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={fadeUp} className="text-center mb-16">
-            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-4">Was wir tun</p>
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
+      <section className="py-28 bg-white relative overflow-hidden">
+        {/* Subtle bg grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: "radial-gradient(circle, #0a1628 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={fadeUp} className="text-center mb-20">
+            <motion.span
+              className="inline-flex items-center gap-2 bg-accent/10 text-accent font-semibold text-xs tracking-[0.18em] uppercase px-4 py-2 rounded-full mb-5"
+              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-accent" /> Was wir tun
+            </motion.span>
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-5">
               Unsere Leistungen im <span className="text-accent">Überblick</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Maßgeschneiderte digitale Lösungen für Unternehmen, die online wachsen wollen.
             </p>
           </motion.div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            variants={stagger}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {services.map((s, i) => (
-              <motion.div key={i} variants={fadeUp}>
-                <Link href={s.link} className="block group h-full">
-                  <div className="h-full border border-gray-100 rounded-2xl p-7 hover:border-gray-200 hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1">
-                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
-                      <s.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-lg font-bold font-display mb-3 group-hover:text-accent transition-colors">{s.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed mb-4">{s.desc}</p>
-                    <div className="flex items-center text-accent text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                      Mehr erfahren <ChevronRight className="w-4 h-4 ml-1" />
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {services.map((s, i) => {
+              const glowMap: Record<number, string> = {
+                0: "rgba(236,72,153,0.14)", 1: "rgba(139,92,246,0.14)", 2: "rgba(59,130,246,0.14)",
+                3: "rgba(249,115,22,0.14)", 4: "rgba(34,197,94,0.14)", 5: "rgba(100,116,139,0.12)",
+              };
+              const glow = glowMap[i] ?? "rgba(10,22,40,0.10)";
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 36 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Link href={s.link} className="block h-full">
+                    <motion.div
+                      className="group relative h-full bg-white rounded-3xl p-8 border border-gray-100 overflow-hidden cursor-pointer"
+                      whileHover={{ y: -8, boxShadow: `0 28px 56px ${glow}` }}
+                      transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                    >
+                      {/* Gradient blob – fades in on hover */}
+                      <div className={`absolute -right-10 -top-10 w-44 h-44 rounded-full bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-[0.09] transition-opacity duration-500 blur-2xl`} />
+
+                      {/* Card number – ghosted top-right */}
+                      <div className="absolute top-5 right-6 font-black text-[52px] leading-none select-none text-gray-900/[0.04]">
+                        {String(i + 1).padStart(2, "0")}
+                      </div>
+
+                      {/* Icon */}
+                      <motion.div
+                        className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center mb-6 shadow-lg`}
+                        whileHover={{ scale: 1.12, rotate: -6 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                      >
+                        <s.icon className="w-7 h-7 text-white" />
+                        {/* Inner glow ring */}
+                        <div className="absolute inset-0 rounded-2xl ring-1 ring-white/30" />
+                      </motion.div>
+
+                      {/* Content */}
+                      <h3 className="text-xl font-display font-bold mb-3 group-hover:text-accent transition-colors duration-200">
+                        {s.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed mb-6">{s.desc}</p>
+
+                      {/* CTA row */}
+                      <div className="flex items-center gap-1.5 text-accent text-sm font-bold">
+                        Mehr erfahren
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
+                      </div>
+
+                      {/* Animated bottom accent line */}
+                      <motion.div
+                        className={`absolute bottom-0 left-0 h-[3px] bg-gradient-to-r ${s.color}`}
+                        initial={{ width: "0%" }}
+                        whileHover={{ width: "100%" }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
+                      />
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
