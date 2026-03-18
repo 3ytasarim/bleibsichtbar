@@ -5,8 +5,11 @@ import { Toaster } from "@/components/ui/toaster";
 
 // Public Pages
 import Home from "./pages/Home";
-import Services from "./pages/Services";
 import SocialMedia from "./pages/SocialMedia";
+import Webseiten from "./pages/Webseiten";
+import MarketingAds from "./pages/MarketingAds";
+import KIAutomatisierungen from "./pages/KIAutomatisierungen";
+import Analyse from "./pages/Analyse";
 import Projects from "./pages/Projects";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -42,8 +45,11 @@ function Router() {
       
       {/* Public Routes */}
       <Route path="/" component={Home} />
-      <Route path="/services" component={Services} />
-      <Route path="/services/social-media" component={SocialMedia} />
+      <Route path="/social-media" component={SocialMedia} />
+      <Route path="/webseiten" component={Webseiten} />
+      <Route path="/marketing-ads" component={MarketingAds} />
+      <Route path="/ki-automatisierungen" component={KIAutomatisierungen} />
+      <Route path="/analyse" component={Analyse} />
       <Route path="/projekte" component={Projects} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:id" component={BlogPost} />

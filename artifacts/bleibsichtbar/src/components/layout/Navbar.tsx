@@ -6,11 +6,12 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const links = [
-  { name: "Startseite", path: "/" },
-  { name: "Leistungen", path: "/services" },
-  { name: "Projekte", path: "/projekte" },
-  { name: "Referenzen", path: "/referenzen" },
-  { name: "Blog", path: "/blog" },
+  { name: "Start", path: "/" },
+  { name: "Social Media", path: "/social-media" },
+  { name: "Webseiten", path: "/webseiten" },
+  { name: "Marketing Ads", path: "/marketing-ads" },
+  { name: "Ki & Automatisierungen", path: "/ki-automatisierungen" },
+  { name: "Analyse", path: "/analyse" },
 ];
 
 export function Navbar() {
@@ -44,7 +45,7 @@ export function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2.5 group">
+            <Link href="/" className="flex items-center space-x-2.5 group shrink-0">
               <div className="w-9 h-9 bg-primary text-white rounded-xl flex items-center justify-center font-display font-bold text-lg group-hover:bg-accent transition-colors duration-200">
                 B
               </div>
@@ -53,13 +54,13 @@ export function Navbar() {
               </span>
             </Link>
 
-            <nav className="hidden lg:flex items-center space-x-8">
+            <nav className="hidden lg:flex items-center space-x-5 xl:space-x-7">
               {links.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   className={cn(
-                    "text-sm font-medium transition-all hover:text-accent relative py-1",
+                    "text-[13px] xl:text-sm font-medium transition-all hover:text-accent relative py-1 whitespace-nowrap",
                     location === link.path ? "text-accent" : isScrolled || !isHeroPage ? "text-foreground/80" : "text-white/90"
                   )}
                 >
@@ -74,8 +75,8 @@ export function Navbar() {
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center">
-              <Button asChild variant="default" className="rounded-full px-6 font-semibold shadow-md hover:shadow-lg transition-shadow">
+            <div className="hidden lg:flex items-center shrink-0">
+              <Button asChild variant="default" className="rounded-full px-5 xl:px-6 text-sm font-semibold shadow-md hover:shadow-lg transition-shadow">
                 <Link href="/kontakt">Kontakt aufnehmen</Link>
               </Button>
             </div>
