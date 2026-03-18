@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
 import { useGetProjects } from "@workspace/api-client-react";
 import {
-  Camera, Edit3, Users, BarChart3, MessageSquare, TrendingUp,
-  CheckCircle2, Clock,
+  Camera, Edit3, BarChart3, MessageSquare,
+  CheckCircle2, Clock, Search, Target, Send, TrendingUp, Zap,
 } from "lucide-react";
 
 const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
@@ -63,14 +63,71 @@ const services = [
 ];
 
 const steps = [
-  { num: "01", title: "Analyse", desc: "Wir durchleuchten Ihren Ist-Zustand, analysieren Wettbewerber und definieren Ihre genaue Zielgruppe." },
-  { num: "02", title: "Strategie", desc: "Entwicklung einer maßgeschneiderten Content- und Plattformstrategie. Wer, was, wann und wo." },
-  { num: "03", title: "Content Creation", desc: "Produktion hochwertiger Bilder, Reels und Texte, die Ihre Marke authentisch repräsentieren." },
-  { num: "04", title: "Publishing", desc: "Vollständige Übernahme der Veröffentlichung und aktives Community Management." },
-  { num: "05", title: "Reporting", desc: "Monatliche Auswertung aller KPIs und kontinuierliche Strategieanpassung auf Basis der Daten." },
+  {
+    num: "01", title: "Analyse",
+    desc: "Wir durchleuchten Ihren Ist-Zustand, analysieren Wettbewerber und definieren Ihre genaue Zielgruppe.",
+    icon: Search,
+    tags: ["Kanal-Audit", "Wettbewerber-Check", "Zielgruppe"],
+    color: "from-blue-500 to-cyan-400",
+  },
+  {
+    num: "02", title: "Strategie",
+    desc: "Entwicklung einer maßgeschneiderten Content- und Plattformstrategie. Wer, was, wann und wo.",
+    icon: Target,
+    tags: ["Content-Plan", "Plattformwahl", "Posting-Rhythmus"],
+    color: "from-violet-500 to-purple-400",
+  },
+  {
+    num: "03", title: "Content Creation",
+    desc: "Produktion hochwertiger Bilder, Reels und Texte, die Ihre Marke authentisch repräsentieren.",
+    icon: Camera,
+    tags: ["Fotografie", "Videoproduktion", "Copywriting"],
+    color: "from-pink-500 to-rose-400",
+  },
+  {
+    num: "04", title: "Publishing",
+    desc: "Vollständige Übernahme der Veröffentlichung und aktives Community Management.",
+    icon: Send,
+    tags: ["Scheduling", "Hashtag-Optimierung", "Community-Mgmt."],
+    color: "from-orange-500 to-amber-400",
+  },
+  {
+    num: "05", title: "Reporting",
+    desc: "Monatliche Auswertung aller KPIs und kontinuierliche Strategieanpassung auf Basis der Daten.",
+    icon: BarChart3,
+    tags: ["KPI-Dashboard", "Monatsbericht", "Strategieanpassung"],
+    color: "from-green-500 to-emerald-400",
+  },
 ];
 
 const platforms = ["Instagram", "TikTok", "YouTube", "Facebook", "LinkedIn"];
+
+function StepCard({ step, Icon, isLeft }: { step: typeof steps[0]; Icon: React.ElementType; isLeft: boolean }) {
+  return (
+    <div className={`group relative bg-white/5 border border-white/10 rounded-3xl p-7 hover:bg-white/10 hover:border-accent/30 transition-all duration-300 hover:shadow-2xl hover:shadow-accent/10 ${isLeft ? "lg:mr-10" : "lg:ml-10"}`}>
+      <div className="flex items-start gap-4 mb-5">
+        <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform`}>
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <div className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white/10 shrink-0">
+          <span className="text-accent font-display font-black text-sm">{step.num}</span>
+        </div>
+        <div>
+          <h3 className="text-xl font-display font-bold text-white mb-1">{step.title}</h3>
+          <p className="text-white/60 text-sm leading-relaxed">{step.desc}</p>
+        </div>
+      </div>
+      <div className={`flex flex-wrap gap-2 ${isLeft ? "lg:justify-end" : ""}`}>
+        {step.tags.map(tag => (
+          <span key={tag} className="text-[11px] bg-white/8 border border-white/15 text-white/60 px-2.5 py-1 rounded-full font-medium">
+            {tag}
+          </span>
+        ))}
+      </div>
+      <div className={`absolute -inset-px rounded-3xl bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-5 transition-opacity pointer-events-none`} />
+    </div>
+  );
+}
 
 export default function SocialMedia() {
   const { data: allProjects = [] } = useGetProjects({ published: true });
@@ -153,26 +210,94 @@ export default function SocialMedia() {
         </div>
       </section>
 
-      {/* PROZESS */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.div variants={fadeUp} className="text-center mb-16">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unser Prozess</p>
-              <h2 className="text-4xl md:text-5xl font-display font-bold">Schritt für Schritt zu mehr <span className="text-accent">Sichtbarkeit</span></h2>
-            </motion.div>
-            <div className="space-y-4">
-              {steps.map((step, i) => (
-                <motion.div key={i} variants={fadeUp} className="flex gap-6 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="text-4xl font-display font-black text-accent/20 leading-none shrink-0 w-12">{step.num}</div>
-                  <div>
-                    <h3 className="text-xl font-display font-bold mb-1">{step.title}</h3>
-                    <p className="text-muted-foreground">{step.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+      {/* PROZESS — Animierte Timeline */}
+      <section className="py-28 bg-primary text-white relative overflow-hidden">
+        <AnimatedHeroBackground />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+          {/* Header */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="text-center mb-20">
+            <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">
+              Unser Prozess
+            </motion.p>
+            <motion.h2 variants={fadeUp} className="text-4xl md:text-6xl font-display font-bold text-white">
+              Schritt für Schritt zu mehr{" "}
+              <span className="text-accent">Sichtbarkeit</span>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-white/60 text-lg mt-5 max-w-xl mx-auto">
+              Unser bewährter 5-Stufen-Prozess bringt messbare Ergebnisse.
+            </motion.p>
           </motion.div>
+
+          {/* Timeline */}
+          <div className="relative">
+            {/* Vertical center line (desktop) */}
+            <div className="hidden lg:block absolute left-1/2 top-6 bottom-6 w-px bg-gradient-to-b from-accent/60 via-white/10 to-transparent -translate-x-1/2 pointer-events-none" />
+
+            <div className="space-y-10 lg:space-y-0">
+              {steps.map((step, i) => {
+                const isLeft = i % 2 === 0;
+                const Icon = step.icon;
+                return (
+                  <div key={i} className="relative lg:grid lg:grid-cols-2 lg:gap-12 lg:mb-14 items-center">
+
+                    {/* Center node (desktop) */}
+                    <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 z-10 flex-col items-center">
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2, duration: 0.4, type: "spring" }}
+                        className={`w-14 h-14 rounded-full bg-gradient-to-br ${step.color} flex items-center justify-center shadow-2xl ring-4 ring-primary`}
+                      >
+                        <span className="text-white font-display font-black text-base">{step.num}</span>
+                      </motion.div>
+                    </div>
+
+                    {/* Left column (desktop only) */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: "-60px" }}
+                      transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                      className="hidden lg:flex items-center"
+                    >
+                      {isLeft
+                        ? <StepCard step={step} Icon={Icon} isLeft />
+                        : <div />
+                      }
+                    </motion.div>
+
+                    {/* Right column (desktop only) */}
+                    <motion.div
+                      initial={{ opacity: 0, x: 50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: "-60px" }}
+                      transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                      className="hidden lg:flex items-center"
+                    >
+                      {!isLeft
+                        ? <StepCard step={step} Icon={Icon} isLeft={false} />
+                        : <div />
+                      }
+                    </motion.div>
+
+                    {/* Mobile card */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5 }}
+                      className="lg:hidden col-span-2"
+                    >
+                      <StepCard step={step} Icon={Icon} isLeft={false} />
+                    </motion.div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </section>
 
