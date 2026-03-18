@@ -110,16 +110,16 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ delay: index * 0.07, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       className="relative"
-      style={{ paddingTop: 52 }} /* room for device to extend above */
+      style={{ paddingTop: 72 }} /* room for device to extend above */
     >
       {/* Device mockup — absolute, sticks up above the colored card */}
       <div
         className="absolute z-20"
         style={{
           top: 0,
-          left: isWeb ? 12 : 20,
+          left: isWeb ? 14 : 22,
           transform: `rotate(${isWeb ? -5 : -8}deg)`,
-          filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.35))",
+          filter: "drop-shadow(0 28px 56px rgba(0,0,0,0.38))",
         }}
       >
         {isWeb ? (
@@ -134,8 +134,8 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
         whileHover={{ scale: 1.015, transition: { type: "spring", stiffness: 280, damping: 22 } }}
         className="relative rounded-[28px] overflow-hidden"
         style={{
-          marginLeft: isWeb ? 88 : 96,
-          minHeight: 220,
+          marginLeft: isWeb ? 92 : 100,
+          minHeight: 248,
           background: accent,
         }}
       >
@@ -152,8 +152,8 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
 
         {/* Content — left padding to clear the phone overlap */}
         <div
-          className="flex flex-col justify-center items-center text-center px-6 py-7"
-          style={{ paddingLeft: isWeb ? 120 : 90, minHeight: 220 }}
+          className="flex flex-col justify-center items-center text-center px-6 py-9"
+          style={{ paddingLeft: isWeb ? 124 : 96, minHeight: 248 }}
         >
           <h3 className="text-xl md:text-2xl font-display font-black text-white leading-tight mb-1">
             {project.title}
@@ -253,10 +253,10 @@ export default function Projects() {
       </section>
 
       {/* PROJECTS GRID */}
-      <section className="py-16 min-h-[50vh] bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 min-h-[50vh] bg-white">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 lg:px-14">
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 pt-10">
               {[1,2,3,4].map(i => (
                 <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-60" />
               ))}
@@ -271,7 +271,7 @@ export default function Projects() {
               <p className="text-gray-400 text-sm">In dieser Kategorie sind aktuell keine Projekte vorhanden.</p>
             </motion.div>
           ) : (
-            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6">
+            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 pt-8">
               <AnimatePresence mode="popLayout">
                 {filtered.map((project, index) => (
                   <ProjectCard key={project.id} project={project} index={index} />
