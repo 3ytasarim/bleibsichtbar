@@ -313,17 +313,68 @@ export default function KIAutomatisierungen() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 bg-primary text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-            Bereit, Zeit zu sparen und <span className="text-accent">zu wachsen?</span>
-          </h2>
-          <p className="text-xl text-white/80 mb-10">
-            Lassen Sie uns gemeinsam herausfinden, welche Prozesse in Ihrem Unternehmen automatisiert werden können.
-          </p>
-          <Button asChild size="lg" className="rounded-full px-10 bg-accent hover:bg-accent/90 text-white font-bold text-lg">
-            <Link href="/kontakt">KI-Potenzial kostenlos analysieren <ArrowRight className="ml-2 w-5 h-5 inline" /></Link>
-          </Button>
+      <section className="py-28 bg-white relative overflow-hidden">
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)" }} />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(10,22,40,0.05) 0%, transparent 70%)" }} />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={stagger}
+            className="grid lg:grid-cols-2 gap-16 items-center"
+          >
+            {/* Left */}
+            <div>
+              <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">
+                Jetzt starten
+              </motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-black leading-tight mb-6" style={{ color: "#0a1628" }}>
+                Bereit, Zeit zu sparen{" "}
+                <span className="text-accent">und zu wachsen?</span>
+              </motion.h2>
+              <motion.p variants={fadeUp} className="text-gray-500 text-lg leading-relaxed">
+                Lassen Sie uns gemeinsam herausfinden, welche Prozesse in Ihrem Unternehmen automatisiert werden können.
+              </motion.p>
+            </div>
+
+            {/* Right: card */}
+            <motion.div
+              variants={fadeUp}
+              whileHover={{ y: -6 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="relative rounded-3xl overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, #0a1628 0%, #1a2f52 100%)",
+                boxShadow: "0 20px 48px -8px rgba(10,22,40,0.22)",
+              }}
+            >
+              <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.22) 0%, transparent 70%)" }} />
+              <div className="relative p-10 z-10">
+                <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center mb-6">
+                  <Brain className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-display font-bold text-white mb-4 leading-snug">
+                  KI-Potenzial<br />kostenlos analysieren
+                </h3>
+                <p className="text-white/60 mb-8 leading-relaxed">
+                  Wir identifizieren Automatisierungspotenzial in Ihrem Unternehmen – kostenlos und unverbindlich.
+                </p>
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  {[{ value: "80%", label: "Zeitersparnis" }, { value: "24/7", label: "Verfügbarkeit" }].map(s => (
+                    <div key={s.label} className="rounded-xl p-4 border border-white/10" style={{ background: "rgba(255,255,255,0.06)" }}>
+                      <div className="text-2xl font-black text-accent mb-1">{s.value}</div>
+                      <div className="text-xs text-white/50 font-medium uppercase tracking-wider">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <Button asChild size="lg" className="w-full rounded-full bg-accent hover:bg-accent/90 text-white font-bold text-base">
+                  <Link href="/kontakt">Jetzt analysieren <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </PublicLayout>
