@@ -5,6 +5,7 @@ import { ArrowRight, BarChart3, Users, Zap, CheckCircle2 } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { PhoneMockup } from "@/components/shared/PhoneMockup";
+import { MarqueeClients } from "@/components/shared/MarqueeClients";
 import { useGetProjects, useGetReferences } from "@workspace/api-client-react";
 
 export default function Home() {
@@ -111,8 +112,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CLIENTS MARQUEE */}
+      <MarqueeClients />
+
       {/* SERVICES OVERVIEW */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">Was wir für Sie tun können</h2>
