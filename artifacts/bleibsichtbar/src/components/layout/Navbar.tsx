@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { ContactModal } from "@/components/shared/ContactModal";
 
 const links = [
   { name: "Start", path: "/" },
@@ -18,6 +18,7 @@ export function Navbar() {
   const [location] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -28,6 +29,11 @@ export function Navbar() {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    document.body.style.overflow = modalOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [modalOpen]);
 
   const isHeroPage = location === "/";
 
@@ -45,12 +51,17 @@ export function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
+            {/* Logo */}
             <Link href="/" className="flex items-center shrink-0 group">
-              <span className={cn("font-display font-bold text-2xl tracking-tight transition-colors", isScrolled || !isHeroPage ? "text-foreground" : "text-white")}>
+              <span className={cn(
+                "font-display font-bold text-2xl tracking-tight transition-colors",
+                isScrolled || !isHeroPage ? "text-foreground" : "text-white"
+              )}>
                 Bleibsichtbar
               </span>
             </Link>
 
+            {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center space-x-5 xl:space-x-7">
               {links.map((link) => (
                 <Link
@@ -58,7 +69,11 @@ export function Navbar() {
                   href={link.path}
                   className={cn(
                     "text-[13px] xl:text-sm font-medium transition-all hover:text-accent relative py-1 whitespace-nowrap",
-                    location === link.path ? "text-accent" : isScrolled || !isHeroPage ? "text-foreground/80" : "text-white/90"
+                    location === link.path
+                      ? "text-accent"
+                      : isScrolled || !isHeroPage
+                      ? "text-foreground/80"
+                      : "text-white/90"
                   )}
                 >
                   {link.name}
@@ -72,14 +87,34 @@ export function Navbar() {
               ))}
             </nav>
 
+            {/* CTA Button */}
             <div className="hidden lg:flex items-center shrink-0">
-              <Button asChild variant="default" className="rounded-full px-5 xl:px-6 text-sm font-semibold shadow-md hover:shadow-lg transition-shadow">
-                <Link href="/kontakt">Kontakt aufnehmen</Link>
-              </Button>
+              <motion.button
+                onClick={() => setModalOpen(true)}
+                whileHover={{ scale: 1.04, boxShadow: "0 8px 28px rgba(255,107,53,0.35)" }}
+                whileTap={{ scale: 0.97 }}
+                className="relative overflow-hidden px-6 py-2.5 rounded-full text-sm font-bold text-white"
+                style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
+              >
+                {/* Shimmer */}
+                <motion.span
+                  className="absolute inset-0 -translate-x-full skew-x-12"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)" }}
+                  animate={{ x: ["−100%", "200%"] }}
+                  transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 1.6, ease: "easeInOut" }}
+                />
+                <span className="relative flex items-center gap-2">
+                  Kontakt aufnehmen
+                </span>
+              </motion.button>
             </div>
 
+            {/* Mobile menu toggle */}
             <button
-              className={cn("lg:hidden p-2 rounded-lg transition-colors", isScrolled || !isHeroPage ? "text-foreground" : "text-white")}
+              className={cn(
+                "lg:hidden p-2 rounded-lg transition-colors",
+                isScrolled || !isHeroPage ? "text-foreground" : "text-white"
+              )}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Menü öffnen"
             >
@@ -89,6 +124,7 @@ export function Navbar() {
         </div>
       </header>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -119,13 +155,21 @@ export function Navbar() {
               ))}
             </nav>
             <div className="pt-8">
-              <Button asChild variant="default" size="lg" className="w-full rounded-full text-lg font-semibold">
-                <Link href="/kontakt">Kontakt aufnehmen</Link>
-              </Button>
+              <motion.button
+                onClick={() => { setMobileMenuOpen(false); setModalOpen(true); }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full py-4 rounded-full text-lg font-bold text-white"
+                style={{ background: "linear-gradient(135deg, #ff6b35, #e8522a)" }}
+              >
+                Kontakt aufnehmen
+              </motion.button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Contact Modal */}
+      <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }
