@@ -239,7 +239,7 @@ const heroSlides = [
     headline: ["Smarte KI-", "Lösungen für Sie"],
     sub: "Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI.",
     cta: "Mehr erfahren",
-    ctaLink: "/services",
+    ctaLink: "/ki-automatisierungen",
     bg: "from-slate-900 via-[#0a2218] to-slate-900",
     pill: "KI & Automatisierung",
   },
@@ -252,36 +252,42 @@ const services = [
     title: "Social Media Management",
     desc: "Wir bauen eine starke Präsenz auf, die Vertrauen schafft und neue Kunden bringt. Strategie, Content und Betreuung aus einer Hand.",
     color: "from-pink-500 to-rose-600",
+    link: "/social-media",
   },
   {
     icon: Brain,
     title: "KI & Automatisierung",
     desc: "Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI. Mehr Effizienz, weniger Aufwand, mehr Wachstum.",
     color: "from-violet-500 to-purple-700",
+    link: "/ki-automatisierungen",
   },
   {
     icon: Monitor,
     title: "Webseiten Optimierung & Design",
     desc: "Moderne Webseiten, die nicht nur gut aussehen, sondern Anfragen generieren. Schnell, professionell und zugeschnitten.",
     color: "from-blue-500 to-indigo-700",
+    link: "/webseiten",
   },
   {
     icon: Target,
     title: "Strategie & Beratung",
     desc: "Wir analysieren Ihr Unternehmen und entwickeln eine digitale Strategie, die wirklich zu Ihnen passt.",
     color: "from-orange-400 to-amber-600",
+    link: "/analyse",
   },
   {
     icon: BarChart3,
     title: "Performance Marketing & Ads",
     desc: "Gezielte Werbung bei Google, damit Kunden Sie genau dann finden, wenn sie suchen. Messbare Ergebnisse statt Streuverlust.",
     color: "from-green-500 to-emerald-700",
+    link: "/marketing-ads",
   },
   {
     icon: Clock,
     title: "Langfristige Betreuung",
     desc: "Wir begleiten Unternehmen langfristig – von der ersten Idee bis zur laufenden Optimierung.",
     color: "from-slate-500 to-gray-700",
+    link: "/kontakt",
   },
 ];
 
@@ -451,7 +457,7 @@ export default function Home() {
                       </Link>
                     </Button>
                     <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-6 text-lg font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm">
-                      <Link href="/services">Leistungen ansehen</Link>
+                      <Link href="/projekte">Projekte ansehen</Link>
                     </Button>
                   </div>
 
@@ -568,7 +574,7 @@ export default function Home() {
           >
             {services.map((s, i) => (
               <motion.div key={i} variants={fadeUp}>
-                <Link href="/services" className="block group h-full">
+                <Link href={s.link} className="block group h-full">
                   <div className="h-full border border-gray-100 rounded-2xl p-7 hover:border-gray-200 hover:shadow-xl transition-all duration-300 bg-white hover:-translate-y-1">
                     <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                       <s.icon className="w-6 h-6 text-white" />
