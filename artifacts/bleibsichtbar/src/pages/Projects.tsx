@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, ExternalLink, Globe, Folder } from "lucide-react";
+import { ArrowRight, Globe, Folder } from "lucide-react";
 
 const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
 const WEB_RE    = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|app|landing/i;
@@ -17,66 +17,68 @@ function getType(cat: string): ProjectType {
   return "standard";
 }
 
-const CARD_PALETTES = [
-  { accent: "#1a56db", lightBg: "#eff6ff", badgeBg: "#1a56db", shadow: "hover:shadow-blue-100" },
-  { accent: "#f97316", lightBg: "#fff7ed", badgeBg: "#f97316", shadow: "hover:shadow-orange-100" },
-  { accent: "#7c3aed", lightBg: "#f5f3ff", badgeBg: "#7c3aed", shadow: "hover:shadow-violet-100" },
-  { accent: "#0891b2", lightBg: "#ecfeff", badgeBg: "#0891b2", shadow: "hover:shadow-cyan-100" },
-  { accent: "#16a34a", lightBg: "#f0fdf4", badgeBg: "#16a34a", shadow: "hover:shadow-green-100" },
-  { accent: "#dc2626", lightBg: "#fef2f2", badgeBg: "#dc2626", shadow: "hover:shadow-red-100" },
+const PALETTES = [
+  "#1a56db",
+  "#f97316",
+  "#7c3aed",
+  "#0891b2",
+  "#16a34a",
+  "#dc2626",
+  "#0a1628",
+  "#b45309",
 ];
 
-function PhoneMockupCard({ src, alt }: { src?: string; alt: string }) {
+function PhoneMockup({ src, alt }: { src?: string; alt: string }) {
   return (
-    <div
-      className="relative w-[155px] shrink-0"
-      style={{ transform: "rotate(-8deg)", filter: "drop-shadow(0 30px 50px rgba(0,0,0,0.5))" }}
-    >
-      <div className="relative bg-[#111] rounded-[2.6rem] p-[5px] border border-white/10">
-        {/* Side buttons */}
-        <div className="absolute -left-[3px] top-20 w-[3px] h-7 bg-[#333] rounded-l-full" />
-        <div className="absolute -left-[3px] top-32 w-[3px] h-10 bg-[#333] rounded-l-full" />
-        <div className="absolute -left-[3px] top-44 w-[3px] h-10 bg-[#333] rounded-l-full" />
-        <div className="absolute -right-[3px] top-36 w-[3px] h-14 bg-[#333] rounded-r-full" />
-
-        <div className="rounded-[2.1rem] overflow-hidden relative bg-black" style={{ width: "145px", height: "295px" }}>
+    <div className="relative" style={{ width: 148 }}>
+      <div
+        className="relative rounded-[2.6rem] bg-[#111] border border-white/10"
+        style={{ padding: 5, boxShadow: "0 32px 64px rgba(0,0,0,0.55)" }}
+      >
+        {/* Volume buttons */}
+        <div className="absolute -left-[3px] top-20 w-[3px] h-6 bg-[#333] rounded-l-full" />
+        <div className="absolute -left-[3px] top-28 w-[3px] h-9 bg-[#333] rounded-l-full" />
+        <div className="absolute -left-[3px] top-40 w-[3px] h-9 bg-[#333] rounded-l-full" />
+        <div className="absolute -right-[3px] top-32 w-[3px] h-12 bg-[#333] rounded-r-full" />
+        {/* Screen */}
+        <div
+          className="rounded-[2.1rem] overflow-hidden bg-black relative"
+          style={{ width: 138, height: 290 }}
+        >
           {/* Dynamic Island */}
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-16 h-5 bg-black rounded-full z-30" />
-
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 w-14 h-5 bg-black rounded-full z-30" />
           {src ? (
             <img src={src} alt={alt} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-              <Globe className="w-10 h-10 text-gray-600" />
+              <Globe className="w-8 h-8 text-gray-600" />
             </div>
           )}
-          {/* Glare */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-transparent to-transparent pointer-events-none" />
+          {/* Screen glare */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.06] via-transparent to-transparent pointer-events-none" />
         </div>
-
         {/* Home bar */}
         <div className="flex justify-center pt-1.5 pb-0.5">
-          <div className="w-12 h-[3px] bg-[#444] rounded-full" />
+          <div className="w-11 h-[3px] bg-[#444] rounded-full" />
         </div>
       </div>
     </div>
   );
 }
 
-function BrowserMockupCard({ src, alt }: { src?: string; alt: string }) {
-  const slug = alt.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+function BrowserMockup({ src, alt }: { src?: string; alt: string }) {
+  const slug = alt.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   return (
-    <div
-      className="relative w-[200px] shrink-0"
-      style={{ transform: "rotate(-6deg)", filter: "drop-shadow(0 30px 50px rgba(0,0,0,0.5))" }}
-    >
-      <div className="bg-[#1a1a1a] rounded-xl border border-white/10 overflow-hidden">
-        {/* Browser chrome */}
+    <div className="relative" style={{ width: 190 }}>
+      <div
+        className="rounded-xl bg-[#1a1a1a] border border-white/10 overflow-hidden"
+        style={{ boxShadow: "0 32px 64px rgba(0,0,0,0.5)" }}
+      >
         <div className="flex items-center gap-1.5 px-3 py-2 bg-[#111]">
-          {["#ff5f57","#ffbd2e","#28c840"].map(c => (
+          {["#ff5f57", "#ffbd2e", "#28c840"].map(c => (
             <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />
           ))}
-          <div className="flex-1 mx-2 h-4 bg-[#2a2a2a] rounded-full text-[8px] text-gray-500 flex items-center justify-center px-2 overflow-hidden">
+          <div className="flex-1 mx-2 h-3.5 bg-[#2a2a2a] rounded-full text-[7px] text-gray-500 flex items-center justify-center px-2 overflow-hidden truncate">
             {slug}.de
           </div>
         </div>
@@ -85,7 +87,7 @@ function BrowserMockupCard({ src, alt }: { src?: string; alt: string }) {
             <img src={src} alt={alt} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
-              <Globe className="w-10 h-10 text-gray-600" />
+              <Globe className="w-8 h-8 text-gray-600" />
             </div>
           )}
         </div>
@@ -96,69 +98,79 @@ function BrowserMockupCard({ src, alt }: { src?: string; alt: string }) {
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
   const type = getType(project.category ?? "");
-  const palette = CARD_PALETTES[index % CARD_PALETTES.length];
+  const accent = PALETTES[index % PALETTES.length];
+  const isWeb = type === "web";
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ delay: index * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6, transition: { type: "spring", stiffness: 260, damping: 22 } }}
-      className={`group relative bg-white rounded-3xl overflow-visible border border-gray-100 shadow-md ${palette.shadow} hover:shadow-xl transition-shadow duration-400 flex flex-row items-end min-h-[200px]`}
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ delay: index * 0.07, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      className="relative"
+      style={{ paddingTop: 52 }} /* room for device to extend above */
     >
-      {/* Subtle tinted bg patch on right */}
+      {/* Device mockup — absolute, sticks up above the colored card */}
       <div
-        className="absolute right-0 top-0 bottom-0 w-2/3 rounded-r-3xl pointer-events-none"
-        style={{ background: palette.lightBg }}
-      />
-
-      {/* Top accent line */}
-      <div
-        className="absolute top-0 left-6 right-6 h-[3px] rounded-b-full"
-        style={{ background: palette.accent }}
-      />
-
-      {/* Category badge – top right */}
-      <div
-        className="absolute top-4 right-4 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest z-10"
-        style={{ background: palette.accent }}
+        className="absolute z-20"
+        style={{
+          top: 0,
+          left: isWeb ? 12 : 20,
+          transform: `rotate(${isWeb ? -5 : -8}deg)`,
+          filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.35))",
+        }}
       >
-        {project.category}
-      </div>
-
-      {/* Device mockup – sticks out above */}
-      <div className="shrink-0 pl-6 pb-0 flex items-end relative z-10" style={{ marginTop: "-32px" }}>
-        {type === "web" ? (
-          <BrowserMockupCard src={project.imageUrl} alt={project.title} />
+        {isWeb ? (
+          <BrowserMockup src={project.imageUrl} alt={project.title} />
         ) : (
-          <PhoneMockupCard src={project.imageUrl} alt={project.title} />
+          <PhoneMockup src={project.imageUrl} alt={project.title} />
         )}
       </div>
 
-      {/* Info – right side */}
-      <div className="flex flex-col justify-center flex-1 px-6 py-7 relative z-10 min-w-0">
-        <h3 className="text-xl md:text-2xl font-display font-black text-primary leading-tight mb-1 truncate">
-          {project.title}
-        </h3>
-        {project.clientName && (
-          <p className="text-gray-500 text-sm font-medium mb-4 flex items-center gap-1.5 truncate">
-            <Globe className="w-3 h-3 shrink-0" />
-            {project.clientName}
-          </p>
-        )}
-        {!project.clientName && <div className="mb-4" />}
+      {/* Colored pill card */}
+      <motion.div
+        whileHover={{ scale: 1.015, transition: { type: "spring", stiffness: 280, damping: 22 } }}
+        className="relative rounded-[28px] overflow-hidden"
+        style={{
+          marginLeft: isWeb ? 88 : 96,
+          minHeight: 220,
+          background: accent,
+        }}
+      >
+        {/* Subtle inner glow top-right */}
+        <div
+          className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none"
+          style={{ background: "rgba(255,255,255,0.08)", filter: "blur(40px)", transform: "translate(30%, -30%)" }}
+        />
 
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.97 }}
-          className="self-start text-white text-sm font-bold px-6 py-2.5 rounded-full flex items-center gap-2 shadow-md transition-opacity hover:opacity-90"
-          style={{ background: palette.accent }}
+        {/* Category badge — top right */}
+        <div className="absolute top-4 right-4 bg-black/25 backdrop-blur-sm text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-white/15">
+          {project.category}
+        </div>
+
+        {/* Content — left padding to clear the phone overlap */}
+        <div
+          className="flex flex-col justify-center items-center text-center px-6 py-7"
+          style={{ paddingLeft: isWeb ? 120 : 90, minHeight: 220 }}
         >
-          Ansehen <ExternalLink className="w-3.5 h-3.5" />
-        </motion.button>
-      </div>
+          <h3 className="text-xl md:text-2xl font-display font-black text-white leading-tight mb-1">
+            {project.title}
+          </h3>
+          {project.clientName && (
+            <p className="text-white/60 text-sm mb-5">{project.clientName}</p>
+          )}
+          {!project.clientName && <div className="mb-5" />}
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            className="bg-black text-white text-xs font-black px-7 py-2.5 rounded-full uppercase tracking-widest shadow-lg hover:bg-gray-900 transition-colors"
+          >
+            Ansehen →
+          </motion.button>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -238,12 +250,12 @@ export default function Projects() {
       </section>
 
       {/* PROJECTS GRID */}
-      <section className="py-16 min-h-[50vh] bg-gray-50">
+      <section className="py-16 min-h-[50vh] bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10">
               {[1,2,3,4].map(i => (
-                <div key={i} className="animate-pulse bg-gray-200 rounded-3xl h-52" />
+                <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-60" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
@@ -256,7 +268,7 @@ export default function Projects() {
               <p className="text-gray-400 text-sm">In dieser Kategorie sind aktuell keine Projekte vorhanden.</p>
             </motion.div>
           ) : (
-            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10">
+            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6">
               <AnimatePresence mode="popLayout">
                 {filtered.map((project, index) => (
                   <ProjectCard key={project.id} project={project} index={index} />
