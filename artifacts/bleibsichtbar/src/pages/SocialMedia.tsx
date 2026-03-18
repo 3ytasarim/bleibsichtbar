@@ -363,68 +363,117 @@ const fadeUp = {
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
 // ─── Case Study Carousel ────────────────────────────────────────────────────────
+// White-frame phone à la sparksocialagency.com
 function PhoneFrame({ project, size, rotate, opacity, zIndex, onClick }: {
   project: any; size: "sm" | "lg"; rotate: number; opacity: number; zIndex: number; onClick?: () => void;
 }) {
   const isLg = size === "lg";
-  const w = isLg ? 195 : 145;
-  const screenW = isLg ? 185 : 135;
-  const screenH = isLg ? 350 : 260;
-  const radius = isLg ? "2.8rem" : "2.2rem";
-  const screenRadius = isLg ? "2.4rem" : "1.9rem";
-  const pad = isLg ? "5px" : "4px";
+  const totalW  = isLg ? 220 : 155;
+  const screenW = isLg ? 196 : 138;
+  const screenH = isLg ? 390 : 275;
+  const pad     = isLg ? 12 : 8;
 
   return (
     <div
       onClick={onClick}
-      className={`relative flex-shrink-0 transition-all duration-500 ${onClick ? "cursor-pointer" : ""}`}
-      style={{ width: w, zIndex, transform: `rotate(${rotate}deg)`, opacity }}
+      className={`relative flex-shrink-0 select-none ${onClick ? "cursor-pointer" : ""}`}
+      style={{ width: totalW, zIndex, transform: `rotate(${rotate}deg)`, opacity, transition: "opacity 0.4s, transform 0.4s" }}
     >
-      {isLg && (
-        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-40 h-14 blur-2xl rounded-full opacity-50 pointer-events-none" style={{ background: "#f97316" }} />
-      )}
+      {/* Outer shell: white/light silver frame */}
       <div
-        className="rounded-[2.8rem] bg-[#161616]"
         style={{
-          borderRadius: radius,
-          boxShadow: isLg
-            ? "0 50px 120px -10px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.08)"
-            : "0 20px 60px -10px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
+          background: "linear-gradient(160deg, #f8f9fb 0%, #e8ecf0 100%)",
+          borderRadius: isLg ? 38 : 28,
           padding: pad,
+          boxShadow: isLg
+            ? "0 32px 80px -8px rgba(0,0,0,0.28), 0 0 0 1px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)"
+            : "0 16px 48px -6px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.05)",
+          position: "relative",
         }}
       >
+        {/* Side buttons (large phone only) */}
         {isLg && <>
-          <div className="absolute -left-[3px] top-[88px] w-[3px] h-7 bg-[#2a2a2a] rounded-l-full" />
-          <div className="absolute -left-[3px] top-[122px] w-[3px] h-[46px] bg-[#2a2a2a] rounded-l-full" />
-          <div className="absolute -left-[3px] top-[175px] w-[3px] h-[46px] bg-[#2a2a2a] rounded-l-full" />
-          <div className="absolute -right-[3px] top-[140px] w-[3px] h-[60px] bg-[#2a2a2a] rounded-r-full" />
+          <div style={{ position: "absolute", left: -3, top: 86, width: 3, height: 28, background: "#cdd4dc", borderRadius: "2px 0 0 2px" }} />
+          <div style={{ position: "absolute", left: -3, top: 122, width: 3, height: 44, background: "#cdd4dc", borderRadius: "2px 0 0 2px" }} />
+          <div style={{ position: "absolute", left: -3, top: 174, width: 3, height: 44, background: "#cdd4dc", borderRadius: "2px 0 0 2px" }} />
+          <div style={{ position: "absolute", right: -3, top: 136, width: 3, height: 58, background: "#cdd4dc", borderRadius: "0 2px 2px 0" }} />
         </>}
+
+        {/* Screen */}
         <div
-          className="overflow-hidden bg-black relative"
-          style={{ borderRadius: screenRadius, width: screenW, height: screenH }}
+          style={{
+            width: screenW, height: screenH,
+            borderRadius: isLg ? 28 : 22,
+            overflow: "hidden",
+            position: "relative",
+            background: "#f0f2f5",
+          }}
         >
-          {isLg && (
-            <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-[68px] h-[22px] bg-black rounded-full z-30 flex items-center justify-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-[#1e1e1e]" />
-              <div className="w-[6px] h-[6px] rounded-full bg-[#1e1e1e] opacity-60" />
+          {/* Status bar */}
+          <div style={{
+            position: "absolute", top: 0, left: 0, right: 0,
+            height: isLg ? 36 : 28, zIndex: 20, display: "flex",
+            alignItems: "center", justifyContent: "space-between",
+            padding: "0 14px",
+            background: "rgba(255,255,255,0.85)",
+            backdropFilter: "blur(8px)",
+          }}>
+            <span style={{ fontSize: isLg ? 11 : 9, fontWeight: 700, color: "#1a2340", fontFamily: "system-ui" }}>
+              {isLg ? "9:41" : "5:24"}
+            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              {/* Signal dots */}
+              {[1,2,3].map(i => <div key={i} style={{ width: isLg ? 4 : 3, height: isLg ? 4 : 3, borderRadius: "50%", background: "#1a2340", opacity: 0.4 + i * 0.2 }} />)}
+              {/* Wifi */}
+              <svg width={isLg ? 13 : 10} height={isLg ? 10 : 8} viewBox="0 0 13 10" fill="none">
+                <path d="M6.5 8.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" fill="#1a2340" opacity=".7"/>
+                <path d="M2 5.2A6.5 6.5 0 0 1 11 5.2" stroke="#1a2340" strokeWidth="1.3" strokeLinecap="round" opacity=".5"/>
+                <path d="M0 2.8A9.5 9.5 0 0 1 13 2.8" stroke="#1a2340" strokeWidth="1.3" strokeLinecap="round" opacity=".3"/>
+              </svg>
+              {/* Battery */}
+              <div style={{ width: isLg ? 20 : 15, height: isLg ? 10 : 8, border: "1px solid rgba(26,35,64,0.4)", borderRadius: 3, padding: "1px 1px", display: "flex" }}>
+                <div style={{ flex: 1, background: "#1a2340", borderRadius: 2, opacity: 0.7 }} />
+              </div>
             </div>
-          )}
+          </div>
+
+          {/* Project image */}
           {project?.imageUrl ? (
-            <img src={project.imageUrl} alt={project?.title ?? ""} className="w-full h-full object-cover" />
+            <img
+              src={project.imageUrl}
+              alt={project?.title ?? ""}
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+            />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900" />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #c8d4de 0%, #aebece 100%)" }} />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+
+          {/* Bottom overlay with title (large phone only) */}
           {isLg && (
-            <div className="absolute bottom-4 left-0 right-0 px-4 z-10">
-              <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{project?.category}</span>
-              <p className="text-white text-xs font-bold leading-snug line-clamp-2 mt-0.5">{project?.title}</p>
-            </div>
+            <>
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(10,22,40,0.72) 0%, transparent 55%)" }} />
+              <div style={{ position: "absolute", bottom: 20, left: 14, right: 14, zIndex: 10 }}>
+                <p style={{ fontSize: 9, fontWeight: 800, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 3 }}>
+                  {project?.category}
+                </p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", lineHeight: 1.3 }} className="line-clamp-2">
+                  {project?.title}
+                </p>
+              </div>
+            </>
           )}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none" style={{ borderRadius: screenRadius }} />
+
+          {/* Screen glare */}
+          <div style={{
+            position: "absolute", inset: 0, pointerEvents: "none",
+            background: "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 50%)",
+            borderRadius: isLg ? 28 : 22,
+          }} />
         </div>
-        <div className="flex justify-center" style={{ paddingTop: isLg ? "8px" : "6px", paddingBottom: isLg ? "4px" : "3px" }}>
-          <div className={`bg-[#444] rounded-full ${isLg ? "w-[52px] h-[3px]" : "w-9 h-[2.5px]"}`} />
+
+        {/* Home indicator */}
+        <div style={{ display: "flex", justifyContent: "center", paddingTop: isLg ? 10 : 7, paddingBottom: isLg ? 5 : 4 }}>
+          <div style={{ width: isLg ? 52 : 38, height: isLg ? 4 : 3, background: "#b8c4ce", borderRadius: 99 }} />
         </div>
       </div>
     </div>
@@ -468,20 +517,20 @@ function CaseStudyCarousel({ projects }: { projects: any[] }) {
             <span className="text-xs font-black text-accent uppercase tracking-widest">{active.category}</span>
             {active.clientName && (
               <>
-                <span className="w-1 h-1 rounded-full bg-white/20" />
-                <span className="text-xs text-white/40 font-medium">{active.clientName}</span>
+                <span className="w-1 h-1 rounded-full bg-gray-400" />
+                <span className="text-xs text-gray-500 font-medium">{active.clientName}</span>
               </>
             )}
           </div>
 
-          <h3 className="text-3xl md:text-4xl lg:text-[2.8rem] font-display font-black text-white leading-tight mb-5">
+          <h3 className="text-3xl md:text-4xl lg:text-[2.8rem] font-display font-black leading-tight mb-5" style={{ color: "#0a1628" }}>
             {active.title}
           </h3>
 
           <div className="w-12 h-1 bg-accent rounded-full mb-6" />
 
           {active.description && (
-            <p className="text-white/60 text-base leading-relaxed mb-8 max-w-md">
+            <p className="text-gray-600 text-base leading-relaxed mb-8 max-w-md">
               {active.description}
             </p>
           )}
@@ -489,7 +538,7 @@ function CaseStudyCarousel({ projects }: { projects: any[] }) {
           {active.tags && active.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-8">
               {active.tags.map((tag: string) => (
-                <span key={tag} className="text-[11px] font-semibold text-white/50 border border-white/15 px-3 py-1 rounded-full">
+                <span key={tag} className="text-[11px] font-semibold text-gray-500 border border-gray-300 px-3 py-1 rounded-full">
                   {tag}
                 </span>
               ))}
@@ -501,7 +550,8 @@ function CaseStudyCarousel({ projects }: { projects: any[] }) {
             <Link href={`/projekte/${active.id}`}>
               <motion.span
                 whileHover={{ x: 4 }}
-                className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-white border border-white/30 hover:border-accent hover:text-accent px-7 py-3 rounded-full transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest border px-7 py-3 rounded-full transition-colors cursor-pointer hover:border-accent hover:text-accent"
+                style={{ color: "#0a1628", borderColor: "rgba(10,22,40,0.35)" }}
               >
                 Fallstudie ansehen
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -516,7 +566,7 @@ function CaseStudyCarousel({ projects }: { projects: any[] }) {
                 <button
                   key={i}
                   onClick={() => setActiveIdx(i)}
-                  className={`rounded-full transition-all duration-300 ${i === activeIdx ? "w-6 h-2 bg-accent" : "w-2 h-2 bg-white/20 hover:bg-white/40"}`}
+                  className={`rounded-full transition-all duration-300 ${i === activeIdx ? "w-6 h-2 bg-accent" : "w-2 h-2 bg-gray-300 hover:bg-gray-400"}`}
                 />
               ))}
             </div>
@@ -846,7 +896,7 @@ export default function SocialMedia() {
 
       {/* FALLSTUDIEN / CASE STUDIES CAROUSEL */}
       {allProjects.length > 0 && (
-        <section className="bg-[#0a1628] overflow-hidden">
+        <section className="overflow-hidden" style={{ background: "#dce8f0" }}>
           {/* Section Header */}
           <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-20 pb-4">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
@@ -854,11 +904,11 @@ export default function SocialMedia() {
                 <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">
                   Ergebnisse die überzeugen
                 </motion.p>
-                <motion.h2 variants={fadeUp} className="text-4xl md:text-6xl font-display font-black text-white leading-tight">
+                <motion.h2 variants={fadeUp} className="text-4xl md:text-6xl font-display font-black leading-tight" style={{ color: "#0a1628" }}>
                   Unsere <span className="text-accent">Projekte</span>
                 </motion.h2>
               </div>
-              <motion.p variants={fadeUp} className="text-white/50 text-base max-w-xs leading-relaxed">
+              <motion.p variants={fadeUp} className="text-gray-500 text-base max-w-xs leading-relaxed">
                 Klicken Sie durch die iPhones, um eine Auswahl unserer Projekte zu sehen.
               </motion.p>
             </motion.div>
@@ -867,7 +917,7 @@ export default function SocialMedia() {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-              className="mt-8 h-px bg-white/10"
+              className="mt-8 h-px bg-gray-400/30"
             />
           </div>
 
