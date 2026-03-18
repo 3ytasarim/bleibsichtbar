@@ -767,14 +767,7 @@ export default function Home() {
       </section>
 
       {/* ─── Client Marquee ────────────────────────────────────────────────── */}
-      <section className="py-20 bg-gray-50 border-y border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
-          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-muted-foreground text-sm font-medium tracking-widest uppercase">
-            Unternehmen, die uns vertrauen
-          </motion.p>
-        </div>
-        <MarqueeClients />
-      </section>
+      <MarqueeClients />
     </PublicLayout>
   );
 }
