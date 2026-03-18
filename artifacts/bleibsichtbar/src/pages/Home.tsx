@@ -1,12 +1,162 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowRight, BarChart3, Users, Zap, CheckCircle2 } from "lucide-react";
+import { ArrowRight, BarChart3, Users, Zap, CheckCircle2, Heart, MessageCircle, Share2, Bookmark, TrendingUp } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { PhoneMockup } from "@/components/shared/PhoneMockup";
 import { MarqueeClients } from "@/components/shared/MarqueeClients";
 import { useGetProjects, useGetReferences } from "@workspace/api-client-react";
+
+function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let start = 0;
+    const duration = 2000;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { setCount(target); clearInterval(timer); }
+      else setCount(Math.floor(start));
+    }, 16);
+    return () => clearInterval(timer);
+  }, [target]);
+  return <span>{count.toLocaleString("de-DE")}{suffix}</span>;
+}
+
+function SocialMediaPhone() {
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(2847);
+  const [activePost, setActivePost] = useState(0);
+
+  const posts = [
+    { gradient: "from-purple-500 via-pink-500 to-orange-400", label: "Instagram", icon: "📸", tag: "@bleibsichtbar" },
+    { gradient: "from-black via-gray-800 to-gray-900", label: "TikTok", icon: "🎵", tag: "@bleibsichtbar" },
+    { gradient: "from-blue-600 via-blue-500 to-cyan-400", label: "LinkedIn", icon: "💼", tag: "Bleibsichtbar" },
+  ];
+
+  useEffect(() => {
+    const t = setInterval(() => setActivePost(p => (p + 1) % posts.length), 3000);
+    return () => clearInterval(t);
+  }, []);
+
+  const current = posts[activePost];
+
+  return (
+    <div className="p-3 space-y-3 select-none">
+      {/* App header */}
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center space-x-2">
+          <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${current.gradient} flex items-center justify-center text-xs`}>
+            {current.icon}
+          </div>
+          <div>
+            <div className="text-[10px] font-bold text-gray-900 leading-none">{current.label}</div>
+            <div className="text-[9px] text-gray-400">{current.tag}</div>
+          </div>
+        </div>
+        <div className="flex space-x-1">
+          {posts.map((_, i) => (
+            <div key={i} className={`h-1 rounded-full transition-all duration-500 ${i === activePost ? "w-4 bg-accent" : "w-1 bg-gray-200"}`} />
+          ))}
+        </div>
+      </div>
+
+      {/* Post visual */}
+      <motion.div
+        key={activePost}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+        className={`h-40 rounded-2xl bg-gradient-to-br ${current.gradient} overflow-hidden relative`}
+      >
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+          <motion.div
+            animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="text-4xl mb-2"
+          >
+            {current.icon}
+          </motion.div>
+          <div className="text-xs font-bold opacity-90">{current.label} Content</div>
+          <div className="text-[10px] opacity-60 mt-1">Bleibsichtbar Agency</div>
+        </div>
+        {/* Animated sparkles */}
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-white rounded-full"
+            style={{ left: `${15 + i * 18}%`, top: `${20 + (i % 3) * 20}%` }}
+            animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
+          />
+        ))}
+      </motion.div>
+
+      {/* Engagement row */}
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => { setLiked(l => !l); setLikes(n => liked ? n - 1 : n + 1); }}
+            className="flex items-center space-x-1"
+          >
+            <motion.div whileTap={{ scale: 1.5 }} transition={{ type: "spring", stiffness: 400 }}>
+              <Heart className={`w-5 h-5 transition-colors ${liked ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
+            </motion.div>
+            <span className="text-[10px] font-semibold text-gray-600">{likes.toLocaleString("de-DE")}</span>
+          </button>
+          <div className="flex items-center space-x-1">
+            <MessageCircle className="w-4 h-4 text-gray-400" />
+            <span className="text-[10px] text-gray-500">342</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Share2 className="w-4 h-4 text-gray-400" />
+            <span className="text-[10px] text-gray-500">89</span>
+          </div>
+        </div>
+        <Bookmark className="w-4 h-4 text-gray-400" />
+      </div>
+
+      {/* Stats bar */}
+      <div className="grid grid-cols-2 gap-2">
+        <div className="bg-primary/5 rounded-xl p-3 border border-primary/10">
+          <div className="flex items-center space-x-1 mb-1">
+            <TrendingUp className="w-3 h-3 text-primary" />
+            <span className="text-[9px] text-gray-500 font-medium">Reichweite</span>
+          </div>
+          <div className="text-sm font-bold text-primary">
+            <AnimatedCounter target={150} suffix="%" />
+          </div>
+          <div className="mt-1.5 h-1 bg-gray-100 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-primary rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: "75%" }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            />
+          </div>
+        </div>
+        <div className="bg-accent/5 rounded-xl p-3 border border-accent/20">
+          <div className="flex items-center space-x-1 mb-1">
+            <Users className="w-3 h-3 text-accent" />
+            <span className="text-[9px] text-gray-500 font-medium">Follower</span>
+          </div>
+          <div className="text-sm font-bold text-accent">
+            +<AnimatedCounter target={3200} />
+          </div>
+          <div className="mt-1.5 h-1 bg-gray-100 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-accent rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: "60%" }}
+              transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const { data: projects = [] } = useGetProjects({ published: true });
@@ -67,26 +217,7 @@ export default function Home() {
             <div className="relative hidden lg:flex justify-center items-center">
               <div className="absolute w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
               <PhoneMockup className="rotate-[-5deg] hover:rotate-0 transition-transform duration-500">
-                <div className="p-4 space-y-4">
-                  <div className="h-48 rounded-xl bg-gray-200 overflow-hidden relative">
-                    {/* Unsplash abstract marketing graphic */}
-                    <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&h=400&fit=crop" alt="Social Media" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="h-4 w-1/2 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 pt-4">
-                    <div className="h-24 bg-primary/5 rounded-xl flex flex-col justify-center items-center border border-primary/10">
-                      <BarChart3 className="w-6 h-6 text-primary mb-2" />
-                      <span className="text-xs font-bold">+150%</span>
-                    </div>
-                    <div className="h-24 bg-accent/5 rounded-xl flex flex-col justify-center items-center border border-accent/20">
-                      <Users className="w-6 h-6 text-accent mb-2" />
-                      <span className="text-xs font-bold">+3.2k</span>
-                    </div>
-                  </div>
-                </div>
+                <SocialMediaPhone />
               </PhoneMockup>
             </div>
           </div>
