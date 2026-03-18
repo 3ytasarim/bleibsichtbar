@@ -169,3 +169,12 @@
 .animate-marquee-right:hover {
   animation-play-state: paused;
 }
+
+/* Code rain scroll */
+@keyframes code-scroll-up {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+.animate-code-scroll {
+  animation: code-scroll-up var(--code-dur, 40s) linear infinite;
+}

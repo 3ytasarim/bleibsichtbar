@@ -9,6 +9,208 @@ import { Monitor, Zap, Smartphone, Search, Palette, RefreshCw, CheckCircle2, Arr
 
 const WEB_RE = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|landing/i;
 
+// ─── Infinite Code Rain Background ────────────────────────────────────────────
+const CODE_BLOCKS = [
+  [
+    "import React, { useState } from 'react';",
+    "export default function App() {",
+    "  const [active, setActive] = useState(false);",
+    "  return (",
+    "    <main className=\"container\">",
+    "      <Header title=\"Bleibsichtbar\" />",
+    "      <Hero onCta={() => setActive(true)} />",
+    "      <Services data={services} />",
+    "    </main>",
+    "  );",
+    "}",
+    "",
+    "const services = [",
+    "  { id: 1, title: 'Social Media' },",
+    "  { id: 2, title: 'Webseiten' },",
+    "  { id: 3, title: 'Marketing Ads' },",
+    "];",
+    "",
+    "function Hero({ onCta }) {",
+    "  return <section className=\"hero\">",
+    "    <h1>Ihr digitaler Auftritt</h1>",
+    "    <button onClick={onCta}>Jetzt starten</button>",
+    "  </section>;",
+    "}",
+  ],
+  [
+    ".container {",
+    "  max-width: 1280px;",
+    "  margin: 0 auto;",
+    "  padding: 0 1.5rem;",
+    "}",
+    ".hero {",
+    "  background: linear-gradient(",
+    "    135deg, #0a1628 0%, #1a3a6b 100%",
+    "  );",
+    "  min-height: 100vh;",
+    "  display: flex;",
+    "  align-items: center;",
+    "}",
+    ".card {",
+    "  border-radius: 1.5rem;",
+    "  box-shadow: 0 20px 60px rgba(0,0,0,.1);",
+    "  transition: transform .3s ease;",
+    "}",
+    ".card:hover { transform: translateY(-8px); }",
+    ".btn-primary {",
+    "  background: #f97316;",
+    "  border-radius: 9999px;",
+    "  font-weight: 700;",
+    "  padding: .75rem 2rem;",
+    "}",
+  ],
+  [
+    "const router = createBrowserRouter([",
+    "  { path: '/', element: <Home /> },",
+    "  { path: '/about', element: <About /> },",
+    "  { path: '/contact', element: <Contact /> },",
+    "]);",
+    "",
+    "async function fetchProjects() {",
+    "  const res = await fetch('/api/projects');",
+    "  return res.json();",
+    "}",
+    "",
+    "const queryClient = new QueryClient({",
+    "  defaultOptions: {",
+    "    queries: { staleTime: 60_000 },",
+    "  },",
+    "});",
+    "",
+    "export function useProjects() {",
+    "  return useQuery({",
+    "    queryKey: ['projects'],",
+    "    queryFn: fetchProjects,",
+    "  });",
+    "}",
+  ],
+  [
+    "<html lang=\"de\">",
+    "<head>",
+    "  <meta charset=\"UTF-8\" />",
+    "  <meta name=\"viewport\"",
+    "    content=\"width=device-width\" />",
+    "  <title>Bleibsichtbar</title>",
+    "  <link rel=\"stylesheet\" href=\"/style.css\">",
+    "</head>",
+    "<body>",
+    "  <nav class=\"navbar\">",
+    "    <a href=\"/\">Bleibsichtbar</a>",
+    "    <ul>",
+    "      <li><a href=\"/social-media\">",
+    "        Social Media</a></li>",
+    "      <li><a href=\"/webseiten\">",
+    "        Webseiten</a></li>",
+    "    </ul>",
+    "  </nav>",
+    "  <main id=\"root\"></main>",
+    "  <script src=\"/app.js\"></script>",
+    "</body>",
+    "</html>",
+  ],
+  [
+    "import { motion } from 'framer-motion';",
+    "",
+    "const fadeUp = {",
+    "  hidden: { opacity: 0, y: 32 },",
+    "  visible: {",
+    "    opacity: 1, y: 0,",
+    "    transition: { duration: 0.6 }",
+    "  },",
+    "};",
+    "",
+    "function AnimatedCard({ children }) {",
+    "  return (",
+    "    <motion.div",
+    "      variants={fadeUp}",
+    "      initial=\"hidden\"",
+    "      whileInView=\"visible\"",
+    "      viewport={{ once: true }}",
+    "      whileHover={{ y: -8 }}",
+    "      className=\"card\"",
+    "    >",
+    "      {children}",
+    "    </motion.div>",
+    "  );",
+    "}",
+  ],
+  [
+    "// Performance & SEO",
+    "export const metadata = {",
+    "  title: 'Bleibsichtbar | Agentur',",
+    "  description: 'Ihre Agentur',",
+    "  openGraph: {",
+    "    type: 'website',",
+    "    locale: 'de_DE',",
+    "  },",
+    "};",
+    "",
+    "const vitals = {",
+    "  LCP: '0.8s',",
+    "  FID: '12ms',",
+    "  CLS: '0.01',",
+    "  score: 98,",
+    "};",
+    "",
+    "function optimizeImages(src) {",
+    "  return src",
+    "    .replace(/\\.jpg$/, '.webp')",
+    "    .replace(/\\/upload\\//, '/upload/q_auto/');",
+    "}",
+    "",
+    "export { vitals, optimizeImages };",
+  ],
+];
+
+const COL_CONFIG = [
+  { speed: "38s", opacity: 0.055, delay: "0s",   fontSize: "11px" },
+  { speed: "52s", opacity: 0.04,  delay: "-12s",  fontSize: "10px" },
+  { speed: "44s", opacity: 0.06,  delay: "-6s",   fontSize: "11px" },
+  { speed: "60s", opacity: 0.035, delay: "-22s",  fontSize: "10px" },
+  { speed: "46s", opacity: 0.055, delay: "-34s",  fontSize: "11px" },
+  { speed: "55s", opacity: 0.04,  delay: "-18s",  fontSize: "10px" },
+];
+
+function CodeRainBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
+      <div className="flex h-full w-full gap-3 px-2">
+        {COL_CONFIG.map((cfg, colIdx) => {
+          const block = CODE_BLOCKS[colIdx % CODE_BLOCKS.length];
+          const lines = [...block, ...block, ...block, ...block];
+          return (
+            <div key={colIdx} className="flex-1 overflow-hidden" style={{ opacity: cfg.opacity }}>
+              <div
+                className="animate-code-scroll whitespace-pre font-mono leading-relaxed"
+                style={{
+                  "--code-dur": cfg.speed,
+                  animationDelay: cfg.delay,
+                  fontSize: cfg.fontSize,
+                  color: "#7dd3fc",
+                  lineHeight: "1.65",
+                } as React.CSSProperties}
+              >
+                {/* doubled for seamless loop (animation moves -50%) */}
+                {[...lines, ...lines].map((line, i) => (
+                  <div key={i} className="truncate">{line || "\u00A0"}</div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {/* Gradient overlay so content stays readable */}
+      <div className="absolute inset-0"
+        style={{ background: "linear-gradient(to right, rgba(10,22,40,0.55) 0%, rgba(10,22,40,0.25) 40%, rgba(10,22,40,0.25) 60%, rgba(10,22,40,0.7) 100%)" }} />
+    </div>
+  );
+}
+
 function MultiDeviceShowcase({ src, alt }: { src?: string; alt: string }) {
   const img = src || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80";
   return (
@@ -105,6 +307,7 @@ export default function Webseiten() {
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
         <AnimatedHeroBackground />
+        <CodeRainBackground />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
