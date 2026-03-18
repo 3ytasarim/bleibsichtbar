@@ -45,12 +45,9 @@ export function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2.5 group shrink-0">
-              <div className="w-9 h-9 bg-primary text-white rounded-xl flex items-center justify-center font-display font-bold text-lg group-hover:bg-accent transition-colors duration-200">
-                B
-              </div>
-              <span className={cn("font-display font-bold text-xl tracking-tight transition-colors", isScrolled || !isHeroPage ? "text-foreground" : "text-white")}>
-                Bleibsichtbar<span className="text-accent">.</span>
+            <Link href="/" className="flex items-center shrink-0 group">
+              <span className={cn("font-display font-bold text-2xl tracking-tight transition-colors", isScrolled || !isHeroPage ? "text-foreground" : "text-white")}>
+                Bleibsichtbar
               </span>
             </Link>
 
