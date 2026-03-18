@@ -168,12 +168,12 @@ const CODE_BLOCKS = [
 ];
 
 const COL_CONFIG = [
-  { speed: "38s", opacity: 0.18, delay: "0s",   fontSize: "11px" },
-  { speed: "52s", opacity: 0.13, delay: "-12s",  fontSize: "10px" },
-  { speed: "44s", opacity: 0.20, delay: "-6s",   fontSize: "11px" },
-  { speed: "60s", opacity: 0.11, delay: "-22s",  fontSize: "10px" },
-  { speed: "46s", opacity: 0.17, delay: "-34s",  fontSize: "11px" },
-  { speed: "55s", opacity: 0.13, delay: "-18s",  fontSize: "10px" },
+  { speed: "38s", opacity: 0.28, delay: "0s",   fontSize: "11px" },
+  { speed: "52s", opacity: 0.20, delay: "-12s",  fontSize: "10px" },
+  { speed: "44s", opacity: 0.32, delay: "-6s",   fontSize: "11px" },
+  { speed: "60s", opacity: 0.18, delay: "-22s",  fontSize: "10px" },
+  { speed: "46s", opacity: 0.26, delay: "-34s",  fontSize: "11px" },
+  { speed: "55s", opacity: 0.20, delay: "-18s",  fontSize: "10px" },
 ];
 
 function CodeRainBackground() {
