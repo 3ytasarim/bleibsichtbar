@@ -12,37 +12,101 @@ import {
 
 const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
 
-function PhoneCard({ project }: { project: any }) {
+function getPlatformGlow(category: string): string {
+  if (/instagram/i.test(category)) return "#E1306C";
+  if (/tiktok/i.test(category)) return "#00f2ea";
+  if (/linkedin/i.test(category)) return "#0A66C2";
+  if (/facebook/i.test(category)) return "#1877F2";
+  if (/youtube/i.test(category)) return "#FF0000";
+  return "#f97316";
+}
+
+function PhoneCard({ project, index }: { project: any; index: number }) {
+  const glowColor = getPlatformGlow(project.category ?? "");
+  const floatDuration = 3.2 + (index % 3) * 0.6;
+  const floatDelay = (index % 4) * 0.5;
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.7, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       className="group shrink-0 flex flex-col items-center"
-      style={{ width: "160px" }}
+      style={{ width: "190px" }}
     >
-      <div className="relative">
-        <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-2xl border-[6px] border-gray-800 ring-1 ring-white/10 transition-transform duration-300 group-hover:-translate-y-2">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-4 bg-gray-900 rounded-b-2xl z-10" />
-          <div className="rounded-[1.4rem] overflow-hidden" style={{ aspectRatio: "9/16", width: "130px", height: "231px" }}>
+      {/* Phone + floating wrapper */}
+      <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{ repeat: Infinity, duration: floatDuration, delay: floatDelay, ease: "easeInOut" }}
+        whileHover={{ scale: 1.06, rotateY: index % 2 === 0 ? 6 : -6, rotateX: -4 }}
+        style={{ transformStyle: "preserve-3d", perspective: "1200px" }}
+        className="relative"
+      >
+        {/* Ambient glow halo under phone */}
+        <div
+          className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-28 h-10 blur-2xl opacity-40 group-hover:opacity-75 transition-opacity duration-500 rounded-full pointer-events-none z-0"
+          style={{ background: glowColor }}
+        />
+
+        {/* iPhone frame */}
+        <div className="relative z-10 rounded-[2.8rem] bg-[#161616] shadow-[0_40px_100px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(255,255,255,0.08)] transition-all duration-500 group-hover:shadow-[0_50px_120px_-10px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.15)]"
+          style={{ padding: "5px" }}>
+
+          {/* Side volume buttons */}
+          <div className="absolute -left-[3px] top-[88px] w-[3px] h-8 bg-[#2a2a2a] rounded-l-full" />
+          <div className="absolute -left-[3px] top-[128px] w-[3px] h-[52px] bg-[#2a2a2a] rounded-l-full" />
+          <div className="absolute -left-[3px] top-[188px] w-[3px] h-[52px] bg-[#2a2a2a] rounded-l-full" />
+          {/* Power button */}
+          <div className="absolute -right-[3px] top-[148px] w-[3px] h-[68px] bg-[#2a2a2a] rounded-r-full" />
+
+          {/* Screen */}
+          <div className="rounded-[2.4rem] overflow-hidden relative bg-black" style={{ width: "180px", height: "320px" }}>
+
+            {/* Dynamic Island */}
+            <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-[70px] h-[22px] bg-black rounded-full z-30 flex items-center justify-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#1e1e1e]" />
+              <div className="w-[6px] h-[6px] rounded-full bg-[#1e1e1e] opacity-60" />
+            </div>
+
+            {/* Content image */}
             {project.imageUrl ? (
               <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-500 text-xs">Kein Bild</div>
+              <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                <Camera className="w-10 h-10 text-gray-600" />
+              </div>
             )}
+
+            {/* Bottom overlay with info */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+              <p className="text-white text-[11px] font-bold leading-snug line-clamp-2 drop-shadow">{project.title}</p>
+              {project.clientName && (
+                <p className="text-white/50 text-[9px] mt-0.5 font-medium">{project.clientName}</p>
+              )}
+            </div>
+
+            {/* Platform badge top-right */}
+            <div className="absolute top-8 right-3 z-20">
+              <span
+                className="text-[8px] font-black text-white px-2 py-0.5 rounded-full uppercase tracking-wide shadow"
+                style={{ background: glowColor + "dd" }}
+              >
+                {(project.category ?? "Social").split(" ").slice(0, 2).join(" ")}
+              </span>
+            </div>
+
+            {/* Subtle screen glare */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none rounded-[2.4rem]" />
           </div>
-          <div className="flex justify-center py-1.5">
-            <div className="w-10 h-0.5 bg-gray-600 rounded-full" />
+
+          {/* Home indicator */}
+          <div className="flex justify-center pt-2 pb-1">
+            <div className="w-[52px] h-[3px] bg-[#444] rounded-full" />
           </div>
         </div>
-        <div className="absolute -inset-3 bg-accent/10 rounded-[2.5rem] blur-xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
-      </div>
-      <div className="mt-4 text-center px-2">
-        <p className="text-white font-semibold text-sm leading-tight line-clamp-2">{project.title}</p>
-        {project.clientName && <p className="text-white/40 text-xs mt-1">{project.clientName}</p>}
-        <span className="inline-block mt-2 text-[10px] bg-accent/20 text-accent px-2 py-0.5 rounded-full font-medium">{project.category}</span>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -315,28 +379,48 @@ export default function SocialMedia() {
 
       {/* SOCIAL MEDIA PROJEKTE - TELEFON GALERIE */}
       {socialProjects.length > 0 && (
-        <section className="py-24 bg-primary text-white overflow-hidden relative">
-          <AnimatedHeroBackground />
+        <section className="py-28 text-white overflow-hidden relative" style={{ background: "radial-gradient(ellipse 120% 80% at 50% 50%, #0d1f3c 0%, #060e1e 60%, #000 100%)" }}>
+          {/* Decorative orbs */}
+          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 rounded-full blur-[120px] opacity-20 pointer-events-none" style={{ background: "#f97316" }} />
+          <div className="absolute top-1/3 right-1/4 w-72 h-72 rounded-full blur-[100px] opacity-15 pointer-events-none" style={{ background: "#3b82f6" }} />
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-              <motion.div variants={fadeUp} className="text-center mb-14">
+              <motion.div variants={fadeUp} className="text-center mb-16">
                 <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unsere Arbeit</p>
-                <h2 className="text-4xl md:text-5xl font-display font-bold text-white">
+                <h2 className="text-4xl md:text-6xl font-display font-bold text-white">
                   Social Media <span className="text-accent">Projekte</span>
                 </h2>
-                <p className="text-white/70 text-lg mt-4 max-w-xl mx-auto">
+                <p className="text-white/60 text-lg mt-5 max-w-xl mx-auto">
                   Echter Content, echter Erfolg – Einblicke in unsere Kundenprojekte.
                 </p>
               </motion.div>
 
               <div className="relative">
-                <div className="flex gap-8 overflow-x-auto pb-8 -mx-4 px-4" style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,255,255,0.15) transparent" }}>
+                {/* Left edge fade */}
+                <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#060e1e] to-transparent z-10" />
+                {/* Right edge fade */}
+                <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-28 bg-gradient-to-l from-[#060e1e] to-transparent z-10" />
+
+                <div
+                  className="flex gap-10 overflow-x-auto pb-16 pt-8 px-8"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
                   {socialProjects.map((project, i) => (
-                    <PhoneCard key={project.id} project={project} />
+                    <PhoneCard key={project.id} project={project} index={i} />
                   ))}
                 </div>
-                <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-primary to-transparent" />
               </div>
+
+              {/* Scroll hint */}
+              <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mt-2">
+                <div className="flex gap-1">
+                  {socialProjects.slice(0, 5).map((_, i) => (
+                    <div key={i} className={`h-1 rounded-full ${i === 0 ? "w-6 bg-accent" : "w-2 bg-white/20"}`} />
+                  ))}
+                </div>
+                <span className="text-white/30 text-xs">Scrollen für mehr</span>
+              </motion.div>
             </motion.div>
           </div>
         </section>
