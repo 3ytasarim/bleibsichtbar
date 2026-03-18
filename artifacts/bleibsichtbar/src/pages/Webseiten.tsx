@@ -363,26 +363,102 @@ export default function Webseiten() {
       </section>
 
       {/* LEISTUNGEN ÜBERBLICK */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.div variants={fadeUp} className="text-center mb-16">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unsere Leistungen im Überblick</p>
-              <h2 className="text-4xl md:text-5xl font-display font-bold">
-                Alles aus <span className="text-accent">einer Hand</span>
-              </h2>
+      <section className="py-28 bg-[#07111f] relative overflow-hidden">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }} />
+        {/* Top glow blob */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-accent/10 blur-[100px] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Section header */}
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}
+            variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
+            className="text-center mb-20"
+          >
+            <motion.div
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+            >
+              <span className="inline-flex items-center gap-2 bg-accent/10 border border-accent/25 text-accent text-xs font-bold px-4 py-1.5 rounded-full tracking-widest uppercase mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                Unsere Leistungen im Überblick
+              </span>
             </motion.div>
-            <motion.div variants={stagger} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {leistungen.map((l, i) => (
-                <motion.div key={i} variants={fadeUp} className="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-accent/30 hover:shadow-md transition-all group">
-                  <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all">
-                    {l.icon}
-                  </div>
-                  <h3 className="text-xl font-display font-bold mb-3">{l.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{l.desc}</p>
+            <motion.h2
+              variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
+              className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight"
+            >
+              Alles aus{" "}
+              <span className="relative inline-block">
+                <span className="text-accent">einer Hand</span>
+                <motion.span
+                  initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
+                  transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
+                  className="absolute -bottom-1 left-0 right-0 h-[3px] bg-accent origin-left rounded-full"
+                />
+              </span>
+            </motion.h2>
+            <motion.p
+              variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, delay: 0.1 } } }}
+              className="mt-5 text-white/50 text-lg max-w-xl mx-auto"
+            >
+              Professionelle Webauftritte, die überzeugen — vom ersten Pixel bis zum laufenden Betrieb.
+            </motion.p>
+          </motion.div>
+
+          {/* Cards grid */}
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}
+            variants={{ visible: { transition: { staggerChildren: 0.09 } } }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            {leistungen.map((l, i) => (
+              <motion.div
+                key={i}
+                variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } } }}
+                whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
+                className="group relative bg-white/[0.04] border border-white/10 rounded-2xl p-7 overflow-hidden cursor-default"
+                style={{ backdropFilter: "blur(8px)" }}
+              >
+                {/* Hover glow */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(249,115,22,0.12) 0%, transparent 70%)" }} />
+                {/* Top border accent */}
+                <div className="absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-transparent via-accent/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+
+                {/* Number badge */}
+                <div className="absolute top-6 right-6 w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-white/30 group-hover:text-accent/70 transition-colors">{String(i + 1).padStart(2, "0")}</span>
+                </div>
+
+                {/* Icon */}
+                <motion.div
+                  whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
+                  className="w-12 h-12 rounded-xl bg-accent/15 text-accent flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-all duration-300 shadow-sm"
+                >
+                  {l.icon}
                 </motion.div>
-              ))}
-            </motion.div>
+
+                <h3 className="text-lg font-display font-bold text-white mb-3 group-hover:text-accent transition-colors duration-300 leading-snug pr-6">
+                  {l.title}
+                </h3>
+                <p className="text-white/50 text-sm leading-relaxed group-hover:text-white/65 transition-colors duration-300">
+                  {l.desc}
+                </p>
+
+                {/* Bottom line */}
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.15 * i, ease: "easeOut" }}
+                  className="absolute bottom-0 left-7 right-7 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent origin-left"
+                />
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </section>
