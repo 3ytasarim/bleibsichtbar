@@ -18,12 +18,12 @@ function getType(cat: string): ProjectType {
 }
 
 const CARD_PALETTES = [
-  { bg: "from-[#1a56db] to-[#1e40af]", shadow: "shadow-blue-700/30", ring: "border-blue-400/20", glow: "#3b82f6" },
-  { bg: "from-[#f97316] to-[#ea580c]",  shadow: "shadow-orange-700/30", ring: "border-orange-400/20", glow: "#f97316" },
-  { bg: "from-[#7c3aed] to-[#6d28d9]",  shadow: "shadow-violet-700/30", ring: "border-violet-400/20", glow: "#8b5cf6" },
-  { bg: "from-[#0891b2] to-[#0e7490]",  shadow: "shadow-cyan-700/30", ring: "border-cyan-400/20", glow: "#06b6d4" },
-  { bg: "from-[#16a34a] to-[#15803d]",  shadow: "shadow-green-700/30", ring: "border-green-400/20", glow: "#22c55e" },
-  { bg: "from-[#dc2626] to-[#b91c1c]",  shadow: "shadow-red-700/30", ring: "border-red-400/20", glow: "#ef4444" },
+  { accent: "#1a56db", lightBg: "#eff6ff", badgeBg: "#1a56db", shadow: "hover:shadow-blue-100" },
+  { accent: "#f97316", lightBg: "#fff7ed", badgeBg: "#f97316", shadow: "hover:shadow-orange-100" },
+  { accent: "#7c3aed", lightBg: "#f5f3ff", badgeBg: "#7c3aed", shadow: "hover:shadow-violet-100" },
+  { accent: "#0891b2", lightBg: "#ecfeff", badgeBg: "#0891b2", shadow: "hover:shadow-cyan-100" },
+  { accent: "#16a34a", lightBg: "#f0fdf4", badgeBg: "#16a34a", shadow: "hover:shadow-green-100" },
+  { accent: "#dc2626", lightBg: "#fef2f2", badgeBg: "#dc2626", shadow: "hover:shadow-red-100" },
 ];
 
 function PhoneMockupCard({ src, alt }: { src?: string; alt: string }) {
@@ -97,7 +97,6 @@ function BrowserMockupCard({ src, alt }: { src?: string; alt: string }) {
 function ProjectCard({ project, index }: { project: any; index: number }) {
   const type = getType(project.category ?? "");
   const palette = CARD_PALETTES[index % CARD_PALETTES.length];
-  const slug = (project.title ?? "projekt").toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
   return (
     <motion.div
@@ -107,21 +106,30 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: index * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -6, transition: { type: "spring", stiffness: 260, damping: 22 } }}
-      className={`group relative bg-gradient-to-br ${palette.bg} rounded-3xl overflow-visible border ${palette.ring} shadow-2xl ${palette.shadow} flex flex-row items-end min-h-[200px]`}
+      className={`group relative bg-white rounded-3xl overflow-visible border border-gray-100 shadow-md ${palette.shadow} hover:shadow-xl transition-shadow duration-400 flex flex-row items-end min-h-[200px]`}
     >
-      {/* Glow blob inside card */}
+      {/* Subtle tinted bg patch on right */}
       <div
-        className="absolute top-0 right-0 w-40 h-40 rounded-full blur-[60px] opacity-30 pointer-events-none"
-        style={{ background: palette.glow }}
+        className="absolute right-0 top-0 bottom-0 w-2/3 rounded-r-3xl pointer-events-none"
+        style={{ background: palette.lightBg }}
+      />
+
+      {/* Top accent line */}
+      <div
+        className="absolute top-0 left-6 right-6 h-[3px] rounded-b-full"
+        style={{ background: palette.accent }}
       />
 
       {/* Category badge – top right */}
-      <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-white/20 z-10">
+      <div
+        className="absolute top-4 right-4 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest z-10"
+        style={{ background: palette.accent }}
+      >
         {project.category}
       </div>
 
       {/* Device mockup – sticks out above */}
-      <div className="shrink-0 pl-6 pb-0 flex items-end" style={{ marginTop: "-32px", marginBottom: "0" }}>
+      <div className="shrink-0 pl-6 pb-0 flex items-end relative z-10" style={{ marginTop: "-32px" }}>
         {type === "web" ? (
           <BrowserMockupCard src={project.imageUrl} alt={project.title} />
         ) : (
@@ -130,12 +138,12 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       </div>
 
       {/* Info – right side */}
-      <div className="flex flex-col justify-center flex-1 px-6 py-7 z-10 min-w-0">
-        <h3 className="text-xl md:text-2xl font-display font-black text-white leading-tight mb-1 truncate">
+      <div className="flex flex-col justify-center flex-1 px-6 py-7 relative z-10 min-w-0">
+        <h3 className="text-xl md:text-2xl font-display font-black text-primary leading-tight mb-1 truncate">
           {project.title}
         </h3>
         {project.clientName && (
-          <p className="text-white/60 text-sm font-medium mb-4 flex items-center gap-1.5 truncate">
+          <p className="text-gray-500 text-sm font-medium mb-4 flex items-center gap-1.5 truncate">
             <Globe className="w-3 h-3 shrink-0" />
             {project.clientName}
           </p>
@@ -143,9 +151,10 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
         {!project.clientName && <div className="mb-4" />}
 
         <motion.button
-          whileHover={{ scale: 1.03 }}
+          whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
-          className="self-start bg-black text-white text-sm font-bold px-6 py-2.5 rounded-full flex items-center gap-2 hover:bg-gray-900 transition-colors shadow-lg"
+          className="self-start text-white text-sm font-bold px-6 py-2.5 rounded-full flex items-center gap-2 shadow-md transition-opacity hover:opacity-90"
+          style={{ background: palette.accent }}
         >
           Ansehen <ExternalLink className="w-3.5 h-3.5" />
         </motion.button>
