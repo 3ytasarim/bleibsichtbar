@@ -3,36 +3,34 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Instagram, Facebook, Linkedin, Mail, Music2 } from "lucide-react";
 
-const TICKER_TEXT = "bleibsichtbar.com";
-const TICKER_ITEMS = Array(16).fill(TICKER_TEXT);
+const TICKER_ITEMS = Array(16).fill(null);
 
 export function Footer() {
   return (
     <footer className="bg-primary text-white overflow-hidden">
 
       {/* ── Scrolling Ticker ── */}
-      <div className="relative py-5 overflow-hidden border-y border-white/[0.08]"
-        style={{ background: "rgba(0,0,0,0.25)" }}>
-        {/* Left/right fade masks */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 z-10"
-          style={{ background: "linear-gradient(to right, #0a1628, transparent)" }} />
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 z-10"
-          style={{ background: "linear-gradient(to left, #0a1628, transparent)" }} />
-
+      <div className="relative overflow-hidden border-y border-white/[0.06]"
+        style={{ background: "rgba(0,0,0,0.2)", paddingTop: "18px", paddingBottom: "18px" }}>
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 22, ease: "linear", repeat: Infinity }}
+          transition={{ duration: 28, ease: "linear", repeat: Infinity }}
           className="flex whitespace-nowrap select-none"
         >
           {TICKER_ITEMS.map((_, i) => (
-            <span key={i} className="inline-flex items-center gap-5 px-6 shrink-0">
-              <span className="text-2xl md:text-3xl font-display font-black tracking-tight text-white/90">
-                bleibsichtbar
+            <span key={i} className="inline-flex items-center shrink-0">
+              <span
+                className="font-display font-black uppercase tracking-widest text-white/80"
+                style={{ fontSize: "clamp(1.1rem, 2vw, 1.5rem)", letterSpacing: "0.12em" }}
+              >
+                BLEIBSICHTBAR.COM
               </span>
-              <span className="text-2xl md:text-3xl font-display font-black tracking-tight text-accent">
-                .com
+              <span
+                className="font-display font-black text-white/25 mx-8"
+                style={{ fontSize: "clamp(1rem, 1.8vw, 1.3rem)" }}
+              >
+                –
               </span>
-              <span className="text-accent/40 text-lg mx-1">✦</span>
             </span>
           ))}
         </motion.div>
