@@ -450,15 +450,62 @@ export default function Home() {
                   </p>
 
                   <div className="flex flex-wrap gap-4 mt-8">
-                    <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-white rounded-full px-8 py-6 text-lg font-semibold shadow-lg shadow-accent/30 hover:shadow-xl hover:shadow-accent/40 transition-all">
-                      <Link href={current.ctaLink}>
-                        {current.cta}
-                        <ArrowRight className="ml-2 w-5 h-5" />
+                    {/* Primary CTA */}
+                    <motion.div
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    >
+                      <Link
+                        href={current.ctaLink}
+                        className="relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-4 rounded-full text-white font-bold text-base group"
+                        style={{
+                          background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)",
+                          boxShadow: "0 8px 32px rgba(255,107,53,0.35), inset 0 1px 0 rgba(255,255,255,0.2)",
+                        }}
+                      >
+                        {/* Shimmer sweep */}
+                        <motion.span
+                          className="absolute inset-0 -translate-x-full skew-x-12 pointer-events-none"
+                          style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)" }}
+                          animate={{ x: ["-100%", "200%"] }}
+                          transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 1.8, ease: "easeInOut" }}
+                        />
+                        <span className="relative">{current.cta}</span>
+                        <motion.span
+                          className="relative"
+                          animate={{ x: [0, 4, 0] }}
+                          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <ArrowRight className="w-5 h-5" />
+                        </motion.span>
                       </Link>
-                    </Button>
-                    <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-6 text-lg font-semibold border-white/30 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm">
-                      <Link href="/projekte">Projekte ansehen</Link>
-                    </Button>
+                    </motion.div>
+
+                    {/* Secondary — Ghost */}
+                    <motion.div
+                      whileHover={{ scale: 1.04, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    >
+                      <Link
+                        href="/projekte"
+                        className="relative inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-bold text-base text-white/90 group overflow-hidden"
+                        style={{
+                          background: "rgba(255,255,255,0.08)",
+                          border: "1.5px solid rgba(255,255,255,0.18)",
+                          backdropFilter: "blur(10px)",
+                        }}
+                      >
+                        {/* Hover fill */}
+                        <motion.span
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
+                          style={{ background: "rgba(255,255,255,0.1)" }}
+                        />
+                        <span className="relative">Projekte ansehen</span>
+                        <ChevronRight className="relative w-4 h-4 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" />
+                      </Link>
+                    </motion.div>
                   </div>
 
                   {/* Trust badges */}
