@@ -462,6 +462,101 @@ export default function Webseiten() {
         </div>
       </section>
 
+      {/* PROJEKT CHECKLISTE */}
+      <section className="py-28 bg-gray-50 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ backgroundImage: "radial-gradient(circle at 80% 50%, rgba(249,115,22,0.06) 0%, transparent 60%)" }} />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Left – illustration */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.7 }}
+              className="flex justify-center"
+            >
+              <motion.div
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="relative"
+              >
+                {/* Glow halo behind illustration */}
+                <div className="absolute inset-0 rounded-full bg-accent/10 blur-[60px] scale-110 pointer-events-none" />
+                <img
+                  src="/brain-lightbulb.png"
+                  alt="Webseiten Projekt Prozess"
+                  className="relative w-72 md:w-80 drop-shadow-2xl"
+                />
+              </motion.div>
+            </motion.div>
+
+            {/* Right – checklist */}
+            <motion.div
+              initial="hidden" whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
+            >
+              <motion.div
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+                className="mb-8"
+              >
+                <span className="text-accent font-bold text-sm tracking-widest uppercase">Unser Projektvorgehen</span>
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-primary mt-2 leading-tight">
+                  Webseiten{" "}
+                  <span className="text-accent">Projekt&shy;prozess</span>
+                </h2>
+                <p className="text-gray-500 mt-3 text-base leading-relaxed">
+                  Von der ersten Anfrage bis zur Veröffentlichung — transparent, strukturiert und termingerecht.
+                </p>
+              </motion.div>
+
+              <div className="space-y-3">
+                {[
+                  "Kundenanfrage aufnehmen",
+                  "Zielanalyse und Lösungsvorschläge erarbeiten",
+                  "Arbeitsablauf gemeinsam präsentieren",
+                  "Angebot erstellen und freigeben",
+                  "Erstentwurf und Seitenstruktur festlegen",
+                  "Kodierung und visuelles Design abstimmen",
+                  "Inhalte und Texte einpflegen",
+                  "Testphase und Qualitätsprüfung",
+                  "Fehlerbehebung und Optimierung",
+                  "Projektabnahme durch den Kunden",
+                  "Webseite veröffentlichen",
+                ].map((step, i) => (
+                  <motion.div
+                    key={i}
+                    variants={{ hidden: { opacity: 0, x: 24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
+                    className="flex items-center gap-3 group"
+                  >
+                    {/* Check icon */}
+                    <div className="w-6 h-6 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:border-accent transition-all duration-300">
+                      <svg className="w-3 h-3 text-accent group-hover:text-white transition-colors" fill="none" viewBox="0 0 12 12">
+                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    {/* Step number */}
+                    <span className="text-[11px] font-bold text-gray-400 w-5 shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                    {/* Text */}
+                    <span className="text-gray-700 text-sm font-medium group-hover:text-primary transition-colors">{step}</span>
+                  </motion.div>
+                ))}
+              </div>
+
+              <motion.div
+                variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.3 } } }}
+                className="mt-8"
+              >
+                <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold shadow-lg shadow-accent/20">
+                  <Link href="/kontakt">Jetzt Projekt starten</Link>
+                </Button>
+              </motion.div>
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
+
       {/* PROZESS */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
