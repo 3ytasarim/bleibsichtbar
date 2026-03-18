@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
@@ -136,6 +136,123 @@ function FloatingSocialIcons() {
           />
         </motion.div>
       ))}
+    </div>
+  );
+}
+
+// ─── Rising Reaction Particles ─────────────────────────────────────────────────
+const REACTION_TYPES = [
+  {
+    color: "#e94560",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="white" className="w-full h-full p-[24%]">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    ),
+  },
+  {
+    color: "#1877F2",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="white" className="w-full h-full p-[22%]">
+        <path d="M1 21V9l7-7h6l1 1v4h5l2 2v6l-2 2h-5v4l-1 1H8l-7-7zm9-14H5l-2 2v9l5-4V7zm4 0v4l1 1h4v4h-4l-1 1v4h3v-3h4V10h-5l-1-1V7h-1z"/>
+        <path d="M7 10h10v2H7z" transform="translate(-1 2)"/>
+      </svg>
+    ),
+  },
+  {
+    color: "#1877F2",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="white" className="w-full h-full p-[22%]">
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+      </svg>
+    ),
+  },
+  {
+    color: "#e94560",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="white" className="w-full h-full p-[22%]">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.86 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
+      </svg>
+    ),
+  },
+  {
+    color: "#f97316",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="white" className="w-full h-full p-[22%]">
+        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+      </svg>
+    ),
+  },
+  {
+    color: "#a855f7",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="white" className="w-full h-full p-[22%]">
+        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      </svg>
+    ),
+  },
+];
+
+interface Particle { id: number; x: number; size: number; reactionIdx: number; dur: number; wobble: number; }
+let _pid = 0;
+
+function RisingReactions() {
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  useEffect(() => {
+    const spawn = () => {
+      const p: Particle = {
+        id: _pid++,
+        x: 5 + Math.random() * 90,
+        size: 32 + Math.random() * 24,
+        reactionIdx: Math.floor(Math.random() * REACTION_TYPES.length),
+        dur: 3.2 + Math.random() * 2.8,
+        wobble: (Math.random() - 0.5) * 50,
+      };
+      setParticles(prev => [...prev.slice(-22), p]);
+    };
+    spawn();
+    const t = setInterval(spawn, 420);
+    return () => clearInterval(t);
+  }, []);
+
+  const remove = useCallback((id: number) => {
+    setParticles(prev => prev.filter(p => p.id !== id));
+  }, []);
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 2 }}>
+      {particles.map(p => {
+        const reaction = REACTION_TYPES[p.reactionIdx];
+        return (
+          <motion.div
+            key={p.id}
+            className="absolute bottom-0"
+            style={{ left: `${p.x}%`, width: p.size, height: p.size }}
+            initial={{ y: 0, opacity: 0, scale: 0.4, rotate: -15 }}
+            animate={{
+              y: -(500 + Math.random() * 200),
+              opacity: [0, 0.9, 0.9, 0.9, 0],
+              scale: [0.4, 1, 1, 0.85],
+              rotate: [Math.random() * 20 - 10, Math.random() * 20 - 10],
+              x: [0, p.wobble, p.wobble * 0.5, 0],
+            }}
+            transition={{ duration: p.dur, ease: [0.22, 1, 0.36, 1], times: [0, 0.15, 0.6, 0.85, 1] }}
+            onAnimationComplete={() => remove(p.id)}
+          >
+            <div
+              className="w-full h-full rounded-xl shadow-lg ring-1 ring-white/20"
+              style={{ background: reaction.color }}
+            >
+              {reaction.icon}
+            </div>
+            <div
+              className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3/4 h-3 blur-md rounded-full opacity-60"
+              style={{ background: reaction.color }}
+            />
+          </motion.div>
+        );
+      })}
     </div>
   );
 }
@@ -350,6 +467,7 @@ export default function SocialMedia() {
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
         <AnimatedHeroBackground />
         <FloatingSocialIcons />
+        <RisingReactions />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div custom={0} variants={heroFadeUp} initial="hidden" animate="visible">
             <span className="inline-block bg-white/10 border border-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6 tracking-wide">
