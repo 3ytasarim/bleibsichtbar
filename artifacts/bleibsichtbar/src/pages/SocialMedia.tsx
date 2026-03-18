@@ -649,13 +649,16 @@ export default function SocialMedia() {
                 {/* Right edge fade */}
                 <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-28 bg-gradient-to-l from-[#060e1e] to-transparent z-10" />
 
-                <div
-                  className="flex gap-10 overflow-x-auto pb-16 pt-8 px-8"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
-                  {socialProjects.map((project, i) => (
-                    <PhoneCard key={project.id} project={project} index={i} />
-                  ))}
+                {/* Outer wrapper keeps overflow-x scroll but doesn't clip y */}
+                <div className="overflow-x-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                  <div
+                    className="flex gap-10 pb-10 pt-16 px-8"
+                    style={{ minWidth: "max-content" }}
+                  >
+                    {socialProjects.map((project, i) => (
+                      <PhoneCard key={project.id} project={project} index={i} />
+                    ))}
+                  </div>
                 </div>
               </div>
 
