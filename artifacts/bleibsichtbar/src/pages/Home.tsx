@@ -311,10 +311,11 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 
 // ─── Fade-in wrapper ──────────────────────────────────────────────────────────
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" } },
 };
 const stagger = {
+  hidden: {},
   visible: { transition: { staggerChildren: 0.1 } },
 };
 
@@ -331,7 +332,7 @@ export default function Home() {
   return (
     <PublicLayout>
       {/* ─── Hero ────────────────────────────────────────────────────────── */}
-      <div className="relative min-h-screen flex items-center overflow-hidden -mt-20">
+      <div className="relative h-screen min-h-[640px] max-h-[900px] flex items-center overflow-hidden -mt-20">
         {/* Animated bg */}
         <AnimatePresence mode="sync">
           <motion.div
@@ -354,7 +355,7 @@ export default function Home() {
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
             <div className="space-y-8">
               <AnimatePresence mode="wait">
