@@ -497,7 +497,7 @@ function SocialMediaSlider() {
                         >
                           {/* Follower */}
                           <div className="flex items-center gap-2">
-                            <svg className="w-4 h-4 flex-shrink-0 opacity-60" fill="none" stroke="white" strokeWidth="1.8" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="#f97316" strokeWidth="1.8" viewBox="0 0 24 24">
                               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/>
                               <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round"/>
                               <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" strokeLinecap="round" strokeLinejoin="round"/>
@@ -506,17 +506,17 @@ function SocialMediaSlider() {
                           </div>
                           {/* Likes */}
                           <div className="flex items-center gap-2">
-                            <svg className="w-4 h-4 flex-shrink-0 opacity-60" fill="none" stroke="white" strokeWidth="1.8" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="#f97316" strokeWidth="1.8" viewBox="0 0 24 24">
                               <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" strokeLinecap="round" strokeLinejoin="round"/>
                               <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                             <span className="text-white font-bold text-sm">{likes}</span>
                           </div>
-                          {/* Views */}
+                          {/* Views — camera icon */}
                           <div className="flex items-center gap-2">
-                            <svg className="w-4 h-4 flex-shrink-0 opacity-60" fill="none" stroke="white" strokeWidth="1.8" viewBox="0 0 24 24">
-                              <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M8 21h8M12 17v4" strokeLinecap="round" strokeLinejoin="round"/>
+                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="#f97316" strokeWidth="1.8" viewBox="0 0 24 24">
+                              <path d="M23 7l-7 5 7 5V7z" strokeLinecap="round" strokeLinejoin="round"/>
+                              <rect x="1" y="5" width="15" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                             <span className="text-white font-bold text-sm">{views}</span>
                           </div>
