@@ -437,7 +437,7 @@ function SocialMediaSlider() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[0, 1, 2].map(i => (
-              <div key={i} className="rounded-3xl bg-white/5 animate-pulse" style={{ height: 480 }} />
+              <div key={i} className="rounded-3xl bg-white/5 animate-pulse" style={{ aspectRatio: "9/16" }} />
             ))}
           </div>
         ) : (
@@ -445,64 +445,84 @@ function SocialMediaSlider() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -30 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.38, ease: "easeInOut" }}
                 className="grid grid-cols-1 md:grid-cols-3 gap-5"
               >
                 {displayVisible.map((p: any, i: number) => (
                   <motion.div
                     key={p.id ?? i}
-                    whileHover={{ y: -8, scale: 1.01 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                    whileHover={{ y: -10, scale: 1.015 }}
+                    transition={{ type: "spring", stiffness: 280, damping: 22 }}
                   >
-                    <Link href={p.id > 0 ? `/projekte/${p.id}` : "/projekte"} className="block group">
+                    <Link href={p.id > 0 ? `/projekte/${p.id}` : "/projekte"} className="block group cursor-pointer">
+                      {/* Phone-ratio card */}
                       <div
-                        className="relative rounded-3xl overflow-hidden"
-                        style={{ height: 480, boxShadow: "0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07)" }}
+                        className="relative overflow-hidden flex flex-col"
+                        style={{
+                          aspectRatio: "9/16",
+                          borderRadius: 28,
+                          boxShadow: "0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08)",
+                        }}
                       >
+                        {/* Full-bleed photo */}
                         <img
                           src={p.imageUrl || "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80&fit=crop"}
                           alt={p.title}
                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)" }} />
-                        <div className="absolute top-4 left-4 z-10">
-                          <span className="inline-flex items-center bg-accent text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
-                            {p.category}
-                          </span>
+
+                        {/* Subtle top-to-transparent gradient (only top ~25%) */}
+                        <div className="absolute inset-0 pointer-events-none"
+                          style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 35%)" }} />
+
+                        {/* Bottom dark strip with stats */}
+                        <div
+                          className="absolute bottom-0 inset-x-0 z-10"
+                          style={{ background: "rgba(10,10,10,0.82)", backdropFilter: "blur(12px)" }}
+                        >
+                          {/* Stats row */}
+                          <div className="flex items-center gap-5 px-5 py-3.5">
+                            {p.statFollowers && (
+                              <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="white" strokeOpacity="0.55" strokeWidth="1.8" viewBox="0 0 24 24">
+                                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M16 3.13a4 4 0 0 1 0 7.75" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                <span className="text-white font-bold text-sm tracking-tight">{p.statFollowers}</span>
+                              </div>
+                            )}
+                            {p.statLikes && (
+                              <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="white" strokeOpacity="0.55" strokeWidth="1.8" viewBox="0 0 24 24">
+                                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                <span className="text-white font-bold text-sm tracking-tight">{p.statLikes}</span>
+                              </div>
+                            )}
+                            {p.statViews && (
+                              <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="white" strokeOpacity="0.55" strokeWidth="1.8" viewBox="0 0 24 24">
+                                  <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M8 21h8M12 17v4" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                <span className="text-white font-bold text-sm tracking-tight">{p.statViews}</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        <div className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-y-1 group-hover:translate-y-0">
-                          <ArrowRight className="w-4 h-4 text-white" />
-                        </div>
-                        <div className="absolute bottom-0 inset-x-0 p-5 z-10">
-                          {p.clientName && (
-                            <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-1">{p.clientName}</p>
-                          )}
-                          <h3 className="text-white font-display font-bold text-lg leading-snug mb-4">{p.title}</h3>
-                          {(p.statFollowers || p.statLikes || p.statViews) && (
-                            <div className="flex items-center gap-4 pt-4 border-t border-white/15">
-                              {p.statFollowers && (
-                                <div className="flex items-center gap-1.5">
-                                  <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-                                  <span className="text-white text-xs font-bold">{p.statFollowers}</span>
-                                </div>
-                              )}
-                              {p.statLikes && (
-                                <div className="flex items-center gap-1.5">
-                                  <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                                  <span className="text-white text-xs font-bold">{p.statLikes}</span>
-                                </div>
-                              )}
-                              {p.statViews && (
-                                <div className="flex items-center gap-1.5">
-                                  <svg className="w-3.5 h-3.5 text-white/50" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                                  <span className="text-white text-xs font-bold">{p.statViews}</span>
-                                </div>
-                              )}
-                            </div>
-                          )}
+
+                        {/* Hover overlay arrow */}
+                        <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ background: "rgba(249,115,22,0.12)" }}>
+                          <div className="w-14 h-14 rounded-full bg-accent flex items-center justify-center shadow-xl">
+                            <ArrowRight className="w-6 h-6 text-white" />
+                          </div>
                         </div>
                       </div>
                     </Link>
