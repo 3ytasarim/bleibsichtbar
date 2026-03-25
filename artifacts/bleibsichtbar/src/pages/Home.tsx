@@ -361,6 +361,15 @@ const stagger = {
 // ─── Social Media Slider ───────────────────────────────────────────────────────
 const CARDS_PER_VIEW = 3;
 
+// Deterministic "random" based on project id so same project always shows same stats
+function autoStat(seed: number, min: number, max: number): string {
+  const x = Math.abs(Math.sin(seed * 9301 + 49297) * 233280);
+  const val = Math.floor((x % 1) * (max - min) + min);
+  if (val >= 1_000_000) return (val / 1_000_000).toFixed(1).replace(".0", "") + "M";
+  if (val >= 1_000) return (val / 1_000).toFixed(0) + "k";
+  return String(val);
+}
+
 function SocialMediaSlider() {
   const { data: allProjects = [], isLoading } = useGetProjects({ published: true });
   const projects = allProjects.filter(p =>
@@ -437,7 +446,7 @@ function SocialMediaSlider() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[0, 1, 2].map(i => (
-              <div key={i} className="rounded-3xl bg-white/5 animate-pulse" style={{ aspectRatio: "9/16" }} />
+              <div key={i} className="rounded-3xl bg-white/5 animate-pulse" style={{ height: 420 }} />
             ))}
           </div>
         ) : (
@@ -451,20 +460,24 @@ function SocialMediaSlider() {
                 transition={{ duration: 0.38, ease: "easeInOut" }}
                 className="grid grid-cols-1 md:grid-cols-3 gap-5"
               >
-                {displayVisible.map((p: any, i: number) => (
+                {displayVisible.map((p: any, i: number) => {
+                  const seed = Math.abs(p.id ?? i + 1);
+                  const followers = p.statFollowers || autoStat(seed, 8000, 180000);
+                  const likes    = p.statLikes    || autoStat(seed + 1, 150000, 950000);
+                  const views    = p.statViews    || autoStat(seed + 2, 5000000, 120000000);
+                  return (
                   <motion.div
                     key={p.id ?? i}
-                    whileHover={{ y: -10, scale: 1.015 }}
+                    whileHover={{ y: -8, scale: 1.015 }}
                     transition={{ type: "spring", stiffness: 280, damping: 22 }}
                   >
                     <Link href={p.id > 0 ? `/projekte/${p.id}` : "/projekte"} className="block group cursor-pointer">
-                      {/* Phone-ratio card */}
                       <div
-                        className="relative overflow-hidden flex flex-col"
+                        className="relative overflow-hidden"
                         style={{
-                          aspectRatio: "9/16",
-                          borderRadius: 28,
-                          boxShadow: "0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08)",
+                          height: 420,
+                          borderRadius: 24,
+                          boxShadow: "0 24px 64px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.08)",
                         }}
                       >
                         {/* Full-bleed photo */}
@@ -474,60 +487,45 @@ function SocialMediaSlider() {
                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
 
-                        {/* Subtle top-to-transparent gradient (only top ~25%) */}
-                        <div className="absolute inset-0 pointer-events-none"
-                          style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 35%)" }} />
+                        {/* Hover tint */}
+                        <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-colors duration-300 z-10" />
 
-                        {/* Bottom dark strip with stats */}
+                        {/* Bottom dark stat bar */}
                         <div
-                          className="absolute bottom-0 inset-x-0 z-10"
-                          style={{ background: "rgba(10,10,10,0.82)", backdropFilter: "blur(12px)" }}
+                          className="absolute bottom-0 inset-x-0 z-20 flex items-center gap-6 px-5 py-4"
+                          style={{ background: "rgba(8,8,8,0.80)", backdropFilter: "blur(14px)" }}
                         >
-                          {/* Stats row */}
-                          <div className="flex items-center gap-5 px-5 py-3.5">
-                            {p.statFollowers && (
-                              <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="white" strokeOpacity="0.55" strokeWidth="1.8" viewBox="0 0 24 24">
-                                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/>
-                                  <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round"/>
-                                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" strokeLinecap="round" strokeLinejoin="round"/>
-                                  <path d="M16 3.13a4 4 0 0 1 0 7.75" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                                <span className="text-white font-bold text-sm tracking-tight">{p.statFollowers}</span>
-                              </div>
-                            )}
-                            {p.statLikes && (
-                              <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="white" strokeOpacity="0.55" strokeWidth="1.8" viewBox="0 0 24 24">
-                                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" strokeLinecap="round" strokeLinejoin="round"/>
-                                  <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                                <span className="text-white font-bold text-sm tracking-tight">{p.statLikes}</span>
-                              </div>
-                            )}
-                            {p.statViews && (
-                              <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="white" strokeOpacity="0.55" strokeWidth="1.8" viewBox="0 0 24 24">
-                                  <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                  <path d="M8 21h8M12 17v4" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                                <span className="text-white font-bold text-sm tracking-tight">{p.statViews}</span>
-                              </div>
-                            )}
+                          {/* Follower */}
+                          <div className="flex items-center gap-2">
+                            <svg className="w-4 h-4 flex-shrink-0 opacity-60" fill="none" stroke="white" strokeWidth="1.8" viewBox="0 0 24 24">
+                              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            <span className="text-white font-bold text-sm">{followers}</span>
                           </div>
-                        </div>
-
-                        {/* Hover overlay arrow */}
-                        <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ background: "rgba(249,115,22,0.12)" }}>
-                          <div className="w-14 h-14 rounded-full bg-accent flex items-center justify-center shadow-xl">
-                            <ArrowRight className="w-6 h-6 text-white" />
+                          {/* Likes */}
+                          <div className="flex items-center gap-2">
+                            <svg className="w-4 h-4 flex-shrink-0 opacity-60" fill="none" stroke="white" strokeWidth="1.8" viewBox="0 0 24 24">
+                              <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            <span className="text-white font-bold text-sm">{likes}</span>
+                          </div>
+                          {/* Views */}
+                          <div className="flex items-center gap-2">
+                            <svg className="w-4 h-4 flex-shrink-0 opacity-60" fill="none" stroke="white" strokeWidth="1.8" viewBox="0 0 24 24">
+                              <rect x="2" y="3" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M8 21h8M12 17v4" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            <span className="text-white font-bold text-sm">{views}</span>
                           </div>
                         </div>
                       </div>
                     </Link>
                   </motion.div>
-                ))}
+                  );
+                })}
               </motion.div>
             </AnimatePresence>
 
