@@ -124,47 +124,98 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-white pt-24 px-6 pb-8 overflow-y-auto"
-          >
-            <nav className="flex flex-col space-y-2">
-              {links.map((link, i) => (
-                <motion.div
-                  key={link.path}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+          <>
+            {/* Dark backdrop */}
+            <motion.div
+              key="drawer-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-40"
+              style={{ background: "rgba(5,10,22,0.72)", backdropFilter: "blur(6px)" }}
+              onClick={() => setMobileMenuOpen(false)}
+            />
+
+            {/* Left panel */}
+            <motion.div
+              key="drawer-panel"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed top-0 left-0 bottom-0 z-50 flex flex-col"
+              style={{
+                width: "80vw",
+                maxWidth: 320,
+                background: "linear-gradient(160deg, #0c1a36 0%, #0a1628 100%)",
+                borderRight: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "8px 0 40px rgba(0,0,0,0.5)",
+              }}
+            >
+              {/* Logo + close row */}
+              <div className="flex items-center justify-between px-6 pt-6 pb-4">
+                <span className="font-display font-black text-[18px] tracking-[0.18em] uppercase text-white">
+                  Bleibsichtbar
+                </span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
                 >
-                  <Link
-                    href={link.path}
-                    className={cn(
-                      "block text-2xl font-display font-bold py-4 border-b border-gray-100 hover:text-accent transition-colors",
-                      location === link.path ? "text-accent" : "text-foreground"
-                    )}
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div className="mx-6 h-px bg-white/08 mb-4" style={{ background: "rgba(255,255,255,0.08)" }} />
+
+              {/* Nav links */}
+              <nav className="flex flex-col px-4 flex-1">
+                {links.map((link, i) => (
+                  <motion.div
+                    key={link.path}
+                    initial={{ opacity: 0, x: -24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.08 + i * 0.06, ease: [0.22, 1, 0.36, 1], duration: 0.35 }}
                   >
-                    {link.name}
-                  </Link>
-                </motion.div>
-              ))}
-            </nav>
-            <div className="pt-8">
-              <motion.button
-                onClick={() => { setMobileMenuOpen(false); setModalOpen(true); }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full py-4 rounded-full text-lg font-bold text-white"
-                style={{ background: "linear-gradient(135deg, #ff6b35, #e8522a)" }}
-              >
-                Kontakt aufnehmen
-              </motion.button>
-            </div>
-          </motion.div>
+                    <Link
+                      href={link.path}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-3.5 rounded-xl font-semibold text-[15px] transition-all",
+                        location === link.path
+                          ? "text-accent bg-accent/10"
+                          : "text-white/75 hover:text-white hover:bg-white/06"
+                      )}
+                      style={location !== link.path ? { "--tw-bg-opacity": 1 } as React.CSSProperties : undefined}
+                    >
+                      {location === link.path && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
+                      )}
+                      {link.name}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+
+              {/* CTA */}
+              <div className="px-5 pb-8">
+                <motion.button
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.42 }}
+                  onClick={() => { setMobileMenuOpen(false); setModalOpen(true); }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full py-4 rounded-2xl text-sm font-bold text-white"
+                  style={{ background: "linear-gradient(135deg, #ff6b35, #e8522a)" }}
+                >
+                  Kontakt aufnehmen
+                </motion.button>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 

@@ -115,7 +115,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             className="fixed inset-0 z-[101] flex items-center justify-center px-4 py-8 pointer-events-none"
           >
             <div
-              className="relative w-full max-w-xl pointer-events-auto overflow-hidden"
+              className="relative w-full max-w-xl pointer-events-auto"
               style={{
                 background: "linear-gradient(145deg, #0c1a36 0%, #0e2050 100%)",
                 borderRadius: "28px",
@@ -123,7 +123,9 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 boxShadow: "0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset",
                 maxHeight: "92vh",
                 overflowY: "auto",
-              }}
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              } as React.CSSProperties}
             >
               {/* Decorative orbs */}
               <div className="pointer-events-none absolute -top-20 -right-20 w-64 h-64 rounded-full"
