@@ -705,12 +705,14 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone (hidden on mobile) */}
-            <div className="hidden lg:flex justify-center lg:justify-end relative">
+            {/* Right — Phone */}
+            <div className="flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
-                <SocialMediaPhone />
-              </PhoneMockup>
+              <div className="scale-75 sm:scale-90 lg:scale-100 origin-top">
+                <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
+                  <SocialMediaPhone />
+                </PhoneMockup>
+              </div>
             </div>
           </div>
 
