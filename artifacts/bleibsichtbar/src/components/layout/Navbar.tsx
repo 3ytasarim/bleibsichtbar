@@ -54,7 +54,7 @@ export function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center shrink-0 group">
               <span className={cn(
-                "font-display font-bold text-2xl tracking-tight transition-colors",
+                "font-display font-black text-[22px] tracking-[0.18em] uppercase transition-colors",
                 isScrolled || !isHeroPage ? "text-foreground" : "text-white"
               )}>
                 Bleibsichtbar
