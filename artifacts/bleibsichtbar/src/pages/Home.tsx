@@ -708,7 +708,7 @@ export default function Home() {
             {/* Right — Phone */}
             <div className="flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <div className="scale-75 sm:scale-90 lg:scale-100 origin-top">
+              <div className="scale-75 sm:scale-90 lg:scale-100 origin-top -mb-[25%] sm:-mb-[10%] lg:mb-0">
                 <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
                   <SocialMediaPhone />
                 </PhoneMockup>
@@ -717,7 +717,7 @@ export default function Home() {
           </div>
 
           {/* Slide indicators */}
-          <div className="flex items-center justify-center space-x-3 mt-8">
+          <div className="flex items-center justify-center space-x-3 mt-4 sm:mt-8">
             {heroSlides.map((_, i) => (
               <button
                 key={i}
@@ -728,11 +728,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll hint */}
+        {/* Scroll hint — hidden on mobile to avoid overlap with slide dots */}
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40"
+          className="hidden sm:block absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
