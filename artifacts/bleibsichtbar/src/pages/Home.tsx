@@ -587,7 +587,7 @@ export default function Home() {
   return (
     <PublicLayout>
       {/* ─── Hero ────────────────────────────────────────────────────────── */}
-      <div className="relative h-screen min-h-[640px] max-h-[900px] flex items-center overflow-hidden -mt-20">
+      <div className="relative min-h-[100svh] sm:min-h-[640px] sm:max-h-[900px] flex items-center overflow-hidden -mt-20">
         {/* Animated bg */}
         <AnimatePresence mode="sync">
           <motion.div
@@ -609,19 +609,19 @@ export default function Home() {
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8 sm:pt-24 sm:pb-16 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left */}
-            <div className="space-y-8">
+            <div className="space-y-5 sm:space-y-8">
               <AnimatePresence mode="wait">
                 <motion.div key={slide} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.6 }}>
                   {/* Pill */}
-                  <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-8">
+                  <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-5 sm:mb-8">
                     <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
                     <span className="text-white/90 text-sm font-medium">{current.pill}</span>
                   </div>
 
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-[1.05] tracking-tight">
+                  <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-[1.08] tracking-tight">
                     {current.headline.map((line, i) => (
                       <span key={i} className="block">
                         {i === 1 ? <span className="text-accent">{line}</span> : line}
@@ -629,11 +629,11 @@ export default function Home() {
                     ))}
                   </h1>
 
-                  <p className="text-xl text-white/70 max-w-lg leading-relaxed mt-6">
+                  <p className="text-base sm:text-xl text-white/70 max-w-lg leading-relaxed mt-4 sm:mt-6">
                     {current.sub}
                   </p>
 
-                  <div className="flex flex-wrap gap-4 mt-8">
+                  <div className="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8">
                     {/* Primary CTA */}
                     <motion.div
                       whileHover={{ scale: 1.05, y: -2 }}
@@ -693,7 +693,7 @@ export default function Home() {
                   </div>
 
                   {/* Trust badges */}
-                  <div className="flex flex-wrap items-center gap-6 mt-10 pt-8 border-t border-white/10">
+                  <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6 sm:mt-10 pt-5 sm:pt-8 border-t border-white/10">
                     {["Datengetrieben", "Transparent", "Zielorientiert"].map(badge => (
                       <div key={badge} className="flex items-center space-x-2 text-white/70">
                         <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
@@ -705,8 +705,8 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone */}
-            <div className="flex justify-center lg:justify-end relative">
+            {/* Right — Phone (hidden on mobile) */}
+            <div className="hidden lg:flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
               <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
                 <SocialMediaPhone />
