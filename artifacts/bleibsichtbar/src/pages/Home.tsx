@@ -495,12 +495,13 @@ function SocialMediaSlider() {
                           className="absolute bottom-0 inset-x-0 z-20 flex items-center gap-6 px-5 py-4"
                           style={{ background: "rgba(8,8,8,0.80)", backdropFilter: "blur(14px)" }}
                         >
-                          {/* Follower */}
+                          {/* Follower — user-plus icon */}
                           <div className="flex items-center gap-2">
                             <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="#f97316" strokeWidth="1.8" viewBox="0 0 24 24">
-                              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round"/>
                               <circle cx="9" cy="7" r="4" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" strokeLinecap="round" strokeLinejoin="round"/>
+                              <line x1="19" y1="8" x2="19" y2="14" strokeLinecap="round"/>
+                              <line x1="16" y1="11" x2="22" y2="11" strokeLinecap="round"/>
                             </svg>
                             <span className="text-white font-bold text-sm">{followers}</span>
                           </div>
