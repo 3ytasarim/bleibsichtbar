@@ -93,7 +93,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — clicking closes modal */}
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -105,45 +105,56 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             onClick={handleClose}
           />
 
-          {/* Modal */}
+          {/* Modal wrapper — clicking outside closes */}
           <motion.div
             key="modal"
             initial={{ opacity: 0, scale: 0.92, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-[101] flex items-center justify-center px-4 py-8 pointer-events-none"
+            className="fixed inset-0 z-[101] flex items-center justify-center px-4 py-8"
+            onClick={handleClose}
           >
+            {/* Modal card — stop propagation so inner clicks don't close */}
             <div
-              className="relative w-full max-w-xl pointer-events-auto"
+              className="relative w-full max-w-xl"
               style={{
                 background: "linear-gradient(145deg, #0c1a36 0%, #0e2050 100%)",
                 borderRadius: "28px",
                 border: "1px solid rgba(255,255,255,0.08)",
                 boxShadow: "0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset",
                 maxHeight: "92vh",
-                overflowY: "auto",
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              } as React.CSSProperties}
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+              }}
+              onClick={e => e.stopPropagation()}
             >
               {/* Decorative orbs */}
-              <div className="pointer-events-none absolute -top-20 -right-20 w-64 h-64 rounded-full"
-                style={{ background: "radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%)" }} />
-              <div className="pointer-events-none absolute -bottom-16 -left-16 w-48 h-48 rounded-full"
-                style={{ background: "radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)" }} />
+              <div
+                className="pointer-events-none absolute -top-20 -right-20 w-64 h-64 rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%)" }}
+              />
+              <div
+                className="pointer-events-none absolute -bottom-16 -left-16 w-48 h-48 rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)" }}
+              />
 
-              {/* Close button */}
+              {/* Close button — fixed inside card, above scrollable area */}
               <button
+                type="button"
                 onClick={handleClose}
-                className="absolute top-5 right-5 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                className="absolute top-5 right-5 z-20 w-9 h-9 rounded-full flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="px-7 pt-8 pb-8 relative z-10">
+              {/* Scrollable content area */}
+              <div
+                className="relative z-10 flex-1 overflow-y-auto px-7 pt-8 pb-8"
+                style={{ scrollbarWidth: "none" } as React.CSSProperties}
+              >
                 {isSuccess ? (
-                  /* ── Success State ── */
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -172,7 +183,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   </motion.div>
                 ) : (
                   <>
-                    {/* ── Header ── */}
                     <motion.div
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -188,7 +198,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <p className="text-white/45 text-sm mt-1.5">Wählen Sie eine oder mehrere Optionen</p>
                     </motion.div>
 
-                    {/* ── Service Cards ── */}
                     <div className="grid grid-cols-3 gap-3 mb-7">
                       {SERVICES.map((svc, i) => {
                         const Icon = svc.icon;
@@ -212,7 +221,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                               boxShadow: isActive ? `0 4px 20px ${svc.glow}` : "none",
                             }}
                           >
-                            {/* Check badge */}
                             <AnimatePresence>
                               {isActive && (
                                 <motion.div
@@ -229,7 +237,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                 </motion.div>
                               )}
                             </AnimatePresence>
-
                             <div
                               className="w-10 h-10 rounded-xl flex items-center justify-center"
                               style={{ background: `linear-gradient(135deg, ${svc.color}33, ${svc.color}18)`, border: `1px solid ${svc.color}30` }}
@@ -245,13 +252,8 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       })}
                     </div>
 
-                    {/* ── Form ── */}
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-                      {/* Name */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.32 }}
-                      >
+                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.32 }}>
                         <input
                           {...register("name")}
                           placeholder="Ihr Name"
@@ -263,11 +265,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         {errors.name && <p className="text-red-400 text-xs mt-1 pl-1">{errors.name.message}</p>}
                       </motion.div>
 
-                      {/* Email */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.38 }}
-                      >
+                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.38 }}>
                         <input
                           {...register("email")}
                           type="email"
@@ -280,11 +278,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         {errors.email && <p className="text-red-400 text-xs mt-1 pl-1">{errors.email.message}</p>}
                       </motion.div>
 
-                      {/* Message */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.44 }}
-                      >
+                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.44 }}>
                         <textarea
                           {...register("message")}
                           placeholder="Kurze Beschreibung Ihres Projekts…"
@@ -297,11 +291,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         {errors.message && <p className="text-red-400 text-xs mt-1 pl-1">{errors.message.message}</p>}
                       </motion.div>
 
-                      {/* Submit */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.5 }}
-                      >
+                      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.5 }}>
                         <motion.button
                           type="submit"
                           disabled={isPending}
@@ -316,7 +306,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                             <>Kostenlos Anfragen <ArrowRight className="w-4 h-4" /></>
                           )}
                         </motion.button>
-
                         <p className="text-center text-white/25 text-xs mt-3">
                           100% kostenlos &amp; unverbindlich · Antwort innerhalb 24h
                         </p>
