@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight, CheckCircle2, Loader2, Instagram, Globe, Megaphone } from "lucide-react";
+import { X, ArrowRight, CheckCircle2, Loader2, Instagram, Globe, Megaphone, AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -262,7 +262,13 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                           onFocus={e => Object.assign(e.target.style, inputFocus)}
                           onBlur={e => Object.assign(e.target.style, inputBlur)}
                         />
-                        {errors.name && <p className="text-red-400 text-xs mt-1 pl-1">{errors.name.message}</p>}
+                        {errors.name && (
+                          <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                            className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-medium">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                            <span>{errors.name.message}</span>
+                          </motion.div>
+                        )}
                       </motion.div>
 
                       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.38 }}>
@@ -275,7 +281,13 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                           onFocus={e => Object.assign(e.target.style, inputFocus)}
                           onBlur={e => Object.assign(e.target.style, inputBlur)}
                         />
-                        {errors.email && <p className="text-red-400 text-xs mt-1 pl-1">{errors.email.message}</p>}
+                        {errors.email && (
+                          <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                            className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-medium">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                            <span>{errors.email.message}</span>
+                          </motion.div>
+                        )}
                       </motion.div>
 
                       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.44 }}>
@@ -288,7 +300,13 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                           onFocus={e => Object.assign(e.target.style, inputFocus)}
                           onBlur={e => Object.assign(e.target.style, inputBlur)}
                         />
-                        {errors.message && <p className="text-red-400 text-xs mt-1 pl-1">{errors.message.message}</p>}
+                        {errors.message && (
+                          <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                            className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-medium">
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                            <span>{errors.message.message}</span>
+                          </motion.div>
+                        )}
                       </motion.div>
 
                       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.5 }}>

@@ -7,7 +7,7 @@ import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/Animated
 import { useGetProjects } from "@workspace/api-client-react";
 import {
   Camera, Edit3, BarChart3, MessageSquare,
-  CheckCircle2, Clock, Search, Target, Send, TrendingUp, Zap,
+  CheckCircle2, Clock, Search, Target, Send, TrendingUp, Zap, AlertCircle,
 } from "lucide-react";
 
 const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
@@ -1021,7 +1021,11 @@ export default function SocialMedia() {
                 ))}
 
                 {formError && (
-                  <p className="text-sm text-red-600 font-medium text-center">{formError}</p>
+                  <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200/80 text-sm text-red-600 font-medium">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{formError}</span>
+                  </motion.div>
                 )}
                 <Button type="submit" size="lg" className="w-full rounded-full font-bold py-4 text-base bg-accent hover:bg-accent/90">
                   Analysebogen absenden

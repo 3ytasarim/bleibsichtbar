@@ -7,7 +7,7 @@ import { AnimatedHeroBackground } from "@/components/shared/AnimatedHero";
 import {
   BarChart3, TrendingUp, Users, Eye, Target, CheckCircle2,
   ArrowRight, PieChart, Activity, Search, Lightbulb, Rocket, RefreshCw,
-  LineChart, Shield, Zap, Star,
+  LineChart, Shield, Zap, Star, AlertCircle,
 } from "lucide-react";
 
 const fadeUp = {
@@ -408,7 +408,13 @@ export default function Analyse() {
                     onChange={e => { setForm(f => ({ ...f, company: e.target.value })); setErrors(ev => ({ ...ev, company: undefined })); }}
                     className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors ${errors.company ? "border-red-400" : "border-gray-200"}`}
                     placeholder="Ihr Unternehmen" />
-                  {errors.company && <p className="text-red-500 text-xs mt-1">{errors.company}</p>}
+                  {errors.company && (
+                    <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                      className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.company}</span>
+                    </motion.div>
+                  )}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
@@ -433,7 +439,13 @@ export default function Analyse() {
                     rows={3}
                     className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors resize-none ${errors.goals ? "border-red-400" : "border-gray-200"}`}
                     placeholder="z.B. mehr Anfragen, Bekanntheit steigern, neue Kunden..." />
-                  {errors.goals && <p className="text-red-500 text-xs mt-1">{errors.goals}</p>}
+                  {errors.goals && (
+                    <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                      className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.goals}</span>
+                    </motion.div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-bold mb-2">Ihre E-Mail-Adresse *</label>
@@ -441,7 +453,13 @@ export default function Analyse() {
                     onChange={e => { setForm(f => ({ ...f, contact: e.target.value })); setErrors(ev => ({ ...ev, contact: undefined })); }}
                     className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors ${errors.contact ? "border-red-400" : "border-gray-200"}`}
                     placeholder="ihre@email.de" />
-                  {errors.contact && <p className="text-red-500 text-xs mt-1">{errors.contact}</p>}
+                  {errors.contact && (
+                    <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                      className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.contact}</span>
+                    </motion.div>
+                  )}
                 </div>
                 <Button type="submit" size="lg" className="w-full rounded-full font-bold bg-accent hover:bg-accent/90 text-white">
                   Kostenlose Analyse anfordern <ArrowRight className="ml-2 w-4 h-4 inline" />

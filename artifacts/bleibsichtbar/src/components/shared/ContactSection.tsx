@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Send, CheckCircle2, Loader2 } from "lucide-react";
+import { Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -96,12 +96,24 @@ export function ContactSection() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Name *</label>
                     <Input {...register("name")} placeholder="Max Mustermann" className={errors.name ? "border-destructive" : ""} />
-                    {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+                    {errors.name && (
+                      <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                        className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span>{errors.name.message}</span>
+                      </motion.div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">E-Mail *</label>
                     <Input {...register("email")} type="email" placeholder="max@beispiel.de" className={errors.email ? "border-destructive" : ""} />
-                    {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+                    {errors.email && (
+                      <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                        className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span>{errors.email.message}</span>
+                      </motion.div>
+                    )}
                   </div>
                 </div>
                 
@@ -119,7 +131,13 @@ export function ContactSection() {
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Nachricht *</label>
                   <Textarea {...register("message")} placeholder="Wie können wir Ihnen helfen?" className={errors.message ? "border-destructive" : ""} />
-                  {errors.message && <p className="text-xs text-destructive">{errors.message.message}</p>}
+                  {errors.message && (
+                    <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                      className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.message.message}</span>
+                    </motion.div>
+                  )}
                 </div>
 
                 <Button type="submit" variant="accent" size="lg" className="w-full text-lg" disabled={isPending}>

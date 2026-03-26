@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Instagram, Mail, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
+import { Instagram, Mail, ArrowRight, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -79,12 +79,13 @@ function FooterField({
         />
       )}
       {error && (
-        <motion.p
-          initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
-          className="text-red-400 text-xs mt-1.5 pl-1"
+        <motion.div
+          initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+          className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400 font-medium"
         >
-          {error}
-        </motion.p>
+          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+          <span>{error}</span>
+        </motion.div>
       )}
     </motion.div>
   );
