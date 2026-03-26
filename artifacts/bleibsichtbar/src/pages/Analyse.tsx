@@ -105,6 +105,7 @@ const vorteile = [
 export default function Analyse() {
   const [form, setForm] = useState({ company: "", instagram: "", tiktok: "", linkedin: "", goals: "", contact: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<{ company?: string; goals?: string; contact?: string }>({});
 
   return (
     <PublicLayout>
@@ -385,15 +386,29 @@ export default function Analyse() {
                 <p className="text-muted-foreground">Ihr kostenloser Analysebericht wird innerhalb von 48 Stunden zugesendet.</p>
               </motion.div>
             ) : (
-              <motion.form variants={fadeUp}
-                onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+              <motion.form noValidate variants={fadeUp}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const errs: typeof errors = {};
+                  if (!form.company.trim()) errs.company = "Bitte geben Sie Ihren Unternehmensnamen ein.";
+                  if (!form.goals.trim()) errs.goals = "Bitte beschreiben Sie Ihre Ziele.";
+                  if (!form.contact.trim()) {
+                    errs.contact = "Bitte geben Sie Ihre E-Mail-Adresse ein.";
+                  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contact)) {
+                    errs.contact = "Bitte geben Sie eine gültige E-Mail-Adresse ein.";
+                  }
+                  if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+                  setErrors({});
+                  setSubmitted(true);
+                }}
                 className="bg-white rounded-3xl p-8 border border-gray-100 shadow-lg space-y-6">
                 <div>
                   <label className="block text-sm font-bold mb-2">Unternehmensname *</label>
-                  <input required value={form.company}
-                    onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors"
+                  <input value={form.company}
+                    onChange={e => { setForm(f => ({ ...f, company: e.target.value })); setErrors(ev => ({ ...ev, company: undefined })); }}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors ${errors.company ? "border-red-400" : "border-gray-200"}`}
                     placeholder="Ihr Unternehmen" />
+                  {errors.company && <p className="text-red-500 text-xs mt-1">{errors.company}</p>}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
@@ -413,18 +428,20 @@ export default function Analyse() {
                 </div>
                 <div>
                   <label className="block text-sm font-bold mb-2">Was möchten Sie mit Social Media erreichen? *</label>
-                  <textarea required value={form.goals}
-                    onChange={e => setForm(f => ({ ...f, goals: e.target.value }))}
+                  <textarea value={form.goals}
+                    onChange={e => { setForm(f => ({ ...f, goals: e.target.value })); setErrors(ev => ({ ...ev, goals: undefined })); }}
                     rows={3}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors resize-none"
+                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors resize-none ${errors.goals ? "border-red-400" : "border-gray-200"}`}
                     placeholder="z.B. mehr Anfragen, Bekanntheit steigern, neue Kunden..." />
+                  {errors.goals && <p className="text-red-500 text-xs mt-1">{errors.goals}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-bold mb-2">Ihre E-Mail-Adresse *</label>
-                  <input required type="email" value={form.contact}
-                    onChange={e => setForm(f => ({ ...f, contact: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors"
+                  <input type="text" value={form.contact}
+                    onChange={e => { setForm(f => ({ ...f, contact: e.target.value })); setErrors(ev => ({ ...ev, contact: undefined })); }}
+                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors ${errors.contact ? "border-red-400" : "border-gray-200"}`}
                     placeholder="ihre@email.de" />
+                  {errors.contact && <p className="text-red-500 text-xs mt-1">{errors.contact}</p>}
                 </div>
                 <Button type="submit" size="lg" className="w-full rounded-full font-bold bg-accent hover:bg-accent/90 text-white">
                   Kostenlose Analyse anfordern <ArrowRight className="ml-2 w-4 h-4 inline" />
