@@ -718,6 +718,7 @@ export default function SocialMedia() {
     previousAgency: "", priorities: "", dislikes: "", collaboration: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const handlePlatform = (p: string) => {
     setForm(f => ({
@@ -728,6 +729,11 @@ export default function SocialMedia() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.company.trim()) {
+      setFormError("Bitte geben Sie den Unternehmensnamen ein.");
+      return;
+    }
+    setFormError("");
     setSubmitted(true);
   };
 
@@ -945,11 +951,11 @@ export default function SocialMedia() {
                 <p className="text-muted-foreground">Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
               </motion.div>
             ) : (
-              <motion.form variants={fadeUp} onSubmit={handleSubmit} className="bg-gray-50 rounded-3xl p-8 md:p-12 border border-gray-100 space-y-8">
+              <motion.form noValidate variants={fadeUp} onSubmit={handleSubmit} className="bg-gray-50 rounded-3xl p-8 md:p-12 border border-gray-100 space-y-8">
 
                 <div>
                   <label className="block text-sm font-bold mb-2">Wie heißt Ihr Unternehmen oder Ihre Marke? *</label>
-                  <input required value={form.company} onChange={e => setForm(f => ({...f, company: e.target.value}))}
+                  <input value={form.company} onChange={e => setForm(f => ({...f, company: e.target.value}))}
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent bg-white"
                     placeholder="Unternehmensname" />
                 </div>
@@ -974,7 +980,7 @@ export default function SocialMedia() {
                   ].map(f => (
                     <div key={f.key}>
                       <label className="block text-sm font-bold mb-2">{f.label} *</label>
-                      <select required value={(form as any)[f.key]} onChange={e => setForm(prev => ({...prev, [f.key]: e.target.value}))}
+                      <select value={(form as any)[f.key]} onChange={e => setForm(prev => ({...prev, [f.key]: e.target.value}))}
                         className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-white">
                         <option value="">Wählen</option>
                         {["0", "1", "2", "3", "4", "5+"].map(v => <option key={v} value={v}>{v}</option>)}
@@ -1007,13 +1013,16 @@ export default function SocialMedia() {
                 ].map(field => (
                   <div key={field.key}>
                     <label className="block text-sm font-bold mb-2">{field.label} *</label>
-                    <textarea required value={(form as any)[field.key]} onChange={e => setForm(prev => ({...prev, [field.key]: e.target.value}))}
+                    <textarea value={(form as any)[field.key]} onChange={e => setForm(prev => ({...prev, [field.key]: e.target.value}))}
                       rows={3}
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent bg-white resize-none"
                       placeholder="Ihre Antwort..." />
                   </div>
                 ))}
 
+                {formError && (
+                  <p className="text-sm text-red-600 font-medium text-center">{formError}</p>
+                )}
                 <Button type="submit" size="lg" className="w-full rounded-full font-bold py-4 text-base bg-accent hover:bg-accent/90">
                   Analysebogen absenden
                 </Button>

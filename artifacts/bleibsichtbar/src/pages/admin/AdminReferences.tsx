@@ -158,7 +158,7 @@ export default function AdminReferences() {
         onClose={() => setIsModalOpen(false)} 
         title={editingId ? "Referenz bearbeiten" : "Neue Referenz"}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Name der Person</label>

@@ -197,7 +197,7 @@ export default function AdminProjects() {
         onClose={() => setIsModalOpen(false)}
         title={editingId ? "Projekt bearbeiten" : "Neues Projekt erstellen"}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Title + Category */}
           <div className="grid grid-cols-2 gap-4">
             <div>

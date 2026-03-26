@@ -54,7 +54,7 @@ export default function AdminLogin() {
           <p className="text-muted-foreground mt-2">Willkommen zurück bei Bleibsichtbar.</p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium">Benutzername</label>
             <Input {...register("username")} placeholder="admin" className={errors.username ? "border-destructive" : ""} />

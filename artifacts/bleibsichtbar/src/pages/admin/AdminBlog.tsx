@@ -157,7 +157,7 @@ export default function AdminBlog() {
         onClose={() => setIsModalOpen(false)} 
         title={editingId ? "Artikel bearbeiten" : "Neuer Artikel"}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Titel</label>

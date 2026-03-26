@@ -252,7 +252,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       })}
                     </div>
 
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+                    <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-3">
                       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.32 }}>
                         <input
                           {...register("name")}
