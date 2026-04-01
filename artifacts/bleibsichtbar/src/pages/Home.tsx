@@ -786,7 +786,7 @@ export default function Home() {
             </div>
 
             {/* Right — Phone */}
-            <div className="flex justify-center lg:justify-end relative h-[260px] sm:h-auto overflow-hidden sm:overflow-visible">
+            <div className="flex justify-center lg:justify-end relative h-[340px] sm:h-auto overflow-hidden sm:overflow-visible">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
               <div className="scale-[0.62] sm:scale-90 lg:scale-100 origin-top lg:mb-0"
                 style={{ transform: "rotate(-11deg) scale(0.9)", transformOrigin: "top center" }}>
