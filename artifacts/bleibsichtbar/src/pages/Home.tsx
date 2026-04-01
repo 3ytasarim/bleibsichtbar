@@ -690,7 +690,7 @@ export default function Home() {
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-4 sm:pt-24 sm:pb-6 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-6 lg:gap-12 items-center">
             {/* Left */}
             <div className="space-y-5 sm:space-y-8">
               <AnimatePresence mode="wait">
@@ -785,11 +785,11 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone (hidden on mobile) */}
-            <div className="hidden sm:flex justify-center lg:justify-end relative">
+            {/* Right — Phone */}
+            <div className="flex justify-center lg:justify-end relative h-[260px] sm:h-auto overflow-hidden sm:overflow-visible">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <div className="scale-75 sm:scale-90 lg:scale-100 origin-top -mb-[25%] sm:-mb-[10%] lg:mb-0"
-                style={{ transform: "rotate(-11deg) scale(0.9)", transformOrigin: "bottom center" }}>
+              <div className="scale-[0.62] sm:scale-90 lg:scale-100 origin-top lg:mb-0"
+                style={{ transform: "rotate(-11deg) scale(0.9)", transformOrigin: "top center" }}>
                 <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
                   <SocialMediaPhone />
                 </PhoneMockup>
