@@ -247,58 +247,76 @@ const heroSlides = [
 ];
 
 // ─── Animated Star Field ─────────────────────────────────────────────────────
-const STARS = Array.from({ length: 70 }, (_, i) => {
-  const a = (i * 2654435761) >>> 0;
-  const b = (i * 1234567891 + 987654321) >>> 0;
-  const c = (i * 3141592653 + 271828182) >>> 0;
-  const d = (i * 1597334677 + 123456789) >>> 0;
-  const e = (i * 2246822519 + 456789012) >>> 0;
-  const f = (i * 2870177449 + 789012345) >>> 0;
-  const g = (i * 1103515245 + 12345) >>> 0;
-  const norm = (n: number) => (n % 10000) / 10000;
+const STARS = Array.from({ length: 90 }, (_, i) => {
+  const h = (n: number) => ((i * 1664525 + n * 214013 + 2531011) >>> 0) % 10000 / 10000;
+  const dx = (h(1) - 0.5) * 40;
+  const dy = (h(2) - 0.5) * 40;
   return {
     id: i,
-    x: norm(a) * 100,
-    y: norm(b) * 100,
-    size: i % 5 === 0 ? 3.5 : i % 3 === 0 ? 2.5 : 1.8,
-    dur: 18 + norm(c) * 24,
-    driftX: (norm(d) - 0.5) * 30,
-    driftY: (norm(e) - 0.5) * 30,
-    pulseDur: 2 + norm(f) * 3,
-    opacity: 0.25 + norm(g) * 0.55,
-    delay: -(norm(a) * 20),
+    x: h(3) * 100,
+    y: h(4) * 100,
+    size: i % 7 === 0 ? 3.8 : i % 4 === 0 ? 2.8 : i % 2 === 0 ? 2.0 : 1.5,
+    moveDur: `${14 + h(5) * 20}s`,
+    blinkDur: `${2 + h(6) * 4}s`,
+    delay: `-${h(7) * 22}s`,
+    blinkDelay: `-${h(8) * 5}s`,
+    opacity: 0.3 + h(9) * 0.55,
+    dx1: `${dx}px`,
+    dy1: `${dy}px`,
+    dx2: `${-dx * 0.7}px`,
+    dy2: `${dy * 0.5}px`,
   };
 });
 
 function FloatingDots() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {STARS.map(s => (
-        <motion.div
-          key={s.id}
-          className="absolute rounded-full bg-white"
-          style={{
-            left: `${s.x}%`,
-            top: `${s.y}%`,
-            width: s.size,
-            height: s.size,
-          }}
-          animate={{
-            x: [0, s.driftX * 0.4, s.driftX, s.driftX * 0.6, 0],
-            y: [0, s.driftY * 0.6, s.driftY * 0.2, s.driftY, 0],
-            opacity: [s.opacity, s.opacity * 0.4, s.opacity * 0.9, s.opacity * 0.6, s.opacity],
-            scale: [1, 1.3, 0.85, 1.15, 1],
-          }}
-          transition={{
-            duration: s.dur,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: s.delay,
-            times: [0, 0.25, 0.5, 0.75, 1],
-          }}
-        />
-      ))}
-    </div>
+    <>
+      <style>{`
+        @keyframes starDrift {
+          0%   { transform: translate(0, 0); }
+          25%  { transform: translate(var(--dx1), var(--dy2)); }
+          50%  { transform: translate(var(--dx2), var(--dy1)); }
+          75%  { transform: translate(var(--dx1), var(--dy2)); }
+          100% { transform: translate(0, 0); }
+        }
+        @keyframes starBlink {
+          0%, 100% { opacity: var(--op); }
+          40%       { opacity: calc(var(--op) * 0.2); }
+          70%       { opacity: calc(var(--op) * 0.85); }
+        }
+        .star-dot {
+          position: absolute;
+          border-radius: 9999px;
+          background: white;
+          animation:
+            starDrift var(--move-dur) ease-in-out var(--delay) infinite,
+            starBlink var(--blink-dur) ease-in-out var(--blink-delay) infinite;
+        }
+      `}</style>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {STARS.map(s => (
+          <div
+            key={s.id}
+            className="star-dot"
+            style={{
+              left: `${s.x}%`,
+              top: `${s.y}%`,
+              width: s.size,
+              height: s.size,
+              "--op": s.opacity,
+              "--move-dur": s.moveDur,
+              "--blink-dur": s.blinkDur,
+              "--delay": s.delay,
+              "--blink-delay": s.blinkDelay,
+              "--dx1": s.dx1,
+              "--dy1": s.dy1,
+              "--dx2": s.dx2,
+              "--dy2": s.dy2,
+            } as React.CSSProperties}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 
