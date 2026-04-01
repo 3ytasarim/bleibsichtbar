@@ -247,20 +247,28 @@ const heroSlides = [
 ];
 
 // ─── Animated Star Field ─────────────────────────────────────────────────────
+function rng(seed: number): number {
+  let x = seed;
+  x = ((x >> 16) ^ x) * 0x45d9f3b | 0;
+  x = ((x >> 16) ^ x) * 0x45d9f3b | 0;
+  x = (x >> 16) ^ x;
+  return Math.abs(x % 10000) / 10000;
+}
+
 const STARS = Array.from({ length: 90 }, (_, i) => {
-  const h = (n: number) => ((i * 1664525 + n * 214013 + 2531011) >>> 0) % 10000 / 10000;
-  const dx = (h(1) - 0.5) * 40;
-  const dy = (h(2) - 0.5) * 40;
+  const r = (salt: number) => rng(i * 7919 + salt * 104729);
+  const dx = (r(1) - 0.5) * 44;
+  const dy = (r(2) - 0.5) * 44;
   return {
     id: i,
-    x: h(3) * 100,
-    y: h(4) * 100,
+    x: r(3) * 98 + 1,
+    y: r(4) * 98 + 1,
     size: i % 7 === 0 ? 3.8 : i % 4 === 0 ? 2.8 : i % 2 === 0 ? 2.0 : 1.5,
-    moveDur: `${14 + h(5) * 20}s`,
-    blinkDur: `${2 + h(6) * 4}s`,
-    delay: `-${h(7) * 22}s`,
-    blinkDelay: `-${h(8) * 5}s`,
-    opacity: 0.3 + h(9) * 0.55,
+    moveDur: `${14 + r(5) * 20}s`,
+    blinkDur: `${2 + r(6) * 4}s`,
+    delay: `-${r(7) * 22}s`,
+    blinkDelay: `-${r(8) * 5}s`,
+    opacity: 0.3 + r(9) * 0.55,
     dx1: `${dx}px`,
     dy1: `${dy}px`,
     dx2: `${-dx * 0.7}px`,
