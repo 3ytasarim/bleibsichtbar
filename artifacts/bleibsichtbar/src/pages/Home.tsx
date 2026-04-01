@@ -785,8 +785,8 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone */}
-            <div className="flex justify-center lg:justify-end relative">
+            {/* Right — Phone (hidden on mobile) */}
+            <div className="hidden sm:flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
               <div className="scale-75 sm:scale-90 lg:scale-100 origin-top -mb-[25%] sm:-mb-[10%] lg:mb-0"
                 style={{ transform: "rotate(-11deg) scale(0.9)", transformOrigin: "bottom center" }}>
@@ -809,8 +809,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        {/* Scroll indicator — desktop only */}
+        <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
           <span className="text-white/40 text-xs font-medium tracking-widest uppercase select-none">Entdecken</span>
           <button
             onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
