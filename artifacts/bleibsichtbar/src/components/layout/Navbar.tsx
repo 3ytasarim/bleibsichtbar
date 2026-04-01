@@ -102,23 +102,24 @@ export function Navbar() {
 
             {/* CTA Button — "Kontakt" */}
             <div className="hidden lg:flex items-center shrink-0">
-              <motion.button
-                onClick={() => setModalOpen(true)}
-                whileHover={{ scale: 1.04, boxShadow: "0 8px 28px rgba(255,107,53,0.35)" }}
-                whileTap={{ scale: 0.97 }}
-                className="relative overflow-hidden px-6 py-2.5 rounded-full text-sm font-bold text-white"
-                style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
-              >
+              <Link href="/kontakt">
                 <motion.span
-                  className="absolute inset-0 -translate-x-full skew-x-12"
-                  style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)" }}
-                  animate={{ x: ["−100%", "200%"] }}
-                  transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 1.6, ease: "easeInOut" }}
-                />
-                <span className="relative flex items-center gap-2">
-                  Kontakt
-                </span>
-              </motion.button>
+                  whileHover={{ scale: 1.04, boxShadow: "0 8px 28px rgba(255,107,53,0.35)" }}
+                  whileTap={{ scale: 0.97 }}
+                  className="relative overflow-hidden px-6 py-2.5 rounded-full text-sm font-bold text-white inline-flex items-center"
+                  style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
+                >
+                  <motion.span
+                    className="absolute inset-0 -translate-x-full skew-x-12"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)" }}
+                    animate={{ x: ["−100%", "200%"] }}
+                    transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 1.6, ease: "easeInOut" }}
+                  />
+                  <span className="relative flex items-center gap-2">
+                    Kontakt
+                  </span>
+                </motion.span>
+              </Link>
             </div>
 
             {/* Mobile menu toggle */}
