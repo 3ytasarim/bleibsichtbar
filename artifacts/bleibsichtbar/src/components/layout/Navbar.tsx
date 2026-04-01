@@ -12,6 +12,7 @@ const links = [
   { name: "Marketing Ads", path: "/marketing-ads" },
   { name: "Ki & Automatisierungen", path: "/ki-automatisierungen" },
   { name: "Analyse", path: "/analyse" },
+  { name: "Kontakt", path: "/kontakt" },
 ];
 
 export function Navbar() {

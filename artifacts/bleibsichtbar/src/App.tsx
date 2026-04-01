@@ -16,6 +16,8 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import References from "./pages/References";
 import Contact from "./pages/Contact";
+import Datenschutz from "./pages/Datenschutz";
+import Impressum from "./pages/Impressum";
 import NotFound from "./pages/not-found";
 
 // Admin Pages
@@ -67,6 +69,8 @@ function Router() {
         <Route path="/blog/:id" component={BlogPost} />
         <Route path="/referenzen" component={References} />
         <Route path="/kontakt" component={Contact} />
+        <Route path="/datenschutz" component={Datenschutz} />
+        <Route path="/impressum" component={Impressum} />
 
         <Route component={NotFound} />
       </Switch>

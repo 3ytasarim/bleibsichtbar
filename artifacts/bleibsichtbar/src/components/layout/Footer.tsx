@@ -269,11 +269,6 @@ export function Footer() {
                 {[
                   { label: "Datenschutz", href: "/datenschutz" },
                   { label: "Impressum", href: "/impressum" },
-                  { label: "Social Media", href: "/social-media" },
-                  { label: "Webseiten", href: "/webseiten" },
-                  { label: "Marketing Ads", href: "/marketing-ads" },
-                  { label: "KI & Automatisierungen", href: "/ki-automatisierungen" },
-                  { label: "Analyse", href: "/analyse" },
                 ].map(l => (
                   <li key={l.href}>
                     <Link

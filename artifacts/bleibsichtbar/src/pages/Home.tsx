@@ -225,7 +225,7 @@ const heroSlides = [
     sub: "Digitale Präsenz, die Kunden überzeugt und messbar mehr Umsatz generiert.",
     cta: "Jetzt starten",
     ctaLink: "/kontakt",
-    bg: "from-slate-900 via-[#0a1628] to-slate-900",
+    bg: "from-[#0e2248] via-[#1a3a70] to-[#0e2248]",
     pill: "Ihre Agentur für digitale Sichtbarkeit",
   },
   {
@@ -233,7 +233,7 @@ const heroSlides = [
     sub: "Moderne, schnelle Websites, die nicht nur gut aussehen, sondern Anfragen generieren.",
     cta: "Website anfragen",
     ctaLink: "/kontakt",
-    bg: "from-slate-900 via-[#0d1f3c] to-slate-900",
+    bg: "from-[#0e2248] via-[#1e3f7a] to-[#0e2248]",
     pill: "Webseiten Optimierung & Design",
   },
   {
@@ -241,7 +241,7 @@ const heroSlides = [
     sub: "Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI.",
     cta: "Mehr erfahren",
     ctaLink: "/ki-automatisierungen",
-    bg: "from-slate-900 via-[#0a2218] to-slate-900",
+    bg: "from-[#0e2248] via-[#173e52] to-[#0e2248]",
     pill: "KI & Automatisierung",
   },
 ];
@@ -416,7 +416,7 @@ function SocialMediaSlider() {
   const showControls = displayProjects.length > CARDS_PER_VIEW;
 
   return (
-    <section className="py-28 relative overflow-hidden" style={{ background: "#06090f" }}>
+    <section className="py-28 relative overflow-hidden" style={{ background: "#0a1628" }}>
       <div className="absolute inset-0 pointer-events-none" style={{
         backgroundImage: "radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%), radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.3) 0%, transparent 100%), radial-gradient(1px 1px at 80% 20%, rgba(255,255,255,0.25) 0%, transparent 100%), radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.2) 0%, transparent 100%)",
       }} />
@@ -578,7 +578,7 @@ export default function Home() {
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % heroSlides.length), 5000);
+    const t = setInterval(() => setSlide(s => (s + 1) % heroSlides.length), 8000);
     return () => clearInterval(t);
   }, []);
 
@@ -708,7 +708,8 @@ export default function Home() {
             {/* Right — Phone */}
             <div className="flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <div className="scale-75 sm:scale-90 lg:scale-100 origin-top -mb-[25%] sm:-mb-[10%] lg:mb-0">
+              <div className="scale-75 sm:scale-90 lg:scale-100 origin-top -mb-[25%] sm:-mb-[10%] lg:mb-0"
+                style={{ transform: "rotate(-11deg) scale(0.9)", transformOrigin: "bottom center" }}>
                 <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
                   <SocialMediaPhone />
                 </PhoneMockup>
@@ -741,7 +742,7 @@ export default function Home() {
       </div>
 
       {/* ─── Problem Statement ─────────────────────────────────────────────── */}
-      <section className="py-24 bg-[#0a0f1e] text-white relative overflow-hidden">
+      <section className="py-24 bg-[#0a1628] text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-30"
           style={{ backgroundImage: "radial-gradient(circle at 20% 50%, rgba(234,88,12,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(59,130,246,0.1) 0%, transparent 50%)" }}
         />

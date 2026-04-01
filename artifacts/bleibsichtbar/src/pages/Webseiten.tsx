@@ -608,34 +608,6 @@ export default function Webseiten() {
         </div>
       </section>
 
-      {/* PROZESS */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.div variants={fadeUp} className="text-center mb-16">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unser Prozess</p>
-              <h2 className="text-4xl md:text-5xl font-display font-bold">
-                Struktur. Klarheit. <span className="text-accent">Ergebnisse.</span>
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-xl mx-auto mt-4">
-                Klare Prozesse schaffen messbare Ergebnisse. Wir begleiten Sie von der ersten Analyse bis zur laufenden Optimierung.
-              </p>
-            </motion.div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {steps.map((step, i) => (
-                <motion.div key={i} variants={fadeUp} className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
-                  <div className="absolute top-6 right-6 text-7xl font-black text-gray-100 leading-none">{step.num}</div>
-                  <div className="relative z-10">
-                    <div className="w-10 h-10 bg-accent text-white rounded-xl flex items-center justify-center font-bold text-lg mb-5">{step.num}</div>
-                    <h3 className="text-xl font-display font-bold mb-3">{step.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{step.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* WAS ENTHALTEN IST */}
       <section className="py-24 bg-white">
@@ -672,7 +644,7 @@ export default function Webseiten() {
       {/* PROJEKTE SHOWCASE */}
       {webProjects.length > 0 && (
         <section className="py-28 text-white overflow-hidden relative"
-          style={{ background: "radial-gradient(ellipse 110% 80% at 50% 40%, #0d1f3c 0%, #070e1d 55%, #020810 100%)" }}>
+          style={{ background: "radial-gradient(ellipse 110% 80% at 50% 40%, #163060 0%, #0a1628 55%, #0a1628 100%)" }}>
           {/* Decorative ambient orbs */}
           <div className="absolute top-1/4 left-10 w-80 h-80 rounded-full blur-[140px] opacity-15 pointer-events-none" style={{ background: "#f97316" }} />
           <div className="absolute bottom-1/4 right-10 w-72 h-72 rounded-full blur-[120px] opacity-10 pointer-events-none" style={{ background: "#3b82f6" }} />
