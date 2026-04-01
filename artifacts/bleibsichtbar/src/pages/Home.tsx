@@ -246,46 +246,55 @@ const heroSlides = [
   },
 ];
 
-// ─── Animated Floating Dots ───────────────────────────────────────────────────
-const DOTS = Array.from({ length: 24 }, (_, i) => {
-  const seed = (i * 9301 + 49297) % 233280;
-  const r = (n: number) => ((seed * (n + 1) * 7919) % 10000) / 10000;
+// ─── Animated Star Field ─────────────────────────────────────────────────────
+const STARS = Array.from({ length: 70 }, (_, i) => {
+  const a = (i * 2654435761) >>> 0;
+  const b = (i * 1234567891 + 987654321) >>> 0;
+  const c = (i * 3141592653 + 271828182) >>> 0;
+  const d = (i * 1597334677 + 123456789) >>> 0;
+  const e = (i * 2246822519 + 456789012) >>> 0;
+  const f = (i * 2870177449 + 789012345) >>> 0;
+  const g = (i * 1103515245 + 12345) >>> 0;
+  const norm = (n: number) => (n % 10000) / 10000;
   return {
     id: i,
-    x: r(0) * 100,
-    y: r(1) * 100,
-    size: 7 + r(2) * 16,
-    dur: 7 + r(3) * 13,
-    dx: (r(4) - 0.5) * 22,
-    dy: (r(5) - 0.5) * 22,
-    opacity: 0.18 + r(6) * 0.30,
-    delay: r(7) * -12,
+    x: norm(a) * 100,
+    y: norm(b) * 100,
+    size: i % 5 === 0 ? 3.5 : i % 3 === 0 ? 2.5 : 1.8,
+    dur: 18 + norm(c) * 24,
+    driftX: (norm(d) - 0.5) * 30,
+    driftY: (norm(e) - 0.5) * 30,
+    pulseDur: 2 + norm(f) * 3,
+    opacity: 0.25 + norm(g) * 0.55,
+    delay: -(norm(a) * 20),
   };
 });
 
 function FloatingDots() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {DOTS.map(dot => (
+      {STARS.map(s => (
         <motion.div
-          key={dot.id}
+          key={s.id}
           className="absolute rounded-full bg-white"
           style={{
-            left: `${dot.x}%`,
-            top: `${dot.y}%`,
-            width: dot.size,
-            height: dot.size,
-            opacity: dot.opacity,
+            left: `${s.x}%`,
+            top: `${s.y}%`,
+            width: s.size,
+            height: s.size,
           }}
           animate={{
-            x: [0, dot.dx, -dot.dx * 0.6, dot.dx * 0.4, 0],
-            y: [0, dot.dy * 0.5, dot.dy, -dot.dy * 0.3, 0],
+            x: [0, s.driftX * 0.4, s.driftX, s.driftX * 0.6, 0],
+            y: [0, s.driftY * 0.6, s.driftY * 0.2, s.driftY, 0],
+            opacity: [s.opacity, s.opacity * 0.4, s.opacity * 0.9, s.opacity * 0.6, s.opacity],
+            scale: [1, 1.3, 0.85, 1.15, 1],
           }}
           transition={{
-            duration: dot.dur,
+            duration: s.dur,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: dot.delay,
+            delay: s.delay,
+            times: [0, 0.25, 0.5, 0.75, 1],
           }}
         />
       ))}
