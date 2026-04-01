@@ -809,16 +809,42 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll hint — hidden on mobile to avoid overlap with slide dots */}
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="hidden sm:block absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
-          </svg>
-        </motion.div>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <span className="text-white/40 text-xs font-medium tracking-widest uppercase select-none">Entdecken</span>
+          <button
+            onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
+            className="relative flex items-center justify-center focus:outline-none group"
+            aria-label="Zu Leistungen scrollen"
+          >
+            {/* Pulsing rings */}
+            <motion.span
+              className="absolute w-12 h-12 rounded-full border border-white/20"
+              animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+            />
+            <motion.span
+              className="absolute w-12 h-12 rounded-full border border-white/15"
+              animate={{ scale: [1, 1.6], opacity: [0.3, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut", delay: 0.6 }}
+            />
+            {/* Circle */}
+            <motion.span
+              className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/25 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.svg
+                className="w-4 h-4 text-white"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                animate={{ y: [0, 4, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </motion.svg>
+            </motion.span>
+          </button>
+        </div>
       </div>
 
       {/* ─── Problem Statement ─────────────────────────────────────────────── */}
@@ -867,7 +893,7 @@ export default function Home() {
       </section>
 
       {/* ─── Services ──────────────────────────────────────────────────────── */}
-      <section className="py-28 bg-white relative overflow-hidden">
+      <section id="leistungen" className="py-28 bg-white relative overflow-hidden">
         {/* Subtle bg grid */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.025]"
           style={{ backgroundImage: "radial-gradient(circle, #0a1628 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
