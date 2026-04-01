@@ -669,7 +669,7 @@ export default function Home() {
   return (
     <PublicLayout>
       {/* ─── Hero ────────────────────────────────────────────────────────── */}
-      <div className="relative min-h-[auto] sm:min-h-[100svh] flex items-center overflow-hidden -mt-20 pb-4 sm:pb-28">
+      <div className="relative min-h-[auto] sm:min-h-[100svh] flex items-center overflow-hidden -mt-20 pb-4 sm:pb-16">
         {/* Animated bg */}
         <AnimatePresence mode="sync">
           <motion.div
