@@ -225,7 +225,7 @@ const heroSlides = [
     sub: "Digitale Präsenz, die Kunden überzeugt und messbar mehr Umsatz generiert.",
     cta: "Jetzt starten",
     ctaLink: "/kontakt",
-    bg: "from-[#0e2248] via-[#1a3a70] to-[#0e2248]",
+    bg: "from-[#1e4080] via-[#2d5fbe] to-[#1e4080]",
     pill: "Ihre Agentur für digitale Sichtbarkeit",
   },
   {
@@ -233,7 +233,7 @@ const heroSlides = [
     sub: "Moderne, schnelle Websites, die nicht nur gut aussehen, sondern Anfragen generieren.",
     cta: "Website anfragen",
     ctaLink: "/kontakt",
-    bg: "from-[#0e2248] via-[#1e3f7a] to-[#0e2248]",
+    bg: "from-[#1e4080] via-[#264fa8] to-[#1e4080]",
     pill: "Webseiten Optimierung & Design",
   },
   {
@@ -241,10 +241,57 @@ const heroSlides = [
     sub: "Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI.",
     cta: "Mehr erfahren",
     ctaLink: "/ki-automatisierungen",
-    bg: "from-[#0e2248] via-[#173e52] to-[#0e2248]",
+    bg: "from-[#1e4080] via-[#1e6080] to-[#1e4080]",
     pill: "KI & Automatisierung",
   },
 ];
+
+// ─── Animated Floating Dots ───────────────────────────────────────────────────
+const DOTS = Array.from({ length: 24 }, (_, i) => {
+  const seed = (i * 9301 + 49297) % 233280;
+  const r = (n: number) => ((seed * (n + 1) * 7919) % 10000) / 10000;
+  return {
+    id: i,
+    x: r(0) * 100,
+    y: r(1) * 100,
+    size: 7 + r(2) * 16,
+    dur: 7 + r(3) * 13,
+    dx: (r(4) - 0.5) * 22,
+    dy: (r(5) - 0.5) * 22,
+    opacity: 0.18 + r(6) * 0.30,
+    delay: r(7) * -12,
+  };
+});
+
+function FloatingDots() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {DOTS.map(dot => (
+        <motion.div
+          key={dot.id}
+          className="absolute rounded-full bg-white"
+          style={{
+            left: `${dot.x}%`,
+            top: `${dot.y}%`,
+            width: dot.size,
+            height: dot.size,
+            opacity: dot.opacity,
+          }}
+          animate={{
+            x: [0, dot.dx, -dot.dx * 0.6, dot.dx * 0.4, 0],
+            y: [0, dot.dy * 0.5, dot.dy, -dot.dy * 0.3, 0],
+          }}
+          transition={{
+            duration: dot.dur,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: dot.delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 // ─── Services ────────────────────────────────────────────────────────────────
 const services = [
@@ -600,14 +647,12 @@ export default function Home() {
           />
         </AnimatePresence>
 
-        {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px)", backgroundSize: "60px 60px" }}
-        />
+        {/* Animated floating dots */}
+        <FloatingDots />
 
         {/* Glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/25 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8 sm:pt-24 sm:pb-16 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
