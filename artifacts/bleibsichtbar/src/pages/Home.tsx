@@ -669,7 +669,7 @@ export default function Home() {
   return (
     <PublicLayout>
       {/* ─── Hero ────────────────────────────────────────────────────────── */}
-      <div className="relative min-h-[100svh] sm:min-h-[640px] sm:max-h-[900px] flex items-center overflow-hidden -mt-20">
+      <div className="relative min-h-[100svh] flex items-center overflow-hidden -mt-20 pb-28">
         {/* Animated bg */}
         <AnimatePresence mode="sync">
           <motion.div
@@ -689,7 +689,7 @@ export default function Home() {
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/25 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8 sm:pt-24 sm:pb-16 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-4 sm:pt-24 sm:pb-6 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left */}
             <div className="space-y-5 sm:space-y-8">
