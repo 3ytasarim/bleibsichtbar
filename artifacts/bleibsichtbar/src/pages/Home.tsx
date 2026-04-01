@@ -255,7 +255,7 @@ function rng(seed: number): number {
   return Math.abs(x % 10000) / 10000;
 }
 
-const STARS = Array.from({ length: 200 }, (_, i) => {
+const STARS = Array.from({ length: 250 }, (_, i) => {
   const r = (salt: number) => rng(i * 7919 + salt * 104729);
   const dx = (r(1) - 0.5) * 44;
   const dy = (r(2) - 0.5) * 44;
