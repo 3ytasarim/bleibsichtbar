@@ -188,9 +188,20 @@ export default function Onboarding() {
     set(k, arr.includes(v) ? arr.filter((x: string) => x !== v) : [...arr, v]);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    try {
+      await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName: f.q0 || "Unbekannt",
+          ansprechpartner: f.q24 || null,
+          data: f,
+        }),
+      });
+    } catch (_) {}
     setTimeout(() => {
       setVideoOpen(true);
       setTimeout(() => videoRef.current?.play(), 300);
