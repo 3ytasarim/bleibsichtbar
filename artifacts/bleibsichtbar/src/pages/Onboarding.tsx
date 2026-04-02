@@ -164,7 +164,6 @@ export default function Onboarding() {
     q11: "" as string,         // Kamera Ja/Nein
     q12: [] as string[],       // offen für (multi)
     q13: "",                   // Accounts
-    q14: "",                   // Konkurrenten
     q15: "",                   // vermeiden
     q16: [] as string[],       // Priorität (multi)
     q17: "",                   // Produkte pushen
@@ -305,10 +304,6 @@ export default function Onboarding() {
                 <div>
                   <QLabel n={13} text="Nennen Sie 1–3 Accounts, die Ihnen gefallen" required />
                   <TextArea value={f.q13} onChange={v => set("q13", v)} placeholder="z. B. @beispiel1, @beispiel2 – weil …" required />
-                </div>
-                <div>
-                  <QLabel n={14} text="Gibt es Konkurrenten, die Sie gut finden oder bewusst anders machen möchten?" required />
-                  <TextArea value={f.q14} onChange={v => set("q14", v)} placeholder="Konkurrent X macht … – das finden wir gut / möchten wir vermeiden" required />
                 </div>
               </Section>
 
