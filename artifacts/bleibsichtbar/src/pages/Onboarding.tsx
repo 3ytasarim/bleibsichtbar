@@ -161,7 +161,7 @@ export default function Onboarding() {
     q8: [] as string[],        // Content-Richtung (multi)
     q9: "",                    // No-Gos
     q10: "",                   // hervorheben
-    q11: [] as string[],       // Kamera Ja/Nein
+    q11: "" as string,         // Kamera Ja/Nein
     q12: [] as string[],       // offen für (multi)
     q13: "",                   // Accounts
     q14: "",                   // Konkurrenten
@@ -292,7 +292,7 @@ export default function Onboarding() {
               <Section icon={Camera} color="bg-yellow-500/20 text-yellow-300" title="5. Kamera & Stil" subtitle="Auftreten vor der Kamera">
                 <div>
                   <QLabel n={11} text="Wären Sie oder Ihr Team bereit, vor die Kamera zu gehen?" />
-                  <OptionGrid options={["Ja", "Nein"]} selected={f.q11} onChange={v => toggleMulti("q11", v)} multi />
+                  <OptionGrid options={["Ja", "Nein"]} selected={f.q11} onChange={v => set("q11", v === f.q11 ? "" : v)} />
                 </div>
                 <div>
                   <QLabel n={12} text="Sind Sie offen für …?" required />
