@@ -11,7 +11,7 @@ const links = [
   { name: "Webseiten", path: "/webseiten" },
   { name: "Marketing Ads", path: "/marketing-ads" },
   { name: "Ki & Automatisierungen", path: "/ki-automatisierungen" },
-  { name: "Analyse", path: "/analyse" },
+  { name: "Analyse & Reporting", path: "/analyse" },
 ];
 
 const WHATSAPP_NUMBER = "4915123456789";
