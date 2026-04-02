@@ -372,6 +372,7 @@ export default function Onboarding() {
               <Section icon={UserCheck} color="bg-sky-500/20 text-sky-300" title="12. Organisation" subtitle="Ansprechpartner & Freigaben">
                 <div>
                   <QLabel n={24} text="Wer ist Ansprechpartner für Feedback & Freigaben?" />
+                  <p className="text-white/40 text-xs mb-3 -mt-1 pl-7">(Bitte Vorname/Name und Telefonnummer angeben)</p>
                   <TextInput value={f.q24} onChange={v => set("q24", v)} placeholder="Name, E-Mail, Telefon …" />
                 </div>
               </Section>
