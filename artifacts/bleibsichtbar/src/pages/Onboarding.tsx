@@ -35,7 +35,7 @@ function GalaxyCanvas() {
     /* ── sabitler ── */
     const sNumber = 600, sSize = 0.3, sSizeR = 0.6, sAlphaR = 0.5;
     /* kayan yıldız — seyrek ve yavaş, referans görsele benzer */
-    const shootingStarDensity   = 0.003;
+    const shootingStarDensity   = 0.009;
     const shootingStarBaseXspeed = 8;
     const shootingStarBaseYspeed = 5;
     const shootingStarBaseLength = 12;
@@ -302,7 +302,7 @@ function Section({ icon: Icon, color, title, subtitle, children }: {
     <motion.div
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }} transition={{ duration: 0.5 }}
-      className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm"
+      className="bg-white/[0.13] border border-white/20 rounded-2xl p-6 sm:p-8 backdrop-blur-md"
     >
       <div className="flex items-center gap-3 mb-7">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
@@ -418,7 +418,7 @@ export default function Onboarding() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="mb-10 bg-white/[0.04] border border-white/10 rounded-2xl p-7 sm:p-9 backdrop-blur-sm relative overflow-hidden"
+          className="mb-10 bg-white/[0.13] border border-white/20 rounded-2xl p-7 sm:p-9 backdrop-blur-md relative overflow-hidden"
         >
           {/* subtle accent line */}
           <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl bg-gradient-to-b from-orange-400 via-orange-500 to-orange-400/30" />
@@ -457,7 +457,7 @@ export default function Onboarding() {
 
               {/* ── 0. Unternehmensname ── */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
+                className="bg-white/[0.13] border border-white/20 rounded-2xl p-6 sm:p-8 backdrop-blur-md">
                 <p className="text-white/85 text-sm font-semibold leading-snug mb-3">
                   Wie heißt Ihr Unternehmen oder Ihre Marke?<span className="text-orange-400 ml-1">*</span>
                 </p>
