@@ -6,129 +6,217 @@ import {
   ShoppingBag, BookOpen, UserCheck, MessageCircle,
 } from "lucide-react";
 
-/* ---------- star field ---------- */
-function rng(seed: number) {
-  let x = seed;
-  x = (((x >> 16) ^ x) * 0x45d9f3b) | 0;
-  x = (((x >> 16) ^ x) * 0x45d9f3b) | 0;
-  x = (x >> 16) ^ x;
-  return Math.abs(x % 10000) / 10000;
-}
+/* ─── Canvas-tabanlı galaksi arka planı (kaynak dosyalara sadık port) ─── */
+function GalaxyCanvas() {
+  const starsRef = useRef<HTMLCanvasElement>(null);
+  const mwRef    = useRef<HTMLCanvasElement>(null);
+  const rafRef   = useRef<number>(0);
 
-/* 550 yıldız — bol bol, yoğun gece gökyüzü */
-const STARS = Array.from({ length: 550 }, (_, i) => {
-  const r = (s: number) => rng(i * 7919 + s * 104729);
-  const tier = i < 280 ? 0 : i < 420 ? 1 : i < 500 ? 2 : 3; // 0=ince 1=küçük 2=orta 3=büyük
-  const sizes  = [1.0, 1.8, 2.8, 4.2];
-  const opBase = [0.35, 0.55, 0.75, 0.95];
-  return {
-    id: i, x: r(3) * 100, y: r(4) * 100,
-    size: sizes[tier] + r(9) * sizes[tier] * 0.4,
-    moveDur: `${20 + r(5) * 25}s`, blinkDur: `${1.8 + r(6) * 3.5}s`,
-    delay: `-${r(7) * 30}s`, blinkDelay: `-${r(8) * 6}s`,
-    opacity: opBase[tier] + r(9) * 0.2,
-    dx1: `${(r(1) - 0.5) * 28}px`, dy1: `${(r(2) - 0.5) * 28}px`,
-    dx2: `${(r(1) - 0.5) * -18}px`, dy2: `${(r(2) - 0.5) * 18}px`,
-  };
-});
-
-/* ─── Kayan yıldız efekti — kuyruklu, hızlı, sık ─── */
-interface ShootingStar { id: number; x: number; y: number; angle: number; travel: number; len: number; }
-let _sId = 0;
-function spawnStar(): ShootingStar {
-  const id = _sId++;
-  const r = (s: number) => rng(id * 7919 + s * 104729);
-  return {
-    id,
-    x: 2 + r(1) * 75,
-    y: 1 + r(2) * 60,
-    angle: 15 + r(3) * 35,
-    travel: 220 + r(4) * 260,
-    len: 100 + r(5) * 150,
-  };
-}
-
-function ShootingStars() {
-  const [stars, setStars] = useState<ShootingStar[]>(() => [spawnStar(), spawnStar()]);
   useEffect(() => {
-    const spawn = () => setStars(prev => [...prev.slice(-8), spawnStar()]);
-    spawn();
-    const t = setInterval(spawn, 1800);
-    return () => clearInterval(t);
+    const sc = starsRef.current;
+    const mc = mwRef.current;
+    if (!sc || !mc) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+
+    sc.width  = W * dpr; sc.height = H * dpr;
+    mc.width  = W * dpr; mc.height = H * dpr;
+
+    const ctx   = sc.getContext("2d")!;
+    const ctxMw = mc.getContext("2d")!;
+    ctx.scale(dpr, dpr);
+    ctxMw.scale(dpr, dpr);
+
+    /* ── sabitler (kaynak dosyadan) ── */
+    const sNumber = 600, sSize = 0.3, sSizeR = 0.6, sAlphaR = 0.5;
+    const shootingStarDensity = 0.012;
+    const shootingStarBaseXspeed = 30, shootingStarBaseYspeed = 15;
+    const shootingStarBaseLength = 8, shootingStarBaseLifespan = 60;
+    const shootingStarsColors = ["#a1ffba","#a1d2ff","#fffaa1","#ffa1a1"];
+    const mwStarCount = 100000, mwRandomStarProp = 0.2;
+    const mwClusterCount = 300, mwClusterStarCount = 1500;
+    const mwClusterSize = 120, mwClusterSizeR = 80, mwClusterLayers = 10;
+    const mwAngle = 0.6;
+    const mwHueMin = 150, mwHueMax = 300;
+    const mwWhiteProportionMin = 50, mwWhiteProportionMax = 65;
+    const randomArrayLength = 1000, hueArrayLength = 1000;
+
+    /* ── rastgele diziler ── */
+    const randomArray: number[] = Array.from({length: randomArrayLength}, () => Math.random());
+    const hueArray: number[] = Array.from({length: hueArrayLength}, () => {
+      let h = Math.floor(Math.random() * 160);
+      if (h > 60) h += 110;
+      return h;
+    });
+    let randomArrayIterator = 0;
+
+    /* ── yıldız sınıfı ── */
+    class Star {
+      x: number; y: number; size: number;
+      alpha: number; baseHue: number; baseHueProportion: number;
+      randomIndexa: number; randomIndexh: number; randomValue: number;
+      color = "";
+      constructor(x: number, y: number, size: number) {
+        this.x = x; this.y = y; this.size = size;
+        this.alpha = size / (sSize + sSizeR);
+        this.baseHue = hueArray[Math.floor(Math.random() * hueArrayLength)];
+        this.baseHueProportion = Math.random();
+        this.randomIndexa = Math.floor(Math.random() * randomArrayLength);
+        this.randomIndexh = this.randomIndexa;
+        this.randomValue = randomArray[this.randomIndexa];
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+        const rAlpha = this.alpha + Math.min((this.randomValue - 0.5) * sAlphaR, 1);
+        const rHue = randomArray[this.randomIndexh] > this.baseHueProportion
+          ? hueArray[this.randomIndexa] : this.baseHue;
+        this.color = `hsla(${rHue},100%,85%,${rAlpha})`;
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+      update() {
+        this.randomIndexh = this.randomIndexa;
+        this.randomIndexa = this.randomIndexa >= 999 ? 0 : this.randomIndexa + 1;
+        this.randomValue = randomArray[this.randomIndexa];
+        this.draw();
+      }
+    }
+
+    /* ── kayan yıldız sınıfı ── */
+    class ShootingStar {
+      x: number; y: number; speedX: number; speedY: number;
+      framesLeft: number; color: string;
+      constructor(x: number, y: number, speedX: number, speedY: number, color: string) {
+        this.x = x; this.y = y; this.speedX = speedX; this.speedY = speedY;
+        this.framesLeft = shootingStarBaseLifespan; this.color = color;
+      }
+      goingOut() { return this.framesLeft <= 0; }
+      ageModifier() {
+        const hl = shootingStarBaseLifespan / 2;
+        return Math.pow(1 - Math.abs(this.framesLeft - hl) / hl, 2);
+      }
+      draw() {
+        const am = this.ageModifier();
+        const endX = this.x - this.speedX * shootingStarBaseLength * am;
+        const endY = this.y - this.speedY * shootingStarBaseLength * am;
+        const grad = ctx.createLinearGradient(this.x, this.y, endX, endY);
+        grad.addColorStop(0, "#fff");
+        grad.addColorStop(Math.min(am, 0.7), this.color);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.strokeStyle = grad;
+        ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(endX, endY);
+        ctx.stroke();
+      }
+      update() { this.framesLeft--; this.x += this.speedX; this.y += this.speedY; this.draw(); }
+    }
+
+    /* ── samanyolu kümesi ── */
+    class MwStarCluster {
+      constructor(
+        public x: number, public y: number, public size: number,
+        public hue: number, public baseWhiteProportion: number, public brigthnessModifier: number
+      ) {}
+      draw() {
+        const starsPerLayer = Math.floor(mwClusterStarCount / mwClusterLayers);
+        for (let layer = 1; layer < mwClusterLayers; layer++) {
+          const lr = this.size * layer / mwClusterLayers;
+          for (let i = 1; i < starsPerLayer; i++) {
+            const px = this.x + 2 * lr * (Math.random() - 0.5);
+            const py = this.y + 2 * Math.sqrt(Math.pow(lr,2) - Math.pow(this.x-px,2)) * (Math.random()-0.5);
+            const sz = 0.05 + Math.random() * 0.15;
+            const al = 0.3 + Math.random() * 0.4;
+            const wp = this.baseWhiteProportion + 15 + 15*this.brigthnessModifier + Math.floor(Math.random()*10);
+            ctxMw.beginPath();
+            ctxMw.arc(px, py, sz, 0, Math.PI*2, false);
+            ctxMw.fillStyle = `hsla(${this.hue},100%,${wp}%,${al})`;
+            ctxMw.fill();
+          }
+        }
+        const grad = ctxMw.createRadialGradient(this.x,this.y,0,this.x,this.y,this.size);
+        grad.addColorStop(0, `hsla(${this.hue},100%,${this.baseWhiteProportion}%,0.002)`);
+        grad.addColorStop(0.25, `hsla(${this.hue},100%,${this.baseWhiteProportion+30}%,${0.01+0.01*this.brigthnessModifier})`);
+        grad.addColorStop(0.4, `hsla(${this.hue},100%,${this.baseWhiteProportion+15}%,0.005)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctxMw.beginPath(); ctxMw.arc(this.x,this.y,this.size,0,Math.PI*2,false);
+        ctxMw.fillStyle = grad; ctxMw.fill();
+      }
+    }
+
+    /* ── samanyolu yardımcı fonksiyonlar ── */
+    function mwX() { return Math.floor(Math.random() * W); }
+    function mwY(xPos: number, mode: string) {
+      const offset = (W/2 - xPos) * mwAngle;
+      if (mode === "star")
+        return Math.floor(Math.pow(Math.random(),1.2)*H*(Math.random()-0.5)+H/2+(Math.random()-0.5)*100)+offset;
+      return Math.floor(Math.pow(Math.random(),1.5)*H*0.6*(Math.random()-0.5)+H/2+(Math.random()-0.5)*100)+offset;
+    }
+    function drawMilkyWay() {
+      for (let i = 0; i < mwStarCount; i++) {
+        const x = mwX();
+        const y = Math.random() < mwRandomStarProp ? Math.floor(Math.random()*H) : mwY(x,"star");
+        ctxMw.beginPath();
+        ctxMw.arc(x, y, Math.random()*0.27, 0, Math.PI*2, false);
+        ctxMw.fillStyle = `hsla(0,100%,100%,${0.4+Math.random()*0.6})`;
+        ctxMw.fill();
+      }
+      for (let i = 0; i < mwClusterCount; i++) {
+        const x = mwX(), y = mwY(x,"cluster");
+        const d = (1-Math.abs(x-W/2)/(W/2)) * (1-Math.abs(y-H/2)/(H/2));
+        const size = mwClusterSize + Math.random()*mwClusterSizeR;
+        const hue  = mwHueMin + Math.floor((Math.random()*0.5+d*0.5)*(mwHueMax-mwHueMin));
+        const bwp  = mwWhiteProportionMin + Math.random()*(mwWhiteProportionMax-mwWhiteProportionMin);
+        new MwStarCluster(x, y, size, hue, bwp, d).draw();
+      }
+    }
+
+    /* ── init ── */
+    const StarsArray: Star[] = [];
+    for (let i = 0; i < sNumber; i++) {
+      const sz = Math.random()*sSizeR + sSize;
+      const x  = Math.random()*((W-sz*2)-(sz*2))+sz*2;
+      const y  = Math.random()*((H-sz*2)-(sz*2))+sz*2;
+      StarsArray.push(new Star(x, y, sz));
+    }
+    const ShootingStarsArray: ShootingStar[] = [];
+    drawMilkyWay();
+
+    /* ── animasyon döngüsü ── */
+    function animate() {
+      rafRef.current = requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, W, H);
+      for (const s of StarsArray) s.update();
+
+      if (randomArray[randomArrayIterator] < shootingStarDensity) {
+        const px = Math.floor(Math.random()*W);
+        const py = Math.floor(Math.random()*150);
+        const sx = Math.floor((Math.random()-0.5)*shootingStarBaseXspeed);
+        const sy = Math.floor(Math.random()*shootingStarBaseYspeed);
+        const cl = shootingStarsColors[Math.floor(Math.random()*shootingStarsColors.length)];
+        ShootingStarsArray.push(new ShootingStar(px, py, sx, sy, cl));
+      }
+      for (let i = ShootingStarsArray.length - 1; i >= 0; i--) {
+        if (ShootingStarsArray[i].goingOut()) ShootingStarsArray.splice(i, 1);
+        else ShootingStarsArray[i].update();
+      }
+      randomArrayIterator = (randomArrayIterator + 1) % randomArrayLength;
+    }
+    animate();
+    return () => cancelAnimationFrame(rafRef.current);
   }, []);
+
   return (
-    <>
-      <style>{`
-        @keyframes oShoot{
-          0%  {opacity:0;transform:rotate(var(--ang)) translateX(0) scaleX(0.04)}
-          7%  {opacity:1;transform:rotate(var(--ang)) translateX(0) scaleX(1)}
-          85% {opacity:0.7;transform:rotate(var(--ang)) translateX(var(--tv)) scaleX(0.9)}
-          100%{opacity:0;transform:rotate(var(--ang)) translateX(var(--tv)) scaleX(0.1)}
-        }
-        .oShoot{
-          position:absolute;transform-origin:left center;border-radius:9999px;pointer-events:none;
-          background:linear-gradient(90deg,
-            rgba(255,255,255,0) 0%,
-            rgba(180,210,255,0.5) 30%,
-            rgba(255,255,255,0.95) 65%,
-            white 100%);
-          box-shadow:0 0 4px 1px rgba(200,225,255,0.6);
-          animation:oShoot var(--sd) cubic-bezier(0.25,0.1,0.15,1) forwards;
-        }
-      `}</style>
-      {stars.map(s => (
-        <div key={s.id} className="oShoot" style={{
-          left:`${s.x}%`, top:`${s.y}%`,
-          width:`${s.len}px`, height:"2px",
-          "--ang":`${s.angle}deg`,
-          "--tv":`${s.travel}px`,
-          "--sd":`${0.8 + rng(s.id * 3 + 1) * 0.6}s`,
-        } as React.CSSProperties}
-          onAnimationEnd={() => setStars(p => p.filter(st => st.id !== s.id))}
-        />
-      ))}
-    </>
+    <div style={{ position:"absolute", inset:0, overflow:"hidden", background:"radial-gradient(#100826,#060212)" }}>
+      <canvas ref={mwRef}    style={{ position:"absolute", inset:0, width:"100%", height:"100%", zIndex:1 }} />
+      <canvas ref={starsRef} style={{ position:"absolute", inset:0, width:"100%", height:"100%", zIndex:2 }} />
+    </div>
   );
 }
 
 function StarField() {
-  return (
-    <>
-      <style>{`
-        @keyframes oBDrift{
-          0%{transform:translate(0,0)}
-          25%{transform:translate(var(--dx1),var(--dy2))}
-          50%{transform:translate(var(--dx2),var(--dy1))}
-          75%{transform:translate(var(--dx1),var(--dy2))}
-          100%{transform:translate(0,0)}
-        }
-        @keyframes oBlink{
-          0%,100%{opacity:var(--op)}
-          40%{opacity:calc(var(--op)*0.4)}
-          70%{opacity:calc(var(--op)*0.95)}
-        }
-        .obs{
-          position:absolute;border-radius:9999px;background:white;
-          animation:oBDrift var(--md) ease-in-out var(--dl) infinite,
-                     oBlink var(--bd) ease-in-out var(--bld) infinite;
-        }
-      `}</style>
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {STARS.map(s => (
-          <div key={s.id} className="obs" style={{
-            left:`${s.x}%`, top:`${s.y}%`,
-            width:`${s.size}px`, height:`${s.size}px`,
-            "--op":s.opacity, "--md":s.moveDur, "--bd":s.blinkDur,
-            "--dl":s.delay, "--bld":s.blinkDelay,
-            "--dx1":s.dx1, "--dy1":s.dy1, "--dx2":s.dx2, "--dy2":s.dy2,
-          } as React.CSSProperties}/>
-        ))}
-      </div>
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <ShootingStars />
-      </div>
-    </>
-  );
+  return <GalaxyCanvas />;
 }
 
 /* ---------- reusable option button (radio style) ---------- */
@@ -293,9 +381,7 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060d1f] relative overflow-hidden">
-      {/* Atmosferik gradient — referans gibi üstten aydınlık */}
-      <div className="absolute inset-0 pointer-events-none" style={{background:"radial-gradient(ellipse 110% 60% at 50% 0%,#1a3a6e 0%,#0d1f42 30%,#060d1f 70%)"}} />
+    <div className="min-h-screen relative overflow-hidden">
       <StarField />
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
