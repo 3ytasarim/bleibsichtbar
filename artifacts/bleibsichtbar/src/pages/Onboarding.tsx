@@ -153,28 +153,28 @@ function QLabel({ n, text, required }: { n: number; text: string; required?: boo
 /* ---------- main component ---------- */
 export default function Onboarding() {
   const [f, setF] = useState({
-    q1: "" as string,          // Corporate Design Ja/Nein
+    q1: [] as string[],        // Corporate Design Ja/Nein
     q2: [] as string[],        // Marke wirken (multi)
     q2sonstiges: "",
     q3: [] as string[],        // Tonalität (multi)
     q4: "",                    // Zielgruppe textarea
-    q5: "" as string,          // neue Zielgruppe Ja/Nein
+    q5: [] as string[],        // neue Zielgruppe Ja/Nein
     q5detail: "",
     q6: "",                    // Konkurrenz
     q7: "",                    // Warum kaufen
     q8: [] as string[],        // Content-Richtung (multi)
     q9: "",                    // No-Gos
     q10: "",                   // hervorheben
-    q11: "" as string,         // Kamera Ja/Nein
+    q11: [] as string[],       // Kamera Ja/Nein
     q12: [] as string[],       // offen für (multi)
     q13: "",                   // Accounts
     q14: "",                   // Konkurrenten
     q15: "",                   // vermeiden
     q16: [] as string[],       // Priorität (multi)
     q17: "",                   // Produkte pushen
-    q18: "" as string,         // Fotos/Videos Ja/Nein
+    q18: [] as string[],       // Fotos/Videos Ja/Nein
     q18detail: "",
-    q19: "" as string,         // Materialien Ja/Nein
+    q19: [] as string[],       // Materialien Ja/Nein
     q20: "",                   // meistverkauftes Produkt
     q21: "",                   // Kundenfragen
     q22: "",                   // Markenstory
@@ -231,7 +231,7 @@ export default function Onboarding() {
               <Section icon={Palette} color="bg-purple-500/20 text-purple-300" title="1. Marke & Wirkung" subtitle="Wie soll Ihre Marke auftreten?">
                 <div>
                   <QLabel n={1} text="Gibt es ein bestehendes Corporate Design? (Logo, Farben, Schriftarten etc.)" required />
-                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q1} onChange={v => set("q1", v === f.q1 ? "" : v)} />
+                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q1} onChange={v => toggleMulti("q1", v)} multi />
                 </div>
                 <div>
                   <QLabel n={2} text="Wie soll Ihre Marke wirken?" required />
@@ -256,9 +256,9 @@ export default function Onboarding() {
                   <QLabel n={5} text="Möchten Sie eine neue Zielgruppe erreichen?" required />
                   <OptionGrid
                     options={["Ja → welche?", "Wir möchten unsere bisherige Zielgruppe weiterhin ansprechen"]}
-                    selected={f.q5} onChange={v => set("q5", v === f.q5 ? "" : v)}
+                    selected={f.q5} onChange={v => toggleMulti("q5", v)} multi
                   />
-                  {f.q5 === "Ja → welche?" && (
+                  {f.q5.includes("Ja → welche?") && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-3 overflow-hidden">
                       <TextInput value={f.q5detail} onChange={v => set("q5detail", v)} placeholder="Neue Zielgruppe beschreiben …" />
                     </motion.div>
@@ -298,7 +298,7 @@ export default function Onboarding() {
               <Section icon={Camera} color="bg-yellow-500/20 text-yellow-300" title="5. Kamera & Stil" subtitle="Auftreten vor der Kamera">
                 <div>
                   <QLabel n={11} text="Wären Sie oder Ihr Team bereit, vor die Kamera zu gehen?" />
-                  <OptionGrid options={["Ja", "Nein"]} selected={f.q11} onChange={v => set("q11", v === f.q11 ? "" : v)} />
+                  <OptionGrid options={["Ja", "Nein"]} selected={f.q11} onChange={v => toggleMulti("q11", v)} multi />
                 </div>
                 <div>
                   <QLabel n={12} text="Sind Sie offen für …?" required />
@@ -342,8 +342,8 @@ export default function Onboarding() {
               <Section icon={Package} color="bg-indigo-500/20 text-indigo-300" title="9. Inhalte & Material" subtitle="Vorhandenes Material">
                 <div>
                   <QLabel n={18} text="Haben Sie Fotos/Videos, die wir nutzen können?" required />
-                  <OptionGrid options={["Ja (bitte zusenden)", "Nein – haben Sie bereits einen Content-Tag gebucht?"]} selected={f.q18} onChange={v => set("q18", v === f.q18 ? "" : v)} />
-                  {f.q18 === "Nein – haben Sie bereits einen Content-Tag gebucht?" && (
+                  <OptionGrid options={["Ja (bitte zusenden)", "Nein – haben Sie bereits einen Content-Tag gebucht?"]} selected={f.q18} onChange={v => toggleMulti("q18", v)} multi />
+                  {f.q18.includes("Nein – haben Sie bereits einen Content-Tag gebucht?") && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-3 overflow-hidden">
                       <TextInput value={f.q18detail} onChange={v => set("q18detail", v)} placeholder="Details zum Content-Tag …" />
                     </motion.div>
@@ -351,7 +351,7 @@ export default function Onboarding() {
                 </div>
                 <div>
                   <QLabel n={19} text="Haben Sie zusätzliche Materialien? (z. B. Menükarte, Leistungen, Angebote etc.)" required />
-                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q19} onChange={v => set("q19", v === f.q19 ? "" : v)} />
+                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q19} onChange={v => toggleMulti("q19", v)} multi />
                 </div>
               </Section>
 
