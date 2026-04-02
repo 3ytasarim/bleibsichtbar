@@ -6,7 +6,7 @@ import {
   ShoppingBag, BookOpen, UserCheck, MessageCircle,
 } from "lucide-react";
 
-/* ─── Canvas-tabanlı galaksi arka planı (kaynak dosyalara sadık port) ─── */
+/* ─── Canvas-tabanlı galaksi arka planı ─── */
 function GalaxyCanvas() {
   const starsRef = useRef<HTMLCanvasElement>(null);
   const mwRef    = useRef<HTMLCanvasElement>(null);
@@ -21,21 +21,28 @@ function GalaxyCanvas() {
     const W = window.innerWidth;
     const H = window.innerHeight;
 
+    /* canvas boyutlarını viewport'a sabitle */
     sc.width  = W * dpr; sc.height = H * dpr;
     mc.width  = W * dpr; mc.height = H * dpr;
+    sc.style.width  = `${W}px`; sc.style.height = `${H}px`;
+    mc.style.width  = `${W}px`; mc.style.height = `${H}px`;
 
     const ctx   = sc.getContext("2d")!;
     const ctxMw = mc.getContext("2d")!;
     ctx.scale(dpr, dpr);
     ctxMw.scale(dpr, dpr);
 
-    /* ── sabitler (kaynak dosyadan) ── */
+    /* ── sabitler ── */
     const sNumber = 600, sSize = 0.3, sSizeR = 0.6, sAlphaR = 0.5;
-    const shootingStarDensity = 0.012;
-    const shootingStarBaseXspeed = 30, shootingStarBaseYspeed = 15;
-    const shootingStarBaseLength = 8, shootingStarBaseLifespan = 60;
+    /* kayan yıldız — seyrek ve yavaş, referans görsele benzer */
+    const shootingStarDensity   = 0.003;
+    const shootingStarBaseXspeed = 8;
+    const shootingStarBaseYspeed = 5;
+    const shootingStarBaseLength = 12;
+    const shootingStarBaseLifespan = 90;
     const shootingStarsColors = ["#a1ffba","#a1d2ff","#fffaa1","#ffa1a1"];
-    const mwStarCount = 100000, mwRandomStarProp = 0.2;
+    /* samanyolu */
+    const mwStarCount = 80000, mwRandomStarProp = 0.2;
     const mwClusterCount = 300, mwClusterStarCount = 1500;
     const mwClusterSize = 120, mwClusterSizeR = 80, mwClusterLayers = 10;
     const mwAngle = 0.6;
@@ -43,7 +50,6 @@ function GalaxyCanvas() {
     const mwWhiteProportionMin = 50, mwWhiteProportionMax = 65;
     const randomArrayLength = 1000, hueArrayLength = 1000;
 
-    /* ── rastgele diziler ── */
     const randomArray: number[] = Array.from({length: randomArrayLength}, () => Math.random());
     const hueArray: number[] = Array.from({length: hueArrayLength}, () => {
       let h = Math.floor(Math.random() * 160);
@@ -52,7 +58,7 @@ function GalaxyCanvas() {
     });
     let randomArrayIterator = 0;
 
-    /* ── yıldız sınıfı ── */
+    /* ── Titreşen yıldız ── */
     class Star {
       x: number; y: number; size: number;
       alpha: number; baseHue: number; baseHueProportion: number;
@@ -70,7 +76,7 @@ function GalaxyCanvas() {
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        const rAlpha = this.alpha + Math.min((this.randomValue - 0.5) * sAlphaR, 1);
+        const rAlpha = Math.min(1, Math.max(0, this.alpha + (this.randomValue - 0.5) * sAlphaR));
         const rHue = randomArray[this.randomIndexh] > this.baseHueProportion
           ? hueArray[this.randomIndexa] : this.baseHue;
         this.color = `hsla(${rHue},100%,85%,${rAlpha})`;
@@ -85,7 +91,7 @@ function GalaxyCanvas() {
       }
     }
 
-    /* ── kayan yıldız sınıfı ── */
+    /* ── Kayan yıldız ── */
     class ShootingStar {
       x: number; y: number; speedX: number; speedY: number;
       framesLeft: number; color: string;
@@ -106,14 +112,17 @@ function GalaxyCanvas() {
         grad.addColorStop(0, "#fff");
         grad.addColorStop(Math.min(am, 0.7), this.color);
         grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.save();
+        ctx.lineWidth = 1.5;
         ctx.strokeStyle = grad;
         ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(endX, endY);
         ctx.stroke();
+        ctx.restore();
       }
       update() { this.framesLeft--; this.x += this.speedX; this.y += this.speedY; this.draw(); }
     }
 
-    /* ── samanyolu kümesi ── */
+    /* ── Samanyolu kümesi ── */
     class MwStarCluster {
       constructor(
         public x: number, public y: number, public size: number,
@@ -125,7 +134,8 @@ function GalaxyCanvas() {
           const lr = this.size * layer / mwClusterLayers;
           for (let i = 1; i < starsPerLayer; i++) {
             const px = this.x + 2 * lr * (Math.random() - 0.5);
-            const py = this.y + 2 * Math.sqrt(Math.pow(lr,2) - Math.pow(this.x-px,2)) * (Math.random()-0.5);
+            const diff = Math.pow(lr,2) - Math.pow(px - this.x, 2);
+            const py = this.y + 2 * Math.sqrt(Math.max(0, diff)) * (Math.random() - 0.5);
             const sz = 0.05 + Math.random() * 0.15;
             const al = 0.3 + Math.random() * 0.4;
             const wp = this.baseWhiteProportion + 15 + 15*this.brigthnessModifier + Math.floor(Math.random()*10);
@@ -136,16 +146,16 @@ function GalaxyCanvas() {
           }
         }
         const grad = ctxMw.createRadialGradient(this.x,this.y,0,this.x,this.y,this.size);
-        grad.addColorStop(0, `hsla(${this.hue},100%,${this.baseWhiteProportion}%,0.002)`);
+        grad.addColorStop(0,    `hsla(${this.hue},100%,${this.baseWhiteProportion}%,0.002)`);
         grad.addColorStop(0.25, `hsla(${this.hue},100%,${this.baseWhiteProportion+30}%,${0.01+0.01*this.brigthnessModifier})`);
-        grad.addColorStop(0.4, `hsla(${this.hue},100%,${this.baseWhiteProportion+15}%,0.005)`);
+        grad.addColorStop(0.4,  `hsla(${this.hue},100%,${this.baseWhiteProportion+15}%,0.005)`);
         grad.addColorStop(1, "rgba(0,0,0,0)");
         ctxMw.beginPath(); ctxMw.arc(this.x,this.y,this.size,0,Math.PI*2,false);
         ctxMw.fillStyle = grad; ctxMw.fill();
       }
     }
 
-    /* ── samanyolu yardımcı fonksiyonlar ── */
+    /* ── Samanyolu hesaplama ── */
     function mwX() { return Math.floor(Math.random() * W); }
     function mwY(xPos: number, mode: string) {
       const offset = (W/2 - xPos) * mwAngle;
@@ -183,18 +193,19 @@ function GalaxyCanvas() {
     const ShootingStarsArray: ShootingStar[] = [];
     drawMilkyWay();
 
-    /* ── animasyon döngüsü ── */
+    /* ── Animasyon döngüsü ── */
+    let running = true;
     function animate() {
+      if (!running) return;
       rafRef.current = requestAnimationFrame(animate);
       ctx.clearRect(0, 0, W, H);
       for (const s of StarsArray) s.update();
-
       if (randomArray[randomArrayIterator] < shootingStarDensity) {
-        const px = Math.floor(Math.random()*W);
-        const py = Math.floor(Math.random()*150);
-        const sx = Math.floor((Math.random()-0.5)*shootingStarBaseXspeed);
-        const sy = Math.floor(Math.random()*shootingStarBaseYspeed);
-        const cl = shootingStarsColors[Math.floor(Math.random()*shootingStarsColors.length)];
+        const px  = Math.floor(Math.random()*W);
+        const py  = Math.floor(Math.random()*H*0.4);
+        const sx  = (Math.random()-0.5)*shootingStarBaseXspeed;
+        const sy  = Math.random()*shootingStarBaseYspeed + 1;
+        const cl  = shootingStarsColors[Math.floor(Math.random()*shootingStarsColors.length)];
         ShootingStarsArray.push(new ShootingStar(px, py, sx, sy, cl));
       }
       for (let i = ShootingStarsArray.length - 1; i >= 0; i--) {
@@ -204,13 +215,13 @@ function GalaxyCanvas() {
       randomArrayIterator = (randomArrayIterator + 1) % randomArrayLength;
     }
     animate();
-    return () => cancelAnimationFrame(rafRef.current);
+    return () => { running = false; cancelAnimationFrame(rafRef.current); };
   }, []);
 
   return (
-    <div style={{ position:"absolute", inset:0, overflow:"hidden", background:"radial-gradient(#100826,#060212)" }}>
-      <canvas ref={mwRef}    style={{ position:"absolute", inset:0, width:"100%", height:"100%", zIndex:1 }} />
-      <canvas ref={starsRef} style={{ position:"absolute", inset:0, width:"100%", height:"100%", zIndex:2 }} />
+    <div style={{ position:"fixed", inset:0, zIndex:0, background:"radial-gradient(ellipse at 50% 55%, #100826 0%, #060212 100%)" }}>
+      <canvas ref={mwRef}    style={{ position:"absolute", top:0, left:0, zIndex:1 }} />
+      <canvas ref={starsRef} style={{ position:"absolute", top:0, left:0, zIndex:2 }} />
     </div>
   );
 }
