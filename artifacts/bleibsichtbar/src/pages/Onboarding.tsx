@@ -149,6 +149,7 @@ function QLabel({ n, text, required }: { n: number; text: string; required?: boo
 /* ---------- main component ---------- */
 export default function Onboarding() {
   const [f, setF] = useState({
+    q0: "",                    // Unternehmensname
     q1: [] as string[],        // Corporate Design Ja/Nein
     q2: [] as string[],        // Marke wirken (multi)
     q2sonstiges: "",
@@ -221,6 +222,15 @@ export default function Onboarding() {
         <AnimatePresence mode="wait">
           {!submitted ? (
             <motion.form key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.5, delay: 0.2 }} onSubmit={handleSubmit} className="space-y-6">
+
+              {/* ── 0. Unternehmensname ── */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
+                className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
+                <p className="text-white/85 text-sm font-semibold leading-snug mb-3">
+                  Wie heißt Ihr Unternehmen oder Ihre Marke?<span className="text-orange-400 ml-1">*</span>
+                </p>
+                <TextInput value={f.q0} onChange={v => set("q0", v)} placeholder="Ihr Unternehmens- oder Markenname …" required />
+              </motion.div>
 
               {/* ── 1. Marke & Wirkung ── */}
               <Section icon={Palette} color="bg-purple-500/20 text-purple-300" title="1. Marke & Wirkung" subtitle="Wie soll Ihre Marke auftreten?">
