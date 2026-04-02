@@ -18,6 +18,7 @@ import References from "./pages/References";
 import Contact from "./pages/Contact";
 import Datenschutz from "./pages/Datenschutz";
 import Impressum from "./pages/Impressum";
+import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/not-found";
 
 // Admin Pages
@@ -71,6 +72,7 @@ function Router() {
         <Route path="/kontakt" component={Contact} />
         <Route path="/datenschutz" component={Datenschutz} />
         <Route path="/impressum" component={Impressum} />
+        <Route path="/onboarding" component={Onboarding} />
 
         <Route component={NotFound} />
       </Switch>
