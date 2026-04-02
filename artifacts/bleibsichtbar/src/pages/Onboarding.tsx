@@ -1,406 +1,411 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, ChevronRight, Building2, User, Mail, Phone, Globe, Target, BarChart3, MessageSquare, Play, X } from "lucide-react";
+import {
+  CheckCircle2, ChevronRight, Palette, Users, Crosshair,
+  Film, Camera, Search, ShieldOff, Target, Package,
+  ShoppingBag, BookOpen, UserCheck, MessageCircle,
+} from "lucide-react";
 
-const PLATFORMS = ["Instagram", "Facebook", "TikTok", "LinkedIn", "YouTube", "Pinterest"];
-const GOALS = [
-  "Mehr Follower & Reichweite",
-  "Umsatzsteigerung",
-  "Markenbekanntheit aufbauen",
-  "Kundenbindung stärken",
-  "Leadgenerierung",
-  "Community aufbauen",
-];
-const SIZES = ["1–5 Mitarbeiter", "6–20 Mitarbeiter", "21–50 Mitarbeiter", "51–200 Mitarbeiter", "200+ Mitarbeiter"];
-const BUDGETS = ["bis 500 €/Monat", "500–1.000 €/Monat", "1.000–2.500 €/Monat", "2.500–5.000 €/Monat", "5.000+ €/Monat"];
-
+/* ---------- star field ---------- */
 function rng(seed: number) {
   let x = seed;
-  x = ((x >> 16) ^ x) * 0x45d9f3b | 0;
-  x = ((x >> 16) ^ x) * 0x45d9f3b | 0;
+  x = (((x >> 16) ^ x) * 0x45d9f3b) | 0;
+  x = (((x >> 16) ^ x) * 0x45d9f3b) | 0;
   x = (x >> 16) ^ x;
   return Math.abs(x % 10000) / 10000;
 }
-
 const STARS = Array.from({ length: 120 }, (_, i) => {
   const r = (s: number) => rng(i * 7919 + s * 104729);
   return {
     id: i, x: r(3) * 98 + 1, y: r(4) * 98 + 1,
     size: i % 7 === 0 ? 3.2 : i % 4 === 0 ? 2.2 : 1.5,
     moveDur: `${16 + r(5) * 18}s`, blinkDur: `${2 + r(6) * 4}s`,
-    delay: `-${r(7) * 20}s`, blinkDelay: `-${r(8) * 5}s`,
-    opacity: 0.25 + r(9) * 0.5,
+    delay: `-${r(7) * 20}s`, blinkDelay: `-${r(8) * 5}s`, opacity: 0.25 + r(9) * 0.5,
     dx1: `${(r(1) - 0.5) * 35}px`, dy1: `${(r(2) - 0.5) * 35}px`,
     dx2: `${(r(1) - 0.5) * -24}px`, dy2: `${(r(2) - 0.5) * 18}px`,
   };
 });
-
 function StarField() {
   return (
     <>
       <style>{`
-        @keyframes oBoardDrift {
-          0% { transform: translate(0,0); }
-          25% { transform: translate(var(--dx1), var(--dy2)); }
-          50% { transform: translate(var(--dx2), var(--dy1)); }
-          75% { transform: translate(var(--dx1), var(--dy2)); }
-          100% { transform: translate(0,0); }
-        }
-        @keyframes oBoardBlink {
-          0%, 100% { opacity: var(--op); }
-          40% { opacity: calc(var(--op) * 0.2); }
-          70% { opacity: calc(var(--op) * 0.85); }
-        }
-        .ob-star {
-          position: absolute; border-radius: 9999px; background: white;
-          animation: oBoardDrift var(--move-dur) ease-in-out var(--delay) infinite,
-                     oBoardBlink var(--blink-dur) ease-in-out var(--blink-delay) infinite;
-        }
+        @keyframes oBDrift{0%{transform:translate(0,0)}25%{transform:translate(var(--dx1),var(--dy2))}50%{transform:translate(var(--dx2),var(--dy1))}75%{transform:translate(var(--dx1),var(--dy2))}100%{transform:translate(0,0)}}
+        @keyframes oBlink{0%,100%{opacity:var(--op)}40%{opacity:calc(var(--op)*0.2)}70%{opacity:calc(var(--op)*0.85)}}
+        .obs{position:absolute;border-radius:9999px;background:white;animation:oBDrift var(--md) ease-in-out var(--dl) infinite,oBlink var(--bd) ease-in-out var(--bld) infinite}
       `}</style>
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {STARS.map(s => (
-          <div key={s.id} className="ob-star" style={{
-            left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size,
-            "--op": s.opacity, "--move-dur": s.moveDur, "--blink-dur": s.blinkDur,
-            "--delay": s.delay, "--blink-delay": s.blinkDelay,
-            "--dx1": s.dx1, "--dy1": s.dy1, "--dx2": s.dx2, "--dy2": s.dy2,
-          } as React.CSSProperties} />
+          <div key={s.id} className="obs" style={{
+            left:`${s.x}%`,top:`${s.y}%`,width:s.size,height:s.size,
+            "--op":s.opacity,"--md":s.moveDur,"--bd":s.blinkDur,
+            "--dl":s.delay,"--bld":s.blinkDelay,
+            "--dx1":s.dx1,"--dy1":s.dy1,"--dx2":s.dx2,"--dy2":s.dy2,
+          } as React.CSSProperties}/>
         ))}
       </div>
     </>
   );
 }
 
-function CheckboxGroup({ options, selected, onChange }: { options: string[]; selected: string[]; onChange: (v: string) => void }) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {options.map(opt => {
-        const active = selected.includes(opt);
-        return (
-          <motion.button key={opt} type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            onClick={() => onChange(opt)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left text-sm font-medium transition-all duration-200 ${
-              active
-                ? "bg-accent/20 border-accent text-white"
-                : "bg-white/5 border-white/15 text-white/70 hover:border-white/30 hover:bg-white/8"
-            }`}
-          >
-            <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
-              active ? "border-accent bg-accent" : "border-white/30"
-            }`}>
-              {active && <CheckCircle2 className="w-3 h-3 text-white" />}
-            </span>
-            {opt}
-          </motion.button>
-        );
-      })}
-    </div>
-  );
-}
-
-function RadioGroup({ options, selected, onChange }: { options: string[]; selected: string; onChange: (v: string) => void }) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {options.map(opt => {
-        const active = selected === opt;
-        return (
-          <motion.button key={opt} type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            onClick={() => onChange(opt)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left text-sm font-medium transition-all duration-200 ${
-              active
-                ? "bg-accent/20 border-accent text-white"
-                : "bg-white/5 border-white/15 text-white/70 hover:border-white/30 hover:bg-white/8"
-            }`}
-          >
-            <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
-              active ? "border-accent bg-accent" : "border-white/30"
-            }`}>
-              {active && <span className="w-2 h-2 rounded-full bg-white" />}
-            </span>
-            {opt}
-          </motion.button>
-        );
-      })}
-    </div>
-  );
-}
-
-function InputField({ label, type = "text", value, onChange, placeholder, icon: Icon }: {
-  label: string; type?: string; value: string; onChange: (v: string) => void; placeholder?: string; icon?: React.ElementType;
+/* ---------- reusable option button (radio style) ---------- */
+function OptionBtn({ label, active, onClick, multi }: {
+  label: string; active: boolean; onClick: () => void; multi?: boolean;
 }) {
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-semibold text-white/80">{label}</label>
-      <div className="relative">
-        {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />}
-        <input
-          type={type}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          placeholder={placeholder}
-          className={`w-full bg-white/8 border border-white/15 rounded-xl py-3 ${Icon ? "pl-11 pr-4" : "px-4"} text-white placeholder-white/35 text-sm focus:outline-none focus:border-accent/60 focus:bg-white/12 transition-all duration-200`}
-        />
-      </div>
+    <motion.button
+      type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+      onClick={onClick}
+      className={`flex items-center gap-3 w-full px-5 py-3.5 rounded-2xl border text-left text-sm font-medium transition-all duration-200 ${
+        active
+          ? "bg-white/10 border-white/40 text-white"
+          : "bg-transparent border-white/15 text-white/70 hover:border-white/28 hover:bg-white/5"
+      }`}
+    >
+      <span className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+        active ? "border-white/80" : "border-white/30"
+      }`}>
+        {active && (
+          multi
+            ? <span className="w-2.5 h-2.5 rounded-full bg-white" />
+            : <span className="w-2.5 h-2.5 rounded-full bg-white" />
+        )}
+      </span>
+      <span>{label}</span>
+    </motion.button>
+  );
+}
+
+function OptionGrid({ options, selected, onChange, multi }: {
+  options: string[]; selected: string | string[]; onChange: (v: string) => void; multi?: boolean;
+}) {
+  const isSelected = (opt: string) =>
+    multi ? (selected as string[]).includes(opt) : selected === opt;
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {options.map(opt => (
+        <OptionBtn key={opt} label={opt} active={isSelected(opt)} onClick={() => onChange(opt)} multi={multi} />
+      ))}
     </div>
   );
 }
 
-const sections = [
-  { id: "company", icon: Building2, label: "Unternehmen" },
-  { id: "contact", icon: User, label: "Kontakt" },
-  { id: "platforms", icon: Globe, label: "Plattformen" },
-  { id: "goals", icon: Target, label: "Ziele" },
-  { id: "details", icon: BarChart3, label: "Details" },
-  { id: "message", icon: MessageSquare, label: "Nachricht" },
-];
+function TextArea({ value, onChange, placeholder, required }: {
+  value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean;
+}) {
+  return (
+    <textarea
+      value={value} rows={3} required={required}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full bg-white/5 border border-white/15 rounded-2xl px-5 py-4 text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/35 focus:bg-white/8 transition-all duration-200 resize-none"
+    />
+  );
+}
 
+function TextInput({ value, onChange, placeholder, required }: {
+  value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean;
+}) {
+  return (
+    <input
+      type="text" value={value} required={required}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full bg-white/5 border border-white/15 rounded-2xl px-5 py-3.5 text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/35 focus:bg-white/8 transition-all duration-200"
+    />
+  );
+}
+
+/* ---------- section wrapper ---------- */
+function Section({ icon: Icon, color, title, subtitle, children }: {
+  icon: React.ElementType; color: string; title: string; subtitle: string; children: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }} transition={{ duration: 0.5 }}
+      className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm"
+    >
+      <div className="flex items-center gap-3 mb-7">
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
+          <Icon className="w-5 h-5" />
+        </div>
+        <div>
+          <h2 className="text-white font-bold text-lg leading-tight">{title}</h2>
+          <p className="text-white/40 text-sm">{subtitle}</p>
+        </div>
+      </div>
+      <div className="space-y-7">{children}</div>
+    </motion.div>
+  );
+}
+
+function QLabel({ n, text, required }: { n: number; text: string; required?: boolean }) {
+  return (
+    <div className="flex items-start gap-2 mb-3">
+      <span className="text-white/30 text-xs font-bold mt-0.5 w-5 flex-shrink-0">{n}.</span>
+      <p className="text-white/85 text-sm font-semibold leading-snug">
+        {text}{required && <span className="text-orange-400 ml-1">*</span>}
+      </p>
+    </div>
+  );
+}
+
+/* ---------- main component ---------- */
 export default function Onboarding() {
-  const [form, setForm] = useState({
-    company: "", industry: "", website: "",
-    name: "", email: "", phone: "", position: "",
-    platforms: [] as string[], currentFollowers: "",
-    goals: [] as string[],
-    size: "", budget: "",
-    message: "",
+  const [f, setF] = useState({
+    q1: "" as string,          // Corporate Design Ja/Nein
+    q2: [] as string[],        // Marke wirken (multi)
+    q2sonstiges: "",
+    q3: [] as string[],        // Tonalität (multi)
+    q4: "",                    // Zielgruppe textarea
+    q5: "" as string,          // neue Zielgruppe Ja/Nein
+    q5detail: "",
+    q6: "",                    // Konkurrenz
+    q7: "",                    // Warum kaufen
+    q8: [] as string[],        // Content-Richtung (multi)
+    q9: "",                    // No-Gos
+    q10: "",                   // hervorheben
+    q11: "" as string,         // Kamera Ja/Nein
+    q12: [] as string[],       // offen für (multi)
+    q13: "",                   // Accounts
+    q14: "",                   // Konkurrenten
+    q15: "",                   // vermeiden
+    q16: [] as string[],       // Priorität (multi)
+    q17: "",                   // Produkte pushen
+    q18: "" as string,         // Fotos/Videos Ja/Nein
+    q18detail: "",
+    q19: "" as string,         // Materialien Ja/Nein
+    q20: "",                   // meistverkauftes Produkt
+    q21: "",                   // Kundenfragen
+    q22: "",                   // Markenstory
+    q23: "",                   // Slogans
+    q24: "",                   // Ansprechpartner
+    q25: "",                   // Sonstiges
   });
   const [submitted, setSubmitted] = useState(false);
   const [videoOpen, setVideoOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const set = (k: string, v: unknown) => setForm(f => ({ ...f, [k]: v }));
-  const toggleArr = (k: "platforms" | "goals", v: string) =>
-    set(k, form[k].includes(v) ? form[k].filter((x: string) => x !== v) : [...form[k], v]);
+  const set = (k: string, v: unknown) => setF(p => ({ ...p, [k]: v }));
+  const toggleMulti = (k: string, v: string) => {
+    const arr = (f as Record<string, string[]>)[k];
+    set(k, arr.includes(v) ? arr.filter((x: string) => x !== v) : [...arr, v]);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => {
       setVideoOpen(true);
-      setTimeout(() => {
-        videoRef.current?.play();
-      }, 300);
-    }, 800);
-  };
-
-  const closeVideo = () => {
-    setVideoOpen(false);
-    videoRef.current?.pause();
+      setTimeout(() => videoRef.current?.play(), 300);
+    }, 900);
   };
 
   return (
     <div className="min-h-screen bg-[#0a1628] relative overflow-hidden">
       <StarField />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/12 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/8 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Glow orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+      <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-14"
-        >
-          <div className="inline-flex items-center gap-2 bg-accent/15 border border-accent/30 rounded-full px-5 py-2 mb-8">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            <span className="text-accent text-sm font-semibold tracking-wide">Willkommen bei Bleibsichtbar</span>
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 bg-orange-500/15 border border-orange-500/30 rounded-full px-5 py-2 mb-8">
+            <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+            <span className="text-orange-400 text-sm font-semibold tracking-wide">🚀 BleibSichtbar – Onboarding</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-5 leading-tight">
-            Ihr persönliches<br />
-            <span className="text-accent">Onboarding</span>
+            Ihr persönliches<br /><span className="text-orange-400">Onboarding</span>
           </h1>
-          <p className="text-white/60 text-lg max-w-xl mx-auto leading-relaxed">
-            Damit wir Ihre Zusammenarbeit optimal vorbereiten können, bitten wir Sie, die folgenden Informationen auszufüllen. Dies dauert nur wenige Minuten.
+          <p className="text-white/55 text-base max-w-xl mx-auto leading-relaxed">
+            Damit wir Ihre Betreuung optimal vorbereiten können, bitten wir Sie, die folgenden Fragen zu beantworten. Mit <span className="text-orange-400">*</span> markierte Felder sind Pflichtfelder.
           </p>
-        </motion.div>
-
-        {/* Progress steps */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex justify-center gap-1 sm:gap-2 mb-12 flex-wrap"
-        >
-          {sections.map((s, i) => (
-            <div key={s.id} className="flex items-center gap-1 sm:gap-2">
-              <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
-                <s.icon className="w-3.5 h-3.5 text-accent" />
-                <span className="text-white/60 text-xs font-medium hidden sm:block">{s.label}</span>
-              </div>
-              {i < sections.length - 1 && <ChevronRight className="w-3 h-3 text-white/20 flex-shrink-0" />}
-            </div>
-          ))}
         </motion.div>
 
         <AnimatePresence mode="wait">
           {!submitted ? (
-            <motion.form
-              key="form"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              onSubmit={handleSubmit}
-              className="space-y-8"
-            >
-              {/* Section 1: Company */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
-                    <Building2 className="w-5 h-5 text-accent" />
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Ihr Unternehmen</h2>
-                    <p className="text-white/45 text-sm">Erzählen Sie uns von Ihrer Marke</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <InputField label="Unternehmensname *" value={form.company} onChange={v => set("company", v)} placeholder="z.B. Mustermann GmbH" icon={Building2} />
-                  <InputField label="Branche" value={form.industry} onChange={v => set("industry", v)} placeholder="z.B. E-Commerce, Gastronomie" />
-                  <div className="sm:col-span-2">
-                    <InputField label="Website" type="url" value={form.website} onChange={v => set("website", v)} placeholder="https://www.ihre-website.de" icon={Globe} />
-                  </div>
-                </div>
-              </motion.div>
+            <motion.form key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.5, delay: 0.2 }} onSubmit={handleSubmit} className="space-y-6">
 
-              {/* Section 2: Contact */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                    <User className="w-5 h-5 text-blue-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Ihr Ansprechpartner</h2>
-                    <p className="text-white/45 text-sm">Wer ist unser direkter Kontakt?</p>
+              {/* ── 1. Marke & Wirkung ── */}
+              <Section icon={Palette} color="bg-purple-500/20 text-purple-300" title="1. Marke & Wirkung" subtitle="Wie soll Ihre Marke auftreten?">
+                <div>
+                  <QLabel n={1} text="Gibt es ein bestehendes Corporate Design? (Logo, Farben, Schriftarten etc.)" required />
+                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q1} onChange={v => set("q1", v === f.q1 ? "" : v)} />
+                </div>
+                <div>
+                  <QLabel n={2} text="Wie soll Ihre Marke wirken?" required />
+                  <OptionGrid options={["seriös", "modern", "premium", "jung", "humorvoll"]} selected={f.q2} onChange={v => toggleMulti("q2", v)} multi />
+                  <div className="mt-3">
+                    <TextInput value={f.q2sonstiges} onChange={v => set("q2sonstiges", v)} placeholder="Sonstiges: …" />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <InputField label="Vor- und Nachname *" value={form.name} onChange={v => set("name", v)} placeholder="Max Mustermann" icon={User} />
-                  <InputField label="Position / Rolle" value={form.position} onChange={v => set("position", v)} placeholder="z.B. Geschäftsführer, Marketing" />
-                  <InputField label="E-Mail-Adresse *" type="email" value={form.email} onChange={v => set("email", v)} placeholder="max@mustermann.de" icon={Mail} />
-                  <InputField label="Telefonnummer" type="tel" value={form.phone} onChange={v => set("phone", v)} placeholder="+49 170 1234567" icon={Phone} />
+                <div>
+                  <QLabel n={3} text="Welche Tonalität wünschen Sie sich?" required />
+                  <OptionGrid options={["professionell", "locker", "verkaufsorientiert", "informativ", "emotional"]} selected={f.q3} onChange={v => toggleMulti("q3", v)} multi />
                 </div>
-              </motion.div>
+              </Section>
 
-              {/* Section 3: Platforms */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                    <Globe className="w-5 h-5 text-purple-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Social-Media-Plattformen</h2>
-                    <p className="text-white/45 text-sm">Welche Kanäle nutzen oder möchten Sie nutzen?</p>
-                  </div>
+              {/* ── 2. Zielgruppe ── */}
+              <Section icon={Users} color="bg-blue-500/20 text-blue-300" title="2. Zielgruppe" subtitle="Wen möchten Sie erreichen?">
+                <div>
+                  <QLabel n={4} text="Wer ist Ihre aktuelle Zielgruppe? (Alter, Geschlecht, Kurzbeschreibung)" required />
+                  <TextArea value={f.q4} onChange={v => set("q4", v)} placeholder="z. B. Frauen 25–45, berufstätig, interessiert an Lifestyle & Mode …" required />
                 </div>
-                <CheckboxGroup options={PLATFORMS} selected={form.platforms} onChange={v => toggleArr("platforms", v)} />
-                <div className="mt-5">
-                  <InputField label="Aktuelle Follower-Anzahl (gesamt, ca.)" value={form.currentFollowers} onChange={v => set("currentFollowers", v)} placeholder="z.B. 500 auf Instagram, 200 auf Facebook" />
-                </div>
-              </motion.div>
-
-              {/* Section 4: Goals */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
-                    <Target className="w-5 h-5 text-green-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Ihre Ziele</h2>
-                    <p className="text-white/45 text-sm">Was möchten Sie mit Social Media erreichen?</p>
-                  </div>
-                </div>
-                <CheckboxGroup options={GOALS} selected={form.goals} onChange={v => toggleArr("goals", v)} />
-              </motion.div>
-
-              {/* Section 5: Details */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-orange-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Unternehmensgröße & Budget</h2>
-                    <p className="text-white/45 text-sm">Helfen Sie uns, das passende Angebot zu erstellen</p>
-                  </div>
-                </div>
-                <div className="space-y-6">
-                  <div>
-                    <p className="text-sm font-semibold text-white/80 mb-3">Anzahl der Mitarbeiter</p>
-                    <RadioGroup options={SIZES} selected={form.size} onChange={v => set("size", v)} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white/80 mb-3">Monatliches Budget für Social Media</p>
-                    <RadioGroup options={BUDGETS} selected={form.budget} onChange={v => set("budget", v)} />
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Section 6: Message */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-sm"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center">
-                    <MessageSquare className="w-5 h-5 text-pink-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-white font-bold text-lg">Besondere Wünsche & Anmerkungen</h2>
-                    <p className="text-white/45 text-sm">Was ist Ihnen noch wichtig?</p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-white/80">Ihre Nachricht (optional)</label>
-                  <textarea
-                    value={form.message}
-                    onChange={e => set("message", e.target.value)}
-                    rows={4}
-                    placeholder="Haben Sie spezielle Anforderungen, Fragen oder Wünsche? Teilen Sie uns gerne alles mit..."
-                    className="w-full bg-white/8 border border-white/15 rounded-xl p-4 text-white placeholder-white/35 text-sm focus:outline-none focus:border-accent/60 focus:bg-white/12 transition-all duration-200 resize-none"
+                <div>
+                  <QLabel n={5} text="Möchten Sie eine neue Zielgruppe erreichen?" required />
+                  <OptionGrid
+                    options={["Ja → welche?", "Wir möchten unsere bisherige Zielgruppe weiterhin ansprechen"]}
+                    selected={f.q5} onChange={v => set("q5", v === f.q5 ? "" : v)}
                   />
+                  {f.q5 === "Ja → welche?" && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-3 overflow-hidden">
+                      <TextInput value={f.q5detail} onChange={v => set("q5detail", v)} placeholder="Neue Zielgruppe beschreiben …" />
+                    </motion.div>
+                  )}
                 </div>
-              </motion.div>
+              </Section>
+
+              {/* ── 3. Positionierung ── */}
+              <Section icon={Crosshair} color="bg-green-500/20 text-green-300" title="3. Positionierung" subtitle="Was macht Sie einzigartig?">
+                <div>
+                  <QLabel n={6} text="Was unterscheidet Sie von Ihrer Konkurrenz?" required />
+                  <TextArea value={f.q6} onChange={v => set("q6", v)} placeholder="Unser Alleinstellungsmerkmal ist …" required />
+                </div>
+                <div>
+                  <QLabel n={7} text="Warum sollten Kunden genau bei Ihnen kaufen?" />
+                  <TextArea value={f.q7} onChange={v => set("q7", v)} placeholder="Bei uns kaufen Kunden, weil …" />
+                </div>
+              </Section>
+
+              {/* ── 4. Content-Richtung ── */}
+              <Section icon={Film} color="bg-pink-500/20 text-pink-300" title="4. Content-Richtung" subtitle="Welche Inhalte passen zu Ihnen?">
+                <div>
+                  <QLabel n={8} text="Welche Inhalte gefallen Ihnen besonders?" />
+                  <OptionGrid options={["Reels / Videos", "Bilder / Carousels", "informative Inhalte", "Verkaufsposts", "Humor / Trends"]} selected={f.q8} onChange={v => toggleMulti("q8", v)} multi />
+                </div>
+                <div>
+                  <QLabel n={9} text="Gibt es Inhalte oder Dinge, die Sie nicht möchten? (No-Gos)" />
+                  <TextArea value={f.q9} onChange={v => set("q9", v)} placeholder="Wir möchten keinesfalls …" />
+                </div>
+                <div>
+                  <QLabel n={10} text="Gibt es Themen, Produkte oder Aussagen, die wir häufig hervorheben sollen?" required />
+                  <TextArea value={f.q10} onChange={v => set("q10", v)} placeholder="Besonders wichtig für uns ist …" required />
+                </div>
+              </Section>
+
+              {/* ── 5. Kamera & Stil ── */}
+              <Section icon={Camera} color="bg-yellow-500/20 text-yellow-300" title="5. Kamera & Stil" subtitle="Auftreten vor der Kamera">
+                <div>
+                  <QLabel n={11} text="Wären Sie oder Ihr Team bereit, vor die Kamera zu gehen?" />
+                  <OptionGrid options={["Ja", "Nein"]} selected={f.q11} onChange={v => set("q11", v === f.q11 ? "" : v)} />
+                </div>
+                <div>
+                  <QLabel n={12} text="Sind Sie offen für …?" required />
+                  <OptionGrid options={["humorvolle Inhalte", "Trends / virale Videos"]} selected={f.q12} onChange={v => toggleMulti("q12", v)} multi />
+                </div>
+              </Section>
+
+              {/* ── 6. Inspiration & Konkurrenz ── */}
+              <Section icon={Search} color="bg-cyan-500/20 text-cyan-300" title="6. Inspiration & Konkurrenz" subtitle="Referenzen und Mitbewerber">
+                <div>
+                  <QLabel n={13} text="Nennen Sie 1–3 Accounts, die Ihnen gefallen" required />
+                  <TextArea value={f.q13} onChange={v => set("q13", v)} placeholder="z. B. @beispiel1, @beispiel2 – weil …" required />
+                </div>
+                <div>
+                  <QLabel n={14} text="Gibt es Konkurrenten, die Sie gut finden oder bewusst anders machen möchten?" required />
+                  <TextArea value={f.q14} onChange={v => set("q14", v)} placeholder="Konkurrent X macht … – das finden wir gut / möchten wir vermeiden" required />
+                </div>
+              </Section>
+
+              {/* ── 7. Grenzen & Sensibilität ── */}
+              <Section icon={ShieldOff} color="bg-red-500/20 text-red-300" title="7. Grenzen & Sensibilität" subtitle="Was soll vermieden werden?">
+                <div>
+                  <QLabel n={15} text="Gibt es Themen, Wörter oder Zielgruppen, die wir vermeiden sollen?" />
+                  <TextArea value={f.q15} onChange={v => set("q15", v)} placeholder="Wir möchten folgendes unbedingt vermeiden: …" />
+                </div>
+              </Section>
+
+              {/* ── 8. Fokus & Priorität ── */}
+              <Section icon={Target} color="bg-orange-500/20 text-orange-300" title="8. Fokus & Priorität" subtitle="Was ist am wichtigsten?">
+                <div>
+                  <QLabel n={16} text="Was hat für Sie oberste Priorität?" required />
+                  <OptionGrid options={["Verkäufe", "Reichweite", "Vertrauen", "Branding", "Reservierungen", "Buchungen", "Kontaktanfragen"]} selected={f.q16} onChange={v => toggleMulti("q16", v)} multi />
+                </div>
+                <div>
+                  <QLabel n={17} text="Welche Produkte/Dienstleistungen sollen besonders gepusht werden?" />
+                  <TextArea value={f.q17} onChange={v => set("q17", v)} placeholder="Diese Produkte / Angebote sollen im Fokus stehen: …" />
+                </div>
+              </Section>
+
+              {/* ── 9. Inhalte & Material ── */}
+              <Section icon={Package} color="bg-indigo-500/20 text-indigo-300" title="9. Inhalte & Material" subtitle="Vorhandenes Material">
+                <div>
+                  <QLabel n={18} text="Haben Sie Fotos/Videos, die wir nutzen können?" required />
+                  <OptionGrid options={["Ja (bitte zusenden)", "Nein – haben Sie bereits einen Content-Tag gebucht?"]} selected={f.q18} onChange={v => set("q18", v === f.q18 ? "" : v)} />
+                  {f.q18 === "Nein – haben Sie bereits einen Content-Tag gebucht?" && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-3 overflow-hidden">
+                      <TextInput value={f.q18detail} onChange={v => set("q18detail", v)} placeholder="Details zum Content-Tag …" />
+                    </motion.div>
+                  )}
+                </div>
+                <div>
+                  <QLabel n={19} text="Haben Sie zusätzliche Materialien? (z. B. Menükarte, Leistungen, Angebote etc.)" required />
+                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q19} onChange={v => set("q19", v === f.q19 ? "" : v)} />
+                </div>
+              </Section>
+
+              {/* ── 10. Kundenverständnis ── */}
+              <Section icon={ShoppingBag} color="bg-teal-500/20 text-teal-300" title="10. Kundenverständnis" subtitle="Was Ihre Kunden wollen">
+                <div>
+                  <QLabel n={20} text="Was ist Ihr meistverkauftes Produkt/Dienstleistung?" required />
+                  <TextArea value={f.q20} onChange={v => set("q20", v)} placeholder="Unser Bestseller ist …" required />
+                </div>
+                <div>
+                  <QLabel n={21} text="Welche Fragen stellen Kunden vor dem Kauf am häufigsten?" required />
+                  <TextArea value={f.q21} onChange={v => set("q21", v)} placeholder="Häufige Fragen sind z. B. …" required />
+                </div>
+              </Section>
+
+              {/* ── 11. Marke & Kommunikation ── */}
+              <Section icon={BookOpen} color="bg-violet-500/20 text-violet-300" title="11. Marke & Kommunikation" subtitle="Ihre Markenbotschaft">
+                <div>
+                  <QLabel n={22} text="Gibt es eine Markenstory oder Hintergrundgeschichte?" />
+                  <TextArea value={f.q22} onChange={v => set("q22", v)} placeholder="Unsere Geschichte begann …" />
+                </div>
+                <div>
+                  <QLabel n={23} text="Gibt es feste Slogans oder Botschaften, die wir verwenden sollen?" />
+                  <TextArea value={f.q23} onChange={v => set("q23", v)} placeholder="Unser Slogan lautet …" />
+                </div>
+              </Section>
+
+              {/* ── 12. Organisation ── */}
+              <Section icon={UserCheck} color="bg-sky-500/20 text-sky-300" title="12. Organisation" subtitle="Ansprechpartner & Freigaben">
+                <div>
+                  <QLabel n={24} text="Wer ist Ansprechpartner für Feedback & Freigaben?" />
+                  <TextInput value={f.q24} onChange={v => set("q24", v)} placeholder="Name, E-Mail, Telefon …" />
+                </div>
+              </Section>
+
+              {/* ── 13. Optional ── */}
+              <Section icon={MessageCircle} color="bg-rose-500/20 text-rose-300" title="13. Sonstiges" subtitle="Gibt es noch etwas Wichtiges?">
+                <div>
+                  <QLabel n={25} text="Gibt es noch etwas, das wir unbedingt beachten sollten?" required />
+                  <TextArea value={f.q25} onChange={v => set("q25", v)} placeholder="Wichtig für uns ist außerdem …" required />
+                </div>
+              </Section>
 
               {/* Submit */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="text-center pt-4"
-              >
-                <p className="text-white/45 text-sm mb-6">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center pt-4">
+                <p className="text-white/35 text-sm mb-6">
                   Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer{" "}
-                  <a href="/datenschutz" className="text-accent hover:underline" target="_blank">Datenschutzerklärung</a> zu.
+                  <a href="/datenschutz" className="text-orange-400 hover:underline" target="_blank">Datenschutzerklärung</a> zu.
                 </p>
                 <motion.button
                   type="submit"
                   whileHover={{ scale: 1.04, boxShadow: "0 12px 40px rgba(255,107,53,0.4)" }}
                   whileTap={{ scale: 0.97 }}
-                  className="relative overflow-hidden px-12 py-4 rounded-full font-bold text-white text-lg"
+                  className="relative overflow-hidden px-14 py-4 rounded-full font-bold text-white text-lg"
                   style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
                 >
                   <motion.span
@@ -414,134 +419,64 @@ export default function Onboarding() {
               </motion.div>
             </motion.form>
           ) : (
-            <motion.div
-              key="thanks"
-              initial={{ opacity: 0, scale: 0.9, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              className="text-center py-16"
-            >
-              {/* Success ring */}
+            /* ── success state ── */
+            <motion.div key="thanks" initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.7, ease: "easeOut" }} className="text-center py-20">
               <div className="relative inline-flex items-center justify-center mb-10">
-                <motion.div
-                  className="absolute w-32 h-32 rounded-full border-2 border-green-400/30"
-                  animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
-                />
-                <motion.div
-                  className="absolute w-32 h-32 rounded-full border-2 border-green-400/20"
-                  animate={{ scale: [1, 1.4], opacity: [0.4, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut", delay: 0.6 }}
-                />
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 200 }}
-                  className="w-24 h-24 rounded-full bg-green-500/20 border-2 border-green-400 flex items-center justify-center"
-                >
+                {[0, 0.6].map(d => (
+                  <motion.div key={d} className="absolute w-32 h-32 rounded-full border-2 border-green-400/30"
+                    animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut", delay: d }} />
+                ))}
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 200 }}
+                  className="w-24 h-24 rounded-full bg-green-500/20 border-2 border-green-400 flex items-center justify-center">
                   <CheckCircle2 className="w-12 h-12 text-green-400" />
                 </motion.div>
               </div>
-
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-4xl sm:text-5xl font-bold text-white mb-4"
-              >
+              <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="text-4xl sm:text-5xl font-bold text-white mb-4">
                 Vielen Dank!
               </motion.h2>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.55 }}
-                className="text-xl text-white/70 mb-3 max-w-lg mx-auto leading-relaxed"
-              >
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="text-xl text-white/65 mb-3 max-w-lg mx-auto leading-relaxed">
                 Vielen Dank für Ihre Angaben.
               </motion.p>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="text-white/50 text-base max-w-xl mx-auto leading-relaxed"
-              >
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="text-white/45 text-base max-w-xl mx-auto leading-relaxed">
                 Im folgenden Video erfahren Sie, was nach dem Onboarding als nächstes passiert und was Sie erwartet.
               </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
-                className="mt-8 inline-flex items-center gap-2 text-white/40 text-sm"
-              >
-                <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                Video wird geladen…
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-6 inline-flex items-center gap-2 text-white/30 text-sm">
+                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+                Video wird geöffnet…
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Video Popup */}
+      {/* ── Video popup ── */}
       <AnimatePresence>
         {videoOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "rgba(5,10,20,0.92)", backdropFilter: "blur(12px)" }}
-            onClick={closeVideo}
-          >
-            <motion.div
-              initial={{ scale: 0.85, y: 40, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+            style={{ background: "rgba(5,10,20,0.93)", backdropFilter: "blur(14px)" }}
+            onClick={() => { setVideoOpen(false); videoRef.current?.pause(); }}>
+            <motion.div initial={{ scale: 0.85, y: 40, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.9, y: 20, opacity: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="relative w-full max-w-2xl"
-              onClick={e => e.stopPropagation()}
-            >
-              {/* Close */}
-              <motion.button
-                whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                onClick={closeVideo}
-                className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors z-10"
-              >
-                <X className="w-5 h-5" />
+              onClick={e => e.stopPropagation()}>
+              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
+                onClick={() => { setVideoOpen(false); videoRef.current?.pause(); }}
+                className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                ✕
               </motion.button>
-
-              {/* Glow behind video */}
-              <div className="absolute -inset-4 bg-accent/15 rounded-3xl blur-2xl" />
-
-              {/* Video card */}
-              <div className="relative bg-[#0a1628] border border-white/15 rounded-2xl overflow-hidden shadow-2xl">
-                {/* Header */}
-                <div className="flex items-center gap-3 px-6 py-4 border-b border-white/10">
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500/70" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-                    <div className="w-3 h-3 rounded-full bg-green-500/70" />
+              <div className="absolute -inset-4 bg-orange-500/12 rounded-3xl blur-2xl" />
+              <div className="relative bg-[#0d1f3c] border border-white/15 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-white/10">
+                  <div className="flex gap-1.5">
+                    {["bg-red-500/70","bg-yellow-500/70","bg-green-500/70"].map(c => <div key={c} className={`w-3 h-3 rounded-full ${c}`} />)}
                   </div>
-                  <div className="flex items-center gap-2 ml-2">
-                    <Play className="w-4 h-4 text-accent" />
-                    <span className="text-white/60 text-sm font-medium">Was passiert nach dem Onboarding?</span>
-                  </div>
+                  <span className="text-white/50 text-sm font-medium ml-2">Was passiert nach dem Onboarding?</span>
                 </div>
-                {/* Video */}
-                <video
-                  ref={videoRef}
-                  src="/onboarding-video.mp4"
-                  controls
-                  autoPlay
-                  playsInline
-                  className="w-full aspect-video bg-black"
-                  style={{ display: "block" }}
-                />
+                <video ref={videoRef} src="/onboarding-video.mp4" controls autoPlay playsInline className="w-full aspect-video bg-black block" />
               </div>
-
-              <p className="text-center text-white/35 text-sm mt-4">
-                Klicken Sie außerhalb des Videos, um zu schließen
-              </p>
+              <p className="text-center text-white/30 text-sm mt-4">Klicken Sie außerhalb des Videos, um zu schließen</p>
             </motion.div>
           </motion.div>
         )}
