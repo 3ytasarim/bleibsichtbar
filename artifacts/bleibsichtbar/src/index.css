@@ -178,3 +178,13 @@
 .animate-code-scroll {
   animation: code-scroll-up var(--code-dur, 40s) linear infinite;
 }
+
+/* ── Resim & içerik koruma ── */
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+a img, button img, [role="button"] img, label img {
+  pointer-events: auto;
+}
