@@ -15,12 +15,12 @@ function rng(seed: number) {
   return Math.abs(x % 10000) / 10000;
 }
 
-/* 350 yıldız — katmanlı yoğunluk: referans görüntü gibi yoğun gece gökyüzü */
-const STARS = Array.from({ length: 350 }, (_, i) => {
+/* 550 yıldız — bol bol, yoğun gece gökyüzü */
+const STARS = Array.from({ length: 550 }, (_, i) => {
   const r = (s: number) => rng(i * 7919 + s * 104729);
-  const tier = i < 180 ? 0 : i < 270 ? 1 : i < 320 ? 2 : 3; // 0=ince 1=küçük 2=orta 3=büyük
-  const sizes  = [0.9, 1.6, 2.5, 3.8];
-  const opBase = [0.30, 0.50, 0.70, 0.92];
+  const tier = i < 280 ? 0 : i < 420 ? 1 : i < 500 ? 2 : 3; // 0=ince 1=küçük 2=orta 3=büyük
+  const sizes  = [1.0, 1.8, 2.8, 4.2];
+  const opBase = [0.35, 0.55, 0.75, 0.95];
   return {
     id: i, x: r(3) * 100, y: r(4) * 100,
     size: sizes[tier] + r(9) * sizes[tier] * 0.4,
@@ -32,88 +32,59 @@ const STARS = Array.from({ length: 350 }, (_, i) => {
   };
 });
 
-/* ─── İp/Işık hüzmesi efekti ─── */
-interface RopeStar {
-  id: number;
-  y: number;        // % dikey konum
-  left: number;     // % sol kenar
-  width: number;    // % genişlik
-  dir: 'ltr' | 'rtl';
-  dur: number;      // ms
-  thickness: number; // px
-  glow: number;     // parlaklık çarpanı
-}
-let _rid = 0;
-function spawnRope(): RopeStar {
-  const id = _rid++;
-  const r = (s: number) => rng(id * 6271 + s * 104723);
-  const dir = id % 2 === 0 ? 'ltr' : 'rtl';
+/* ─── Kayan yıldız efekti — kuyruklu, hızlı, sık ─── */
+interface ShootingStar { id: number; x: number; y: number; angle: number; travel: number; len: number; }
+let _sId = 0;
+function spawnStar(): ShootingStar {
+  const id = _sId++;
+  const r = (s: number) => rng(id * 7919 + s * 104729);
   return {
     id,
-    y: 4 + r(1) * 68,
-    left: r(2) * 15,
-    width: 40 + r(3) * 55,
-    dir,
-    dur: 380 + r(4) * 320,
-    thickness: r(5) < 0.3 ? 3 : r(5) < 0.7 ? 2 : 1.5,
-    glow: 0.6 + r(6) * 0.4,
+    x: 2 + r(1) * 75,
+    y: 1 + r(2) * 60,
+    angle: 15 + r(3) * 35,
+    travel: 220 + r(4) * 260,
+    len: 100 + r(5) * 150,
   };
 }
 
 function ShootingStars() {
-  const [ropes, setRopes] = useState<RopeStar[]>(() => [spawnRope()]);
+  const [stars, setStars] = useState<ShootingStar[]>(() => [spawnStar(), spawnStar()]);
   useEffect(() => {
-    const spawn = () => setRopes(prev => [...prev.slice(-6), spawnRope()]);
-    const t = setInterval(spawn, 2800);
+    const spawn = () => setStars(prev => [...prev.slice(-8), spawnStar()]);
+    spawn();
+    const t = setInterval(spawn, 1800);
     return () => clearInterval(t);
   }, []);
-
   return (
     <>
       <style>{`
-        /* ip soldan sağa: açılır → kapanır (sol taraftan kapanır) */
-        @keyframes ipLTR {
-          0%   { clip-path: inset(0 100% 0 0); }
-          42%  { clip-path: inset(0 0% 0 0); }
-          100% { clip-path: inset(0 0% 0 100%); }
+        @keyframes oShoot{
+          0%  {opacity:0;transform:rotate(var(--ang)) translateX(0) scaleX(0.04)}
+          7%  {opacity:1;transform:rotate(var(--ang)) translateX(0) scaleX(1)}
+          85% {opacity:0.7;transform:rotate(var(--ang)) translateX(var(--tv)) scaleX(0.9)}
+          100%{opacity:0;transform:rotate(var(--ang)) translateX(var(--tv)) scaleX(0.1)}
         }
-        /* ip sağdan sola: açılır → kapanır (sağ taraftan kapanır) */
-        @keyframes ipRTL {
-          0%   { clip-path: inset(0 0 0 100%); }
-          42%  { clip-path: inset(0 0 0 0); }
-          100% { clip-path: inset(0 100% 0 0); }
-        }
-        .ipEl {
-          position: absolute;
-          border-radius: 9999px;
-          pointer-events: none;
-          animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
-          animation-fill-mode: both;
+        .oShoot{
+          position:absolute;transform-origin:left center;border-radius:9999px;pointer-events:none;
+          background:linear-gradient(90deg,
+            rgba(255,255,255,0) 0%,
+            rgba(180,210,255,0.5) 30%,
+            rgba(255,255,255,0.95) 65%,
+            white 100%);
+          box-shadow:0 0 4px 1px rgba(200,225,255,0.6);
+          animation:oShoot var(--sd) cubic-bezier(0.25,0.1,0.15,1) forwards;
         }
       `}</style>
-      {ropes.map(r => (
-        <div
-          key={r.id}
-          className="ipEl"
-          style={{
-            top: `${r.y}%`,
-            left: `${r.left}%`,
-            width: `${r.width}%`,
-            height: `${r.thickness}px`,
-            background: `linear-gradient(90deg,
-              rgba(255,255,255,0) 0%,
-              rgba(180,210,255,${0.5 * r.glow}) 15%,
-              rgba(255,255,255,${r.glow}) 40%,
-              rgba(220,235,255,${r.glow}) 50%,
-              rgba(255,255,255,${r.glow}) 60%,
-              rgba(180,210,255,${0.5 * r.glow}) 85%,
-              rgba(255,255,255,0) 100%
-            )`,
-            boxShadow: `0 0 ${6 * r.glow}px ${2 * r.glow}px rgba(180,210,255,0.5), 0 0 ${14 * r.glow}px ${4 * r.glow}px rgba(130,170,255,0.25)`,
-            animationName: r.dir === 'ltr' ? 'ipLTR' : 'ipRTL',
-            animationDuration: `${r.dur}ms`,
-          }}
-          onAnimationEnd={() => setRopes(p => p.filter(rope => rope.id !== r.id))}
+      {stars.map(s => (
+        <div key={s.id} className="oShoot" style={{
+          left:`${s.x}%`, top:`${s.y}%`,
+          width:`${s.len}px`, height:"2px",
+          "--ang":`${s.angle}deg`,
+          "--tv":`${s.travel}px`,
+          "--sd":`${0.8 + rng(s.id * 3 + 1) * 0.6}s`,
+        } as React.CSSProperties}
+          onAnimationEnd={() => setStars(p => p.filter(st => st.id !== s.id))}
         />
       ))}
     </>
