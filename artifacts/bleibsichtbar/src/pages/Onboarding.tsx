@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle2, ChevronRight, Palette, Users, Crosshair,
@@ -14,34 +14,102 @@ function rng(seed: number) {
   x = (x >> 16) ^ x;
   return Math.abs(x % 10000) / 10000;
 }
-const STARS = Array.from({ length: 120 }, (_, i) => {
+
+/* 350 yıldız — katmanlı yoğunluk: referans görüntü gibi yoğun gece gökyüzü */
+const STARS = Array.from({ length: 350 }, (_, i) => {
   const r = (s: number) => rng(i * 7919 + s * 104729);
+  const tier = i < 180 ? 0 : i < 270 ? 1 : i < 320 ? 2 : 3; // 0=ince 1=küçük 2=orta 3=büyük
+  const sizes  = [0.9, 1.6, 2.5, 3.8];
+  const opBase = [0.30, 0.50, 0.70, 0.92];
   return {
-    id: i, x: r(3) * 98 + 1, y: r(4) * 98 + 1,
-    size: i % 7 === 0 ? 3.2 : i % 4 === 0 ? 2.2 : 1.5,
-    moveDur: `${16 + r(5) * 18}s`, blinkDur: `${2 + r(6) * 4}s`,
-    delay: `-${r(7) * 20}s`, blinkDelay: `-${r(8) * 5}s`, opacity: 0.25 + r(9) * 0.5,
-    dx1: `${(r(1) - 0.5) * 35}px`, dy1: `${(r(2) - 0.5) * 35}px`,
-    dx2: `${(r(1) - 0.5) * -24}px`, dy2: `${(r(2) - 0.5) * 18}px`,
+    id: i, x: r(3) * 100, y: r(4) * 100,
+    size: sizes[tier] + r(9) * sizes[tier] * 0.4,
+    moveDur: `${20 + r(5) * 25}s`, blinkDur: `${1.8 + r(6) * 3.5}s`,
+    delay: `-${r(7) * 30}s`, blinkDelay: `-${r(8) * 6}s`,
+    opacity: opBase[tier] + r(9) * 0.2,
+    dx1: `${(r(1) - 0.5) * 28}px`, dy1: `${(r(2) - 0.5) * 28}px`,
+    dx2: `${(r(1) - 0.5) * -18}px`, dy2: `${(r(2) - 0.5) * 18}px`,
   };
 });
+
+/* Kayan yıldız bileşeni — her 5 sn'de bir yeni yıldız, farklı konum */
+interface ShootingStar { id: number; x: number; y: number; angle: number; travel: number; len: number; }
+let _sId = 0;
+function spawnStar(): ShootingStar {
+  const id = _sId++;
+  const r = (s: number) => rng(id * 7919 + s * 104729);
+  return { id, x: 3 + r(1) * 72, y: 2 + r(2) * 52, angle: 18 + r(3) * 30, travel: 260 + r(4) * 220, len: 110 + r(5) * 130 };
+}
+
+function ShootingStars() {
+  const [stars, setStars] = useState<ShootingStar[]>(() => [spawnStar()]);
+  useEffect(() => {
+    const t = setInterval(() => setStars(prev => [...prev.slice(-4), spawnStar()]), 5000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <>
+      <style>{`
+        @keyframes oShoot{
+          0%  {opacity:0;transform:rotate(var(--ang)) translateX(0) scaleX(0.04)}
+          8%  {opacity:1;transform:rotate(var(--ang)) translateX(0) scaleX(1)}
+          88% {opacity:0.65;transform:rotate(var(--ang)) translateX(var(--tv)) scaleX(0.85)}
+          100%{opacity:0;transform:rotate(var(--ang)) translateX(var(--tv)) scaleX(0.15)}
+        }
+        .oShoot{
+          position:absolute;transform-origin:left center;border-radius:9999px;pointer-events:none;
+          background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(200,220,255,0.6) 40%,rgba(255,255,255,0.95) 75%,white 100%);
+          animation:oShoot 1.3s cubic-bezier(0.25,0.1,0.15,1) forwards;
+        }
+      `}</style>
+      {stars.map(s => (
+        <div key={s.id} className="oShoot" style={{
+          left:`${s.x}%`, top:`${s.y}%`,
+          width:`${s.len}px`, height:"1.8px",
+          "--ang":`${s.angle}deg`, "--tv":`${s.travel}px`,
+        } as React.CSSProperties}
+          onAnimationEnd={() => setStars(p => p.filter(st => st.id !== s.id))}
+        />
+      ))}
+    </>
+  );
+}
+
 function StarField() {
   return (
     <>
       <style>{`
-        @keyframes oBDrift{0%{transform:translate(0,0)}25%{transform:translate(var(--dx1),var(--dy2))}50%{transform:translate(var(--dx2),var(--dy1))}75%{transform:translate(var(--dx1),var(--dy2))}100%{transform:translate(0,0)}}
-        @keyframes oBlink{0%,100%{opacity:var(--op)}40%{opacity:calc(var(--op)*0.2)}70%{opacity:calc(var(--op)*0.85)}}
-        .obs{position:absolute;border-radius:9999px;background:white;animation:oBDrift var(--md) ease-in-out var(--dl) infinite,oBlink var(--bd) ease-in-out var(--bld) infinite}
+        @keyframes oBDrift{
+          0%{transform:translate(0,0)}
+          25%{transform:translate(var(--dx1),var(--dy2))}
+          50%{transform:translate(var(--dx2),var(--dy1))}
+          75%{transform:translate(var(--dx1),var(--dy2))}
+          100%{transform:translate(0,0)}
+        }
+        @keyframes oBlink{
+          0%,100%{opacity:var(--op)}
+          40%{opacity:calc(var(--op)*0.4)}
+          70%{opacity:calc(var(--op)*0.95)}
+        }
+        .obs{
+          position:absolute;border-radius:9999px;background:white;
+          animation:oBDrift var(--md) ease-in-out var(--dl) infinite,
+                     oBlink var(--bd) ease-in-out var(--bld) infinite;
+        }
       `}</style>
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {STARS.map(s => (
           <div key={s.id} className="obs" style={{
-            left:`${s.x}%`,top:`${s.y}%`,width:s.size,height:s.size,
-            "--op":s.opacity,"--md":s.moveDur,"--bd":s.blinkDur,
-            "--dl":s.delay,"--bld":s.blinkDelay,
-            "--dx1":s.dx1,"--dy1":s.dy1,"--dx2":s.dx2,"--dy2":s.dy2,
+            left:`${s.x}%`, top:`${s.y}%`,
+            width:`${s.size}px`, height:`${s.size}px`,
+            "--op":s.opacity, "--md":s.moveDur, "--bd":s.blinkDur,
+            "--dl":s.delay, "--bld":s.blinkDelay,
+            "--dx1":s.dx1, "--dy1":s.dy1, "--dx2":s.dx2, "--dy2":s.dy2,
           } as React.CSSProperties}/>
         ))}
+      </div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <ShootingStars />
       </div>
     </>
   );
@@ -209,10 +277,12 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a1628] relative overflow-hidden">
+    <div className="min-h-screen bg-[#060d1f] relative overflow-hidden">
+      {/* Atmosferik gradient — referans gibi üstten aydınlık */}
+      <div className="absolute inset-0 pointer-events-none" style={{background:"radial-gradient(ellipse 110% 60% at 50% 0%,#1a3a6e 0%,#0d1f42 30%,#060d1f 70%)"}} />
       <StarField />
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/12 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-blue-500/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
 
