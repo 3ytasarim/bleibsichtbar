@@ -219,6 +219,44 @@ export default function Onboarding() {
           </p>
         </motion.div>
 
+        {/* Welcome info block */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.35 }}
+          className="mb-10 bg-white/[0.04] border border-white/10 rounded-2xl p-7 sm:p-9 backdrop-blur-sm relative overflow-hidden"
+        >
+          {/* subtle accent line */}
+          <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl bg-gradient-to-b from-orange-400 via-orange-500 to-orange-400/30" />
+
+          <motion.h3
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="text-white font-bold text-xl mb-5 pl-4"
+          >
+            Willkommen bei Bleibsichtbar! 🚀
+          </motion.h3>
+
+          <div className="pl-4 space-y-4">
+            {[
+              "In diesem Formular finden Sie unseren Onboarding-Fragebogen. Bitte nehmen Sie sich einen Moment Zeit, um alle Pflichtfelder vollständig auszufüllen, so können wir optimal auf Ihre Wünsche und Ziele eingehen.",
+              "Sollten Sie bei einzelnen Fragen unsicher sein oder Unterstützung benötigen, zögern Sie bitte nicht, uns jederzeit zu kontaktieren. Wir helfen Ihnen gerne weiter.",
+              "Wir freuen uns auf die Zusammenarbeit! 🎯",
+            ].map((text, i) => (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 + i * 0.15 }}
+                className={`text-sm leading-relaxed ${i === 2 ? "text-orange-400 font-semibold" : "text-white/60"}`}
+              >
+                {text}
+              </motion.p>
+            ))}
+          </div>
+        </motion.div>
+
         <AnimatePresence mode="wait">
           {!submitted ? (
             <motion.form key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.5, delay: 0.2 }} onSubmit={handleSubmit} className="space-y-6">
