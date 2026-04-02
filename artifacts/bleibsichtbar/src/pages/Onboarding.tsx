@@ -167,7 +167,7 @@ export default function Onboarding() {
     q15: "",                   // vermeiden
     q16: [] as string[],       // Priorität (multi)
     q17: "",                   // Produkte pushen
-    q18: [] as string[],       // Fotos/Videos Ja/Nein
+    q18: "" as string,         // Fotos/Videos Ja/Nein
     q18detail: "",
     q19: [] as string[],       // Materialien Ja/Nein
     q20: "",                   // meistverkauftes Produkt
@@ -331,8 +331,8 @@ export default function Onboarding() {
               <Section icon={Package} color="bg-indigo-500/20 text-indigo-300" title="9. Inhalte & Material" subtitle="Vorhandenes Material">
                 <div>
                   <QLabel n={18} text="Haben Sie Fotos/Videos, die wir nutzen können?" required />
-                  <OptionGrid options={["Ja (bitte zusenden)", "Nein – haben Sie bereits einen Content-Tag gebucht?"]} selected={f.q18} onChange={v => toggleMulti("q18", v)} multi />
-                  {f.q18.includes("Nein – haben Sie bereits einen Content-Tag gebucht?") && (
+                  <OptionGrid options={["Ja (bitte zusenden)", "Nein – haben Sie bereits einen Content-Tag gebucht?"]} selected={f.q18} onChange={v => set("q18", v === f.q18 ? "" : v)} />
+                  {f.q18 === "Nein – haben Sie bereits einen Content-Tag gebucht?" && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-3 overflow-hidden">
                       <TextInput value={f.q18detail} onChange={v => set("q18detail", v)} placeholder="Details zum Content-Tag …" />
                     </motion.div>
