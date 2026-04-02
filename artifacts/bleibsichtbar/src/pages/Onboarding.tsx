@@ -302,7 +302,8 @@ function Section({ icon: Icon, color, title, subtitle, children }: {
     <motion.div
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }} transition={{ duration: 0.5 }}
-      className="bg-white/[0.13] border border-white/20 rounded-2xl p-6 sm:p-8 backdrop-blur-md"
+      className="border border-white/20 rounded-2xl p-6 sm:p-8 backdrop-blur-md"
+      style={{ background: "rgba(8,18,38,0.82)" }}
     >
       <div className="flex items-center gap-3 mb-7">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
@@ -362,7 +363,6 @@ export default function Onboarding() {
     q25: "",                   // Sonstiges
   });
   const [submitted, setSubmitted] = useState(false);
-  const [videoOpen, setVideoOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const set = (k: string, v: unknown) => setF(p => ({ ...p, [k]: v }));
@@ -385,10 +385,7 @@ export default function Onboarding() {
         }),
       });
     } catch (_) {}
-    setTimeout(() => {
-      setVideoOpen(true);
-      setTimeout(() => videoRef.current?.play(), 300);
-    }, 900);
+    setTimeout(() => { videoRef.current?.play(); }, 1200);
   };
 
   return (
@@ -408,9 +405,11 @@ export default function Onboarding() {
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-5 leading-tight">
             Ihr persönliches<br /><span className="text-orange-400">Onboarding</span>
           </h1>
-          <p className="text-white/55 text-base max-w-xl mx-auto leading-relaxed">
-            Damit wir Ihre Betreuung optimal vorbereiten können, bitten wir Sie, die folgenden Fragen zu beantworten. Mit <span className="text-orange-400">*</span> markierte Felder sind Pflichtfelder.
-          </p>
+          <div className="inline-block rounded-2xl px-6 py-3" style={{ background: "rgba(6,13,31,0.65)", backdropFilter: "blur(8px)" }}>
+            <p className="text-white/80 text-base max-w-xl mx-auto leading-relaxed">
+              Damit wir Ihre Betreuung optimal vorbereiten können, bitten wir Sie, die folgenden Fragen zu beantworten. Mit <span className="text-orange-400 font-semibold">*</span> markierte Felder sind Pflichtfelder.
+            </p>
+          </div>
         </motion.div>
 
         {/* Welcome info block */}
@@ -418,7 +417,8 @@ export default function Onboarding() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="mb-10 bg-white/[0.13] border border-white/20 rounded-2xl p-7 sm:p-9 backdrop-blur-md relative overflow-hidden"
+          className="mb-10 border border-white/20 rounded-2xl p-7 sm:p-9 backdrop-blur-md relative overflow-hidden"
+          style={{ background: "rgba(8,18,38,0.82)" }}
         >
           {/* subtle accent line */}
           <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl bg-gradient-to-b from-orange-400 via-orange-500 to-orange-400/30" />
@@ -457,7 +457,8 @@ export default function Onboarding() {
 
               {/* ── 0. Unternehmensname ── */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
-                className="bg-white/[0.13] border border-white/20 rounded-2xl p-6 sm:p-8 backdrop-blur-md">
+                className="border border-white/20 rounded-2xl p-6 sm:p-8 backdrop-blur-md"
+                style={{ background: "rgba(8,18,38,0.82)" }}>
                 <p className="text-white/85 text-sm font-semibold leading-snug mb-3">
                   Wie heißt Ihr Unternehmen oder Ihre Marke?<span className="text-orange-400 ml-1">*</span>
                 </p>
@@ -652,8 +653,8 @@ export default function Onboarding() {
             </motion.form>
           ) : (
             /* ── success state ── */
-            <motion.div key="thanks" initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.7, ease: "easeOut" }} className="text-center py-20">
-              <div className="relative inline-flex items-center justify-center mb-10">
+            <motion.div key="thanks" initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.7, ease: "easeOut" }} className="text-center py-12">
+              <div className="relative inline-flex items-center justify-center mb-8">
                 {[0, 0.6].map(d => (
                   <motion.div key={d} className="absolute w-32 h-32 rounded-full border-2 border-green-400/30"
                     animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}
@@ -667,52 +668,31 @@ export default function Onboarding() {
               <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="text-4xl sm:text-5xl font-bold text-white mb-4">
                 Vielen Dank!
               </motion.h2>
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="text-xl text-white/65 mb-3 max-w-lg mx-auto leading-relaxed">
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="text-xl text-white/70 mb-3 max-w-lg mx-auto leading-relaxed">
                 Vielen Dank für Ihre Angaben.
               </motion.p>
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="text-white/45 text-base max-w-xl mx-auto leading-relaxed">
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="text-white/55 text-base max-w-xl mx-auto leading-relaxed mb-10">
                 Im folgenden Video erfahren Sie, was nach dem Onboarding als nächstes passiert und was Sie erwartet.
               </motion.p>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="mt-6 inline-flex items-center gap-2 text-white/30 text-sm">
-                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-                Video wird geöffnet…
+              {/* ── inline video player ── */}
+              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.6 }}
+                className="relative mx-auto max-w-2xl">
+                <div className="absolute -inset-3 bg-orange-500/10 rounded-3xl blur-2xl pointer-events-none" />
+                <div className="relative bg-[#0a1628]/90 border border-white/20 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-md">
+                  <div className="flex items-center gap-2 px-5 py-3 border-b border-white/10">
+                    <div className="flex gap-1.5">
+                      {["bg-red-500/70","bg-yellow-500/70","bg-green-500/70"].map(c => <div key={c} className={`w-3 h-3 rounded-full ${c}`} />)}
+                    </div>
+                    <span className="text-white/50 text-sm font-medium ml-2">Was passiert nach dem Onboarding?</span>
+                  </div>
+                  <video ref={videoRef} src="/onboarding-video.mp4" controls playsInline className="w-full aspect-video bg-black block" />
+                </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* ── Video popup ── */}
-      <AnimatePresence>
-        {videoOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "rgba(5,10,20,0.93)", backdropFilter: "blur(14px)" }}
-            onClick={() => { setVideoOpen(false); videoRef.current?.pause(); }}>
-            <motion.div initial={{ scale: 0.85, y: 40, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.9, y: 20, opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="relative w-full max-w-2xl"
-              onClick={e => e.stopPropagation()}>
-              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                onClick={() => { setVideoOpen(false); videoRef.current?.pause(); }}
-                className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors">
-                ✕
-              </motion.button>
-              <div className="absolute -inset-4 bg-orange-500/12 rounded-3xl blur-2xl" />
-              <div className="relative bg-[#0d1f3c] border border-white/15 rounded-2xl overflow-hidden shadow-2xl">
-                <div className="flex items-center gap-2 px-5 py-3.5 border-b border-white/10">
-                  <div className="flex gap-1.5">
-                    {["bg-red-500/70","bg-yellow-500/70","bg-green-500/70"].map(c => <div key={c} className={`w-3 h-3 rounded-full ${c}`} />)}
-                  </div>
-                  <span className="text-white/50 text-sm font-medium ml-2">Was passiert nach dem Onboarding?</span>
-                </div>
-                <video ref={videoRef} src="/onboarding-video.mp4" controls autoPlay playsInline className="w-full aspect-video bg-black block" />
-              </div>
-              <p className="text-center text-white/30 text-sm mt-4">Klicken Sie außerhalb des Videos, um zu schließen</p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
