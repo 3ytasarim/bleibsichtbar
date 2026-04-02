@@ -32,43 +32,88 @@ const STARS = Array.from({ length: 350 }, (_, i) => {
   };
 });
 
-/* Kayan yıldız bileşeni — her 5 sn'de bir yeni yıldız, farklı konum */
-interface ShootingStar { id: number; x: number; y: number; angle: number; travel: number; len: number; }
-let _sId = 0;
-function spawnStar(): ShootingStar {
-  const id = _sId++;
-  const r = (s: number) => rng(id * 7919 + s * 104729);
-  return { id, x: 3 + r(1) * 72, y: 2 + r(2) * 52, angle: 18 + r(3) * 30, travel: 260 + r(4) * 220, len: 110 + r(5) * 130 };
+/* ─── İp/Işık hüzmesi efekti ─── */
+interface RopeStar {
+  id: number;
+  y: number;        // % dikey konum
+  left: number;     // % sol kenar
+  width: number;    // % genişlik
+  dir: 'ltr' | 'rtl';
+  dur: number;      // ms
+  thickness: number; // px
+  glow: number;     // parlaklık çarpanı
+}
+let _rid = 0;
+function spawnRope(): RopeStar {
+  const id = _rid++;
+  const r = (s: number) => rng(id * 6271 + s * 104723);
+  const dir = id % 2 === 0 ? 'ltr' : 'rtl';
+  return {
+    id,
+    y: 4 + r(1) * 68,
+    left: r(2) * 15,
+    width: 40 + r(3) * 55,
+    dir,
+    dur: 380 + r(4) * 320,
+    thickness: r(5) < 0.3 ? 3 : r(5) < 0.7 ? 2 : 1.5,
+    glow: 0.6 + r(6) * 0.4,
+  };
 }
 
 function ShootingStars() {
-  const [stars, setStars] = useState<ShootingStar[]>(() => [spawnStar()]);
+  const [ropes, setRopes] = useState<RopeStar[]>(() => [spawnRope()]);
   useEffect(() => {
-    const t = setInterval(() => setStars(prev => [...prev.slice(-4), spawnStar()]), 5000);
+    const spawn = () => setRopes(prev => [...prev.slice(-6), spawnRope()]);
+    const t = setInterval(spawn, 2800);
     return () => clearInterval(t);
   }, []);
+
   return (
     <>
       <style>{`
-        @keyframes oShoot{
-          0%  {opacity:0;transform:rotate(var(--ang)) translateX(0) scaleX(0.04)}
-          8%  {opacity:1;transform:rotate(var(--ang)) translateX(0) scaleX(1)}
-          88% {opacity:0.65;transform:rotate(var(--ang)) translateX(var(--tv)) scaleX(0.85)}
-          100%{opacity:0;transform:rotate(var(--ang)) translateX(var(--tv)) scaleX(0.15)}
+        /* ip soldan sağa: açılır → kapanır (sol taraftan kapanır) */
+        @keyframes ipLTR {
+          0%   { clip-path: inset(0 100% 0 0); }
+          42%  { clip-path: inset(0 0% 0 0); }
+          100% { clip-path: inset(0 0% 0 100%); }
         }
-        .oShoot{
-          position:absolute;transform-origin:left center;border-radius:9999px;pointer-events:none;
-          background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(200,220,255,0.6) 40%,rgba(255,255,255,0.95) 75%,white 100%);
-          animation:oShoot 1.3s cubic-bezier(0.25,0.1,0.15,1) forwards;
+        /* ip sağdan sola: açılır → kapanır (sağ taraftan kapanır) */
+        @keyframes ipRTL {
+          0%   { clip-path: inset(0 0 0 100%); }
+          42%  { clip-path: inset(0 0 0 0); }
+          100% { clip-path: inset(0 100% 0 0); }
+        }
+        .ipEl {
+          position: absolute;
+          border-radius: 9999px;
+          pointer-events: none;
+          animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+          animation-fill-mode: both;
         }
       `}</style>
-      {stars.map(s => (
-        <div key={s.id} className="oShoot" style={{
-          left:`${s.x}%`, top:`${s.y}%`,
-          width:`${s.len}px`, height:"1.8px",
-          "--ang":`${s.angle}deg`, "--tv":`${s.travel}px`,
-        } as React.CSSProperties}
-          onAnimationEnd={() => setStars(p => p.filter(st => st.id !== s.id))}
+      {ropes.map(r => (
+        <div
+          key={r.id}
+          className="ipEl"
+          style={{
+            top: `${r.y}%`,
+            left: `${r.left}%`,
+            width: `${r.width}%`,
+            height: `${r.thickness}px`,
+            background: `linear-gradient(90deg,
+              rgba(255,255,255,0) 0%,
+              rgba(180,210,255,${0.5 * r.glow}) 15%,
+              rgba(255,255,255,${r.glow}) 40%,
+              rgba(220,235,255,${r.glow}) 50%,
+              rgba(255,255,255,${r.glow}) 60%,
+              rgba(180,210,255,${0.5 * r.glow}) 85%,
+              rgba(255,255,255,0) 100%
+            )`,
+            boxShadow: `0 0 ${6 * r.glow}px ${2 * r.glow}px rgba(180,210,255,0.5), 0 0 ${14 * r.glow}px ${4 * r.glow}px rgba(130,170,255,0.25)`,
+            animationName: r.dir === 'ltr' ? 'ipLTR' : 'ipRTL',
+            animationDuration: `${r.dur}ms`,
+          }}
+          onAnimationEnd={() => setRopes(p => p.filter(rope => rope.id !== r.id))}
         />
       ))}
     </>
