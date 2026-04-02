@@ -169,7 +169,7 @@ export default function Onboarding() {
     q17: "",                   // Produkte pushen
     q18: "" as string,         // Fotos/Videos Ja/Nein
     q18detail: "",
-    q19: [] as string[],       // Materialien Ja/Nein
+    q19: "" as string,         // Materialien Ja/Nein
     q20: "",                   // meistverkauftes Produkt
     q21: "",                   // Kundenfragen
     q22: "",                   // Markenstory
@@ -340,7 +340,7 @@ export default function Onboarding() {
                 </div>
                 <div>
                   <QLabel n={19} text="Haben Sie zusätzliche Materialien? (z. B. Menükarte, Leistungen, Angebote etc.)" required />
-                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q19} onChange={v => toggleMulti("q19", v)} multi />
+                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q19} onChange={v => set("q19", v === f.q19 ? "" : v)} />
                 </div>
               </Section>
 
