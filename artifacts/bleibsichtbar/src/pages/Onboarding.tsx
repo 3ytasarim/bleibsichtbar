@@ -261,6 +261,7 @@ export default function Onboarding() {
                 </div>
                 <div>
                   <QLabel n={5} text="Möchten Sie eine neue Zielgruppe erreichen?" required />
+                  <p className="text-white/40 text-xs mb-3 -mt-1 pl-7">(Falls ja, welche?)</p>
                   <OptionGrid
                     options={["Ja → welche?", "Wir möchten unsere bisherige Zielgruppe weiterhin ansprechen"]}
                     selected={f.q5} onChange={v => toggleMulti("q5", v)} multi
