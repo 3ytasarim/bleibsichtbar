@@ -236,9 +236,6 @@ export default function Onboarding() {
                 <div>
                   <QLabel n={2} text="Wie soll Ihre Marke wirken?" required />
                   <OptionGrid options={["seriös", "modern", "premium", "jung", "humorvoll"]} selected={f.q2} onChange={v => toggleMulti("q2", v)} multi />
-                  <div className="mt-3">
-                    <TextInput value={f.q2sonstiges} onChange={v => set("q2sonstiges", v)} placeholder="Sonstiges: …" />
-                  </div>
                 </div>
                 <div>
                   <QLabel n={3} text="Welche Tonalität wünschen Sie sich?" required />
