@@ -61,25 +61,11 @@ function OptionBtn({ label, active, onClick, multi }: {
           : "bg-transparent border-white/15 text-white/70 hover:border-white/28 hover:bg-white/5"
       }`}
     >
-      {multi ? (
-        /* checkbox style for multi-select */
-        <span className={`flex-shrink-0 w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200 ${
-          active ? "bg-white border-white" : "border-white/30"
-        }`}>
-          {active && (
-            <svg className="w-3 h-3 text-[#0a1628]" fill="none" viewBox="0 0 12 12" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2 6l3 3 5-5" />
-            </svg>
-          )}
-        </span>
-      ) : (
-        /* radio style for single-select */
-        <span className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
-          active ? "border-white/80" : "border-white/30"
-        }`}>
-          {active && <span className="w-2.5 h-2.5 rounded-full bg-white" />}
-        </span>
-      )}
+      <span className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+        active ? "border-white/80" : "border-white/30"
+      }`}>
+        {active && <span className="w-2.5 h-2.5 rounded-full bg-white" />}
+      </span>
       <span>{label}</span>
     </motion.button>
   );
