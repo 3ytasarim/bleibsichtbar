@@ -26,7 +26,7 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const WHATSAPP_NUMBER = "4915123456789";
+const WHATSAPP_NUMBER = "4915567152351";
 const WHATSAPP_TEXT = encodeURIComponent(
   "Hallo Bleibsichtbar Team, ich würde gerne eine kostenlose Erstberatung anfragen."
 );
