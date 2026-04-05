@@ -792,10 +792,15 @@ export default function Home() {
 
                   {/* Trust badges */}
                   <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6 sm:mt-10 pt-5 sm:pt-8 border-t border-white/10">
-                    {["Datengetrieben", "Transparent", "Zielorientiert"].map(badge => (
-                      <div key={badge} className="flex items-center space-x-2 text-white/70">
+                    {["Sichtbar werden", "Kunden gewinnen", "Zielorientiert"].map(badge => (
+                      <div key={badge} className="relative flex items-center space-x-2 text-white/70 pb-1">
                         <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
                         <span className="text-sm font-medium">{badge}</span>
+                        <span
+                          aria-hidden="true"
+                          className="absolute bottom-0 left-0 w-full"
+                          style={{ height: "2px", borderRadius: "2px", background: "linear-gradient(90deg,#22c55e,#4ade80)" }}
+                        />
                       </div>
                     ))}
                   </div>
