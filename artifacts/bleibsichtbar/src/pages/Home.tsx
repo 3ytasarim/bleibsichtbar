@@ -231,6 +231,24 @@ const heroSlides = [
   {
     headline: ["Webseiten,", "die überzeugen."],
     sub: "Moderne, schnelle Websites, die nicht nur gut aussehen, sondern Anfragen generieren.",
+    subEl: (
+      <>
+        Moderne, schnelle{" "}
+        <span className="relative inline-block">
+          Websites
+          <span
+            aria-hidden="true"
+            className="absolute left-0 -bottom-1 w-full"
+            style={{
+              height: "3px",
+              borderRadius: "2px",
+              background: "linear-gradient(90deg,#22c55e,#4ade80)",
+            }}
+          />
+        </span>
+        , die nicht nur gut aussehen, sondern Anfragen generieren.
+      </>
+    ),
     cta: "Website anfragen",
     ctaLink: "/kontakt",
     bg: "from-[#1e4080] via-[#264fa8] to-[#1e4080]",
@@ -710,7 +728,7 @@ export default function Home() {
                   </h1>
 
                   <p className="text-base sm:text-xl text-white/70 max-w-lg leading-relaxed mt-4 sm:mt-6">
-                    {current.sub}
+                    {"subEl" in current ? current.subEl : current.sub}
                   </p>
 
                   <div className="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8">
