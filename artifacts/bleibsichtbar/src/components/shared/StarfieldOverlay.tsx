@@ -25,7 +25,7 @@ function loadScript(cb: () => void) {
   if (scriptLoading) return;
   scriptLoading = true;
   const script = document.createElement("script");
-  script.src = "/shooting-stars.js";
+  script.src = `${import.meta.env.BASE_URL}shooting-stars.js`;
   script.onload = () => {
     scriptLoaded = true;
     onLoadCallbacks.forEach(fn => fn());
@@ -76,8 +76,8 @@ export function StarfieldOverlay() {
     <div
       id="hero-starfield"
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none"
-      style={{ zIndex: 1, position: "absolute" }}
+      className="absolute inset-0 pointer-events-none"
+      style={{ zIndex: 1, position: "absolute", overflow: "visible" }}
     >
       <canvas
         id="starCanvas"
