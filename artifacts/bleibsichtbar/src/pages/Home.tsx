@@ -10,6 +10,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { PhoneMockup } from "@/components/shared/PhoneMockup";
 import { MarqueeClients } from "@/components/shared/MarqueeClients";
+import { StarfieldOverlay } from "@/components/shared/StarfieldOverlay";
 import { useGetProjects } from "@workspace/api-client-react";
 
 // ─── Like Notification Bubble ─────────────────────────────────────────────────
@@ -681,6 +682,9 @@ export default function Home() {
             className={`absolute inset-0 bg-gradient-to-br ${current.bg}`}
           />
         </AnimatePresence>
+
+        {/* Starfield + shooting stars overlay */}
+        <StarfieldOverlay />
 
         {/* Animated floating dots */}
         <FloatingDots />
