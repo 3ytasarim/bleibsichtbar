@@ -8,6 +8,7 @@ export const referencesTable = pgTable("references", {
   clientTitle: text("client_title"),
   company: text("company").notNull(),
   logoUrl: text("logo_url"),
+  websiteUrl: text("website_url"),
   testimonial: text("testimonial"),
   rating: integer("rating"),
   published: boolean("published").notNull().default(false),
