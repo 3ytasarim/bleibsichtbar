@@ -231,7 +231,7 @@ const heroSlides = [
   {
     headline: ["Webseiten,", "die überzeugen."],
     sub: "Moderne, schnelle Websites, die nicht nur gut aussehen, sondern Anfragen generieren.",
-    cta: "Website anfragen",
+    cta: "Webseiten anfragen",
     ctaLink: "/kontakt",
     bg: "from-[#1e4080] via-[#264fa8] to-[#1e4080]",
     pill: "Webseiten Optimierung & Design",
