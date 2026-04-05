@@ -6,7 +6,10 @@ import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/Animated
 import { CtaBanner } from "@/components/shared/CtaBanner";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Globe, Folder } from "lucide-react";
+import { ArrowRight, Globe, Folder, ShieldCheck, MessageCircle, Mail } from "lucide-react";
+
+const PRIVATE_FILTERS = ["Social Media", "Webseiten", "Content"] as const;
+type PrivateFilter = (typeof PRIVATE_FILTERS)[number];
 
 const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
 const WEB_RE    = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|app|landing/i;
@@ -255,30 +258,140 @@ export default function Projects() {
       {/* PROJECTS GRID */}
       <section className="py-20 min-h-[50vh] bg-white">
         <div className="max-w-5xl mx-auto px-6 sm:px-10 lg:px-14">
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 pt-10">
-              {[1,2,3,4].map(i => (
-                <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-60" />
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className="text-center py-28">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Folder className="w-9 h-9 text-gray-400" />
-              </div>
-              <h3 className="text-xl font-display font-bold text-gray-500 mb-2">Keine Projekte gefunden</h3>
-              <p className="text-gray-400 text-sm">In dieser Kategorie sind aktuell keine Projekte vorhanden.</p>
-            </motion.div>
-          ) : (
-            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 pt-8">
-              <AnimatePresence mode="popLayout">
-                {filtered.map((project, index) => (
-                  <ProjectCard key={project.id} project={project} index={index} />
+          <AnimatePresence mode="wait">
+            {(PRIVATE_FILTERS as readonly string[]).includes(activeFilter) ? (
+              <motion.div
+                key="privacy"
+                initial={{ opacity: 0, y: 32, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                className="py-20 flex justify-center"
+              >
+                <div className="max-w-2xl w-full">
+                  {/* Card */}
+                  <div
+                    className="rounded-3xl overflow-hidden shadow-xl border border-gray-100"
+                    style={{ background: "linear-gradient(135deg, #060d1f 0%, #0f1e3a 60%, #1a2a50 100%)" }}
+                  >
+                    {/* Top accent bar */}
+                    <div className="h-1.5 w-full" style={{ background: "linear-gradient(90deg, #f97316, #ff6b35, #f97316)" }} />
+
+                    <div className="px-10 py-12 text-center">
+                      {/* Shield icon with pulse ring */}
+                      <div className="relative inline-flex mb-8">
+                        <motion.div
+                          animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0, 0.35] }}
+                          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                          className="absolute inset-0 rounded-full bg-orange-400/30"
+                          style={{ margin: "-12px" }}
+                        />
+                        <div className="relative w-20 h-20 rounded-full flex items-center justify-center"
+                          style={{ background: "rgba(249,115,22,0.12)", border: "1.5px solid rgba(249,115,22,0.3)" }}>
+                          <ShieldCheck className="w-9 h-9 text-orange-400" />
+                        </div>
+                      </div>
+
+                      {/* Label */}
+                      <motion.p
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.15 }}
+                        className="text-xs font-black tracking-[0.25em] uppercase text-orange-400 mb-4"
+                      >
+                        Datenschutz & Vertraulichkeit
+                      </motion.p>
+
+                      {/* Heading */}
+                      <motion.h2
+                        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.22 }}
+                        className="text-2xl md:text-3xl font-display font-black text-white leading-snug mb-6"
+                      >
+                        Referenzen auf Anfrage
+                      </motion.h2>
+
+                      {/* Divider */}
+                      <motion.div
+                        initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        className="w-16 h-0.5 mx-auto mb-6 rounded-full bg-orange-400/50"
+                      />
+
+                      {/* Body text */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.35 }}
+                        className="space-y-3 text-white/70 text-base leading-relaxed mb-10"
+                      >
+                        <p>
+                          Aus Datenschutz- und Vertraulichkeitsgründen verzichten wir auf die öffentliche Darstellung unserer Kundenprojekte.
+                        </p>
+                        <p>
+                          Selbstverständlich stellen wir Ihnen ausgewählte Referenzen gerne persönlich zur Verfügung.
+                        </p>
+                      </motion.div>
+
+                      {/* CTA buttons */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.45 }}
+                        className="flex flex-col sm:flex-row gap-3 justify-center"
+                      >
+                        <Link href="/kontakt">
+                          <motion.span
+                            whileHover={{ scale: 1.04 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-sm cursor-pointer transition-all"
+                            style={{ background: "linear-gradient(135deg, #f97316, #ff6b35)", color: "#fff", boxShadow: "0 4px 24px rgba(249,115,22,0.35)" }}
+                          >
+                            <Mail className="w-4 h-4" />
+                            Kontaktformular
+                          </motion.span>
+                        </Link>
+                        <a
+                          href="https://wa.me/4915567152351?text=Hallo%20Bleibsichtbar%20Team%2C%20ich%20m%C3%B6chte%20gerne%20Referenzen%20anfragen."
+                          target="_blank" rel="noopener noreferrer"
+                        >
+                          <motion.span
+                            whileHover={{ scale: 1.04 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-sm cursor-pointer transition-all"
+                            style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1.5px solid rgba(255,255,255,0.18)" }}
+                          >
+                            <MessageCircle className="w-4 h-4 text-green-400" />
+                            Per WhatsApp
+                          </motion.span>
+                        </a>
+                      </motion.div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ) : isLoading ? (
+              <motion.div key="loading" className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 pt-10">
+                {[1,2,3,4].map(i => (
+                  <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-60" />
                 ))}
-              </AnimatePresence>
-            </motion.div>
-          )}
+              </motion.div>
+            ) : filtered.length === 0 ? (
+              <motion.div key="empty" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                className="text-center py-28">
+                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Folder className="w-9 h-9 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-display font-bold text-gray-500 mb-2">Keine Projekte gefunden</h3>
+                <p className="text-gray-400 text-sm">In dieser Kategorie sind aktuell keine Projekte vorhanden.</p>
+              </motion.div>
+            ) : (
+              <motion.div key="grid" layout className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 pt-8">
+                <AnimatePresence mode="popLayout">
+                  {filtered.map((project, index) => (
+                    <ProjectCard key={project.id} project={project} index={index} />
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 

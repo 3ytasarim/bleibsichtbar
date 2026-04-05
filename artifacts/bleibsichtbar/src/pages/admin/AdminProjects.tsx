@@ -207,7 +207,14 @@ export default function AdminProjects() {
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Kategorie *</label>
-              <Input {...register("category")} placeholder="z.B. Social Media" className={errors.category ? "border-destructive" : ""} />
+              <select
+                {...register("category")}
+                className={`w-full rounded-md border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-ring ${errors.category ? "border-destructive" : "border-input"}`}
+              >
+                <option value="">Bitte wählen…</option>
+                <option value="Fotografie">Fotografie</option>
+                <option value="Sonstiges">Sonstiges</option>
+              </select>
               {errors.category && <span className="text-xs text-destructive">{errors.category.message as string}</span>}
             </div>
           </div>
