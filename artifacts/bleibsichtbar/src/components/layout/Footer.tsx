@@ -306,7 +306,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a
-                    href="https://www.instagram.com/bleibsichtbar/"
+                    href="https://www.instagram.com/bleibsichtbarr/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-white/55 hover:text-white transition-colors text-sm font-medium"
