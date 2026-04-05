@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 interface MarqueeItem {
@@ -8,38 +8,51 @@ interface MarqueeItem {
   sortOrder: number;
 }
 
-const PLACEHOLDER_GRADIENTS = [
-  "linear-gradient(135deg,#f5a623 0%,#c8771a 100%)",
-  "linear-gradient(135deg,#e94560 0%,#a01535 100%)",
-  "linear-gradient(135deg,#1a1a2e 0%,#3a3a6e 100%)",
-  "linear-gradient(135deg,#0f3460 0%,#1a6090 100%)",
-  "linear-gradient(135deg,#533483 0%,#8b5fd4 100%)",
-  "linear-gradient(135deg,#2d6a4f 0%,#52b788 100%)",
-  "linear-gradient(135deg,#c62a47 0%,#e8567a 100%)",
-  "linear-gradient(135deg,#1565c0 0%,#2196f3 100%)",
-  "linear-gradient(135deg,#795548 0%,#a1887f 100%)",
-  "linear-gradient(135deg,#37474f 0%,#607d8b 100%)",
+const PLACEHOLDER_COLORS = [
+  { bg: "#f97316", text: "#fff" },
+  { bg: "#0a1628", text: "#f97316" },
+  { bg: "#1e40af", text: "#fff" },
+  { bg: "#7c3aed", text: "#fff" },
+  { bg: "#059669", text: "#fff" },
+  { bg: "#dc2626", text: "#fff" },
+  { bg: "#0891b2", text: "#fff" },
+  { bg: "#d97706", text: "#fff" },
 ];
 
-function ClientCard({ item, idx }: { item: MarqueeItem; idx: number }) {
-  const gradient = PLACEHOLDER_GRADIENTS[idx % PLACEHOLDER_GRADIENTS.length]!;
+function LogoCard({ item, idx }: { item: MarqueeItem; idx: number }) {
+  const color = PLACEHOLDER_COLORS[idx % PLACEHOLDER_COLORS.length]!;
   return (
-    <div className="group mx-5 select-none flex-shrink-0" style={{ width: 240 }}>
+    <div
+      className="group flex-shrink-0 mx-4 select-none cursor-default"
+      style={{ width: 220 }}
+    >
       <div
-        className="relative rounded-2xl overflow-hidden shadow-sm border border-white/10
-          group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300"
-        style={{ height: 160 }}
+        className="relative flex items-center justify-center rounded-2xl transition-all duration-300
+          bg-white border-2 border-gray-200 shadow-md
+          group-hover:border-accent group-hover:shadow-[0_8px_32px_rgba(249,115,22,0.18)]
+          group-hover:-translate-y-2"
+        style={{ height: 140 }}
       >
+        {/* Accent top bar on hover */}
+        <div
+          className="absolute top-0 left-4 right-4 h-0.5 rounded-full bg-accent
+            scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+        />
+
         {item.imageUrl ? (
           <img
             src={item.imageUrl}
             alt={item.name}
-            className="w-full h-full object-contain p-5 group-hover:scale-105 transition-transform duration-500"
+            className="object-contain transition-transform duration-300 group-hover:scale-110"
+            style={{ maxWidth: "75%", maxHeight: "75%" }}
             draggable={false}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center" style={{ background: gradient }}>
-            <span className="text-white font-bold text-lg text-center px-2 leading-tight">{item.name}</span>
+          <div
+            className="w-16 h-16 rounded-xl flex items-center justify-center text-sm font-bold text-center leading-tight px-1"
+            style={{ background: color.bg, color: color.text }}
+          >
+            {item.name.slice(0, 2).toUpperCase()}
           </div>
         )}
       </div>
@@ -47,23 +60,64 @@ function ClientCard({ item, idx }: { item: MarqueeItem; idx: number }) {
   );
 }
 
-interface MarqueeTrackProps {
-  items: MarqueeItem[];
-  direction: "left" | "right";
-}
+function MarqueeTrack({ items, direction }: { items: MarqueeItem[]; direction: "left" | "right" }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
+  const animRef = useRef<number>(0);
+  const speed = 0.5;
 
-function MarqueeTrack({ items, direction }: MarqueeTrackProps) {
-  const animClass = direction === "left" ? "animate-marquee-left" : "animate-marquee-right";
-  const doubled = [...items, ...items, ...items];
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let paused = false;
+    const handleEnter = () => { paused = true; };
+    const handleLeave = () => { paused = false; };
+    track.addEventListener("mouseenter", handleEnter);
+    track.addEventListener("mouseleave", handleLeave);
+
+    let pos = direction === "right" ? -(items.length * (220 + 32)) / 2 : 0;
+    const totalWidth = items.length * (220 + 32);
+
+    const animate = () => {
+      if (!paused) {
+        if (direction === "left") {
+          pos -= speed;
+          if (pos <= -totalWidth) pos = 0;
+        } else {
+          pos += speed;
+          if (pos >= 0) pos = -totalWidth;
+        }
+        setOffset(pos);
+      }
+      animRef.current = requestAnimationFrame(animate);
+    };
+    animRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      track.removeEventListener("mouseenter", handleEnter);
+      track.removeEventListener("mouseleave", handleLeave);
+    };
+  }, [items, direction]);
+
+  const doubled = [...items, ...items];
+
   return (
     <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 z-10"
-        style={{ background: "linear-gradient(to right, #f9fafb, transparent)" }} />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10"
-        style={{ background: "linear-gradient(to left, #f9fafb, transparent)" }} />
-      <div className={`flex ${animClass}`} style={{ width: "max-content" }}>
+      {/* Fade edges */}
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-32 z-10"
+        style={{ background: "linear-gradient(to right, #f3f4f6, transparent)" }} />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 z-10"
+        style={{ background: "linear-gradient(to left, #f3f4f6, transparent)" }} />
+
+      <div
+        ref={trackRef}
+        className="flex py-2"
+        style={{ transform: `translateX(${offset}px)`, willChange: "transform", width: "max-content" }}
+      >
         {doubled.map((item, i) => (
-          <ClientCard key={`${item.id}-${i}`} item={item} idx={i % items.length} />
+          <LogoCard key={`${item.id}-${i}`} item={item} idx={i % items.length} />
         ))}
       </div>
     </div>
@@ -103,42 +157,46 @@ export function MarqueeClients() {
     });
   }, []);
 
+  const half = Math.ceil(items.length / 2);
   const row1 = items.length > 0 ? items : [];
-  const row2 = items.length > 0
-    ? [...items.slice(Math.ceil(items.length / 2)), ...items.slice(0, Math.ceil(items.length / 2))]
-    : [];
+  const row2 = items.length > 0 ? [...items.slice(half), ...items.slice(0, half)] : [];
 
   return (
-    <section className="py-24 bg-gray-50 overflow-hidden">
+    <section className="py-24 overflow-hidden" style={{ background: "#f3f4f6" }}>
+      {/* Header */}
       <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-14 text-center"
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">
-          Vertrauen seit Tag 1
-        </p>
-        <h2 className="text-3xl md:text-4xl font-display font-bold mb-4" style={{ color: "#0a1628" }}>
+        <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          <p className="text-accent font-semibold text-xs tracking-widest uppercase">
+            Vertrauen seit Tag 1
+          </p>
+        </div>
+        <h2 className="text-3xl md:text-5xl font-display font-bold mb-4" style={{ color: "#0a1628" }}>
           Unsere <span className="text-accent">Kunden</span>
         </h2>
-        <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+        <p className="text-gray-500 text-lg max-w-xl mx-auto">
           Starke Marken, die uns vertrauen – gemeinsam für Ihren Erfolg.
         </p>
       </motion.div>
 
       {items.length > 0 ? (
-        <div className="space-y-8">
+        <div className="flex flex-col gap-6">
           <MarqueeTrack direction="left" items={row1} />
-          {row2.length > 0 && <MarqueeTrack direction="right" items={row2} />}
+          {row2.length > 1 && <MarqueeTrack direction="right" items={row2} />}
         </div>
       ) : (
-        <p className="text-center text-muted-foreground text-sm py-8">Kunden werden bald hinzugefügt.</p>
+        <p className="text-center text-gray-400 text-sm py-10">Kunden werden bald hinzugefügt.</p>
       )}
 
+      {/* Stats */}
       <motion.div
-        className="max-w-3xl mx-auto mt-16 px-4 grid grid-cols-3 gap-6 text-center"
+        className="max-w-3xl mx-auto mt-16 px-4 grid grid-cols-3 gap-5 text-center"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -148,14 +206,21 @@ export function MarqueeClients() {
           { value: "50+", label: "Zufriedene Kunden" },
           { value: "4.9★", label: "Durchschnittsbewertung" },
           { value: "5 Jahre", label: "Erfahrung & Expertise" },
-        ].map((s) => (
-          <div key={s.label}
-            className="bg-white rounded-2xl px-6 py-5 shadow-sm border border-gray-100 flex flex-col items-center">
+        ].map((s, i) => (
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+            className="bg-white rounded-2xl px-6 py-6 shadow-sm border-2 border-gray-200 flex flex-col items-center
+              hover:border-accent hover:shadow-[0_4px_20px_rgba(249,115,22,0.15)] transition-all duration-300"
+          >
             <span className="text-2xl font-display font-bold" style={{ color: "#0a1628" }}>
               {s.value}
             </span>
-            <span className="text-xs text-muted-foreground mt-1">{s.label}</span>
-          </div>
+            <span className="text-xs text-gray-400 mt-1 font-medium">{s.label}</span>
+          </motion.div>
         ))}
       </motion.div>
     </section>
