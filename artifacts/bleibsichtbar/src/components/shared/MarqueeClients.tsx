@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-interface Client {
-  id: number;
+interface MarqueeItem {
+  id: string;
   name: string;
   imageUrl: string | null;
   sortOrder: number;
@@ -21,14 +21,8 @@ const PLACEHOLDER_GRADIENTS = [
   "linear-gradient(135deg,#37474f 0%,#607d8b 100%)",
 ];
 
-function getApiBase() {
-  if (typeof window !== "undefined" && window.location.hostname !== "localhost") return "";
-  return "";
-}
-
-function ClientCard({ client, idx }: { client: Client; idx: number }) {
+function ClientCard({ item, idx }: { item: MarqueeItem; idx: number }) {
   const gradient = PLACEHOLDER_GRADIENTS[idx % PLACEHOLDER_GRADIENTS.length]!;
-
   return (
     <div className="group mx-3 select-none flex-shrink-0" style={{ width: 200 }}>
       <div
@@ -36,18 +30,17 @@ function ClientCard({ client, idx }: { client: Client; idx: number }) {
           group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300"
         style={{ height: 130 }}
       >
-        {client.imageUrl ? (
+        {item.imageUrl ? (
           <img
-            src={client.imageUrl}
-            alt={client.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            src={item.imageUrl}
+            alt={item.name}
+            className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
             draggable={false}
           />
         ) : (
-          <div
-            className="w-full h-full"
-            style={{ background: gradient }}
-          />
+          <div className="w-full h-full flex items-center justify-center" style={{ background: gradient }}>
+            <span className="text-white font-bold text-lg text-center px-2 leading-tight">{item.name}</span>
+          </div>
         )}
       </div>
     </div>
@@ -55,7 +48,7 @@ function ClientCard({ client, idx }: { client: Client; idx: number }) {
 }
 
 interface MarqueeTrackProps {
-  items: Client[];
+  items: MarqueeItem[];
   direction: "left" | "right";
 }
 
@@ -69,8 +62,8 @@ function MarqueeTrack({ items, direction }: MarqueeTrackProps) {
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 z-10"
         style={{ background: "linear-gradient(to left, #f9fafb, transparent)" }} />
       <div className={`flex ${animClass}`} style={{ width: "max-content" }}>
-        {doubled.map((client, i) => (
-          <ClientCard key={`${client.id}-${i}`} client={client} idx={i % items.length} />
+        {doubled.map((item, i) => (
+          <ClientCard key={`${item.id}-${i}`} item={item} idx={i % items.length} />
         ))}
       </div>
     </div>
@@ -78,17 +71,42 @@ function MarqueeTrack({ items, direction }: MarqueeTrackProps) {
 }
 
 export function MarqueeClients() {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [items, setItems] = useState<MarqueeItem[]>([]);
 
   useEffect(() => {
-    fetch("/api/clients")
-      .then(r => r.json())
-      .then((data: Client[]) => setClients(Array.isArray(data) ? data : []))
-      .catch(() => {});
+    Promise.all([
+      fetch("/api/clients").then(r => r.json()).catch(() => []),
+      fetch("/api/references").then(r => r.json()).catch(() => []),
+    ]).then(([clients, references]) => {
+      const fromClients: MarqueeItem[] = Array.isArray(clients)
+        ? clients.map((c: { id: number; name: string; imageUrl: string | null; sortOrder: number }) => ({
+            id: `c-${c.id}`,
+            name: c.name,
+            imageUrl: c.imageUrl,
+            sortOrder: c.sortOrder ?? 0,
+          }))
+        : [];
+
+      const fromRefs: MarqueeItem[] = Array.isArray(references)
+        ? references
+            .filter((r: { logoUrl?: string | null }) => r.logoUrl)
+            .map((r: { id: number; company: string; logoUrl: string | null; sortOrder: number }) => ({
+              id: `r-${r.id}`,
+              name: r.company,
+              imageUrl: r.logoUrl,
+              sortOrder: r.sortOrder ?? 0,
+            }))
+        : [];
+
+      const merged = [...fromClients, ...fromRefs].sort((a, b) => a.sortOrder - b.sortOrder);
+      setItems(merged);
+    });
   }, []);
 
-  const row1 = clients.length > 0 ? clients : [];
-  const row2 = clients.length > 0 ? [...clients.slice(Math.ceil(clients.length / 2)), ...clients.slice(0, Math.ceil(clients.length / 2))] : [];
+  const row1 = items.length > 0 ? items : [];
+  const row2 = items.length > 0
+    ? [...items.slice(Math.ceil(items.length / 2)), ...items.slice(0, Math.ceil(items.length / 2))]
+    : [];
 
   return (
     <section className="py-24 bg-gray-50 overflow-hidden">
@@ -110,7 +128,7 @@ export function MarqueeClients() {
         </p>
       </motion.div>
 
-      {clients.length > 0 ? (
+      {items.length > 0 ? (
         <div className="space-y-4">
           <MarqueeTrack direction="left" items={row1} />
           {row2.length > 0 && <MarqueeTrack direction="right" items={row2} />}
