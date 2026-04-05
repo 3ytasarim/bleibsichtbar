@@ -203,7 +203,7 @@ export function Footer() {
                 transition={{ duration: 0.4, delay: 0.3 }}
                 className="text-white/50 text-sm leading-relaxed max-w-sm"
               >
-                Ob neue Website, mehr Sichtbarkeit oder KI-Automatisierung — wir beraten Sie ehrlich und zeigen Ihnen, wie Ihr Unternehmen endlich sinnvoll ist. Kostenlos &amp; unverbindlich.
+                Ob neue Webseite, mehr Sichtbarkeit oder KI-Automatisierung — wir beraten Sie ehrlich und zeigen Ihnen, wie Ihr Unternehmen endlich sinnvoll ist. Kostenlos &amp; unverbindlich.
               </motion.p>
             </motion.div>
 
