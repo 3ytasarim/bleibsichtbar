@@ -123,7 +123,7 @@ function FooterContactForm() {
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-      <FooterField field={register("name")} placeholder="Anfrage" index={0} error={errors.name?.message} />
+      <FooterField field={register("name")} placeholder="Name und Vorname" index={0} error={errors.name?.message} />
       <FooterField field={register("email")} placeholder="E-Mail" type="email" index={1} error={errors.email?.message} />
 
       <FooterField field={register("message")} placeholder="Nachricht" index={2} error={errors.message?.message} rows={5} />
