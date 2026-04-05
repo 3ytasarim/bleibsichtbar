@@ -713,7 +713,7 @@ export default function SocialMedia() {
   const socialProjects = allProjects.filter(p => SOCIAL_RE.test(p.category ?? ""));
 
   const [form, setForm] = useState({
-    company: "", platforms: [] as string[], feedposts: "", reels: "", stories: "",
+    company: "", contact: "", platforms: [] as string[], feedposts: "", reels: "", stories: "",
     contentDay: "", hasWebsite: "", ads: "", wishes: "", goals: "",
     previousAgency: "", priorities: "", dislikes: "", collaboration: "",
   });
@@ -958,6 +958,13 @@ export default function SocialMedia() {
                   <input value={form.company} onChange={e => setForm(f => ({...f, company: e.target.value}))}
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent bg-white"
                     placeholder="Unternehmensname" />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold mb-2">Wie sollen wir uns bei Ihnen melden? <span className="font-normal text-muted-foreground">(Geben Sie Ihre Mail oder Telefonnummer an)</span></label>
+                  <input value={form.contact} onChange={e => setForm(f => ({...f, contact: e.target.value}))}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent bg-white"
+                    placeholder="E-Mail oder Telefonnummer" />
                 </div>
 
                 <div>
