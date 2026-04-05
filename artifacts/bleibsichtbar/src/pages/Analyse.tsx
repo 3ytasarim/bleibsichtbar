@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground } from "@/components/shared/AnimatedHero";
 import {
   BarChart3, TrendingUp, Users, Eye, Target, CheckCircle2,
-  ArrowRight, PieChart, Activity, Search, Lightbulb, Rocket, RefreshCw,
-  LineChart, Shield, Zap, Star, AlertCircle,
+  ArrowRight, PieChart, Activity, Shield, Zap, Star, AlertCircle,
 } from "lucide-react";
 
 const fadeUp = {
@@ -56,32 +55,6 @@ const analyseLeistungen = [
   },
 ];
 
-const steps = [
-  {
-    num: "01",
-    icon: <Search className="w-6 h-6" />,
-    title: "Daten erfassen",
-    desc: "Sie teilen uns Ihre Social-Media-Kanäle und Ihre Ziele mit – völlig kostenlos und unverbindlich.",
-  },
-  {
-    num: "02",
-    icon: <LineChart className="w-6 h-6" />,
-    title: "Tiefenanalyse",
-    desc: "Unser Team analysiert alle relevanten KPIs: Reichweite, Engagement, Zielgruppe und Wettbewerb.",
-  },
-  {
-    num: "03",
-    icon: <Lightbulb className="w-6 h-6" />,
-    title: "Insights & Report",
-    desc: "Sie erhalten einen klaren, verständlichen Bericht mit konkreten Handlungsempfehlungen – binnen 48h.",
-  },
-  {
-    num: "04",
-    icon: <Rocket className="w-6 h-6" />,
-    title: "Umsetzung & Wachstum",
-    desc: "Auf Wunsch setzen wir die Empfehlungen direkt um und begleiten Sie langfristig zum Erfolg.",
-  },
-];
 
 const reportItems = [
   "Reichweite & Impressionen",
@@ -175,34 +148,6 @@ export default function Analyse() {
         </div>
       </section>
 
-      {/* PROZESS */}
-      <section className="py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.div variants={fadeUp} className="text-center mb-16">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unser Vorgehen</p>
-              <h2 className="text-4xl md:text-5xl font-display font-bold">Von der Analyse zum <span className="text-accent">Wachstum</span></h2>
-            </motion.div>
-            <div className="space-y-4">
-              {steps.map((step, i) => (
-                <motion.div key={i} variants={fadeUp}
-                  className="flex gap-6 bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:border-accent/20 hover:shadow-sm transition-all group">
-                  <div className="flex-shrink-0 w-12 h-12 bg-accent/10 text-accent rounded-xl flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-all">
-                    {step.icon}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1">
-                      <span className="text-xs font-black text-accent/50 uppercase tracking-widest">{step.num}</span>
-                      <h3 className="text-xl font-display font-bold">{step.title}</h3>
-                    </div>
-                    <p className="text-muted-foreground">{step.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* REPORT INHALTE */}
       <section className="py-24 bg-gray-50">
