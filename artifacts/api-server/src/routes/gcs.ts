@@ -3,8 +3,9 @@ import { streamGCSObject } from "../lib/gcsUpload.js";
 
 const router = Router();
 
-router.get("/*path", async (req: Request, res: Response) => {
-  const key = (req.params as { path: string }).path;
+router.use("/", async (req: Request, res: Response) => {
+  if (req.method !== "GET") { res.status(405).send("Method Not Allowed"); return; }
+  const key = req.path.replace(/^\//, "");
   if (!key) { res.status(400).send("Missing key"); return; }
   await streamGCSObject(key, res);
 });
