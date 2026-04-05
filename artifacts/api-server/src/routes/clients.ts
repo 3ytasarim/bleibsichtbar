@@ -1,27 +1,15 @@
 import { Router } from "express";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
 import { db } from "@workspace/db";
 import { clientsTable } from "@workspace/db/schema";
 import { eq, asc } from "drizzle-orm";
-import type { Request } from "express";
+import { requireAdmin } from "../middlewares/auth.js";
+import { uploadBufferToGCS, deleteGCSObject } from "../lib/gcsUpload.js";
 
 const router = Router();
 
-const uploadDir = path.join(process.cwd(), "public", "uploads", "clients");
-fs.mkdirSync(uploadDir, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadDir),
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `client-${Date.now()}${ext}`);
-  },
-});
-
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     if (file.mimetype.startsWith("image/")) cb(null, true);
@@ -29,72 +17,59 @@ const upload = multer({
   },
 });
 
-function isAdmin(req: Request): boolean {
-  return !!(req.session as { admin?: boolean }).admin;
-}
-
 router.get("/", async (_req, res) => {
   try {
-    const clients = await db
-      .select()
-      .from(clientsTable)
-      .orderBy(asc(clientsTable.sortOrder), asc(clientsTable.createdAt));
+    const clients = await db.select().from(clientsTable).orderBy(asc(clientsTable.sortOrder), asc(clientsTable.createdAt));
     res.json(clients);
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: "Fehler beim Laden der Kunden" });
   }
 });
 
-router.post("/", (req, res, next) => {
-  if (!isAdmin(req)) { res.status(401).json({ error: "Nicht autorisiert" }); return; }
-  next();
-}, upload.single("image"), async (req, res) => {
+router.post("/", requireAdmin, upload.single("image"), async (req, res) => {
   try {
     const { name, sortOrder } = req.body as { name?: string; sortOrder?: string };
     if (!name) { res.status(400).json({ error: "Name ist erforderlich" }); return; }
-    const imageUrl = req.file ? `/api/uploads/clients/${req.file.filename}` : null;
+    let imageUrl: string | null = null;
+    if (req.file) {
+      imageUrl = await uploadBufferToGCS(req.file.buffer, req.file.originalname, req.file.mimetype, "clients");
+    }
     const [client] = await db.insert(clientsTable).values({
       name,
       imageUrl,
       sortOrder: sortOrder ? parseInt(sortOrder, 10) : 0,
     }).returning();
     res.json(client);
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: "Fehler beim Erstellen" });
   }
 });
 
-router.put("/:id", (req, res, next) => {
-  if (!isAdmin(req)) { res.status(401).json({ error: "Nicht autorisiert" }); return; }
-  next();
-}, upload.single("image"), async (req, res) => {
+router.put("/:id", requireAdmin, upload.single("image"), async (req, res) => {
   try {
     const id = parseInt(req.params["id"]!, 10);
     const { name, sortOrder } = req.body as { name?: string; sortOrder?: string };
     const updates: Partial<typeof clientsTable.$inferInsert> = {};
     if (name !== undefined) updates.name = name;
     if (sortOrder !== undefined) updates.sortOrder = parseInt(sortOrder, 10);
-    if (req.file) updates.imageUrl = `/api/uploads/clients/${req.file.filename}`;
+    if (req.file) {
+      updates.imageUrl = await uploadBufferToGCS(req.file.buffer, req.file.originalname, req.file.mimetype, "clients");
+    }
     const [updated] = await db.update(clientsTable).set(updates).where(eq(clientsTable.id, id)).returning();
     if (!updated) { res.status(404).json({ error: "Nicht gefunden" }); return; }
     res.json(updated);
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: "Fehler beim Aktualisieren" });
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  if (!isAdmin(req)) { res.status(401).json({ error: "Nicht autorisiert" }); return; }
+router.delete("/:id", requireAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params["id"]!, 10);
     const [deleted] = await db.delete(clientsTable).where(eq(clientsTable.id, id)).returning();
-    if (deleted?.imageUrl) {
-      const relative = deleted.imageUrl.replace(/^\/api/, "");
-      const filePath = path.join(process.cwd(), "public", relative);
-      fs.unlink(filePath, () => {});
-    }
+    if (deleted?.imageUrl) await deleteGCSObject(deleted.imageUrl);
     res.json({ success: true });
-  } catch (e) {
+  } catch {
     res.status(500).json({ error: "Fehler beim Löschen" });
   }
 });
