@@ -220,12 +220,6 @@ export default function Contact() {
                   href: "mailto:info@bleibsichtbar.com",
                   desc: "Wir antworten innerhalb von 24 Stunden",
                 },
-                {
-                  label: "Kostenlose Erstberatung",
-                  value: "30 Minuten · Unverbindlich",
-                  href: "/analyse",
-                  desc: "Strategie-Gespräch für Ihr Unternehmen",
-                },
               ].map((item, i) => (
                 <motion.div key={i} variants={fadeUp}>
                   <a
