@@ -1,68 +1,81 @@
-import React, { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import React, { useState, useRef } from "react";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { SimpleModal } from "@/components/admin/SimpleModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit2, Trash2, Check, X, ImagePlus, Minus, Globe, Images, Users, Heart, Eye } from "lucide-react";
-import { useGetProjects, useCreateProject, useUpdateProject, useDeleteProject, type Project } from "@workspace/api-client-react";
+import { Edit2, Trash2, Check, X, ImagePlus, Minus, Plus, Globe, Images, Users, Heart, Eye, Upload } from "lucide-react";
+import { useGetProjects, useDeleteProject, type Project } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 
-const projectSchema = z.object({
-  title: z.string().min(1, "Titel erforderlich"),
-  description: z.string().min(1, "Beschreibung erforderlich"),
-  category: z.string().min(1, "Kategorie erforderlich"),
-  imageUrl: z.string().url("Gültige URL erforderlich").or(z.literal("")).nullable(),
-  clientName: z.string().optional().nullable(),
-  websiteUrl: z.string().url("Gültige URL erforderlich").or(z.literal("")).nullable(),
-  tags: z.string().transform(val => val.split(",").map(t => t.trim()).filter(Boolean)),
-  published: z.boolean().default(true),
-  sortOrder: z.coerce.number().default(0),
-  statFollowers: z.string().optional().nullable(),
-  statLikes: z.string().optional().nullable(),
-  statViews: z.string().optional().nullable(),
-});
+type FormState = {
+  title: string;
+  description: string;
+  category: string;
+  clientName: string;
+  websiteUrl: string;
+  tags: string;
+  published: boolean;
+  sortOrder: number;
+  statFollowers: string;
+  statLikes: string;
+  statViews: string;
+};
 
-type FormValues = z.input<typeof projectSchema>;
+const defaultForm: FormState = {
+  title: "",
+  description: "",
+  category: "",
+  clientName: "",
+  websiteUrl: "",
+  tags: "",
+  published: true,
+  sortOrder: 0,
+  statFollowers: "",
+  statLikes: "",
+  statViews: "",
+};
+
+type GalleryItem = { file: File | null; preview: string; existing: string };
 
 export default function AdminProjects() {
   const queryClient = useQueryClient();
   const { data: projects = [], isLoading } = useGetProjects();
-  const createMut = useCreateProject();
-  const updateMut = useUpdateProject();
   const deleteMut = useDeleteProject();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [galleryImages, setGalleryImages] = useState<string[]>([""]);
+  const [form, setForm] = useState<FormState>(defaultForm);
+  const [saving, setSaving] = useState(false);
 
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<FormValues>({
-    resolver: zodResolver(projectSchema),
-    defaultValues: { published: true, sortOrder: 0, tags: "" }
-  });
+  // Main image
+  const [mainImageFile, setMainImageFile] = useState<File | null>(null);
+  const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
+  const [existingMainImage, setExistingMainImage] = useState<string | null>(null);
+  const mainImageRef = useRef<HTMLInputElement>(null);
 
-  const watchedCategory = useWatch({ control, name: "category" });
-  const isSocialMedia = watchedCategory?.toLowerCase().includes("social");
+  // Gallery images
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+  const galleryRef = useRef<HTMLInputElement>(null);
+
+  const isSocialMedia = form.category.toLowerCase().includes("social");
 
   const openCreate = () => {
     setEditingId(null);
-    setGalleryImages([""]);
-    reset({ title: "", description: "", category: "", imageUrl: "", clientName: "", websiteUrl: "", tags: "", published: true, sortOrder: 0, statFollowers: "", statLikes: "", statViews: "" });
+    setForm(defaultForm);
+    setMainImageFile(null);
+    setMainImagePreview(null);
+    setExistingMainImage(null);
+    setGalleryItems([]);
     setIsModalOpen(true);
   };
 
   const openEdit = (project: Project) => {
     setEditingId(project.id);
-    const gallery = (project as any).galleryImages ?? [];
-    setGalleryImages(gallery.length > 0 ? gallery : [""]);
-    reset({
+    setForm({
       title: project.title,
       description: project.description,
       category: project.category,
-      imageUrl: project.imageUrl || "",
       clientName: project.clientName || "",
       websiteUrl: (project as any).websiteUrl || "",
       tags: project.tags.join(", "),
@@ -72,52 +85,81 @@ export default function AdminProjects() {
       statLikes: (project as any).statLikes || "",
       statViews: (project as any).statViews || "",
     });
+    setMainImageFile(null);
+    setMainImagePreview(null);
+    setExistingMainImage(project.imageUrl || null);
+    const existingGallery: GalleryItem[] = ((project as any).galleryImages ?? []).map((url: string) => ({
+      file: null, preview: url, existing: url,
+    }));
+    setGalleryItems(existingGallery);
     setIsModalOpen(true);
   };
 
   const handleDelete = (id: number) => {
-    if (confirm("Wirklich löschen?")) {
-      deleteMut.mutate({ id }, {
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/projects"] })
+    if (!confirm("Wirklich löschen?")) return;
+    deleteMut.mutate({ id }, {
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/projects"] })
+    });
+  };
+
+  const handleMainImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setMainImageFile(file);
+    if (file) setMainImagePreview(URL.createObjectURL(file));
+    else setMainImagePreview(null);
+  };
+
+  const handleGalleryAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    const newItems: GalleryItem[] = files.map(f => ({
+      file: f, preview: URL.createObjectURL(f), existing: "",
+    }));
+    setGalleryItems(prev => [...prev, ...newItems]);
+    e.target.value = "";
+  };
+
+  const removeGalleryItem = (idx: number) => {
+    setGalleryItems(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.title || !form.description || !form.category) return;
+    setSaving(true);
+    try {
+      const fd = new FormData();
+      fd.append("title", form.title);
+      fd.append("description", form.description);
+      fd.append("category", form.category);
+      fd.append("clientName", form.clientName);
+      fd.append("websiteUrl", form.websiteUrl);
+      fd.append("tags", form.tags);
+      fd.append("published", String(form.published));
+      fd.append("sortOrder", String(form.sortOrder));
+      fd.append("statFollowers", form.statFollowers);
+      fd.append("statLikes", form.statLikes);
+      fd.append("statViews", form.statViews);
+
+      if (mainImageFile) {
+        fd.append("image", mainImageFile);
+      }
+
+      // New gallery files
+      galleryItems.forEach(item => {
+        if (item.file) fd.append("gallery", item.file);
       });
+
+      const url = editingId ? `/api/projects/${editingId}` : "/api/projects";
+      const method = editingId ? "PUT" : "POST";
+      await fetch(url, { method, body: fd });
+      queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
+      setIsModalOpen(false);
+    } finally {
+      setSaving(false);
     }
   };
 
-  const addGalleryImage = () => setGalleryImages(prev => [...prev, ""]);
-  const removeGalleryImage = (idx: number) => setGalleryImages(prev => prev.filter((_, i) => i !== idx));
-  const updateGalleryImage = (idx: number, val: string) => {
-    setGalleryImages(prev => prev.map((img, i) => i === idx ? val : img));
-  };
-
-  const onSubmit = (data: any) => {
-    const cleanGallery = galleryImages.filter(url => url.trim() !== "");
-    const payload = {
-      ...data,
-      imageUrl: data.imageUrl || null,
-      clientName: data.clientName || null,
-      websiteUrl: data.websiteUrl || null,
-      galleryImages: cleanGallery,
-      statFollowers: data.statFollowers || null,
-      statLikes: data.statLikes || null,
-      statViews: data.statViews || null,
-    };
-
-    if (editingId) {
-      updateMut.mutate({ id: editingId, data: payload }, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-          setIsModalOpen(false);
-        }
-      });
-    } else {
-      createMut.mutate({ data: payload }, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
-          setIsModalOpen(false);
-        }
-      });
-    }
-  };
+  const mainImageDisplay = mainImagePreview || existingMainImage;
 
   return (
     <AdminLayout>
@@ -194,126 +236,130 @@ export default function AdminProjects() {
         onClose={() => setIsModalOpen(false)}
         title={editingId ? "Projekt bearbeiten" : "Neues Projekt erstellen"}
       >
-        <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form noValidate onSubmit={handleSubmit} className="space-y-5">
           {/* Title + Category */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Titel *</label>
-              <Input {...register("title")} placeholder="Projektname" className={errors.title ? "border-destructive" : ""} />
-              {errors.title && <span className="text-xs text-destructive">{errors.title.message as string}</span>}
+              <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Projektname" required />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Kategorie *</label>
               <select
-                {...register("category")}
-                className={`w-full rounded-md border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-ring ${errors.category ? "border-destructive" : "border-input"}`}
+                value={form.category}
+                onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+                className="w-full rounded-md border border-input px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-ring"
+                required
               >
                 <option value="">Bitte wählen…</option>
                 <option value="Fotografie">Fotografie</option>
-                <option value="Sonstiges">Sonstiges</option>
               </select>
-              {errors.category && <span className="text-xs text-destructive">{errors.category.message as string}</span>}
             </div>
           </div>
 
           {/* Description */}
           <div>
             <label className="text-sm font-medium mb-1 block">Beschreibung *</label>
-            <Textarea {...register("description")} rows={3} placeholder="Kurze Projektbeschreibung..." className={errors.description ? "border-destructive" : ""} />
-            {errors.description && <span className="text-xs text-destructive">{errors.description.message as string}</span>}
+            <Textarea rows={3} placeholder="Kurze Projektbeschreibung..." value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} required />
           </div>
 
           {/* Client + Website */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Kundenname</label>
-              <Input {...register("clientName")} placeholder="Firma GmbH" />
+              <Input placeholder="Firma GmbH" value={form.clientName} onChange={e => setForm(f => ({ ...f, clientName: e.target.value }))} />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block flex items-center gap-1">
                 <Globe className="w-3.5 h-3.5" /> Website URL
               </label>
-              <Input {...register("websiteUrl")} placeholder="https://kunde.de" />
-              {errors.websiteUrl && <span className="text-xs text-destructive">{errors.websiteUrl.message as string}</span>}
+              <Input type="url" placeholder="https://kunde.de" value={form.websiteUrl} onChange={e => setForm(f => ({ ...f, websiteUrl: e.target.value }))} />
             </div>
           </div>
 
-          {/* Main image */}
+          {/* Main image upload */}
           <div>
-            <label className="text-sm font-medium mb-1 block flex items-center gap-1">
-              <ImagePlus className="w-3.5 h-3.5" /> Hauptbild URL
+            <label className="text-sm font-medium mb-2 block flex items-center gap-1">
+              <ImagePlus className="w-3.5 h-3.5" /> Hauptbild
             </label>
-            <Input {...register("imageUrl")} placeholder="https://..." />
-            {errors.imageUrl && <span className="text-xs text-destructive">{errors.imageUrl.message as string}</span>}
+            <input ref={mainImageRef} type="file" accept="image/*" className="hidden" onChange={handleMainImageChange} />
+            <div className="flex items-center gap-3">
+              <Button type="button" variant="outline" size="sm" onClick={() => mainImageRef.current?.click()}>
+                <Upload className="w-4 h-4 mr-2" />
+                {mainImageDisplay ? "Bild ersetzen" : "Bild hochladen"}
+              </Button>
+              {mainImageDisplay && (
+                <div className="flex items-center gap-2">
+                  <img src={mainImageDisplay} alt="Vorschau" className="h-12 w-auto max-w-[140px] object-cover rounded border border-gray-100" />
+                  <button type="button" onClick={() => { setMainImageFile(null); setMainImagePreview(null); setExistingMainImage(null); }} className="text-gray-400 hover:text-red-500 transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Gallery images */}
+          {/* Gallery images upload */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium flex items-center gap-1">
-                <Images className="w-3.5 h-3.5" /> Galerie-Fotos (weitere Screenshots)
+                <Images className="w-3.5 h-3.5" /> Galerie-Fotos
               </label>
-              <Button type="button" variant="outline" size="sm" onClick={addGalleryImage} className="h-7 text-xs">
-                <Plus className="w-3 h-3 mr-1" /> Foto hinzufügen
+              <Button type="button" variant="outline" size="sm" className="h-7 text-xs" onClick={() => galleryRef.current?.click()}>
+                <Plus className="w-3 h-3 mr-1" /> Fotos hinzufügen
               </Button>
             </div>
-            <div className="space-y-2">
-              {galleryImages.map((img, idx) => (
-                <div key={idx} className="flex gap-2 items-center">
-                  <Input
-                    value={img}
-                    onChange={e => updateGalleryImage(idx, e.target.value)}
-                    placeholder={`https://... (Bild ${idx + 1})`}
-                    className="flex-1"
-                  />
-                  {galleryImages.length > 1 && (
-                    <Button type="button" variant="outline" size="sm" onClick={() => removeGalleryImage(idx)} className="shrink-0 h-9 w-9 p-0 text-red-500 hover:text-red-600 hover:border-red-300">
-                      <Minus className="w-3.5 h-3.5" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1.5">Diese Bilder erscheinen in der Galerie der Detailseite.</p>
+            <input ref={galleryRef} type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryAdd} />
+            {galleryItems.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {galleryItems.map((item, idx) => (
+                  <div key={idx} className="relative group">
+                    <img src={item.preview} alt={`Galerie ${idx + 1}`} className="w-16 h-16 object-cover rounded border border-gray-100" />
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryItem(idx)}
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Minus className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground mt-1.5">Mehrere Fotos auf einmal auswählbar. Hover zum Entfernen.</p>
           </div>
 
           {/* Tags + Sort */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Tags (kommagetrennt)</label>
-              <Input {...register("tags")} placeholder="Social, Branding, ..." />
+              <Input placeholder="Social, Branding, ..." value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Sortiernummer</label>
-              <Input {...register("sortOrder")} type="number" placeholder="0" />
+              <Input type="number" placeholder="0" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} />
             </div>
           </div>
 
-          {/* Social Media Stats — only for Social Media category */}
+          {/* Social Media Stats */}
           {isSocialMedia && (
             <div className="rounded-xl border border-orange-100 bg-orange-50/50 p-4">
               <p className="text-sm font-semibold text-orange-700 mb-3 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent inline-block" />
-                Social Media Statistiken (für Anasayfa-Slider)
+                Social Media Statistiken
               </p>
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="text-xs font-medium mb-1 block flex items-center gap-1">
-                    <Users className="w-3 h-3" /> Follower
-                  </label>
-                  <Input {...register("statFollowers")} placeholder="z.B. 25k" />
+                  <label className="text-xs font-medium mb-1 block flex items-center gap-1"><Users className="w-3 h-3" /> Follower</label>
+                  <Input placeholder="z.B. 25k" value={form.statFollowers} onChange={e => setForm(f => ({ ...f, statFollowers: e.target.value }))} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium mb-1 block flex items-center gap-1">
-                    <Heart className="w-3 h-3" /> Likes
-                  </label>
-                  <Input {...register("statLikes")} placeholder="z.B. 323k" />
+                  <label className="text-xs font-medium mb-1 block flex items-center gap-1"><Heart className="w-3 h-3" /> Likes</label>
+                  <Input placeholder="z.B. 323k" value={form.statLikes} onChange={e => setForm(f => ({ ...f, statLikes: e.target.value }))} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium mb-1 block flex items-center gap-1">
-                    <Eye className="w-3 h-3" /> Aufrufe
-                  </label>
-                  <Input {...register("statViews")} placeholder="z.B. 93M" />
+                  <label className="text-xs font-medium mb-1 block flex items-center gap-1"><Eye className="w-3 h-3" /> Aufrufe</label>
+                  <Input placeholder="z.B. 93M" value={form.statViews} onChange={e => setForm(f => ({ ...f, statViews: e.target.value }))} />
                 </div>
               </div>
             </div>
@@ -322,13 +368,13 @@ export default function AdminProjects() {
           {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
             <div className="flex items-center space-x-2">
-              <input type="checkbox" id="published" {...register("published")} className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" />
+              <input type="checkbox" id="published" checked={form.published} onChange={e => setForm(f => ({ ...f, published: e.target.checked }))} className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" />
               <label htmlFor="published" className="text-sm font-medium">Veröffentlichen</label>
             </div>
             <div className="flex space-x-2">
               <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Abbrechen</Button>
-              <Button type="submit" className="bg-accent hover:bg-accent/90" disabled={createMut.isPending || updateMut.isPending}>
-                {createMut.isPending || updateMut.isPending ? "Speichern..." : "Speichern"}
+              <Button type="submit" className="bg-accent hover:bg-accent/90" disabled={saving}>
+                {saving ? "Speichern..." : "Speichern"}
               </Button>
             </div>
           </div>
