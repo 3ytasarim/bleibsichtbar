@@ -129,7 +129,7 @@ export function MarqueeClients() {
         {[
           { value: "50+", label: "Zufriedene Kunden" },
           { value: "4.9★", label: "Durchschnittsbewertung" },
-          { value: "3 Jahre", label: "Erfahrung & Expertise" },
+          { value: "5 Jahre", label: "Erfahrung & Expertise" },
         ].map((s) => (
           <div key={s.label}
             className="bg-white rounded-2xl px-6 py-5 shadow-sm border border-gray-100 flex flex-col items-center">
