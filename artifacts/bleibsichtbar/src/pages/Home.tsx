@@ -231,24 +231,6 @@ const heroSlides = [
   {
     headline: ["Webseiten,", "die überzeugen."],
     sub: "Moderne, schnelle Websites, die nicht nur gut aussehen, sondern Anfragen generieren.",
-    subEl: (
-      <>
-        Moderne, schnelle{" "}
-        <span className="relative inline-block">
-          Websites
-          <span
-            aria-hidden="true"
-            className="absolute left-0 -bottom-1 w-full"
-            style={{
-              height: "3px",
-              borderRadius: "2px",
-              background: "linear-gradient(90deg,#22c55e,#4ade80)",
-            }}
-          />
-        </span>
-        , die nicht nur gut aussehen, sondern Anfragen generieren.
-      </>
-    ),
     cta: "Website anfragen",
     ctaLink: "/kontakt",
     bg: "from-[#1e4080] via-[#264fa8] to-[#1e4080]",
@@ -728,7 +710,7 @@ export default function Home() {
                   </h1>
 
                   <p className="text-base sm:text-xl text-white/70 max-w-lg leading-relaxed mt-4 sm:mt-6">
-                    {"subEl" in current ? current.subEl : current.sub}
+                    {current.sub}
                   </p>
 
                   <div className="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8">
@@ -793,14 +775,9 @@ export default function Home() {
                   {/* Trust badges */}
                   <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6 sm:mt-10 pt-5 sm:pt-8 border-t border-white/10">
                     {["Sichtbar werden", "Kunden gewinnen", "Zielorientiert"].map(badge => (
-                      <div key={badge} className="relative flex items-center space-x-2 text-white/70 pb-1">
+                      <div key={badge} className="flex items-center space-x-2 text-white/70">
                         <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
                         <span className="text-sm font-medium">{badge}</span>
-                        <span
-                          aria-hidden="true"
-                          className="absolute bottom-0 left-0 w-full"
-                          style={{ height: "2px", borderRadius: "2px", background: "linear-gradient(90deg,#22c55e,#4ade80)" }}
-                        />
                       </div>
                     ))}
                   </div>
