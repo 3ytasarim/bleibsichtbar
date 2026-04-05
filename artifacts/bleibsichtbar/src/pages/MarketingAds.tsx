@@ -77,10 +77,7 @@ export default function MarketingAds() {
             <p className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
               Gezielte Werbung bei Google, Instagram und Co. – damit Ihre Kunden Sie genau dann finden, wenn sie suchen. Messbare Ergebnisse statt Streuverlust.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold">
-                <Link href="/kontakt">Kostenlose Kampagnen-Analyse</Link>
-              </Button>
+            <div className="flex justify-center">
               <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white bg-transparent hover:bg-white/10">
                 <Link href="/kontakt">Angebot anfragen</Link>
               </Button>
