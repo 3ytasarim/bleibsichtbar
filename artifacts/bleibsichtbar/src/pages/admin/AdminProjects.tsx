@@ -126,9 +126,6 @@ export default function AdminProjects() {
           <h1 className="text-3xl font-bold font-display">Projekte</h1>
           <p className="text-muted-foreground">Portfolio-Elemente verwalten</p>
         </div>
-        <Button onClick={openCreate} className="bg-accent hover:bg-accent/90">
-          <Plus className="w-5 h-5 mr-2" /> Neues Projekt
-        </Button>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-border overflow-hidden">

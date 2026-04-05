@@ -181,7 +181,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
   );
 }
 
-const FILTERS = ["Alle", "Social Media", "Webseiten", "Content", "Fotografie", "Sonstiges"] as const;
+const FILTERS = ["Alle", "Social Media", "Webseiten", "Content", "Fotografie"] as const;
 type Filter = (typeof FILTERS)[number];
 
 function matchesFilter(project: any, filter: Filter): boolean {
@@ -191,7 +191,7 @@ function matchesFilter(project: any, filter: Filter): boolean {
   if (filter === "Webseiten")    return WEB_RE.test(cat);
   if (filter === "Content")      return /content/i.test(cat);
   if (filter === "Fotografie")   return /fotografie|photo|food|report/i.test(cat);
-  return !/social.?media|instagram|tiktok|linkedin|content|websei?ten?|web.?design|e.?commerce|fotografie|food|report/i.test(cat);
+  return false;
 }
 
 export default function Projects() {
