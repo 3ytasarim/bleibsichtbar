@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { StarfieldOverlay } from "./StarfieldOverlay";
 
 interface Orb { x: string; y: string; size: string; color: string; delay: number; dur: number; }
 
@@ -22,6 +23,7 @@ const dots = Array.from({ length: 28 }, (_, i) => ({
 export function AnimatedHeroBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <StarfieldOverlay />
       {orbs.map((orb, i) => (
         <motion.div
           key={i}
