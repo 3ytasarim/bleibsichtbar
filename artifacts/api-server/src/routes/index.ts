@@ -6,6 +6,7 @@ import blogRouter from "./blog.js";
 import referencesRouter from "./references.js";
 import contactRouter from "./contact.js";
 import onboardingRouter from "./onboarding.js";
+import clientsRouter from "./clients.js";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use("/blog", blogRouter);
 router.use("/references", referencesRouter);
 router.use("/contact", contactRouter);
 router.use("/onboarding", onboardingRouter);
+router.use("/clients", clientsRouter);
 
 export default router;

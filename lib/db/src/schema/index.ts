@@ -3,3 +3,4 @@ export * from "./blog";
 export * from "./references";
 export * from "./contacts";
 export * from "./onboardings";
+export * from "./clients";

@@ -28,6 +28,7 @@ import AdminProjects from "./pages/admin/AdminProjects";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminReferences from "./pages/admin/AdminReferences";
 import AdminOnboarding from "./pages/admin/AdminOnboarding";
+import AdminClients from "./pages/admin/AdminClients";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,6 +59,7 @@ function Router() {
         <Route path="/admin/blog" component={AdminBlog} />
         <Route path="/admin/referenzen" component={AdminReferences} />
         <Route path="/admin/onboarding" component={AdminOnboarding} />
+        <Route path="/admin/kunden" component={AdminClients} />
 
         {/* Public Routes */}
         <Route path="/" component={Home} />

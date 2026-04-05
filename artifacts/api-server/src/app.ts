@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import session from "express-session";
+import path from "path";
 import router from "./routes/index.js";
 
 const app: Express = express();
@@ -23,6 +24,8 @@ app.use(session({
   },
 }));
 
+app.use("/uploads", express.static(path.join(process.cwd(), "public", "uploads")));
+app.use("/api/uploads", express.static(path.join(process.cwd(), "public", "uploads")));
 app.use("/api", router);
 
 export default app;

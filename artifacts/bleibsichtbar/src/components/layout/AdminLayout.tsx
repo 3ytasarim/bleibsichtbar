@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "wouter";
 import { useGetMe, useAdminLogout } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboard, FileText, Image, MessageSquare, LogOut, Loader2, Menu, X, ClipboardList } from "lucide-react";
+import { LayoutDashboard, FileText, Image, MessageSquare, LogOut, Loader2, Menu, X, ClipboardList, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,7 @@ const adminLinks = [
   { name: "Projekte", path: "/admin/projekte", icon: <Image className="w-5 h-5" /> },
   { name: "Blog", path: "/admin/blog", icon: <FileText className="w-5 h-5" /> },
   { name: "Referenzen", path: "/admin/referenzen", icon: <MessageSquare className="w-5 h-5" /> },
+  { name: "Kunden", path: "/admin/kunden", icon: <Users className="w-5 h-5" /> },
   { name: "Onboarding", path: "/admin/onboarding", icon: <ClipboardList className="w-5 h-5" /> },
 ];
 
