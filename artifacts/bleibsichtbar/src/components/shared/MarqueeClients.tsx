@@ -24,17 +24,17 @@ const PLACEHOLDER_GRADIENTS = [
 function ClientCard({ item, idx }: { item: MarqueeItem; idx: number }) {
   const gradient = PLACEHOLDER_GRADIENTS[idx % PLACEHOLDER_GRADIENTS.length]!;
   return (
-    <div className="group mx-3 select-none flex-shrink-0" style={{ width: 200 }}>
+    <div className="group mx-5 select-none flex-shrink-0" style={{ width: 240 }}>
       <div
         className="relative rounded-2xl overflow-hidden shadow-sm border border-white/10
           group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300"
-        style={{ height: 130 }}
+        style={{ height: 160 }}
       >
         {item.imageUrl ? (
           <img
             src={item.imageUrl}
             alt={item.name}
-            className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain p-5 group-hover:scale-105 transition-transform duration-500"
             draggable={false}
           />
         ) : (
@@ -129,7 +129,7 @@ export function MarqueeClients() {
       </motion.div>
 
       {items.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-8">
           <MarqueeTrack direction="left" items={row1} />
           {row2.length > 0 && <MarqueeTrack direction="right" items={row2} />}
         </div>
