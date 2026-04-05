@@ -901,7 +901,7 @@ export default function Home() {
           >
             {[
               { icon: Globe, label: "Social Media", val: "70%", desc: "der Kaufentscheidungen werden durch Social Media beeinflusst" },
-              { icon: Monitor, label: "Webseite", val: "3 Sek.", desc: "haben Sie, um einen Besucher zu überzeugen – oder zu verlieren" },
+              { icon: Monitor, label: "Webseite", val: "3 Sek.", desc: "haben Sie, um einen Besucher zu überzeugen" },
               { icon: Target, label: "Google Ads", val: "200%", desc: "höherer ROI mit gezielten Performance-Kampagnen möglich" },
             ].map((item, i) => (
               <motion.div key={i} variants={fadeUp} className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm hover:bg-white/10 transition-colors">
