@@ -8,19 +8,19 @@ interface MarqueeItem {
   sortOrder: number;
 }
 
-const PLACEHOLDER_COLORS = [
-  { bg: "#f97316", text: "#fff" },
-  { bg: "#0a1628", text: "#f97316" },
-  { bg: "#1e40af", text: "#fff" },
-  { bg: "#7c3aed", text: "#fff" },
-  { bg: "#059669", text: "#fff" },
-  { bg: "#dc2626", text: "#fff" },
-  { bg: "#0891b2", text: "#fff" },
-  { bg: "#d97706", text: "#fff" },
+const CARD_GRADIENTS = [
+  "linear-gradient(135deg, #0f1f3d 0%, #1a3a6b 100%)",
+  "linear-gradient(135deg, #1a0a2e 0%, #2d1060 100%)",
+  "linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%)",
+  "linear-gradient(135deg, #0d2137 0%, #0f4c75 100%)",
+  "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+  "linear-gradient(135deg, #0f2027 0%, #203a43 100%)",
+  "linear-gradient(135deg, #130f40 0%, #1a1464 100%)",
+  "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
 ];
 
 function LogoCard({ item, idx }: { item: MarqueeItem; idx: number }) {
-  const color = PLACEHOLDER_COLORS[idx % PLACEHOLDER_COLORS.length]!;
+  const grad = CARD_GRADIENTS[idx % CARD_GRADIENTS.length]!;
   return (
     <div
       className="group flex-shrink-0 mx-4 select-none cursor-default"
@@ -28,10 +28,10 @@ function LogoCard({ item, idx }: { item: MarqueeItem; idx: number }) {
     >
       <div
         className="relative flex items-center justify-center rounded-2xl transition-all duration-300
-          bg-white border-2 border-gray-200 shadow-md
-          group-hover:border-accent group-hover:shadow-[0_8px_32px_rgba(249,115,22,0.18)]
+          border border-white/10 shadow-lg
+          group-hover:border-accent/60 group-hover:shadow-[0_8px_32px_rgba(249,115,22,0.25)]
           group-hover:-translate-y-2"
-        style={{ height: 140 }}
+        style={{ height: 140, background: grad }}
       >
         {/* Accent top bar on hover */}
         <div
@@ -44,16 +44,17 @@ function LogoCard({ item, idx }: { item: MarqueeItem; idx: number }) {
             src={item.imageUrl}
             alt={item.name}
             className="object-contain transition-transform duration-300 group-hover:scale-110"
-            style={{ maxWidth: "75%", maxHeight: "75%" }}
+            style={{
+              maxWidth: "75%",
+              maxHeight: "75%",
+              filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.4)) brightness(1.08)",
+            }}
             draggable={false}
           />
         ) : (
-          <div
-            className="w-16 h-16 rounded-xl flex items-center justify-center text-sm font-bold text-center leading-tight px-1"
-            style={{ background: color.bg, color: color.text }}
-          >
+          <span className="text-white font-bold text-xl tracking-wide drop-shadow">
             {item.name.slice(0, 2).toUpperCase()}
-          </div>
+          </span>
         )}
       </div>
     </div>
