@@ -790,24 +790,24 @@ export default function Home() {
             </div>
 
             {/* Right — Phone with real hand mockup */}
-            <div className="flex justify-center lg:justify-center relative h-[560px] sm:h-auto overflow-hidden sm:overflow-visible mt-8 sm:mt-0">
+            <div className="flex justify-center lg:justify-end relative h-[600px] sm:h-auto overflow-hidden sm:overflow-visible mt-4 sm:mt-0">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
               <motion.div
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="relative select-none"
-                style={{ width: 420 }}
+                style={{ width: 700 }}
               >
-                {/* App content — clipped strictly to phone screen bounds */}
+                {/* App content — clipped strictly inside phone screen area */}
                 <div
                   style={{
                     position: "absolute",
-                    top: "11.5%",
-                    left: "22%",
-                    width: "52.5%",
-                    height: "66%",
-                    borderRadius: "10px",
+                    top: "10.5%",
+                    left: "21.5%",
+                    width: "53.5%",
+                    height: "69%",
+                    borderRadius: "12px",
                     overflow: "hidden",
                     contain: "paint",
                     zIndex: 20,
@@ -815,7 +815,7 @@ export default function Home() {
                 >
                   <SocialMediaPhone />
                 </div>
-                {/* Real hand + phone photo — screen blend makes pure black transparent */}
+                {/* Real hand + phone photo — screen blend makes black transparent */}
                 <img
                   src="/hand-mockup.png"
                   alt="Smartphone in Hand"
