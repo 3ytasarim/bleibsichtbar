@@ -143,16 +143,16 @@ export function MarqueeClients() {
 
       {/* Stats */}
       <motion.div
-        className="max-w-3xl mx-auto mt-16 px-4 grid grid-cols-3 gap-5 text-center"
+        className="max-w-3xl mx-auto mt-16 px-4 grid grid-cols-3 gap-3 sm:gap-5 text-center"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
         {[
-          { value: "50+", label: "Zufriedene Kunden" },
-          { value: "4.9★", label: "Durchschnittsbewertung" },
-          { value: "5 Jahre", label: "Erfahrung & Expertise" },
+          { value: "50+", label: "Kunden" },
+          { value: "4.9★", label: "Bewertung" },
+          { value: "5 Jahre", label: "Erfahrung" },
         ].map((s, i) => (
           <motion.div
             key={s.label}
@@ -160,13 +160,13 @@ export function MarqueeClients() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-            className="bg-white rounded-2xl px-6 py-6 shadow-sm border-2 border-gray-200 flex flex-col items-center
+            className="bg-white rounded-2xl px-2 py-4 sm:px-6 sm:py-6 shadow-sm border-2 border-gray-200 flex flex-col items-center
               hover:border-accent hover:shadow-[0_4px_20px_rgba(249,115,22,0.15)] transition-all duration-300"
           >
-            <span className="text-2xl font-display font-bold" style={{ color: "#0a1628" }}>
+            <span className="text-lg sm:text-2xl font-display font-bold leading-tight" style={{ color: "#0a1628" }}>
               {s.value}
             </span>
-            <span className="text-xs text-gray-400 mt-1 font-medium">{s.label}</span>
+            <span className="text-[10px] sm:text-xs text-gray-400 mt-1 font-medium leading-snug">{s.label}</span>
           </motion.div>
         ))}
       </motion.div>
