@@ -32,7 +32,12 @@ function LogoCard({ item }: { item: MarqueeItem; idx?: number }) {
             src={item.imageUrl}
             alt={item.name}
             className="object-contain transition-transform duration-300 group-hover:scale-110"
-            style={{ maxWidth: "75%", maxHeight: "75%" }}
+            style={{
+              maxWidth: "75%",
+              maxHeight: "75%",
+              filter:
+                "drop-shadow(0 0 6px rgba(0,0,0,0.35)) drop-shadow(0 0 2px rgba(0,0,0,0.5))",
+            }}
             draggable={false}
           />
         ) : (
