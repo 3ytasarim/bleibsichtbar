@@ -824,20 +824,21 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Slide indicators */}
-          <div className="flex items-center justify-center space-x-3 mt-4 sm:mt-8">
-            {heroSlides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setSlide(i)}
-                className={`transition-all duration-500 rounded-full ${i === slide ? "w-8 h-2 bg-accent" : "w-2 h-2 bg-white/30 hover:bg-white/50"}`}
-              />
-            ))}
-          </div>
+        </div>
+
+        {/* Slide indicators — absolute, above scroll indicator */}
+        <div className="flex items-center justify-center space-x-3 absolute bottom-28 sm:bottom-32 left-1/2 -translate-x-1/2 z-20">
+          {heroSlides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setSlide(i)}
+              className={`transition-all duration-500 rounded-full ${i === slide ? "w-8 h-2 bg-accent" : "w-2 h-2 bg-white/30 hover:bg-white/50"}`}
+            />
+          ))}
         </div>
 
         {/* Scroll indicator — desktop only */}
-        <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
+        <div className="hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 flex-col items-center gap-1.5 z-20">
           <span className="text-white/80 text-[13px] font-semibold tracking-[0.25em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">Entdecken</span>
           <button
             onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
