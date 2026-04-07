@@ -789,12 +789,14 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone */}
+            {/* Right — Phone with 3D tilt */}
             <div className="flex justify-center lg:justify-center relative mt-4 sm:mt-0">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <PhoneMockup>
-                <SocialMediaPhone />
-              </PhoneMockup>
+              <div style={{ transform: "perspective(900px) rotateY(-14deg) rotateX(4deg) rotateZ(2deg)", transformStyle: "preserve-3d", filter: "drop-shadow(-20px 30px 50px rgba(0,0,0,0.6))" }}>
+                <PhoneMockup>
+                  <SocialMediaPhone />
+                </PhoneMockup>
+              </div>
             </div>
           </div>
 
