@@ -12,14 +12,14 @@ function LogoCard({ item }: { item: MarqueeItem; idx?: number }) {
   return (
     <div
       className="group flex-shrink-0 mx-4 select-none cursor-default"
-      style={{ width: 220 }}
+      style={{ width: 260 }}
     >
       <div
-        className="relative flex items-center justify-center rounded-2xl transition-all duration-300
-          bg-[#eef1f6] border-2 border-[#dde2ec] shadow-sm
+        className="relative rounded-2xl transition-all duration-300
+          bg-[#eef1f6] border-2 border-[#dde2ec] shadow-sm p-5
           group-hover:border-accent group-hover:shadow-[0_8px_32px_rgba(249,115,22,0.18)]
           group-hover:-translate-y-2"
-        style={{ height: 140 }}
+        style={{ height: 160 }}
       >
         {/* Accent top bar on hover */}
         <div
@@ -31,19 +31,19 @@ function LogoCard({ item }: { item: MarqueeItem; idx?: number }) {
           <img
             src={item.imageUrl}
             alt={item.name}
-            className="object-contain transition-transform duration-300 group-hover:scale-110"
+            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
             style={{
-              maxWidth: "90%",
-              maxHeight: "90%",
               filter:
                 "drop-shadow(0 0 6px rgba(0,0,0,0.35)) drop-shadow(0 0 2px rgba(0,0,0,0.5))",
             }}
             draggable={false}
           />
         ) : (
-          <span className="text-[#0a1628] font-bold text-xl tracking-wide">
-            {item.name.slice(0, 2).toUpperCase()}
-          </span>
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-[#0a1628] font-bold text-2xl tracking-wide">
+              {item.name.slice(0, 2).toUpperCase()}
+            </span>
+          </div>
         )}
       </div>
     </div>
