@@ -789,43 +789,12 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone with real hand mockup */}
-            <div className="flex justify-center lg:justify-end relative h-[600px] sm:h-auto overflow-hidden sm:overflow-visible mt-4 sm:mt-0">
+            {/* Right — Phone */}
+            <div className="flex justify-center lg:justify-center relative mt-4 sm:mt-0">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <motion.div
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="relative select-none"
-                style={{ width: 700 }}
-              >
-                {/* App content — clipped to phone screen, content rendered at 300×600 (original design size) then scaled */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "10.5%",
-                    left: "21.5%",
-                    width: "53.5%",
-                    height: "69%",
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    contain: "paint",
-                    zIndex: 20,
-                  }}
-                >
-                  <div style={{ width: 300, height: 600, transform: "scale(1.25)", transformOrigin: "top left" }}>
-                    <SocialMediaPhone />
-                  </div>
-                </div>
-                {/* Real hand + phone photo — screen blend makes black transparent */}
-                <img
-                  src="/hand-mockup.png"
-                  alt="Smartphone in Hand"
-                  className="w-full pointer-events-none"
-                  style={{ display: "block", position: "relative", zIndex: 10, mixBlendMode: "screen" }}
-                  draggable={false}
-                />
-              </motion.div>
+              <PhoneMockup>
+                <SocialMediaPhone />
+              </PhoneMockup>
             </div>
           </div>
 
