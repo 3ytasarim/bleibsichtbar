@@ -1,10 +1,26 @@
-import express, { type Express } from "express";
+import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
 import session from "express-session";
+import compression from "compression";
 import path from "path";
 import router from "./routes/index.js";
 
 const app: Express = express();
+
+app.disable("x-powered-by");
+
+app.use(compression());
+
+app.use((_req: Request, res: Response, next: NextFunction) => {
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  if (process.env.NODE_ENV === "production") {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
+  next();
+});
 
 app.use(cors({
   origin: true,
@@ -18,7 +34,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   },
