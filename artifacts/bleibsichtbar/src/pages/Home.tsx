@@ -789,13 +789,73 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone with 3D tilt */}
+            {/* Right — Phone 3D */}
             <div className="flex justify-center lg:justify-center relative mt-4 sm:mt-0">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <div style={{ transform: "perspective(900px) rotateY(-14deg) rotateX(4deg) rotateZ(2deg)", transformStyle: "preserve-3d", filter: "drop-shadow(-20px 30px 50px rgba(0,0,0,0.6))" }}>
-                <PhoneMockup>
-                  <SocialMediaPhone />
-                </PhoneMockup>
+
+              {/* 3D phone wrapper */}
+              <div style={{ perspective: "1400px", perspectiveOrigin: "50% 40%" }}>
+                <div style={{
+                  transform: "rotateY(-22deg) rotateX(6deg) rotateZ(1deg)",
+                  transformStyle: "preserve-3d",
+                  position: "relative",
+                  filter: "drop-shadow(-28px 40px 60px rgba(0,0,0,0.75))",
+                }}>
+                  {/* Main phone face */}
+                  <PhoneMockup>
+                    <SocialMediaPhone />
+                  </PhoneMockup>
+
+                  {/* Screen gloss overlay */}
+                  <div style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: "2.8rem",
+                    background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 40%, transparent 65%)",
+                    pointerEvents: "none",
+                    zIndex: 50,
+                  }} />
+
+                  {/* Left edge — phone thickness */}
+                  <div style={{
+                    position: "absolute",
+                    top: "4%",
+                    left: -13,
+                    width: 13,
+                    height: "92%",
+                    background: "linear-gradient(to bottom, #2a2a3e 0%, #111122 40%, #0a0a18 100%)",
+                    transform: "rotateY(-90deg)",
+                    transformOrigin: "right center",
+                    borderRadius: "4px 0 0 4px",
+                  }} />
+
+                  {/* Bottom edge — phone thickness */}
+                  <div style={{
+                    position: "absolute",
+                    bottom: -10,
+                    left: "4%",
+                    width: "92%",
+                    height: 10,
+                    background: "linear-gradient(to right, #111122 0%, #1e1e2e 50%, #2a2a3e 100%)",
+                    transform: "rotateX(-90deg)",
+                    transformOrigin: "top center",
+                    borderRadius: "0 0 4px 4px",
+                  }} />
+
+                  {/* Floor reflection */}
+                  <div style={{
+                    position: "absolute",
+                    bottom: -80,
+                    left: "5%",
+                    width: "90%",
+                    height: 80,
+                    background: "linear-gradient(to bottom, rgba(255,255,255,0.06), transparent)",
+                    transform: "rotateX(-90deg) scaleY(-1)",
+                    transformOrigin: "top center",
+                    filter: "blur(4px)",
+                    pointerEvents: "none",
+                  }} />
+                </div>
               </div>
             </div>
           </div>
