@@ -790,46 +790,13 @@ export default function Home() {
             </div>
 
             {/* Right — Phone */}
-            <div className="flex justify-center lg:justify-center relative h-[620px] sm:h-auto overflow-hidden sm:overflow-visible mt-12 sm:mt-0 -translate-x-6 sm:translate-x-0 pt-6 sm:pt-0">
+            <div className="flex justify-center lg:justify-center relative h-[480px] sm:h-auto overflow-hidden sm:overflow-visible mt-12 sm:mt-0 -translate-x-6 sm:translate-x-0 pt-6 sm:pt-0">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <div className="scale-[0.62] sm:scale-90 lg:scale-100 origin-top overflow-visible"
+              <div className="scale-[0.62] sm:scale-90 lg:scale-100 origin-top lg:mb-0"
                 style={{ transform: "rotate(-11deg) scale(0.9)", transformOrigin: "top center" }}>
-                <div className="relative overflow-visible" style={{ paddingBottom: 200 }}>
-
-                  {/* Fingers — behind phone */}
-                  <svg
-                    width="310" height="300" viewBox="0 0 310 300"
-                    className="absolute z-0 pointer-events-none select-none"
-                    style={{ top: 500, left: -5, filter: "drop-shadow(0 -6px 16px rgba(0,0,0,0.35))" }}
-                  >
-                    <rect x="22"  y="0"  width="52" height="145" rx="26" fill="#F0B99A"/>
-                    <rect x="82"  y="0"  width="54" height="158" rx="27" fill="#F0B99A"/>
-                    <rect x="144" y="0"  width="52" height="148" rx="26" fill="#F0B99A"/>
-                    <rect x="204" y="12" width="46" height="118" rx="23" fill="#F0B99A"/>
-                    <rect x="29"  y="33" width="36" height="3"   rx="1.5" fill="#D9906A" opacity="0.55"/>
-                    <rect x="89"  y="27" width="38" height="3"   rx="1.5" fill="#D9906A" opacity="0.55"/>
-                    <rect x="151" y="32" width="36" height="3"   rx="1.5" fill="#D9906A" opacity="0.55"/>
-                    <rect x="210" y="43" width="30" height="3"   rx="1.5" fill="#D9906A" opacity="0.55"/>
-                    <rect x="5"   y="128" width="300" height="118" rx="44" fill="#F0B99A"/>
-                    <rect x="52"  y="215" width="206" height="85"  rx="35" fill="#F0B99A"/>
-                    <path d="M 55 157 Q 155 190 255 157" stroke="#D9906A" strokeWidth="2.5" fill="none" opacity="0.4"/>
-                  </svg>
-
-                  {/* Phone */}
-                  <PhoneMockup className="relative z-10 shadow-2xl shadow-black/50 border-gray-800">
-                    <SocialMediaPhone />
-                  </PhoneMockup>
-
-                  {/* Thumb — in front of phone frame */}
-                  <svg
-                    width="64" height="118" viewBox="0 0 64 118"
-                    className="absolute z-20 pointer-events-none select-none"
-                    style={{ left: -34, top: 315, filter: "drop-shadow(3px 0 8px rgba(0,0,0,0.22))" }}
-                  >
-                    <rect x="3" y="0" width="56" height="114" rx="28" fill="#F0B99A"/>
-                    <rect x="11" y="35" width="35" height="3" rx="1.5" fill="#D9906A" opacity="0.55"/>
-                  </svg>
-                </div>
+                <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
+                  <SocialMediaPhone />
+                </PhoneMockup>
               </div>
             </div>
           </div>
