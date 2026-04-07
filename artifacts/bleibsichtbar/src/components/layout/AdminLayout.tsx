@@ -37,6 +37,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
+        localStorage.removeItem("bs_auth_token");
         queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
         setLocation("/admin/login");
       }

@@ -299,6 +299,14 @@ export async function customFetch<T = unknown>(
 
   const requestInfo = { method, url: resolveUrl(input) };
 
+  // Attach stored auth token for iframe-compatible auth (localStorage fallback)
+  if (typeof window !== "undefined") {
+    const token = window.localStorage.getItem("bs_auth_token");
+    if (token && !headers.has("authorization")) {
+      headers.set("authorization", `Bearer ${token}`);
+    }
+  }
+
   const response = await fetch(input, { credentials: "include", ...init, method, headers });
 
   if (!response.ok) {

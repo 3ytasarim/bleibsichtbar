@@ -34,7 +34,12 @@ export default function AdminLogin() {
 
   const onSubmit = (data: z.infer<typeof loginSchema>) => {
     mutate({ data }, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        // Store token for iframe-compatible auth fallback
+        const token = (response as any)?.token;
+        if (token) {
+          localStorage.setItem("bs_auth_token", token);
+        }
         queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
         setLocation("/admin");
       }
