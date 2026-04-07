@@ -799,25 +799,28 @@ export default function Home() {
                 className="relative select-none"
                 style={{ width: 420 }}
               >
-                {/* App content positioned exactly at the phone screen area */}
+                {/* App content — clipped strictly to phone screen bounds */}
                 <div
-                  className="absolute z-20 overflow-hidden"
                   style={{
-                    top: "10%",
-                    left: "20.5%",
-                    width: "55.5%",
-                    height: "70%",
+                    position: "absolute",
+                    top: "11.5%",
+                    left: "22%",
+                    width: "52.5%",
+                    height: "66%",
                     borderRadius: "10px",
+                    overflow: "hidden",
+                    contain: "paint",
+                    zIndex: 20,
                   }}
                 >
                   <SocialMediaPhone />
                 </div>
-                {/* Real hand + phone photo — lighten blend makes black bg transparent */}
+                {/* Real hand + phone photo — screen blend makes pure black transparent */}
                 <img
                   src="/hand-mockup.png"
                   alt="Smartphone in Hand"
-                  className="w-full relative z-10 pointer-events-none"
-                  style={{ mixBlendMode: "lighten" }}
+                  className="w-full pointer-events-none"
+                  style={{ display: "block", position: "relative", zIndex: 10, mixBlendMode: "screen" }}
                   draggable={false}
                 />
               </motion.div>
