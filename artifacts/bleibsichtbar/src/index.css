@@ -153,17 +153,17 @@
 /* Marquee animations */
 @keyframes marquee-left {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-33.333%); }
+  100% { transform: translateX(-33.3333%); }
 }
 @keyframes marquee-right {
-  0%   { transform: translateX(-33.333%); }
+  0%   { transform: translateX(-33.3333%); }
   100% { transform: translateX(0); }
 }
 .animate-marquee-left {
-  animation: marquee-left 30s linear infinite;
+  animation: marquee-left 40s linear infinite;
 }
 .animate-marquee-right {
-  animation: marquee-right 30s linear infinite;
+  animation: marquee-right 40s linear infinite;
 }
 .animate-marquee-left:hover,
 .animate-marquee-right:hover {

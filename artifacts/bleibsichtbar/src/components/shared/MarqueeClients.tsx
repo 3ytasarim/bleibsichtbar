@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 interface MarqueeItem {
@@ -61,62 +61,19 @@ function LogoCard({ item, idx }: { item: MarqueeItem; idx: number }) {
 }
 
 function MarqueeTrack({ items, direction }: { items: MarqueeItem[]; direction: "left" | "right" }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(0);
-  const animRef = useRef<number>(0);
-  const speed = 0.5;
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    let paused = false;
-    const handleEnter = () => { paused = true; };
-    const handleLeave = () => { paused = false; };
-    track.addEventListener("mouseenter", handleEnter);
-    track.addEventListener("mouseleave", handleLeave);
-
-    let pos = direction === "right" ? -(items.length * (220 + 32)) / 2 : 0;
-    const totalWidth = items.length * (220 + 32);
-
-    const animate = () => {
-      if (!paused) {
-        if (direction === "left") {
-          pos -= speed;
-          if (pos <= -totalWidth) pos = 0;
-        } else {
-          pos += speed;
-          if (pos >= 0) pos = -totalWidth;
-        }
-        setOffset(pos);
-      }
-      animRef.current = requestAnimationFrame(animate);
-    };
-    animRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      cancelAnimationFrame(animRef.current);
-      track.removeEventListener("mouseenter", handleEnter);
-      track.removeEventListener("mouseleave", handleLeave);
-    };
-  }, [items, direction]);
-
-  const doubled = [...items, ...items];
+  // Triple the items so CSS -33.333% translate = exactly one set = seamless loop
+  const tripled = [...items, ...items, ...items];
+  const animClass = direction === "left" ? "animate-marquee-left" : "animate-marquee-right";
 
   return (
     <div className="relative overflow-hidden">
-      {/* Fade edges */}
       <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-32 z-10"
         style={{ background: "linear-gradient(to right, #f3f4f6, transparent)" }} />
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 z-10"
         style={{ background: "linear-gradient(to left, #f3f4f6, transparent)" }} />
 
-      <div
-        ref={trackRef}
-        className="flex py-2"
-        style={{ transform: `translateX(${offset}px)`, willChange: "transform", width: "max-content" }}
-      >
-        {doubled.map((item, i) => (
+      <div className={`flex py-2 ${animClass}`} style={{ width: "max-content", willChange: "transform" }}>
+        {tripled.map((item, i) => (
           <LogoCard key={`${item.id}-${i}`} item={item} idx={i % items.length} />
         ))}
       </div>
