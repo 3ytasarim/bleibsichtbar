@@ -16,9 +16,9 @@ function LogoCard({ item }: { item: MarqueeItem; idx?: number }) {
     >
       <div
         className="relative rounded-2xl transition-all duration-300
-          bg-[#eef1f6] border-2 border-[#dde2ec] shadow-sm p-5
+          bg-[#eef1f6] border-2 border-[#dde2ec] shadow-sm p-3
           group-hover:border-accent group-hover:shadow-[0_8px_32px_rgba(249,115,22,0.18)]
-          group-hover:-translate-y-2"
+          group-hover:-translate-y-2 overflow-hidden"
         style={{ height: 160 }}
       >
         {/* Accent top bar on hover */}
@@ -31,7 +31,7 @@ function LogoCard({ item }: { item: MarqueeItem; idx?: number }) {
           <img
             src={item.imageUrl}
             alt={item.name}
-            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-contain transition-transform duration-500 scale-110 group-hover:scale-125"
             style={{
               filter:
                 "drop-shadow(0 0 6px rgba(0,0,0,0.35)) drop-shadow(0 0 2px rgba(0,0,0,0.5))",
