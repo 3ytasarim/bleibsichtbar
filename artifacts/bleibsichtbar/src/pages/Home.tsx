@@ -799,7 +799,7 @@ export default function Home() {
                 className="relative select-none"
                 style={{ width: 700 }}
               >
-                {/* App content — clipped strictly inside phone screen area */}
+                {/* App content — clipped to phone screen, content rendered at 300×600 (original design size) then scaled */}
                 <div
                   style={{
                     position: "absolute",
@@ -813,7 +813,9 @@ export default function Home() {
                     zIndex: 20,
                   }}
                 >
-                  <SocialMediaPhone />
+                  <div style={{ width: 300, height: 600, transform: "scale(1.25)", transformOrigin: "top left" }}>
+                    <SocialMediaPhone />
+                  </div>
                 </div>
                 {/* Real hand + phone photo — screen blend makes black transparent */}
                 <img
