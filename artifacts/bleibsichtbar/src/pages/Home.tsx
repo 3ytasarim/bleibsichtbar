@@ -789,92 +789,65 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone 3D */}
-            <div className="flex justify-center lg:justify-center relative mt-4 sm:mt-0">
+            {/* Right — Phone */}
+            <div className="flex justify-center lg:justify-center relative h-[620px] sm:h-auto overflow-hidden sm:overflow-visible mt-12 sm:mt-0 -translate-x-6 sm:translate-x-0 pt-6 sm:pt-0">
               <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
+              <div className="scale-[0.62] sm:scale-90 lg:scale-100 origin-top overflow-visible"
+                style={{ transform: "rotate(-11deg) scale(0.9)", transformOrigin: "top center" }}>
+                <div className="relative overflow-visible" style={{ paddingBottom: 200 }}>
 
-              {/* 3D phone wrapper */}
-              <div style={{ perspective: "1400px", perspectiveOrigin: "50% 40%" }}>
-                <div style={{
-                  transform: "rotateY(-22deg) rotateX(6deg) rotateZ(1deg)",
-                  transformStyle: "preserve-3d",
-                  position: "relative",
-                  filter: "drop-shadow(-28px 40px 60px rgba(0,0,0,0.75))",
-                }}>
-                  {/* Main phone face */}
-                  <PhoneMockup>
+                  {/* Fingers — behind phone */}
+                  <svg
+                    width="310" height="300" viewBox="0 0 310 300"
+                    className="absolute z-0 pointer-events-none select-none"
+                    style={{ top: 500, left: -5, filter: "drop-shadow(0 -6px 16px rgba(0,0,0,0.35))" }}
+                  >
+                    <rect x="22"  y="0"  width="52" height="145" rx="26" fill="#F0B99A"/>
+                    <rect x="82"  y="0"  width="54" height="158" rx="27" fill="#F0B99A"/>
+                    <rect x="144" y="0"  width="52" height="148" rx="26" fill="#F0B99A"/>
+                    <rect x="204" y="12" width="46" height="118" rx="23" fill="#F0B99A"/>
+                    <rect x="29"  y="33" width="36" height="3"   rx="1.5" fill="#D9906A" opacity="0.55"/>
+                    <rect x="89"  y="27" width="38" height="3"   rx="1.5" fill="#D9906A" opacity="0.55"/>
+                    <rect x="151" y="32" width="36" height="3"   rx="1.5" fill="#D9906A" opacity="0.55"/>
+                    <rect x="210" y="43" width="30" height="3"   rx="1.5" fill="#D9906A" opacity="0.55"/>
+                    <rect x="5"   y="128" width="300" height="118" rx="44" fill="#F0B99A"/>
+                    <rect x="52"  y="215" width="206" height="85"  rx="35" fill="#F0B99A"/>
+                    <path d="M 55 157 Q 155 190 255 157" stroke="#D9906A" strokeWidth="2.5" fill="none" opacity="0.4"/>
+                  </svg>
+
+                  {/* Phone */}
+                  <PhoneMockup className="relative z-10 shadow-2xl shadow-black/50 border-gray-800">
                     <SocialMediaPhone />
                   </PhoneMockup>
 
-                  {/* Screen gloss overlay */}
-                  <div style={{
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: "2.8rem",
-                    background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 40%, transparent 65%)",
-                    pointerEvents: "none",
-                    zIndex: 50,
-                  }} />
-
-                  {/* Left edge — phone thickness */}
-                  <div style={{
-                    position: "absolute",
-                    top: "4%",
-                    left: -13,
-                    width: 13,
-                    height: "92%",
-                    background: "linear-gradient(to bottom, #2a2a3e 0%, #111122 40%, #0a0a18 100%)",
-                    transform: "rotateY(-90deg)",
-                    transformOrigin: "right center",
-                    borderRadius: "4px 0 0 4px",
-                  }} />
-
-                  {/* Bottom edge — phone thickness */}
-                  <div style={{
-                    position: "absolute",
-                    bottom: -10,
-                    left: "4%",
-                    width: "92%",
-                    height: 10,
-                    background: "linear-gradient(to right, #111122 0%, #1e1e2e 50%, #2a2a3e 100%)",
-                    transform: "rotateX(-90deg)",
-                    transformOrigin: "top center",
-                    borderRadius: "0 0 4px 4px",
-                  }} />
-
-                  {/* Floor reflection */}
-                  <div style={{
-                    position: "absolute",
-                    bottom: -80,
-                    left: "5%",
-                    width: "90%",
-                    height: 80,
-                    background: "linear-gradient(to bottom, rgba(255,255,255,0.06), transparent)",
-                    transform: "rotateX(-90deg) scaleY(-1)",
-                    transformOrigin: "top center",
-                    filter: "blur(4px)",
-                    pointerEvents: "none",
-                  }} />
+                  {/* Thumb — in front of phone frame */}
+                  <svg
+                    width="64" height="118" viewBox="0 0 64 118"
+                    className="absolute z-20 pointer-events-none select-none"
+                    style={{ left: -34, top: 315, filter: "drop-shadow(3px 0 8px rgba(0,0,0,0.22))" }}
+                  >
+                    <rect x="3" y="0" width="56" height="114" rx="28" fill="#F0B99A"/>
+                    <rect x="11" y="35" width="35" height="3" rx="1.5" fill="#D9906A" opacity="0.55"/>
+                  </svg>
                 </div>
               </div>
             </div>
           </div>
 
-        </div>
-
-        {/* Slide indicators — absolute, above scroll indicator */}
-        <div className="flex items-center justify-center space-x-3 absolute bottom-28 sm:bottom-32 left-1/2 -translate-x-1/2 z-20">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setSlide(i)}
-              className={`transition-all duration-500 rounded-full ${i === slide ? "w-8 h-2 bg-accent" : "w-2 h-2 bg-white/30 hover:bg-white/50"}`}
-            />
-          ))}
+          {/* Slide indicators */}
+          <div className="flex items-center justify-center space-x-3 mt-4 sm:mt-8">
+            {heroSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setSlide(i)}
+                className={`transition-all duration-500 rounded-full ${i === slide ? "w-8 h-2 bg-accent" : "w-2 h-2 bg-white/30 hover:bg-white/50"}`}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Scroll indicator — desktop only */}
-        <div className="hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 flex-col items-center gap-1.5 z-20">
+        <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
           <span className="text-white/80 text-[13px] font-semibold tracking-[0.25em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">Entdecken</span>
           <button
             onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
