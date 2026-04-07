@@ -848,7 +848,7 @@ export default function Home() {
 
         {/* Scroll indicator — desktop only */}
         <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
-          <span className="text-white/40 text-xs font-medium tracking-widest uppercase select-none">Entdecken</span>
+          <span className="text-white/80 text-[13px] font-semibold tracking-[0.25em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">Entdecken</span>
           <button
             onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
             className="relative flex items-center justify-center focus:outline-none group"

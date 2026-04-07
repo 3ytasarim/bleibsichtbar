@@ -81,7 +81,7 @@ export function Navbar() {
                   key={link.path}
                   href={link.path}
                   className={cn(
-                    "text-[13px] xl:text-sm font-medium transition-all hover:text-accent relative py-1 whitespace-nowrap",
+                    "text-[14px] xl:text-[15px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
                     location === link.path
                       ? "text-accent"
                       : isScrolled || !isHeroPage
@@ -104,18 +104,37 @@ export function Navbar() {
             <div className="hidden lg:flex items-center shrink-0">
               <Link href="/kontakt">
                 <motion.span
-                  whileHover={{ scale: 1.04, boxShadow: "0 8px 28px rgba(255,107,53,0.35)" }}
-                  whileTap={{ scale: 0.97 }}
-                  className="relative overflow-hidden px-6 py-2.5 rounded-full text-sm font-bold text-white inline-flex items-center"
-                  style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
+                  whileHover={{ scale: 1.06, boxShadow: "0 10px 34px rgba(255,107,53,0.5)" }}
+                  whileTap={{ scale: 0.96 }}
+                  animate={{
+                    x: [0, -4, 4, -4, 4, -2, 2, 0],
+                    transition: {
+                      duration: 0.55,
+                      repeat: Infinity,
+                      repeatDelay: 4,
+                      ease: "easeInOut",
+                    },
+                  }}
+                  className="relative overflow-hidden px-7 py-3 rounded-full text-[15px] font-bold text-white inline-flex items-center cursor-pointer"
+                  style={{
+                    background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)",
+                    boxShadow: "0 4px 18px rgba(255,107,53,0.4)",
+                  }}
                 >
+                  {/* Shimmer */}
                   <motion.span
-                    className="absolute inset-0 -translate-x-full skew-x-12"
-                    style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)" }}
-                    animate={{ x: ["−100%", "200%"] }}
-                    transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 1.6, ease: "easeInOut" }}
+                    className="absolute inset-0 skew-x-12"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)" }}
+                    animate={{ x: ["-100%", "220%"] }}
+                    transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" }}
                   />
-                  <span className="relative flex items-center gap-2">
+                  {/* Pulse ring */}
+                  <motion.span
+                    className="absolute inset-0 rounded-full border-2 border-orange-400/60"
+                    animate={{ scale: [1, 1.18], opacity: [0.7, 0] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: "easeOut" }}
+                  />
+                  <span className="relative z-10 flex items-center gap-2 tracking-wide">
                     Kontakt
                   </span>
                 </motion.span>
