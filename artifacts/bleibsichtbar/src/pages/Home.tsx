@@ -799,75 +799,59 @@ export default function Home() {
                   filter: "blur(52px)",
                 }} />
 
-              {/* SVG filter: erases white/checkered JPEG background */}
-              <svg style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}>
-                <defs>
-                  <filter id="bs-remove-bg" colorInterpolationFilters="sRGB">
-                    <feColorMatrix type="matrix"
-                      values="1 0 0 0 0
-                              0 1 0 0 0
-                              0 0 1 0 0
-                             -2 -2 -2 0 5"
-                    />
-                  </filter>
-                </defs>
-              </svg>
-
-              {/* Float container — overflow:hidden clips the 800px image */}
+              {/* Float container */}
               <motion.div
                 animate={{ y: [0, -18, 0] }}
                 transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
                 className="relative select-none"
-                style={{ width: 380, height: 600, overflow: "hidden" }}
+                style={{ width: 380, height: 600 }}
               >
-                {/* Hand+phone JPEG 800×600 — bg erased by SVG filter
-                    left=-194: shifts phone slightly left so right edge fits in container */}
-                <img
-                  src="/images/hand-mockup-new.png"
-                  alt=""
-                  aria-hidden
-                  draggable={false}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: -194,
-                    width: 800,
-                    height: 600,
-                    filter: "url(#bs-remove-bg)",
-                    zIndex: 1,
-                    pointerEvents: "none",
-                  }}
-                />
-
-                {/* App content — at phone screen polygon (800×600 scale, left=-194):
-                    TL(48,65) TR(235,138) BR(137,469) BL(-50,395) — 21° CW */}
+                {/* ── CSS Phone frame ── */}
                 <div
-                  aria-hidden
                   style={{
                     position: "absolute",
-                    inset: 0,
-                    clipPath: "polygon(48px 65px, 235px 138px, 137px 469px, -50px 395px)",
-                    zIndex: 2,
-                    pointerEvents: "none",
+                    top: 10,
+                    left: 30,
+                    width: 260,
+                    height: 525,
+                    borderRadius: 44,
+                    border: "9px solid #1a1a1c",
+                    background: "#f5f7fa",
+                    boxShadow: "0 0 0 1px rgba(255,255,255,0.10), 0 28px 72px rgba(0,0,0,0.75), 0 0 50px rgba(249,115,22,0.14)",
+                    overflow: "hidden",
+                    zIndex: 5,
+                    transform: "rotate(8deg)",
+                    transformOrigin: "50% 100%",
                   }}
                 >
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 65,
-                      left: 48,
-                      width: 201,
-                      height: 344,
-                      transform: "rotate(21deg)",
-                      transformOrigin: "0% 0%",
-                      overflow: "hidden",
-                      background: "#f5f7fa",
-                    }}
-                  >
-                    <div style={{ transform: "scale(0.718)", transformOrigin: "0% 0%", width: 280 }}>
-                      <SocialMediaPhone />
-                    </div>
+                  {/* Status bar notch */}
+                  <div style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: 28, zIndex: 20,
+                    background: "#1a1a1c", borderRadius: "36px 36px 0 0",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <div style={{ width: 80, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
                   </div>
+
+                  {/* Static app content */}
+                  <div style={{ width: "100%", paddingTop: 28 }}>
+                    <SocialMediaPhone />
+                  </div>
+
+                  {/* Home indicator */}
+                  <div style={{
+                    position: "absolute", bottom: 6, left: 0, right: 0,
+                    display: "flex", justifyContent: "center", zIndex: 20,
+                  }}>
+                    <div style={{ width: 80, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
+                  </div>
+
+                  {/* Glass reflection */}
+                  <div style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: "40%",
+                    background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%)",
+                    pointerEvents: "none", zIndex: 10,
+                  }} />
                 </div>
               </motion.div>
             </div>
