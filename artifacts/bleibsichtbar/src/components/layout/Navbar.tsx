@@ -57,7 +57,7 @@ export function Navbar() {
           isScrolled ? "py-2.5 shadow-sm" : "py-3.5"
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-6 sm:px-10 lg:px-14">
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
             {/* Logo — pinned left */}
             <Link href="/" className="flex items-center shrink-0 group">
