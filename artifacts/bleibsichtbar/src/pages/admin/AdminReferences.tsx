@@ -4,7 +4,7 @@ import { SimpleModal } from "@/components/admin/SimpleModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit2, Trash2, Check, X, Upload, Link as LinkIcon, ImagePlus } from "lucide-react";
+import { Plus, Edit2, Trash2, Check, X, Upload, Link as LinkIcon, ImagePlus, ChevronUp, ChevronDown } from "lucide-react";
 import { useGetReferences, useDeleteReference } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -95,6 +95,29 @@ export default function AdminReferences() {
     }
   };
 
+  const moveOrder = async (id: number, direction: "up" | "down") => {
+    const refs = [...(references as Reference[])].sort((a, b) => a.sortOrder - b.sortOrder);
+    const idx = refs.findIndex(r => r.id === id);
+    if (idx < 0) return;
+    const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= refs.length) return;
+    const a = refs[idx]!;
+    const b = refs[swapIdx]!;
+    await Promise.all([
+      fetch(`/api/references/${a.id}`, {
+        method: "PUT",
+        body: (() => { const f = new FormData(); f.append("clientName", a.clientName); f.append("company", a.company); f.append("sortOrder", String(b.sortOrder)); return f; })(),
+        credentials: "include",
+      }),
+      fetch(`/api/references/${b.id}`, {
+        method: "PUT",
+        body: (() => { const f = new FormData(); f.append("clientName", b.clientName); f.append("company", b.company); f.append("sortOrder", String(a.sortOrder)); return f; })(),
+        credentials: "include",
+      }),
+    ]);
+    queryClient.invalidateQueries({ queryKey: ["/api/references"] });
+  };
+
   const handleDelete = (id: number) => {
     if (!confirm("Referenz wirklich löschen?")) return;
     deleteMut.mutate({ id }, {
@@ -181,7 +204,26 @@ export default function AdminReferences() {
                         </a>
                       ) : ref.company}
                     </td>
-                    <td className="p-4 text-muted-foreground text-sm">{ref.sortOrder}</td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => moveOrder(ref.id, "up")}
+                          disabled={(references as Reference[]).sort((a,b)=>a.sortOrder-b.sortOrder)[0]?.id === ref.id}
+                          className="p-1 rounded hover:bg-gray-100 disabled:opacity-30 transition-colors"
+                          title="Nach oben"
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => moveOrder(ref.id, "down")}
+                          disabled={(references as Reference[]).sort((a,b)=>a.sortOrder-b.sortOrder).at(-1)?.id === ref.id}
+                          className="p-1 rounded hover:bg-gray-100 disabled:opacity-30 transition-colors"
+                          title="Nach unten"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
                     <td className="p-4 text-accent">{"★".repeat(ref.rating || 5)}</td>
                     <td className="p-4">
                       {ref.published ?

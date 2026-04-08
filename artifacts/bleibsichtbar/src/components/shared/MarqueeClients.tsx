@@ -8,50 +8,29 @@ interface MarqueeItem {
   sortOrder: number;
 }
 
-function LogoCard({ item }: { item: MarqueeItem; idx?: number }) {
+function LogoCard({ item }: { item: MarqueeItem }) {
   return (
     <div
-      className="group flex-shrink-0 mx-4 select-none cursor-default"
-      style={{ width: 260 }}
+      className="flex-shrink-0 mx-8 select-none cursor-default flex items-center justify-center"
+      style={{ width: 160, height: 72 }}
     >
-      <div
-        className="relative rounded-2xl transition-all duration-300
-          bg-[#eef1f6] border-2 border-[#dde2ec] shadow-sm p-2
-          group-hover:border-accent group-hover:shadow-[0_8px_32px_rgba(249,115,22,0.18)]
-          group-hover:-translate-y-2 overflow-hidden"
-        style={{ height: 170 }}
-      >
-        {/* Accent top bar on hover */}
-        <div
-          className="absolute top-0 left-4 right-4 h-0.5 rounded-full bg-accent
-            scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+      {item.imageUrl ? (
+        <img
+          src={item.imageUrl}
+          alt={item.name}
+          className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-400"
+          draggable={false}
         />
-
-        {item.imageUrl ? (
-          <img
-            src={item.imageUrl}
-            alt={item.name}
-            className="w-full h-full object-contain"
-            style={{
-              filter:
-                "drop-shadow(0 0 6px rgba(0,0,0,0.35)) drop-shadow(0 0 2px rgba(0,0,0,0.5))",
-            }}
-            draggable={false}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-[#0a1628] font-bold text-2xl tracking-wide">
-              {item.name.slice(0, 2).toUpperCase()}
-            </span>
-          </div>
-        )}
-      </div>
+      ) : (
+        <span className="text-gray-400 font-bold text-lg tracking-wide">
+          {item.name.slice(0, 2).toUpperCase()}
+        </span>
+      )}
     </div>
   );
 }
 
 function MarqueeTrack({ items, direction }: { items: MarqueeItem[]; direction: "left" | "right" }) {
-  // Triple the items so CSS -33.333% translate = exactly one set = seamless loop
   const tripled = [...items, ...items, ...items];
   const animClass = direction === "left" ? "animate-marquee-left" : "animate-marquee-right";
 
@@ -62,9 +41,9 @@ function MarqueeTrack({ items, direction }: { items: MarqueeItem[]; direction: "
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 z-10"
         style={{ background: "linear-gradient(to left, #f3f4f6, transparent)" }} />
 
-      <div className={`flex py-2 ${animClass}`} style={{ width: "max-content", willChange: "transform" }}>
+      <div className={`flex py-3 ${animClass}`} style={{ width: "max-content", willChange: "transform" }}>
         {tripled.map((item, i) => (
-          <LogoCard key={`${item.id}-${i}`} item={item} idx={i % items.length} />
+          <LogoCard key={`${item.id}-${i}`} item={item} />
         ))}
       </div>
     </div>
@@ -110,7 +89,6 @@ export function MarqueeClients() {
 
   return (
     <section className="py-24 overflow-hidden" style={{ background: "#f3f4f6" }}>
-      {/* Header */}
       <motion.div
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-14 text-center"
         initial={{ opacity: 0, y: 24 }}
@@ -133,7 +111,7 @@ export function MarqueeClients() {
       </motion.div>
 
       {items.length > 0 ? (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
           <MarqueeTrack direction="left" items={row1} />
           {row2.length > 1 && <MarqueeTrack direction="right" items={row2} />}
         </div>
@@ -141,7 +119,6 @@ export function MarqueeClients() {
         <p className="text-center text-gray-400 text-sm py-10">Kunden werden bald hinzugefügt.</p>
       )}
 
-      {/* Stats */}
       <motion.div
         className="max-w-3xl mx-auto mt-16 px-4 grid grid-cols-3 gap-3 sm:gap-5 text-center"
         initial={{ opacity: 0, y: 20 }}
