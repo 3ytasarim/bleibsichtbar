@@ -58,22 +58,22 @@ export function Navbar() {
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+            {/* Logo — pinned left */}
             <Link href="/" className="flex items-center shrink-0 group">
               <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
                 Bleibsichtbar
               </span>
             </Link>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6">
+            {/* Desktop Nav — truly centered in the full header */}
+            <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-7">
               {links.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   className={cn(
-                    "text-[15px] xl:text-[16px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
+                    "text-[16px] xl:text-[17px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
                     location === link.path
                       ? "text-accent"
                       : "text-foreground/80"
