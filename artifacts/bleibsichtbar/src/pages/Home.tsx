@@ -806,11 +806,8 @@ export default function Home() {
                 className="relative select-none"
                 style={{ width: 380, height: 600 }}
               >
-                {/* ── CSS Phone frame: z-index 5, properly clips content ── */}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                {/* ── CSS Phone frame ── */}
+                <div
                   style={{
                     position: "absolute",
                     top: 10,
@@ -836,19 +833,10 @@ export default function Home() {
                     <div style={{ width: 80, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
                   </div>
 
-                  {/* Scrolling app content */}
-                  <motion.div
-                    animate={{ y: [0, -200, -200, -90, 0] }}
-                    transition={{
-                      duration: 15,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      times: [0, 0.35, 0.6, 0.78, 1],
-                    }}
-                    style={{ width: "100%", paddingTop: 28 }}
-                  >
+                  {/* Static app content — no scroll */}
+                  <div style={{ width: "100%", paddingTop: 28 }}>
                     <SocialMediaPhone />
-                  </motion.div>
+                  </div>
 
                   {/* Home indicator */}
                   <div style={{
@@ -864,25 +852,7 @@ export default function Home() {
                     background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%)",
                     pointerEvents: "none", zIndex: 10,
                   }} />
-                </motion.div>
-
-                {/* ── Hand image: below + behind phone, same tilt ── */}
-                <img
-                  src="/images/hand-mockup.png"
-                  alt=""
-                  aria-hidden
-                  draggable={false}
-                  style={{
-                    position: "absolute",
-                    bottom: -40,
-                    right: -50,
-                    width: 380,
-                    height: "auto",
-                    zIndex: 3,
-                    pointerEvents: "none",
-                    filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.55))",
-                  }}
-                />
+                </div>
               </motion.div>
             </div>
           </div>
