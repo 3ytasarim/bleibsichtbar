@@ -11,18 +11,18 @@ interface MarqueeItem {
 function LogoCard({ item }: { item: MarqueeItem }) {
   return (
     <div
-      className="flex-shrink-0 mx-8 select-none cursor-default flex items-center justify-center"
-      style={{ width: 160, height: 72 }}
+      className="flex-shrink-0 mx-10 select-none cursor-default flex items-center justify-center"
+      style={{ width: 200, height: 110 }}
     >
       {item.imageUrl ? (
         <img
           src={item.imageUrl}
           alt={item.name}
-          className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-400"
+          className="max-w-full max-h-full object-contain transition-opacity duration-300 opacity-90 hover:opacity-100"
           draggable={false}
         />
       ) : (
-        <span className="text-gray-400 font-bold text-lg tracking-wide">
+        <span className="text-gray-500 font-bold text-xl tracking-wide">
           {item.name.slice(0, 2).toUpperCase()}
         </span>
       )}
