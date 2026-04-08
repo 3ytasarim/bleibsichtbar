@@ -789,15 +789,64 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone */}
-            <div className="flex justify-center lg:justify-center relative h-[480px] sm:h-auto overflow-hidden sm:overflow-visible mt-12 sm:mt-0 -translate-x-6 sm:translate-x-0 pt-6 sm:pt-0">
-              <div className="absolute inset-0 bg-accent/20 rounded-full blur-3xl scale-75" />
-              <div className="scale-[0.62] sm:scale-90 lg:scale-100 origin-top lg:mb-0"
-                style={{ transform: "rotate(-11deg) scale(0.9)", transformOrigin: "top center" }}>
-                <PhoneMockup className="relative shadow-2xl shadow-black/50 border-gray-800">
-                  <SocialMediaPhone />
-                </PhoneMockup>
-              </div>
+            {/* Right — Hand Mockup */}
+            <div className="flex justify-center lg:justify-end relative mt-8 sm:mt-0">
+              {/* Glow halo behind phone */}
+              <div className="absolute top-[8%] left-1/2 -translate-x-1/2 w-[280px] h-[380px] rounded-full blur-[80px] pointer-events-none"
+                style={{ background: "radial-gradient(ellipse, rgba(249,115,22,0.22) 0%, rgba(59,130,246,0.12) 60%, transparent 100%)" }} />
+
+              <motion.div
+                animate={{ y: [0, -18, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="relative select-none"
+                style={{ width: 340, height: 490 }}
+              >
+                {/* ── Phone screen content (behind the hand image) ── */}
+                <div
+                  className="absolute overflow-hidden"
+                  style={{
+                    top: "3.5%",
+                    left: "11.5%",
+                    width: "75%",
+                    height: "75%",
+                    borderRadius: "26px",
+                    transform: "rotate(8deg)",
+                    transformOrigin: "center top",
+                    zIndex: 1,
+                    background: "#f8fafc",
+                    boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)",
+                  }}
+                >
+                  <div className="w-full h-full overflow-hidden scale-[0.88] origin-top-left" style={{ width: "113.6%", height: "113.6%" }}>
+                    <SocialMediaPhone />
+                  </div>
+                </div>
+
+                {/* ── Hand + phone frame image on top ── */}
+                <img
+                  src="/images/hand-mockup.png"
+                  alt="Telefon Mockup"
+                  draggable={false}
+                  className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-2xl"
+                  style={{ zIndex: 10 }}
+                />
+
+                {/* Subtle reflection line on phone screen */}
+                <div
+                  className="absolute pointer-events-none"
+                  style={{
+                    top: "5%",
+                    left: "20%",
+                    width: "28%",
+                    height: "38%",
+                    background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%)",
+                    borderRadius: "12px",
+                    transform: "rotate(8deg)",
+                    transformOrigin: "center top",
+                    zIndex: 15,
+                  }}
+                />
+              </motion.div>
             </div>
           </div>
 
