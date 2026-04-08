@@ -788,61 +788,99 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Hand Mockup */}
+            {/* Right — Phone Mockup with Hand Decoration */}
             <div className="flex justify-center lg:justify-end relative mt-8 sm:mt-0">
-              {/* Glow halo behind phone */}
-              <div className="absolute top-[8%] left-1/2 -translate-x-1/2 w-[280px] h-[380px] rounded-full blur-[80px] pointer-events-none"
-                style={{ background: "radial-gradient(ellipse, rgba(249,115,22,0.22) 0%, rgba(59,130,246,0.12) 60%, transparent 100%)" }} />
 
+              {/* Glow orb behind phone */}
+              <div className="absolute pointer-events-none"
+                style={{
+                  top: "5%", left: "15%", width: "70%", height: "65%",
+                  background: "radial-gradient(ellipse, rgba(249,115,22,0.30) 0%, rgba(96,165,250,0.12) 55%, transparent 100%)",
+                  filter: "blur(52px)",
+                }} />
+
+              {/* Float container */}
               <motion.div
                 animate={{ y: [0, -18, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
                 className="relative select-none"
-                style={{ width: 340, height: 490 }}
+                style={{ width: 380, height: 600 }}
               >
-                {/* ── Phone screen content (behind the hand image) ── */}
-                <div
-                  className="absolute overflow-hidden"
+                {/* ── CSS Phone frame: z-index 5, properly clips content ── */}
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                   style={{
-                    top: "3.5%",
-                    left: "11.5%",
-                    width: "75%",
-                    height: "75%",
-                    borderRadius: "26px",
+                    position: "absolute",
+                    top: 10,
+                    left: 30,
+                    width: 260,
+                    height: 525,
+                    borderRadius: 44,
+                    border: "9px solid #1a1a1c",
+                    background: "#f5f7fa",
+                    boxShadow: "0 0 0 1px rgba(255,255,255,0.10), 0 28px 72px rgba(0,0,0,0.75), 0 0 50px rgba(249,115,22,0.14)",
+                    overflow: "hidden",
+                    zIndex: 5,
                     transform: "rotate(8deg)",
-                    transformOrigin: "center top",
-                    zIndex: 1,
-                    background: "#f8fafc",
-                    boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.06)",
+                    transformOrigin: "50% 100%",
                   }}
                 >
-                  <div className="w-full h-full overflow-hidden scale-[0.88] origin-top-left" style={{ width: "113.6%", height: "113.6%" }}>
-                    <SocialMediaPhone />
+                  {/* Status bar notch */}
+                  <div style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: 28, zIndex: 20,
+                    background: "#1a1a1c", borderRadius: "36px 36px 0 0",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <div style={{ width: 80, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
                   </div>
-                </div>
 
-                {/* ── Hand + phone frame image on top ── */}
+                  {/* Scrolling app content */}
+                  <motion.div
+                    animate={{ y: [0, -200, -200, -90, 0] }}
+                    transition={{
+                      duration: 15,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      times: [0, 0.35, 0.6, 0.78, 1],
+                    }}
+                    style={{ width: "100%", paddingTop: 28 }}
+                  >
+                    <SocialMediaPhone />
+                  </motion.div>
+
+                  {/* Home indicator */}
+                  <div style={{
+                    position: "absolute", bottom: 6, left: 0, right: 0,
+                    display: "flex", justifyContent: "center", zIndex: 20,
+                  }}>
+                    <div style={{ width: 80, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
+                  </div>
+
+                  {/* Glass reflection */}
+                  <div style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: "40%",
+                    background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%)",
+                    pointerEvents: "none", zIndex: 10,
+                  }} />
+                </motion.div>
+
+                {/* ── Hand image: below + behind phone, same tilt ── */}
                 <img
                   src="/images/hand-mockup.png"
-                  alt="Telefon Mockup"
+                  alt=""
+                  aria-hidden
                   draggable={false}
-                  className="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-2xl"
-                  style={{ zIndex: 10 }}
-                />
-
-                {/* Subtle reflection line on phone screen */}
-                <div
-                  className="absolute pointer-events-none"
                   style={{
-                    top: "5%",
-                    left: "20%",
-                    width: "28%",
-                    height: "38%",
-                    background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%)",
-                    borderRadius: "12px",
-                    transform: "rotate(8deg)",
-                    transformOrigin: "center top",
-                    zIndex: 15,
+                    position: "absolute",
+                    bottom: -40,
+                    right: -50,
+                    width: 380,
+                    height: "auto",
+                    zIndex: 3,
+                    pointerEvents: "none",
+                    filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.55))",
                   }}
                 />
               </motion.div>
