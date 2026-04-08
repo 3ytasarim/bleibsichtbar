@@ -48,45 +48,35 @@ export function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [modalOpen]);
 
-  const isHeroPage = location === "/";
-
   return (
     <>
       <header
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-          isScrolled
-            ? "bg-white/95 backdrop-blur-xl border-b border-gray-100 py-3 shadow-sm"
-            : isHeroPage
-            ? "bg-transparent border-transparent py-6"
-            : "bg-white/95 backdrop-blur-xl border-b border-gray-100 py-4"
+          "bg-white/98 backdrop-blur-xl border-b border-gray-100",
+          isScrolled ? "py-2.5 shadow-sm" : "py-3.5"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center shrink-0 group">
-              <span className={cn(
-                "font-display font-black text-[22px] tracking-[0.18em] uppercase transition-colors",
-                isScrolled || !isHeroPage ? "text-foreground" : "text-white"
-              )}>
+              <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
                 Bleibsichtbar
               </span>
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center space-x-5 xl:space-x-7">
+            <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6">
               {links.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   className={cn(
-                    "text-[14px] xl:text-[15px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
+                    "text-[15px] xl:text-[16px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
                     location === link.path
                       ? "text-accent"
-                      : isScrolled || !isHeroPage
-                      ? "text-foreground/80"
-                      : "text-white/90"
+                      : "text-foreground/80"
                   )}
                 >
                   {link.name}
@@ -143,10 +133,7 @@ export function Navbar() {
 
             {/* Mobile menu toggle */}
             <button
-              className={cn(
-                "lg:hidden p-2 rounded-lg transition-colors",
-                isScrolled || !isHeroPage ? "text-foreground" : "text-white"
-              )}
+              className="lg:hidden p-2 rounded-lg transition-colors text-foreground"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Menü öffnen"
             >
