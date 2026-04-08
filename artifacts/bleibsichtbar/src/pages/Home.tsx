@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
-import { PhoneMockup } from "@/components/shared/PhoneMockup";
 import { MarqueeClients } from "@/components/shared/MarqueeClients";
 import { StarfieldOverlay } from "@/components/shared/StarfieldOverlay";
 import { useGetProjects } from "@workspace/api-client-react";
