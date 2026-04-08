@@ -67,7 +67,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop Nav — truly centered in the full header */}
-            <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-7">
+            <nav className="hidden lg:flex items-center justify-center gap-6 2xl:gap-9">
               {links.map((link) => (
                 <Link
                   key={link.path}
