@@ -937,9 +937,9 @@ export default function Home() {
               <div
                 className="relative select-none"
                 style={{
-                  width: 440,
-                  height: 560,
-                  perspective: "1200px",
+                  width: 500,
+                  height: 640,
+                  perspective: "1400px",
                   perspectiveOrigin: "50% 40%",
                 }}
               >
@@ -952,39 +952,47 @@ export default function Home() {
                     position: "absolute",
                     top: -30,
                     left: 0,
-                    width: 218,
-                    height: 442,
+                    width: 252,
+                    height: 535,
                     zIndex: 2,
                     rotateY: 50,
                     rotateZ: -22,
                     scale: 1.0,
                   }}
                 >
+                  {/* Outer titanium frame */}
                   <div style={{
                     width: "100%", height: "100%",
-                    borderRadius: 42,
-                    border: "8px solid #2a2a2e",
+                    borderRadius: 50,
+                    border: "13px solid #4a4a54",
                     background: "#06080f",
-                    overflow: "hidden",
-                    boxShadow: "18px 28px 90px rgba(0,0,0,0.96), 0 0 30px rgba(34,197,94,0.05)",
+                    boxShadow: "18px 28px 90px rgba(0,0,0,0.96), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 30px rgba(34,197,94,0.05)",
                     filter: "brightness(0.65)",
                     position: "relative",
+                    overflow: "hidden",
                   }}>
+                    {/* Inner bezel — thin black edge like iPhone */}
                     <div style={{
-                      position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
-                      background: "#0a0a0f", borderRadius: "34px 34px 0 0",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      <div style={{ width: 56, height: 8, background: "#111", borderRadius: 5 }} />
-                    </div>
+                      position: "absolute", inset: 0,
+                      borderRadius: 38,
+                      border: "2px solid #0a0a0f",
+                      zIndex: 30, pointerEvents: "none",
+                    }} />
+                    {/* Dynamic Island */}
+                    <div style={{
+                      position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)",
+                      width: 80, height: 22,
+                      background: "#000", borderRadius: 14, zIndex: 25,
+                    }} />
                     <div style={{ width: "100%", height: "100%" }}>
                       <VoiceAgentPhone />
                     </div>
+                    {/* Home indicator */}
                     <div style={{
-                      position: "absolute", bottom: 5, left: 0, right: 0,
-                      display: "flex", justifyContent: "center", zIndex: 20,
+                      position: "absolute", bottom: 6, left: 0, right: 0,
+                      display: "flex", justifyContent: "center", zIndex: 25,
                     }}>
-                      <div style={{ width: 56, height: 3, background: "rgba(255,255,255,0.12)", borderRadius: 2 }} />
+                      <div style={{ width: 60, height: 4, background: "rgba(255,255,255,0.18)", borderRadius: 3 }} />
                     </div>
                   </div>
                 </motion.div>
@@ -995,43 +1003,52 @@ export default function Home() {
                   transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
                   style={{
                     position: "absolute",
-                    top: 95,
-                    left: 165,
-                    width: 218,
-                    height: 442,
+                    top: 110,
+                    left: 185,
+                    width: 252,
+                    height: 535,
                     zIndex: 5,
                     rotateY: 14,
                     rotateZ: 6,
                   }}
                 >
+                  {/* Outer titanium frame */}
                   <div style={{
                     width: "100%", height: "100%",
-                    borderRadius: 42,
-                    border: "8px solid #1a1a1c",
+                    borderRadius: 50,
+                    border: "13px solid #3a3a3e",
                     background: "#f5f7fa",
-                    overflow: "hidden",
-                    boxShadow: "20px 32px 100px rgba(0,0,0,0.80), 0 0 50px rgba(249,115,22,0.16), 0 0 0 1px rgba(255,255,255,0.12)",
+                    boxShadow: "20px 40px 110px rgba(0,0,0,0.82), inset 0 1px 0 rgba(255,255,255,0.22), 0 0 50px rgba(249,115,22,0.16)",
                     position: "relative",
+                    overflow: "hidden",
                   }}>
+                    {/* Inner bezel */}
                     <div style={{
-                      position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
-                      background: "#1a1a1c", borderRadius: "34px 34px 0 0",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      <div style={{ width: 70, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
-                    </div>
-                    <div style={{ width: "100%", paddingTop: 26 }}>
+                      position: "absolute", inset: 0,
+                      borderRadius: 38,
+                      border: "2px solid rgba(0,0,0,0.15)",
+                      zIndex: 30, pointerEvents: "none",
+                    }} />
+                    {/* Dynamic Island */}
+                    <div style={{
+                      position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)",
+                      width: 88, height: 24,
+                      background: "#0a0a0a", borderRadius: 14, zIndex: 25,
+                    }} />
+                    <div style={{ width: "100%", paddingTop: 38 }}>
                       <SocialMediaPhone />
                     </div>
+                    {/* Home indicator */}
                     <div style={{
-                      position: "absolute", bottom: 5, left: 0, right: 0,
-                      display: "flex", justifyContent: "center", zIndex: 20,
+                      position: "absolute", bottom: 7, left: 0, right: 0,
+                      display: "flex", justifyContent: "center", zIndex: 25,
                     }}>
-                      <div style={{ width: 70, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
+                      <div style={{ width: 72, height: 5, background: "#1a1a1c", borderRadius: 3 }} />
                     </div>
+                    {/* Glass sheen */}
                     <div style={{
                       position: "absolute", top: 0, left: 0, right: 0, height: "35%",
-                      background: "linear-gradient(170deg, rgba(255,255,255,0.08) 0%, transparent 100%)",
+                      background: "linear-gradient(170deg, rgba(255,255,255,0.09) 0%, transparent 100%)",
                       pointerEvents: "none", zIndex: 10,
                     }} />
                   </div>
