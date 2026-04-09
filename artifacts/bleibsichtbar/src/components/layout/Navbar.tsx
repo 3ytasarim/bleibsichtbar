@@ -61,7 +61,7 @@ export function Navbar() {
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
 
             {/* Logo — with left margin to push it toward center */}
-            <Link href="/" className="flex items-center shrink-0 group lg:ml-16 xl:ml-24">
+            <Link href="/" className="flex items-center shrink-0 group lg:ml-28 xl:ml-40">
               <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
                 Bleibsichtbar
               </span>
