@@ -936,25 +936,25 @@ export default function Home() {
                 }} />
 
               {/* Float container — wider to hold 2 phones */}
-              <div className="relative select-none" style={{ width: 490, height: 620 }}>
+              <div className="relative select-none" style={{ width: 470, height: 580 }}>
 
-                {/* ── LEFT phone: Voice Agent (behind) ── */}
+                {/* ── LEFT phone: Voice Agent (behind, tilted CCW like reference) ── */}
                 <motion.div
-                  animate={{ y: [0, -14, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                  animate={{ y: [0, -13, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
                   style={{
                     position: "absolute",
-                    top: 60,
+                    top: 20,
                     left: 0,
                     width: 215,
                     height: 435,
                     borderRadius: 40,
                     border: "8px solid #1c1c1e",
                     background: "#06080f",
-                    boxShadow: "0 0 0 1px rgba(255,255,255,0.06), 0 24px 60px rgba(0,0,0,0.85), 0 0 40px rgba(34,197,94,0.08)",
+                    boxShadow: "0 0 0 1px rgba(255,255,255,0.06), 0 32px 70px rgba(0,0,0,0.90), 0 0 40px rgba(34,197,94,0.08)",
                     overflow: "hidden",
                     zIndex: 2,
-                    transform: "rotate(-14deg)",
+                    transform: "rotate(-16deg)",
                     transformOrigin: "50% 50%",
                   }}
                 >
@@ -978,43 +978,43 @@ export default function Home() {
                   </div>
                 </motion.div>
 
-                {/* ── RIGHT phone: Social Media (front) ── */}
+                {/* ── RIGHT phone: Social Media (front, tilted CW like reference) ── */}
                 <motion.div
-                  animate={{ y: [0, -18, 0] }}
+                  animate={{ y: [0, -17, 0] }}
                   transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
                   style={{
                     position: "absolute",
-                    top: 10,
+                    top: 90,
                     right: 0,
-                    width: 245,
-                    height: 498,
-                    borderRadius: 44,
-                    border: "9px solid #1a1a1c",
+                    width: 215,
+                    height: 435,
+                    borderRadius: 40,
+                    border: "8px solid #1a1a1c",
                     background: "#f5f7fa",
-                    boxShadow: "0 0 0 1px rgba(255,255,255,0.10), 0 28px 72px rgba(0,0,0,0.75), 0 0 50px rgba(249,115,22,0.16)",
+                    boxShadow: "0 0 0 1px rgba(255,255,255,0.12), 0 32px 70px rgba(0,0,0,0.80), 0 0 50px rgba(249,115,22,0.16)",
                     overflow: "hidden",
                     zIndex: 5,
-                    transform: "rotate(7deg)",
-                    transformOrigin: "50% 100%",
+                    transform: "rotate(14deg)",
+                    transformOrigin: "50% 50%",
                   }}
                 >
                   {/* Status bar notch */}
                   <div style={{
-                    position: "absolute", top: 0, left: 0, right: 0, height: 28, zIndex: 20,
-                    background: "#1a1a1c", borderRadius: "36px 36px 0 0",
+                    position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
+                    background: "#1a1a1c", borderRadius: "32px 32px 0 0",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <div style={{ width: 80, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
+                    <div style={{ width: 60, height: 8, background: "#0a0a0a", borderRadius: 5 }} />
                   </div>
-                  <div style={{ width: "100%", paddingTop: 28 }}>
+                  <div style={{ width: "100%", paddingTop: 26 }}>
                     <SocialMediaPhone />
                   </div>
                   {/* Home indicator */}
                   <div style={{
-                    position: "absolute", bottom: 6, left: 0, right: 0,
+                    position: "absolute", bottom: 5, left: 0, right: 0,
                     display: "flex", justifyContent: "center", zIndex: 20,
                   }}>
-                    <div style={{ width: 80, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
+                    <div style={{ width: 60, height: 3, background: "#1a1a1c", borderRadius: 2 }} />
                   </div>
                   {/* Glass reflection */}
                   <div style={{
