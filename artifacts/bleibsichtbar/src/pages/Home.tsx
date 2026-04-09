@@ -950,13 +950,13 @@ export default function Home() {
                   transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
                   style={{
                     position: "absolute",
-                    top: 0,
+                    top: -30,
                     left: 0,
                     width: 218,
                     height: 442,
                     zIndex: 2,
-                    rotateY: 16,
-                    rotateZ: -11,
+                    rotateY: 26,
+                    rotateZ: -17,
                     scale: 0.90,
                   }}
                 >
