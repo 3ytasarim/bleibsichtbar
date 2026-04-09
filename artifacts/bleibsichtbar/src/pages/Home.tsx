@@ -935,16 +935,16 @@ export default function Home() {
                   filter: "blur(44px)",
                 }} />
 
-              {/* Float container — wider to hold 2 phones */}
-              <div className="relative select-none" style={{ width: 470, height: 580 }}>
+              {/* Float container — overlapping 2-phone layout like reference */}
+              <div className="relative select-none" style={{ width: 380, height: 580 }}>
 
-                {/* ── LEFT phone: Voice Agent (behind, tilted CCW like reference) ── */}
+                {/* ── LEFT phone: Voice Agent (behind, upper-left, tilted CCW) ── */}
                 <motion.div
                   animate={{ y: [0, -13, 0] }}
                   transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
                   style={{
                     position: "absolute",
-                    top: 20,
+                    top: 0,
                     left: 0,
                     width: 215,
                     height: 435,
@@ -978,14 +978,14 @@ export default function Home() {
                   </div>
                 </motion.div>
 
-                {/* ── RIGHT phone: Social Media (front, tilted CW like reference) ── */}
+                {/* ── RIGHT phone: Social Media (front, lower-right, overlapping left, tilted CW) ── */}
                 <motion.div
                   animate={{ y: [0, -17, 0] }}
                   transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
                   style={{
                     position: "absolute",
-                    top: 90,
-                    right: 0,
+                    top: 100,
+                    left: 120,
                     width: 215,
                     height: 435,
                     borderRadius: 40,
