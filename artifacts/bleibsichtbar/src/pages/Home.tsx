@@ -918,110 +918,126 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right — Phone Mockup with Hand Decoration */}
-            <div className="flex justify-center lg:justify-end relative mt-8 sm:mt-0">
+            {/* Right — 3D Phone Composition */}
+            <div className="flex justify-center lg:justify-center relative mt-8 sm:mt-0">
 
-              {/* Glow orbs — one per phone */}
-              <div className="absolute pointer-events-none"
+              {/* Ambient glow — green left, orange right */}
+              <div className="absolute pointer-events-none" style={{
+                top: "5%", left: "0%", width: "55%", height: "70%",
+                background: "radial-gradient(ellipse, rgba(34,197,94,0.16) 0%, transparent 65%)",
+                filter: "blur(48px)",
+              }} />
+              <div className="absolute pointer-events-none" style={{
+                top: "15%", right: "0%", width: "55%", height: "70%",
+                background: "radial-gradient(ellipse, rgba(249,115,22,0.24) 0%, rgba(96,165,250,0.08) 55%, transparent 100%)",
+                filter: "blur(48px)",
+              }} />
+
+              {/* ── 3D Perspective Stage ── */}
+              <div
+                className="relative select-none"
                 style={{
-                  top: "10%", left: "2%", width: "45%", height: "60%",
-                  background: "radial-gradient(ellipse, rgba(34,197,94,0.18) 0%, transparent 70%)",
-                  filter: "blur(40px)",
-                }} />
-              <div className="absolute pointer-events-none"
-                style={{
-                  top: "5%", right: "2%", width: "50%", height: "65%",
-                  background: "radial-gradient(ellipse, rgba(249,115,22,0.28) 0%, rgba(96,165,250,0.10) 55%, transparent 100%)",
-                  filter: "blur(44px)",
-                }} />
+                  width: 440,
+                  height: 560,
+                  perspective: "1200px",
+                  perspectiveOrigin: "50% 40%",
+                }}
+              >
 
-              {/* Float container — overlapping 2-phone layout like reference */}
-              <div className="relative select-none" style={{ width: 380, height: 580 }}>
-
-                {/* ── LEFT phone: Voice Agent (behind, upper-left, tilted CCW) ── */}
+                {/* BACK phone: Voice Agent — tilted right, dimmed, behind */}
                 <motion.div
-                  animate={{ y: [0, -13, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+                  animate={{ y: [0, -12, 0] }}
+                  transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
                   style={{
                     position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: 215,
-                    height: 435,
-                    borderRadius: 40,
-                    border: "8px solid #1c1c1e",
-                    background: "#06080f",
-                    boxShadow: "0 0 0 1px rgba(255,255,255,0.06), 0 32px 70px rgba(0,0,0,0.90), 0 0 40px rgba(34,197,94,0.08)",
-                    overflow: "hidden",
+                    top: 55,
+                    left: 175,
+                    width: 218,
+                    height: 442,
                     zIndex: 2,
-                    transform: "rotate(-16deg)",
-                    transformOrigin: "50% 50%",
+                    rotateY: 18,
+                    rotateZ: 4,
+                    scale: 0.94,
                   }}
                 >
-                  {/* Notch */}
                   <div style={{
-                    position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
-                    background: "#0a0a0f", borderRadius: "32px 32px 0 0",
-                    display: "flex", alignItems: "center", justifyContent: "center",
+                    width: "100%", height: "100%",
+                    borderRadius: 42,
+                    border: "8px solid #2a2a2e",
+                    background: "#06080f",
+                    overflow: "hidden",
+                    boxShadow: "12px 24px 80px rgba(0,0,0,0.95), 0 0 30px rgba(34,197,94,0.06)",
+                    filter: "brightness(0.72)",
+                    position: "relative",
                   }}>
-                    <div style={{ width: 60, height: 8, background: "#111", borderRadius: 5 }} />
-                  </div>
-                  <div style={{ width: "100%", height: "100%" }}>
-                    <VoiceAgentPhone />
-                  </div>
-                  {/* Home indicator */}
-                  <div style={{
-                    position: "absolute", bottom: 5, left: 0, right: 0,
-                    display: "flex", justifyContent: "center", zIndex: 20,
-                  }}>
-                    <div style={{ width: 60, height: 3, background: "rgba(255,255,255,0.2)", borderRadius: 2 }} />
+                    <div style={{
+                      position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
+                      background: "#0a0a0f", borderRadius: "34px 34px 0 0",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      <div style={{ width: 56, height: 8, background: "#111", borderRadius: 5 }} />
+                    </div>
+                    <div style={{ width: "100%", height: "100%" }}>
+                      <VoiceAgentPhone />
+                    </div>
+                    <div style={{
+                      position: "absolute", bottom: 5, left: 0, right: 0,
+                      display: "flex", justifyContent: "center", zIndex: 20,
+                    }}>
+                      <div style={{ width: 56, height: 3, background: "rgba(255,255,255,0.15)", borderRadius: 2 }} />
+                    </div>
                   </div>
                 </motion.div>
 
-                {/* ── RIGHT phone: Social Media (front, lower-right, overlapping left, tilted CW) ── */}
+                {/* FRONT phone: Social Media — tilted left, bright, in front */}
                 <motion.div
-                  animate={{ y: [0, -17, 0] }}
-                  transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+                  animate={{ y: [0, -16, 0] }}
+                  transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
                   style={{
                     position: "absolute",
-                    top: 100,
-                    left: 120,
-                    width: 215,
-                    height: 435,
-                    borderRadius: 40,
-                    border: "8px solid #1a1a1c",
-                    background: "#f5f7fa",
-                    boxShadow: "0 0 0 1px rgba(255,255,255,0.12), 0 32px 70px rgba(0,0,0,0.80), 0 0 50px rgba(249,115,22,0.16)",
-                    overflow: "hidden",
+                    top: 15,
+                    left: 10,
+                    width: 218,
+                    height: 442,
                     zIndex: 5,
-                    transform: "rotate(14deg)",
-                    transformOrigin: "50% 50%",
+                    rotateY: -18,
+                    rotateZ: -4,
                   }}
                 >
-                  {/* Status bar notch */}
                   <div style={{
-                    position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
-                    background: "#1a1a1c", borderRadius: "32px 32px 0 0",
-                    display: "flex", alignItems: "center", justifyContent: "center",
+                    width: "100%", height: "100%",
+                    borderRadius: 42,
+                    border: "8px solid #1a1a1c",
+                    background: "#f5f7fa",
+                    overflow: "hidden",
+                    boxShadow: "-12px 28px 90px rgba(0,0,0,0.75), 0 0 60px rgba(249,115,22,0.18), 0 0 0 1px rgba(255,255,255,0.12)",
+                    position: "relative",
                   }}>
-                    <div style={{ width: 60, height: 8, background: "#0a0a0a", borderRadius: 5 }} />
+                    {/* Notch */}
+                    <div style={{
+                      position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
+                      background: "#1a1a1c", borderRadius: "34px 34px 0 0",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      <div style={{ width: 70, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
+                    </div>
+                    <div style={{ width: "100%", paddingTop: 26 }}>
+                      <SocialMediaPhone />
+                    </div>
+                    {/* Home indicator */}
+                    <div style={{
+                      position: "absolute", bottom: 5, left: 0, right: 0,
+                      display: "flex", justifyContent: "center", zIndex: 20,
+                    }}>
+                      <div style={{ width: 70, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
+                    </div>
+                    {/* Glass sheen */}
+                    <div style={{
+                      position: "absolute", top: 0, left: 0, right: 0, height: "35%",
+                      background: "linear-gradient(170deg, rgba(255,255,255,0.09) 0%, transparent 100%)",
+                      pointerEvents: "none", zIndex: 10,
+                    }} />
                   </div>
-                  <div style={{ width: "100%", paddingTop: 26 }}>
-                    <SocialMediaPhone />
-                  </div>
-                  {/* Home indicator */}
-                  <div style={{
-                    position: "absolute", bottom: 5, left: 0, right: 0,
-                    display: "flex", justifyContent: "center", zIndex: 20,
-                  }}>
-                    <div style={{ width: 60, height: 3, background: "#1a1a1c", borderRadius: 2 }} />
-                  </div>
-                  {/* Glass reflection */}
-                  <div style={{
-                    position: "absolute", top: 0, left: 0, right: 0, height: "40%",
-                    background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%)",
-                    pointerEvents: "none", zIndex: 10,
-                  }} />
                 </motion.div>
 
               </div>
