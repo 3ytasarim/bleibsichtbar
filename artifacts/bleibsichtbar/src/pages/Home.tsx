@@ -4,7 +4,8 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   ArrowRight, BarChart3, Users, Zap, CheckCircle2,
   Heart, MessageCircle, Share2, Bookmark, TrendingUp,
-  Monitor, Brain, Target, Clock, ChevronRight, ChevronLeft, Globe, Star
+  Monitor, Brain, Target, Clock, ChevronRight, ChevronLeft, Globe, Star,
+  Phone, PhoneOff, Mic
 } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,135 @@ function LikeNotifications() {
           </motion.div>
         ))}
       </AnimatePresence>
+    </div>
+  );
+}
+
+// ─── Voice Agent Phone ────────────────────────────────────────────────────────
+function SoundWaveBars() {
+  const heights = [4, 8, 14, 20, 14, 20, 14, 8, 4];
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 3, height: 28 }}>
+      {heights.map((h, i) => (
+        <motion.div
+          key={i}
+          animate={{ scaleY: [1, 1.8, 0.6, 1.4, 1] }}
+          transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
+          style={{
+            width: 3, height: h, borderRadius: 2,
+            background: "rgba(34,197,94,0.85)",
+            transformOrigin: "center",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function VoiceAgentPhone() {
+  return (
+    <div style={{
+      width: "100%", height: "100%",
+      background: "linear-gradient(170deg, #06080f 0%, #0c1020 60%, #060812 100%)",
+      display: "flex", flexDirection: "column", alignItems: "center",
+      paddingTop: 36, paddingBottom: 20,
+      position: "relative", overflow: "hidden",
+    }}>
+      {/* Background ambient glow */}
+      <div style={{
+        position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)",
+        width: 200, height: 200, borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)",
+        filter: "blur(24px)", pointerEvents: "none",
+      }} />
+
+      {/* Incoming call label */}
+      <div style={{
+        color: "rgba(255,255,255,0.40)", fontSize: 9, letterSpacing: 1.5,
+        fontWeight: 600, textTransform: "uppercase", marginBottom: 8,
+      }}>
+        Eingehender Anruf
+      </div>
+
+      {/* Pulsing rings + Avatar */}
+      <div style={{ position: "relative", width: 80, height: 80, marginBottom: 14 }}>
+        {[0, 1, 2].map(i => (
+          <motion.div key={i}
+            animate={{ scale: [1, 2.4], opacity: [0.55, 0] }}
+            transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.7, ease: "easeOut" }}
+            style={{
+              position: "absolute", inset: 0, borderRadius: "50%",
+              border: "1.5px solid rgba(34,197,94,0.6)",
+            }}
+          />
+        ))}
+        {/* Avatar */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "50%",
+          background: "linear-gradient(135deg, #f97316 0%, #ef4444 100%)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 1, boxShadow: "0 0 24px rgba(249,115,22,0.45)",
+        }}>
+          <span style={{ fontSize: 20, fontWeight: 800, color: "white", letterSpacing: -0.5 }}>KI</span>
+        </div>
+      </div>
+
+      {/* Name */}
+      <div style={{ color: "white", fontSize: 16, fontWeight: 700, marginBottom: 3 }}>
+        Voice Agent
+      </div>
+      <div style={{ color: "rgba(255,255,255,0.40)", fontSize: 10, marginBottom: 14 }}>
+        KI Assistent • Bleibsichtbar
+      </div>
+
+      {/* Sound wave */}
+      <SoundWaveBars />
+
+      {/* Call duration */}
+      <motion.div
+        animate={{ opacity: [1, 0.3, 1] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        style={{ color: "rgba(34,197,94,0.8)", fontSize: 10, fontWeight: 600, marginTop: 8, letterSpacing: 0.5 }}
+      >
+        Verbinde…
+      </motion.div>
+
+      {/* Mic indicator */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 6, marginTop: 10,
+        background: "rgba(255,255,255,0.06)", borderRadius: 20,
+        padding: "5px 12px",
+      }}>
+        <motion.div
+          animate={{ opacity: [1, 0.3, 1] }}
+          transition={{ duration: 0.8, repeat: Infinity }}
+          style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }}
+        />
+        <Mic size={10} color="rgba(255,255,255,0.5)" />
+        <span style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>KI spricht...</span>
+      </div>
+
+      {/* Accept / Decline buttons */}
+      <div style={{ display: "flex", gap: 24, marginTop: "auto", paddingTop: 16 }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: "50%", background: "#ef4444",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: "0 4px 16px rgba(239,68,68,0.45)",
+        }}>
+          <PhoneOff size={20} color="white" />
+        </div>
+        <motion.div
+          animate={{ scale: [1, 1.08, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            width: 48, height: 48, borderRadius: "50%", background: "#22c55e",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: "0 4px 20px rgba(34,197,94,0.55)",
+          }}
+        >
+          <Phone size={20} color="white" />
+        </motion.div>
+      </div>
     </div>
   );
 }
@@ -791,36 +921,80 @@ export default function Home() {
             {/* Right — Phone Mockup with Hand Decoration */}
             <div className="flex justify-center lg:justify-end relative mt-8 sm:mt-0">
 
-              {/* Glow orb behind phone */}
+              {/* Glow orbs — one per phone */}
               <div className="absolute pointer-events-none"
                 style={{
-                  top: "5%", left: "15%", width: "70%", height: "65%",
-                  background: "radial-gradient(ellipse, rgba(249,115,22,0.30) 0%, rgba(96,165,250,0.12) 55%, transparent 100%)",
-                  filter: "blur(52px)",
+                  top: "10%", left: "2%", width: "45%", height: "60%",
+                  background: "radial-gradient(ellipse, rgba(34,197,94,0.18) 0%, transparent 70%)",
+                  filter: "blur(40px)",
+                }} />
+              <div className="absolute pointer-events-none"
+                style={{
+                  top: "5%", right: "2%", width: "50%", height: "65%",
+                  background: "radial-gradient(ellipse, rgba(249,115,22,0.28) 0%, rgba(96,165,250,0.10) 55%, transparent 100%)",
+                  filter: "blur(44px)",
                 }} />
 
-              {/* Float container */}
-              <motion.div
-                animate={{ y: [0, -18, 0] }}
-                transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-                className="relative select-none"
-                style={{ width: 380, height: 600 }}
-              >
-                {/* ── CSS Phone frame ── */}
-                <div
+              {/* Float container — wider to hold 2 phones */}
+              <div className="relative select-none" style={{ width: 490, height: 620 }}>
+
+                {/* ── LEFT phone: Voice Agent (behind) ── */}
+                <motion.div
+                  animate={{ y: [0, -14, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                  style={{
+                    position: "absolute",
+                    top: 60,
+                    left: 0,
+                    width: 215,
+                    height: 435,
+                    borderRadius: 40,
+                    border: "8px solid #1c1c1e",
+                    background: "#06080f",
+                    boxShadow: "0 0 0 1px rgba(255,255,255,0.06), 0 24px 60px rgba(0,0,0,0.85), 0 0 40px rgba(34,197,94,0.08)",
+                    overflow: "hidden",
+                    zIndex: 2,
+                    transform: "rotate(-14deg)",
+                    transformOrigin: "50% 50%",
+                  }}
+                >
+                  {/* Notch */}
+                  <div style={{
+                    position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
+                    background: "#0a0a0f", borderRadius: "32px 32px 0 0",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <div style={{ width: 60, height: 8, background: "#111", borderRadius: 5 }} />
+                  </div>
+                  <div style={{ width: "100%", height: "100%" }}>
+                    <VoiceAgentPhone />
+                  </div>
+                  {/* Home indicator */}
+                  <div style={{
+                    position: "absolute", bottom: 5, left: 0, right: 0,
+                    display: "flex", justifyContent: "center", zIndex: 20,
+                  }}>
+                    <div style={{ width: 60, height: 3, background: "rgba(255,255,255,0.2)", borderRadius: 2 }} />
+                  </div>
+                </motion.div>
+
+                {/* ── RIGHT phone: Social Media (front) ── */}
+                <motion.div
+                  animate={{ y: [0, -18, 0] }}
+                  transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
                   style={{
                     position: "absolute",
                     top: 10,
-                    left: 30,
-                    width: 260,
-                    height: 525,
+                    right: 0,
+                    width: 245,
+                    height: 498,
                     borderRadius: 44,
                     border: "9px solid #1a1a1c",
                     background: "#f5f7fa",
-                    boxShadow: "0 0 0 1px rgba(255,255,255,0.10), 0 28px 72px rgba(0,0,0,0.75), 0 0 50px rgba(249,115,22,0.14)",
+                    boxShadow: "0 0 0 1px rgba(255,255,255,0.10), 0 28px 72px rgba(0,0,0,0.75), 0 0 50px rgba(249,115,22,0.16)",
                     overflow: "hidden",
                     zIndex: 5,
-                    transform: "rotate(8deg)",
+                    transform: "rotate(7deg)",
                     transformOrigin: "50% 100%",
                   }}
                 >
@@ -832,12 +1006,9 @@ export default function Home() {
                   }}>
                     <div style={{ width: 80, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
                   </div>
-
-                  {/* Static app content */}
                   <div style={{ width: "100%", paddingTop: 28 }}>
                     <SocialMediaPhone />
                   </div>
-
                   {/* Home indicator */}
                   <div style={{
                     position: "absolute", bottom: 6, left: 0, right: 0,
@@ -845,15 +1016,15 @@ export default function Home() {
                   }}>
                     <div style={{ width: 80, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
                   </div>
-
                   {/* Glass reflection */}
                   <div style={{
                     position: "absolute", top: 0, left: 0, right: 0, height: "40%",
                     background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%)",
                     pointerEvents: "none", zIndex: 10,
                   }} />
-                </div>
-              </motion.div>
+                </motion.div>
+
+              </div>
             </div>
           </div>
 
