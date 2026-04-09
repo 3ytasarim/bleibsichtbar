@@ -79,6 +79,107 @@ function SoundWaveBars() {
   );
 }
 
+// ─── iPhone SVG Frame ─────────────────────────────────────────────────────────
+function IPhoneFrame({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) {
+  const uid = dark ? "d" : "l";
+  const f = dark
+    ? { f0: "#6a6a74", f1: "#2e2e36", f2: "#545460", f3: "#1e1e26", f4: "#626270" }
+    : { f0: "#8c8c98", f1: "#484854", f2: "#707080", f3: "#343442", f4: "#828292" };
+  const btn = dark
+    ? { b0: "#1a1a24", b1: "#505060", b2: "#2c2c38" }
+    : { b0: "#3a3a48", b1: "#747482", b2: "#525262" };
+
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {/* Screen content — below SVG frame overlay */}
+      <div style={{
+        position: "absolute",
+        top: 13, left: 13, right: 13, bottom: 13,
+        borderRadius: 37,
+        overflow: "hidden",
+        background: dark ? "#06080f" : "#f5f7fa",
+        zIndex: 1,
+      }}>
+        {children}
+      </div>
+
+      {/* SVG frame — only the frame ring is visible (screen area is transparent via mask) */}
+      <svg
+        viewBox="0 0 252 535"
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible", pointerEvents: "none", zIndex: 10 }}
+      >
+        <defs>
+          <linearGradient id={`fg-${uid}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stopColor={f.f0} />
+            <stop offset="25%"  stopColor={f.f1} />
+            <stop offset="55%"  stopColor={f.f2} />
+            <stop offset="78%"  stopColor={f.f3} />
+            <stop offset="100%" stopColor={f.f4} />
+          </linearGradient>
+          <linearGradient id={`rg-${uid}`} x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%"   stopColor={btn.b0} />
+            <stop offset="50%"  stopColor={btn.b1} />
+            <stop offset="100%" stopColor={btn.b2} />
+          </linearGradient>
+          <linearGradient id={`lg-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor={btn.b0} />
+            <stop offset="50%"  stopColor={btn.b1} />
+            <stop offset="100%" stopColor={btn.b2} />
+          </linearGradient>
+          {/* Mask: white = draw frame, black = transparent hole for screen */}
+          <mask id={`sm-${uid}`}>
+            <rect x="0" y="0" width="252" height="535" rx="48" fill="white" />
+            <rect x="13" y="13" width="226" height="509" rx="37" fill="black" />
+          </mask>
+          <filter id={`sh-${uid}`} x="-40%" y="-15%" width="180%" height="145%">
+            <feDropShadow dx="0" dy="28" stdDeviation="32" floodColor="#000" floodOpacity="0.88" />
+          </filter>
+        </defs>
+
+        {/* Drop shadow (transparent rect just for shadow) */}
+        <rect x="0" y="0" width="252" height="535" rx="48" fill="rgba(0,0,0,0.01)" filter={`url(#sh-${uid})`} />
+
+        {/* Titanium frame ring — screen area cut out by mask */}
+        <rect x="0" y="0" width="252" height="535" rx="48" fill={`url(#fg-${uid})`} mask={`url(#sm-${uid})`} />
+
+        {/* Top-left shine on frame */}
+        <rect x="1" y="1" width="250" height="58" rx="47" fill="rgba(255,255,255,0.08)" mask={`url(#sm-${uid})`} />
+
+        {/* Outer edge highlight line */}
+        <rect x="0.5" y="0.5" width="251" height="534" rx="47.5" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth="1" mask={`url(#sm-${uid})`} />
+
+        {/* Inner edge shadow line */}
+        <rect x="12" y="12" width="228" height="511" rx="38" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="1.5" mask={`url(#sm-${uid})`} />
+
+        {/* Dynamic Island pill */}
+        <rect x="86" y="24" width="80" height="24" rx="12" fill="#000" />
+        <circle cx="153" cy="36" r="7.5" fill="#08080f" />
+        <circle cx="153" cy="36" r="4.5" fill="#101018" />
+        <circle cx="151" cy="34" r="1.5" fill="rgba(255,255,255,0.1)" />
+
+        {/* RIGHT — Power/Sleep button */}
+        <rect x="249" y="190" width="14" height="72" rx="5" fill={`url(#rg-${uid})`} />
+        <rect x="249.5" y="190.5" width="12" height="71" rx="4" fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="0.5" />
+
+        {/* LEFT — Action button (mute) */}
+        <rect x="-11" y="108" width="14" height="32" rx="5" fill={`url(#lg-${uid})`} />
+        <rect x="-10.5" y="108.5" width="12" height="31" rx="4" fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="0.5" />
+
+        {/* LEFT — Volume Up */}
+        <rect x="-11" y="152" width="14" height="54" rx="5" fill={`url(#lg-${uid})`} />
+        <rect x="-10.5" y="152.5" width="12" height="53" rx="4" fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="0.5" />
+
+        {/* LEFT — Volume Down */}
+        <rect x="-11" y="218" width="14" height="54" rx="5" fill={`url(#lg-${uid})`} />
+        <rect x="-10.5" y="218.5" width="12" height="53" rx="4" fill="none" stroke="rgba(255,255,255,0.09)" strokeWidth="0.5" />
+
+        {/* Home indicator bar */}
+        <rect x="91" y="509" width="70" height="5" rx="2.5" fill={dark ? "rgba(255,255,255,0.22)" : "#1a1a1c"} />
+      </svg>
+    </div>
+  );
+}
+
 function VoiceAgentPhone() {
   return (
     <div style={{
@@ -960,40 +1061,10 @@ export default function Home() {
                     scale: 1.0,
                   }}
                 >
-                  {/* Outer titanium frame */}
-                  <div style={{
-                    width: "100%", height: "100%",
-                    borderRadius: 50,
-                    border: "13px solid #4a4a54",
-                    background: "#06080f",
-                    boxShadow: "18px 28px 90px rgba(0,0,0,0.96), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 30px rgba(34,197,94,0.05)",
-                    filter: "brightness(0.65)",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}>
-                    {/* Inner bezel — thin black edge like iPhone */}
-                    <div style={{
-                      position: "absolute", inset: 0,
-                      borderRadius: 38,
-                      border: "2px solid #0a0a0f",
-                      zIndex: 30, pointerEvents: "none",
-                    }} />
-                    {/* Dynamic Island */}
-                    <div style={{
-                      position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)",
-                      width: 80, height: 22,
-                      background: "#000", borderRadius: 14, zIndex: 25,
-                    }} />
-                    <div style={{ width: "100%", height: "100%" }}>
+                  <div style={{ filter: "brightness(0.68)", width: "100%", height: "100%" }}>
+                    <IPhoneFrame dark>
                       <VoiceAgentPhone />
-                    </div>
-                    {/* Home indicator */}
-                    <div style={{
-                      position: "absolute", bottom: 6, left: 0, right: 0,
-                      display: "flex", justifyContent: "center", zIndex: 25,
-                    }}>
-                      <div style={{ width: 60, height: 4, background: "rgba(255,255,255,0.18)", borderRadius: 3 }} />
-                    </div>
+                    </IPhoneFrame>
                   </div>
                 </motion.div>
 
@@ -1012,46 +1083,11 @@ export default function Home() {
                     rotateZ: 6,
                   }}
                 >
-                  {/* Outer titanium frame */}
-                  <div style={{
-                    width: "100%", height: "100%",
-                    borderRadius: 50,
-                    border: "13px solid #3a3a3e",
-                    background: "#f5f7fa",
-                    boxShadow: "20px 40px 110px rgba(0,0,0,0.82), inset 0 1px 0 rgba(255,255,255,0.22), 0 0 50px rgba(249,115,22,0.16)",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}>
-                    {/* Inner bezel */}
-                    <div style={{
-                      position: "absolute", inset: 0,
-                      borderRadius: 38,
-                      border: "2px solid rgba(0,0,0,0.15)",
-                      zIndex: 30, pointerEvents: "none",
-                    }} />
-                    {/* Dynamic Island */}
-                    <div style={{
-                      position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)",
-                      width: 88, height: 24,
-                      background: "#0a0a0a", borderRadius: 14, zIndex: 25,
-                    }} />
-                    <div style={{ width: "100%", paddingTop: 38 }}>
+                  <IPhoneFrame>
+                    <div style={{ width: "100%", height: "100%", paddingTop: 36 }}>
                       <SocialMediaPhone />
                     </div>
-                    {/* Home indicator */}
-                    <div style={{
-                      position: "absolute", bottom: 7, left: 0, right: 0,
-                      display: "flex", justifyContent: "center", zIndex: 25,
-                    }}>
-                      <div style={{ width: 72, height: 5, background: "#1a1a1c", borderRadius: 3 }} />
-                    </div>
-                    {/* Glass sheen */}
-                    <div style={{
-                      position: "absolute", top: 0, left: 0, right: 0, height: "35%",
-                      background: "linear-gradient(170deg, rgba(255,255,255,0.09) 0%, transparent 100%)",
-                      pointerEvents: "none", zIndex: 10,
-                    }} />
-                  </div>
+                  </IPhoneFrame>
                 </motion.div>
 
               </div>
