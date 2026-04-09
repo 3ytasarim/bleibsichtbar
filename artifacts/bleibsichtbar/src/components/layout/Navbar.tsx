@@ -57,46 +57,42 @@ export function Navbar() {
           isScrolled ? "py-2.5 shadow-sm" : "py-3.5"
         )}
       >
-        <div className="w-full px-3 sm:px-5 lg:px-6">
-          <div className="flex items-center justify-between">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
 
-            {/* Left group: Logo + Desktop Nav */}
-            <div className="flex items-center gap-8 xl:gap-10">
-              {/* Logo */}
-              <Link href="/" className="flex items-center shrink-0 group">
-                <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
-                  Bleibsichtbar
-                </span>
-              </Link>
+            {/* Logo — with left margin to push it toward center */}
+            <Link href="/" className="flex items-center shrink-0 group lg:ml-16 xl:ml-24">
+              <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
+                Bleibsichtbar
+              </span>
+            </Link>
 
-              {/* Desktop Nav */}
-              <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
-                {links.map((link) => (
-                  <Link
-                    key={link.path}
-                    href={link.path}
-                    className={cn(
-                      "text-[15px] xl:text-[16px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
-                      location === link.path
-                        ? "text-accent"
-                        : "text-foreground/80"
-                    )}
-                  >
-                    {link.name}
-                    {location === link.path && (
-                      <motion.div
-                        layoutId="nav-underline"
-                        className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-accent rounded-full"
-                      />
-                    )}
-                  </Link>
-                ))}
-              </nav>
-            </div>
+            {/* Desktop Nav — centered */}
+            <nav className="hidden lg:flex items-center justify-center gap-6 xl:gap-8">
+              {links.map((link) => (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  className={cn(
+                    "text-[15px] xl:text-[16px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
+                    location === link.path
+                      ? "text-accent"
+                      : "text-foreground/80"
+                  )}
+                >
+                  {link.name}
+                  {location === link.path && (
+                    <motion.div
+                      layoutId="nav-underline"
+                      className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-accent rounded-full"
+                    />
+                  )}
+                </Link>
+              ))}
+            </nav>
 
-            {/* Right group: CTA Button + Mobile toggle */}
+            {/* Right: CTA Button + Mobile toggle */}
             <div className="flex items-center gap-3">
-              {/* CTA Button — "Kontakt" */}
               <div className="hidden lg:flex items-center shrink-0">
                 <Link href="/kontakt">
                   <motion.span
@@ -117,14 +113,12 @@ export function Navbar() {
                       boxShadow: "0 4px 18px rgba(255,107,53,0.4)",
                     }}
                   >
-                    {/* Shimmer */}
                     <motion.span
                       className="absolute inset-0 skew-x-12"
                       style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)" }}
                       animate={{ x: ["-100%", "220%"] }}
                       transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" }}
                     />
-                    {/* Pulse ring */}
                     <motion.span
                       className="absolute inset-0 rounded-full border-2 border-orange-400/60"
                       animate={{ scale: [1, 1.18], opacity: [0.7, 0] }}
@@ -137,7 +131,6 @@ export function Navbar() {
                 </Link>
               </div>
 
-              {/* Mobile menu toggle */}
               <button
                 className="lg:hidden p-2 rounded-lg transition-colors text-foreground"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
