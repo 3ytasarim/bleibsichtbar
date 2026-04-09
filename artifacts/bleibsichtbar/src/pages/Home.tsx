@@ -944,20 +944,20 @@ export default function Home() {
                 }}
               >
 
-                {/* BACK phone: Voice Agent — tilted right, dimmed, behind */}
+                {/* BACK phone: Voice Agent — upper-left, tilted CCW + right lean, dimmed */}
                 <motion.div
-                  animate={{ y: [0, -12, 0] }}
-                  transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                  animate={{ y: [0, -11, 0] }}
+                  transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
                   style={{
                     position: "absolute",
-                    top: 55,
-                    left: 175,
+                    top: 0,
+                    left: 0,
                     width: 218,
                     height: 442,
                     zIndex: 2,
-                    rotateY: 18,
-                    rotateZ: 4,
-                    scale: 0.94,
+                    rotateY: 16,
+                    rotateZ: -11,
+                    scale: 0.90,
                   }}
                 >
                   <div style={{
@@ -966,8 +966,8 @@ export default function Home() {
                     border: "8px solid #2a2a2e",
                     background: "#06080f",
                     overflow: "hidden",
-                    boxShadow: "12px 24px 80px rgba(0,0,0,0.95), 0 0 30px rgba(34,197,94,0.06)",
-                    filter: "brightness(0.72)",
+                    boxShadow: "18px 28px 90px rgba(0,0,0,0.96), 0 0 30px rgba(34,197,94,0.05)",
+                    filter: "brightness(0.65)",
                     position: "relative",
                   }}>
                     <div style={{
@@ -984,24 +984,24 @@ export default function Home() {
                       position: "absolute", bottom: 5, left: 0, right: 0,
                       display: "flex", justifyContent: "center", zIndex: 20,
                     }}>
-                      <div style={{ width: 56, height: 3, background: "rgba(255,255,255,0.15)", borderRadius: 2 }} />
+                      <div style={{ width: 56, height: 3, background: "rgba(255,255,255,0.12)", borderRadius: 2 }} />
                     </div>
                   </div>
                 </motion.div>
 
-                {/* FRONT phone: Social Media — tilted left, bright, in front */}
+                {/* FRONT phone: Social Media — lower-right, tilted CW + right lean, bright */}
                 <motion.div
                   animate={{ y: [0, -16, 0] }}
                   transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
                   style={{
                     position: "absolute",
-                    top: 15,
-                    left: 10,
+                    top: 95,
+                    left: 165,
                     width: 218,
                     height: 442,
                     zIndex: 5,
-                    rotateY: -18,
-                    rotateZ: -4,
+                    rotateY: 14,
+                    rotateZ: 6,
                   }}
                 >
                   <div style={{
@@ -1010,10 +1010,9 @@ export default function Home() {
                     border: "8px solid #1a1a1c",
                     background: "#f5f7fa",
                     overflow: "hidden",
-                    boxShadow: "-12px 28px 90px rgba(0,0,0,0.75), 0 0 60px rgba(249,115,22,0.18), 0 0 0 1px rgba(255,255,255,0.12)",
+                    boxShadow: "20px 32px 100px rgba(0,0,0,0.80), 0 0 50px rgba(249,115,22,0.16), 0 0 0 1px rgba(255,255,255,0.12)",
                     position: "relative",
                   }}>
-                    {/* Notch */}
                     <div style={{
                       position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
                       background: "#1a1a1c", borderRadius: "34px 34px 0 0",
@@ -1024,17 +1023,15 @@ export default function Home() {
                     <div style={{ width: "100%", paddingTop: 26 }}>
                       <SocialMediaPhone />
                     </div>
-                    {/* Home indicator */}
                     <div style={{
                       position: "absolute", bottom: 5, left: 0, right: 0,
                       display: "flex", justifyContent: "center", zIndex: 20,
                     }}>
                       <div style={{ width: 70, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
                     </div>
-                    {/* Glass sheen */}
                     <div style={{
                       position: "absolute", top: 0, left: 0, right: 0, height: "35%",
-                      background: "linear-gradient(170deg, rgba(255,255,255,0.09) 0%, transparent 100%)",
+                      background: "linear-gradient(170deg, rgba(255,255,255,0.08) 0%, transparent 100%)",
                       pointerEvents: "none", zIndex: 10,
                     }} />
                   </div>
