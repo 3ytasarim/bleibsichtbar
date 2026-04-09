@@ -1062,36 +1062,46 @@ export default function Home() {
                     width: "100%", height: "100%",
                     borderRadius: 40,
                     border: "8px solid #1a1a1c",
-                    background: "#f5f7fa",
+                    background: "#1a1a1c",
                     overflow: "hidden",
                     boxShadow: "-12px 28px 90px rgba(0,0,0,0.75), 0 0 60px rgba(249,115,22,0.18), 0 0 0 1px rgba(255,255,255,0.12)",
                     position: "relative",
+                    isolation: "isolate",
+                    willChange: "transform",
                   }}>
-                    {/* Notch */}
+                    {/* Screen content clipped inside frame */}
                     <div style={{
-                      position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
-                      background: "#1a1a1c", borderRadius: "32px 32px 0 0",
-                      display: "flex", alignItems: "center", justifyContent: "center",
+                      position: "absolute", inset: 0,
+                      borderRadius: 32,
+                      overflow: "hidden",
+                      background: "#f5f7fa",
                     }}>
-                      <div style={{ width: 70, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
-                    </div>
-                    <div style={{ width: "100%", paddingTop: 26 }}>
-                      <SocialMediaPhone />
-                    </div>
-                    {/* Home indicator */}
-                    <div style={{
-                      position: "absolute", bottom: 5, left: 0, right: 0,
-                      display: "flex", justifyContent: "center", zIndex: 20,
-                    }}>
-                      <div style={{ width: 70, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
-                    </div>
-                    {/* Glass sheen */}
-                    <div style={{
-                      position: "absolute", top: 0, left: 0, right: 0, height: "35%",
-                      background: "linear-gradient(170deg, rgba(255,255,255,0.09) 0%, transparent 100%)",
-                      pointerEvents: "none", zIndex: 10,
-                    }} />
-                  </div>
+                      {/* Notch */}
+                      <div style={{
+                        position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20,
+                        background: "#1a1a1c",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <div style={{ width: 70, height: 10, background: "#0a0a0a", borderRadius: 6 }} />
+                      </div>
+                      <div style={{ width: "100%", paddingTop: 26, height: "100%" }}>
+                        <SocialMediaPhone />
+                      </div>
+                      {/* Home indicator */}
+                      <div style={{
+                        position: "absolute", bottom: 5, left: 0, right: 0,
+                        display: "flex", justifyContent: "center", zIndex: 20,
+                      }}>
+                        <div style={{ width: 70, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
+                      </div>
+                      {/* Glass sheen */}
+                      <div style={{
+                        position: "absolute", top: 0, left: 0, right: 0, height: "35%",
+                        background: "linear-gradient(170deg, rgba(255,255,255,0.09) 0%, transparent 100%)",
+                        pointerEvents: "none", zIndex: 10,
+                      }} />
+                    </div>{/* /inner screen */}
+                  </div>{/* /outer frame */}
                 </motion.div>
               </div>
             </div>
