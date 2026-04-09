@@ -57,88 +57,96 @@ export function Navbar() {
           isScrolled ? "py-2.5 shadow-sm" : "py-3.5"
         )}
       >
-        <div className="w-full px-3 sm:px-5 lg:px-7">
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-            {/* Logo — pinned left */}
-            <Link href="/" className="flex items-center shrink-0 group">
-              <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
-                Bleibsichtbar
-              </span>
-            </Link>
+        <div className="w-full px-3 sm:px-5 lg:px-6">
+          <div className="flex items-center justify-between">
 
-            {/* Desktop Nav — truly centered in the full header */}
-            <nav className="hidden lg:flex items-center justify-center gap-6 2xl:gap-9">
-              {links.map((link) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  className={cn(
-                    "text-[16px] xl:text-[17px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
-                    location === link.path
-                      ? "text-accent"
-                      : "text-foreground/80"
-                  )}
-                >
-                  {link.name}
-                  {location === link.path && (
-                    <motion.div
-                      layoutId="nav-underline"
-                      className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-accent rounded-full"
-                    />
-                  )}
-                </Link>
-              ))}
-            </nav>
-
-            {/* CTA Button — "Kontakt" */}
-            <div className="hidden lg:flex items-center shrink-0">
-              <Link href="/kontakt">
-                <motion.span
-                  whileHover={{ scale: 1.06, boxShadow: "0 10px 34px rgba(255,107,53,0.5)" }}
-                  whileTap={{ scale: 0.96 }}
-                  animate={{
-                    x: [0, -4, 4, -4, 4, -2, 2, 0],
-                    transition: {
-                      duration: 0.55,
-                      repeat: Infinity,
-                      repeatDelay: 4,
-                      ease: "easeInOut",
-                    },
-                  }}
-                  className="relative overflow-hidden px-7 py-3 rounded-full text-[15px] font-bold text-white inline-flex items-center cursor-pointer"
-                  style={{
-                    background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)",
-                    boxShadow: "0 4px 18px rgba(255,107,53,0.4)",
-                  }}
-                >
-                  {/* Shimmer */}
-                  <motion.span
-                    className="absolute inset-0 skew-x-12"
-                    style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)" }}
-                    animate={{ x: ["-100%", "220%"] }}
-                    transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" }}
-                  />
-                  {/* Pulse ring */}
-                  <motion.span
-                    className="absolute inset-0 rounded-full border-2 border-orange-400/60"
-                    animate={{ scale: [1, 1.18], opacity: [0.7, 0] }}
-                    transition={{ duration: 1.4, repeat: Infinity, ease: "easeOut" }}
-                  />
-                  <span className="relative z-10 flex items-center gap-2 tracking-wide">
-                    Kontakt
-                  </span>
-                </motion.span>
+            {/* Left group: Logo + Desktop Nav */}
+            <div className="flex items-center gap-8 xl:gap-10">
+              {/* Logo */}
+              <Link href="/" className="flex items-center shrink-0 group">
+                <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
+                  Bleibsichtbar
+                </span>
               </Link>
+
+              {/* Desktop Nav */}
+              <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
+                {links.map((link) => (
+                  <Link
+                    key={link.path}
+                    href={link.path}
+                    className={cn(
+                      "text-[15px] xl:text-[16px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
+                      location === link.path
+                        ? "text-accent"
+                        : "text-foreground/80"
+                    )}
+                  >
+                    {link.name}
+                    {location === link.path && (
+                      <motion.div
+                        layoutId="nav-underline"
+                        className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-accent rounded-full"
+                      />
+                    )}
+                  </Link>
+                ))}
+              </nav>
             </div>
 
-            {/* Mobile menu toggle */}
-            <button
-              className="lg:hidden p-2 rounded-lg transition-colors text-foreground"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Menü öffnen"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            {/* Right group: CTA Button + Mobile toggle */}
+            <div className="flex items-center gap-3">
+              {/* CTA Button — "Kontakt" */}
+              <div className="hidden lg:flex items-center shrink-0">
+                <Link href="/kontakt">
+                  <motion.span
+                    whileHover={{ scale: 1.06, boxShadow: "0 10px 34px rgba(255,107,53,0.5)" }}
+                    whileTap={{ scale: 0.96 }}
+                    animate={{
+                      x: [0, -4, 4, -4, 4, -2, 2, 0],
+                      transition: {
+                        duration: 0.55,
+                        repeat: Infinity,
+                        repeatDelay: 4,
+                        ease: "easeInOut",
+                      },
+                    }}
+                    className="relative overflow-hidden px-7 py-3 rounded-full text-[15px] font-bold text-white inline-flex items-center cursor-pointer"
+                    style={{
+                      background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)",
+                      boxShadow: "0 4px 18px rgba(255,107,53,0.4)",
+                    }}
+                  >
+                    {/* Shimmer */}
+                    <motion.span
+                      className="absolute inset-0 skew-x-12"
+                      style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)" }}
+                      animate={{ x: ["-100%", "220%"] }}
+                      transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" }}
+                    />
+                    {/* Pulse ring */}
+                    <motion.span
+                      className="absolute inset-0 rounded-full border-2 border-orange-400/60"
+                      animate={{ scale: [1, 1.18], opacity: [0.7, 0] }}
+                      transition={{ duration: 1.4, repeat: Infinity, ease: "easeOut" }}
+                    />
+                    <span className="relative z-10 flex items-center gap-2 tracking-wide">
+                      Kontakt
+                    </span>
+                  </motion.span>
+                </Link>
+              </div>
+
+              {/* Mobile menu toggle */}
+              <button
+                className="lg:hidden p-2 rounded-lg transition-colors text-foreground"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Menü öffnen"
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
+
           </div>
         </div>
       </header>
