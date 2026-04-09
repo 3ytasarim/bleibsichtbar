@@ -247,10 +247,10 @@ function SocialMediaPhone() {
   }, []);
 
   return (
-    <div className="pt-8 p-3 space-y-3 select-none pb-4">
+    <div className="pt-5 p-2.5 space-y-2 select-none pb-2">
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center space-x-2">
-          <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${current.gradient} flex items-center justify-center overflow-hidden`}>
+          <div className={`w-6 h-6 rounded-lg bg-gradient-to-br ${current.gradient} flex items-center justify-center overflow-hidden`}>
             {current.smallIcon}
           </div>
           <div>
@@ -270,18 +270,18 @@ function SocialMediaPhone() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className={`h-40 rounded-2xl bg-gradient-to-br ${current.gradient} overflow-hidden relative`}
+        className={`h-28 rounded-2xl bg-gradient-to-br ${current.gradient} overflow-hidden relative`}
       >
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <motion.div
             animate={{ scale: [1, 1.08, 1], rotate: [0, 4, -4, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="mb-2"
+            className="mb-1"
           >
             {current.bigIcon}
           </motion.div>
-          <div className="text-xs font-bold opacity-90">{current.label} Content</div>
-          <div className="text-[10px] opacity-60 mt-1">Bleibsichtbar Agency</div>
+          <div className="text-[11px] font-bold opacity-90">{current.label} Content</div>
+          <div className="text-[9px] opacity-60 mt-0.5">Bleibsichtbar Agency</div>
         </div>
         {[...Array(5)].map((_, i) => (
           <motion.div
