@@ -955,9 +955,9 @@ export default function Home() {
                     width: 218,
                     height: 442,
                     zIndex: 2,
-                    rotateY: 26,
-                    rotateZ: -17,
-                    scale: 0.90,
+                    rotateY: 34,
+                    rotateZ: -22,
+                    scale: 1.0,
                   }}
                 >
                   <div style={{
