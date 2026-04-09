@@ -1034,53 +1034,28 @@ export default function Home() {
                 filter: "blur(48px)",
               }} />
 
-              {/* ── 3D Perspective Stage ── */}
+              {/* ── Single Phone Stage ── */}
               <div
-                className="relative select-none"
+                className="relative select-none flex items-center justify-center"
                 style={{
-                  width: 500,
-                  height: 640,
-                  perspective: "1400px",
-                  perspectiveOrigin: "50% 40%",
+                  width: 300,
+                  height: 600,
+                  perspective: "1200px",
+                  perspectiveOrigin: "50% 45%",
                 }}
               >
-
-                {/* BACK phone: Voice Agent — upper-left, tilted CCW + right lean, dimmed */}
                 <motion.div
-                  animate={{ y: [0, -11, 0] }}
-                  transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
+                  animate={{ y: [0, -14, 0] }}
+                  transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
                   style={{
                     position: "absolute",
-                    top: -30,
-                    left: 0,
-                    width: 252,
-                    height: 535,
-                    zIndex: 2,
-                    rotateY: 50,
-                    rotateZ: -22,
-                    scale: 1.0,
-                  }}
-                >
-                  <div style={{ filter: "brightness(0.68)", width: "100%", height: "100%" }}>
-                    <IPhoneFrame dark>
-                      <VoiceAgentPhone />
-                    </IPhoneFrame>
-                  </div>
-                </motion.div>
-
-                {/* FRONT phone: Social Media — lower-right, tilted CW + right lean, bright */}
-                <motion.div
-                  animate={{ y: [0, -16, 0] }}
-                  transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
-                  style={{
-                    position: "absolute",
-                    top: 110,
-                    left: 185,
+                    top: 30,
+                    left: 20,
                     width: 252,
                     height: 535,
                     zIndex: 5,
-                    rotateY: 14,
-                    rotateZ: 6,
+                    rotateY: 8,
+                    rotateZ: 3,
                   }}
                 >
                   <IPhoneFrame>
@@ -1089,7 +1064,6 @@ export default function Home() {
                     </div>
                   </IPhoneFrame>
                 </motion.div>
-
               </div>
             </div>
           </div>
