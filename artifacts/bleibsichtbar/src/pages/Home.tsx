@@ -955,7 +955,7 @@ export default function Home() {
                     width: 218,
                     height: 442,
                     zIndex: 2,
-                    rotateY: 34,
+                    rotateY: -30,
                     rotateZ: -22,
                     scale: 1.0,
                   }}
