@@ -1036,24 +1036,24 @@ export default function Home() {
 
               {/* ── Dual Phone Stage ── */}
               <div
-                className="relative select-none"
+                className="relative select-none overflow-hidden"
                 style={{
-                  width: "min(92vw, 390px)",
-                  height: "min(88vw, 540px)",
+                  width: "min(88vw, 390px)",
+                  height: "clamp(290px, 72vw, 540px)",
                   perspective: "1200px",
                   perspectiveOrigin: "50% 50%",
                 }}
               >
                 {/* ── Voice Agent Phone — top-right, tilted right ── */}
                 <motion.div
-                  animate={{ y: [0, -12, 0] }}
+                  animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
                   style={{
                     position: "absolute",
                     top: 0,
                     right: 0,
-                    width: "clamp(148px, 46vw, 206px)",
-                    height: "clamp(302px, 94vw, 420px)",
+                    width: "clamp(130px, 40vw, 206px)",
+                    height: "clamp(256px, 63vw, 420px)",
                     zIndex: 4,
                     rotateY: 10,
                     rotateZ: 4,
@@ -1082,14 +1082,14 @@ export default function Home() {
 
                 {/* ── Social Media Phone — bottom-left, tilted left ── */}
                 <motion.div
-                  animate={{ y: [0, 12, 0] }}
+                  animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
                   style={{
                     position: "absolute",
                     bottom: 0,
                     left: 0,
-                    width: "clamp(160px, 50vw, 222px)",
-                    height: "clamp(326px, 102vw, 452px)",
+                    width: "clamp(140px, 44vw, 222px)",
+                    height: "clamp(278px, 68vw, 452px)",
                     zIndex: 5,
                     rotateY: -10,
                     rotateZ: -4,
