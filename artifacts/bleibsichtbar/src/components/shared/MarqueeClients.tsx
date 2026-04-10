@@ -92,8 +92,14 @@ export function MarqueeClients() {
     });
   }, []);
 
-  const row1 = items.filter(i => (i.row ?? 1) === 1);
-  const row2 = items.filter(i => (i.row ?? 1) === 2);
+  const row1Items = items.filter(i => (i.row ?? 1) === 1);
+  const row2Items = items.filter(i => (i.row ?? 1) === 2);
+
+  // Row2'ye hiç atanmamışsa tüm öğeleri iki eşit parçaya böl
+  const useAutoSplit = row2Items.length === 0 && row1Items.length > 0;
+  const half = Math.ceil(row1Items.length / 2);
+  const row1 = useAutoSplit ? row1Items.slice(0, half) : row1Items;
+  const row2 = useAutoSplit ? row1Items.slice(half) : row2Items;
 
   return (
     <section className="py-24 overflow-hidden" style={{ background: "#f3f4f6" }}>
