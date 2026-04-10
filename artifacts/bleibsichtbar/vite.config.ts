@@ -26,13 +26,14 @@ if (!basePath) {
 }
 
 const isDev = process.env.NODE_ENV !== "production";
+const isReplit = isDev && process.env.REPL_ID !== undefined;
 
 export default defineConfig({
   base: basePath,
   plugins: [
     react(),
     tailwindcss(),
-    ...(isDev && process.env.REPL_ID !== undefined
+    ...(isReplit
       ? [
           await import("@replit/vite-plugin-runtime-error-modal").then((m) =>
             m.default()
@@ -60,8 +61,23 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
     sourcemap: false,
+    cssCodeSplit: false,
     rollupOptions: {
       output: {
+        entryFileNames: "assets/app-core.js",
+        chunkFileNames: (chunk) => {
+          const name = chunk.name;
+          if (name === "vendor") return "assets/vendor-libs.js";
+          if (name === "motion") return "assets/ui-motion.js";
+          return `assets/${name.replace(/[^a-z0-9]/gi, "-").toLowerCase()}.js`;
+        },
+        assetFileNames: (asset) => {
+          const name = asset.names?.[0] ?? asset.name ?? "";
+          if (name.endsWith(".css")) return "assets/global-theme.css";
+          if (/\.(png|jpe?g|webp|svg|gif|ico)$/i.test(name)) return "assets/media/[name][extname]";
+          if (/\.(woff2?|ttf|eot|otf)$/i.test(name)) return "assets/fonts/[name][extname]";
+          return "assets/[name][extname]";
+        },
         manualChunks: {
           vendor: ["react", "react-dom"],
           motion: ["framer-motion"],
