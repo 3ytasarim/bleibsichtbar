@@ -32,7 +32,7 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/", requireAdmin, upload.single("logo"), async (req: Request, res: Response) => {
   try {
-    const { clientName, clientTitle, company, websiteUrl, testimonial, rating, published, sortOrder } = req.body as Record<string, string>;
+    const { clientName, clientTitle, company, websiteUrl, testimonial, rating, published, sortOrder, row } = req.body as Record<string, string>;
     if (!clientName || !company) { res.status(400).json({ message: "Pflichtfelder fehlen" }); return; }
     let logoUrl: string | null = null;
     if (req.file) {
@@ -48,6 +48,7 @@ router.post("/", requireAdmin, upload.single("logo"), async (req: Request, res: 
       rating: rating ? parseInt(rating, 10) : 5,
       published: published === "true",
       sortOrder: sortOrder ? parseInt(sortOrder, 10) : 0,
+      row: row ? parseInt(row, 10) : 1,
     }).returning();
     res.status(201).json(ref);
   } catch (err) {
@@ -58,7 +59,7 @@ router.post("/", requireAdmin, upload.single("logo"), async (req: Request, res: 
 router.put("/:id", requireAdmin, upload.single("logo"), async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-    const { clientName, clientTitle, company, websiteUrl, testimonial, rating, published, sortOrder } = req.body as Record<string, string>;
+    const { clientName, clientTitle, company, websiteUrl, testimonial, rating, published, sortOrder, row } = req.body as Record<string, string>;
     const updates: Partial<typeof referencesTable.$inferInsert> = {};
     if (clientName !== undefined) updates.clientName = clientName;
     if (clientTitle !== undefined) updates.clientTitle = clientTitle || null;
@@ -68,6 +69,7 @@ router.put("/:id", requireAdmin, upload.single("logo"), async (req: Request, res
     if (rating !== undefined) updates.rating = parseInt(rating, 10);
     if (published !== undefined) updates.published = published === "true";
     if (sortOrder !== undefined) updates.sortOrder = parseInt(sortOrder, 10);
+    if (row !== undefined) updates.row = parseInt(row, 10);
     if (req.file) {
       updates.logoUrl = await uploadBufferToGCS(req.file.buffer, req.file.originalname, req.file.mimetype, "references");
     }

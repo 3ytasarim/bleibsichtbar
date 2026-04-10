@@ -19,6 +19,7 @@ type Reference = {
   rating?: number | null;
   published: boolean;
   sortOrder: number;
+  row?: number;
 };
 
 type FormState = {
@@ -30,6 +31,7 @@ type FormState = {
   rating: number;
   published: boolean;
   sortOrder: number;
+  row: 1 | 2;
 };
 
 const defaultForm: FormState = {
@@ -41,6 +43,7 @@ const defaultForm: FormState = {
   rating: 5,
   published: true,
   sortOrder: 0,
+  row: 1,
 };
 
 export default function AdminReferences() {
@@ -57,9 +60,12 @@ export default function AdminReferences() {
   const [saving, setSaving] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const openCreate = () => {
+  const row1 = (references as Reference[]).filter(r => (r.row ?? 1) === 1).sort((a, b) => a.sortOrder - b.sortOrder);
+  const row2 = (references as Reference[]).filter(r => (r.row ?? 1) === 2).sort((a, b) => a.sortOrder - b.sortOrder);
+
+  const openCreate = (rowNum: 1 | 2) => {
     setEditingId(null);
-    setForm(defaultForm);
+    setForm({ ...defaultForm, row: rowNum });
     setLogoFile(null);
     setLogoPreview(null);
     setExistingLogoUrl(null);
@@ -77,6 +83,7 @@ export default function AdminReferences() {
       rating: ref.rating || 5,
       published: ref.published,
       sortOrder: ref.sortOrder,
+      row: (ref.row as 1 | 2) ?? 1,
     });
     setLogoFile(null);
     setLogoPreview(null);
@@ -87,22 +94,17 @@ export default function AdminReferences() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     setLogoFile(file);
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setLogoPreview(url);
-    } else {
-      setLogoPreview(null);
-    }
+    if (file) setLogoPreview(URL.createObjectURL(file));
+    else setLogoPreview(null);
   };
 
-  const moveOrder = async (id: number, direction: "up" | "down") => {
-    const refs = [...(references as Reference[])].sort((a, b) => a.sortOrder - b.sortOrder);
-    const idx = refs.findIndex(r => r.id === id);
+  const moveOrder = async (rowRefs: Reference[], id: number, direction: "up" | "down") => {
+    const idx = rowRefs.findIndex(r => r.id === id);
     if (idx < 0) return;
     const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-    if (swapIdx < 0 || swapIdx >= refs.length) return;
-    const a = refs[idx]!;
-    const b = refs[swapIdx]!;
+    if (swapIdx < 0 || swapIdx >= rowRefs.length) return;
+    const a = rowRefs[idx]!;
+    const b = rowRefs[swapIdx]!;
     await Promise.all([
       fetch(`/api/references/${a.id}`, {
         method: "PUT",
@@ -138,6 +140,7 @@ export default function AdminReferences() {
       fd.append("rating", String(form.rating));
       fd.append("published", String(form.published));
       fd.append("sortOrder", String(form.sortOrder));
+      fd.append("row", String(form.row));
       if (logoFile) fd.append("logo", logoFile);
 
       const url = editingId ? `/api/references/${editingId}` : "/api/references";
@@ -152,24 +155,29 @@ export default function AdminReferences() {
 
   const logoDisplay = logoPreview || existingLogoUrl;
 
-  return (
-    <AdminLayout>
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold font-display">Referenzen</h1>
-          <p className="text-muted-foreground">Kundenstimmen verwalten</p>
+  const RefTable = ({ rowRefs, rowNum }: { rowRefs: Reference[]; rowNum: 1 | 2 }) => (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className={`w-3 h-3 rounded-full ${rowNum === 1 ? "bg-accent" : "bg-blue-500"}`} />
+          <h2 className="text-base font-bold font-display">
+            {rowNum === 1 ? "Obere Reihe (→ links scrollend)" : "Untere Reihe (← rechts scrollend)"}
+          </h2>
+          <span className="text-xs text-muted-foreground bg-gray-100 px-2 py-0.5 rounded-full">
+            {rowRefs.length} Referenz{rowRefs.length !== 1 ? "en" : ""}
+          </span>
         </div>
-        <Button onClick={openCreate} className="bg-accent hover:bg-accent/90">
-          <Plus className="w-5 h-5 mr-2" /> Neue Referenz
+        <Button size="sm" onClick={() => openCreate(rowNum)} className="flex items-center gap-1.5 text-xs h-8">
+          <Plus className="w-3.5 h-3.5" /> Referenz hinzufügen
         </Button>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-border overflow-hidden">
-        {isLoading ? (
-          <div className="p-8 text-center text-muted-foreground">Lade Referenzen...</div>
-        ) : references.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">Keine Referenzen gefunden.</div>
-        ) : (
+      {rowRefs.length === 0 ? (
+        <div className="text-center py-10 bg-white rounded-2xl border border-dashed border-gray-200">
+          <p className="text-muted-foreground text-sm">Noch keine Referenzen. Fügen Sie die erste hinzu.</p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl shadow-sm border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -177,14 +185,14 @@ export default function AdminReferences() {
                   <th className="p-4 font-semibold text-sm">Logo</th>
                   <th className="p-4 font-semibold text-sm">Kunde</th>
                   <th className="p-4 font-semibold text-sm">Unternehmen</th>
-                  <th className="p-4 font-semibold text-sm">Sıra</th>
+                  <th className="p-4 font-semibold text-sm">Reihenfolge</th>
                   <th className="p-4 font-semibold text-sm">Bewertung</th>
                   <th className="p-4 font-semibold text-sm">Status</th>
                   <th className="p-4 font-semibold text-sm text-right">Aktionen</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {(references as Reference[]).map(ref => (
+                {rowRefs.map((ref, idx) => (
                   <tr key={ref.id} className="hover:bg-gray-50/50">
                     <td className="p-4">
                       {ref.logoUrl ? (
@@ -206,20 +214,12 @@ export default function AdminReferences() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => moveOrder(ref.id, "up")}
-                          disabled={(references as Reference[]).sort((a,b)=>a.sortOrder-b.sortOrder)[0]?.id === ref.id}
-                          className="p-1 rounded hover:bg-gray-100 disabled:opacity-30 transition-colors"
-                          title="Nach oben"
-                        >
+                        <button onClick={() => moveOrder(rowRefs, ref.id, "up")} disabled={idx === 0}
+                          className="p-1 rounded hover:bg-gray-100 disabled:opacity-30 transition-colors">
                           <ChevronUp className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={() => moveOrder(ref.id, "down")}
-                          disabled={(references as Reference[]).sort((a,b)=>a.sortOrder-b.sortOrder).at(-1)?.id === ref.id}
-                          className="p-1 rounded hover:bg-gray-100 disabled:opacity-30 transition-colors"
-                          title="Nach unten"
-                        >
+                        <button onClick={() => moveOrder(rowRefs, ref.id, "down")} disabled={idx === rowRefs.length - 1}
+                          className="p-1 rounded hover:bg-gray-100 disabled:opacity-30 transition-colors">
                           <ChevronDown className="w-4 h-4" />
                         </button>
                       </div>
@@ -244,6 +244,27 @@ export default function AdminReferences() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <AdminLayout>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold font-display">Referenzen</h1>
+          <p className="text-muted-foreground">Kundenstimmen in zwei unabhängigen Marquee-Reihen verwalten</p>
+        </div>
+
+        {isLoading ? (
+          <div className="p-8 text-center text-muted-foreground">Lade Referenzen...</div>
+        ) : (
+          <>
+            <RefTable rowRefs={row1} rowNum={1} />
+            <div className="border-t border-dashed border-gray-200 pt-2" />
+            <RefTable rowRefs={row2} rowNum={2} />
+          </>
         )}
       </div>
 
@@ -253,7 +274,6 @@ export default function AdminReferences() {
         title={editingId ? "Referenz bearbeiten" : "Neue Referenz"}
       >
         <form noValidate onSubmit={handleSubmit} className="space-y-4">
-          {/* Name + Company */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Name der Person *</label>
@@ -265,7 +285,6 @@ export default function AdminReferences() {
             </div>
           </div>
 
-          {/* Position + Rating */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Position/Titel (optional)</label>
@@ -277,13 +296,11 @@ export default function AdminReferences() {
             </div>
           </div>
 
-          {/* Testimonial */}
           <div>
             <label className="text-sm font-medium mb-1 block">Testimonial Text</label>
             <Textarea className="min-h-[90px]" value={form.testimonial} onChange={e => setForm(f => ({ ...f, testimonial: e.target.value }))} />
           </div>
 
-          {/* Logo upload */}
           <div>
             <label className="text-sm font-medium mb-2 block flex items-center gap-1.5">
               <ImagePlus className="w-4 h-4" /> Firmenlogo (optional)
@@ -305,26 +322,27 @@ export default function AdminReferences() {
             </div>
           </div>
 
-          {/* Website URL */}
           <div>
             <label className="text-sm font-medium mb-1 block flex items-center gap-1.5">
-              <LinkIcon className="w-4 h-4" /> Website URL (optional, macht Firmennamen klickbar)
+              <LinkIcon className="w-4 h-4" /> Website URL (optional)
             </label>
-            <Input
-              type="url"
-              placeholder="https://firma.de"
-              value={form.websiteUrl}
-              onChange={e => setForm(f => ({ ...f, websiteUrl: e.target.value }))}
-            />
+            <Input type="url" placeholder="https://firma.de" value={form.websiteUrl} onChange={e => setForm(f => ({ ...f, websiteUrl: e.target.value }))} />
           </div>
 
-          {/* Sort order */}
           <div>
-            <label className="text-sm font-medium mb-1 block">Reihenfolge (0 = zuerst)</label>
-            <Input type="number" min="0" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} />
+            <label className="text-sm font-medium mb-1.5 block">Reihe</label>
+            <div className="flex gap-2">
+              {([1, 2] as const).map(r => (
+                <button key={r} type="button" onClick={() => setForm(f => ({ ...f, row: r }))}
+                  className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${
+                    form.row === r ? "bg-accent text-white border-accent" : "border-border text-muted-foreground hover:border-accent/50"
+                  }`}>
+                  {r === 1 ? "Obere Reihe" : "Untere Reihe"}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
             <div className="flex items-center space-x-2">
               <input type="checkbox" id="publishedRef" checked={form.published} onChange={e => setForm(f => ({ ...f, published: e.target.checked }))} className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" />
@@ -332,9 +350,7 @@ export default function AdminReferences() {
             </div>
             <div className="flex space-x-2">
               <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Abbrechen</Button>
-              <Button type="submit" disabled={saving}>
-                {saving ? "Speichern..." : "Speichern"}
-              </Button>
+              <Button type="submit" disabled={saving}>{saving ? "Speichern..." : "Speichern"}</Button>
             </div>
           </div>
         </form>

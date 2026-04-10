@@ -13,6 +13,7 @@ export const referencesTable = pgTable("references", {
   rating: integer("rating"),
   published: boolean("published").notNull().default(false),
   sortOrder: integer("sort_order").notNull().default(0),
+  row: integer("row").notNull().default(1),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

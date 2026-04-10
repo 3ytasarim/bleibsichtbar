@@ -78,12 +78,12 @@ export function MarqueeClients() {
       const fromRefs: MarqueeItem[] = Array.isArray(references)
         ? references
             .filter((r: { logoUrl?: string | null }) => r.logoUrl)
-            .map((r: { id: number; company: string; logoUrl: string | null; sortOrder: number }) => ({
+            .map((r: { id: number; company: string; logoUrl: string | null; sortOrder: number; row?: number }) => ({
               id: `r-${r.id}`,
               name: r.company,
               imageUrl: r.logoUrl,
               sortOrder: r.sortOrder ?? 0,
-              row: 2,
+              row: r.row ?? 1,
             }))
         : [];
 
