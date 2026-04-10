@@ -109,82 +109,72 @@ function BrowserMockup({ src, alt }: { src?: string; alt: string }) {
 }
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
-  const type = getType(project.category ?? "");
-  const accent = PALETTES[index % PALETTES.length];
-  const isWeb = type === "web";
+  const placeholder = "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80&fit=crop";
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 36 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ delay: index * 0.07, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="relative"
-      style={{ paddingTop: 72 }} /* room for device to extend above */
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ delay: index * 0.06, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Device mockup — absolute, sticks up above the colored card */}
-      <div
-        className="absolute z-20"
-        style={{
-          top: 0,
-          left: isWeb ? 14 : 22,
-          transform: `rotate(${isWeb ? -5 : -8}deg)`,
-          filter: "drop-shadow(0 28px 56px rgba(0,0,0,0.38))",
-        }}
-      >
-        {isWeb ? (
-          <BrowserMockup src={project.imageUrl} alt={project.title} />
-        ) : (
-          <PhoneMockup src={project.imageUrl} alt={project.title} />
-        )}
-      </div>
-
-      {/* Colored pill card */}
-      <motion.div
-        whileHover={{ scale: 1.015, transition: { type: "spring", stiffness: 280, damping: 22 } }}
-        className="relative rounded-[28px] overflow-hidden"
-        style={{
-          marginLeft: isWeb ? 92 : 100,
-          minHeight: 248,
-          background: accent,
-        }}
-      >
-        {/* Subtle inner glow top-right */}
-        <div
-          className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none"
-          style={{ background: "rgba(255,255,255,0.08)", filter: "blur(40px)", transform: "translate(30%, -30%)" }}
-        />
-
-        {/* Category badge — top right */}
-        <div className="absolute top-4 right-4 bg-black/25 backdrop-blur-sm text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-white/15">
-          {project.category}
-        </div>
-
-        {/* Content — left padding to clear the phone overlap */}
-        <div
-          className="flex flex-col justify-center items-center text-center px-6 py-9"
-          style={{ paddingLeft: isWeb ? 124 : 96, minHeight: 248 }}
+      <Link href={`/projekte/${project.id}`} className="block">
+        <motion.div
+          className="relative overflow-hidden group cursor-pointer"
+          style={{ borderRadius: 20, aspectRatio: "4/5" }}
+          whileHover={{ scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 300, damping: 24 }}
         >
-          <h3 className="text-xl md:text-2xl font-display font-black text-white leading-tight mb-1">
-            {project.title}
-          </h3>
-          {project.clientName && (
-            <p className="text-white/60 text-sm mb-5">{project.clientName}</p>
-          )}
-          {!project.clientName && <div className="mb-5" />}
+          {/* Cover image */}
+          <img
+            src={project.imageUrl || placeholder}
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          />
 
-          <Link href={`/projekte/${project.id}`}>
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-block bg-black text-white text-xs font-black px-7 py-2.5 rounded-full uppercase tracking-widest shadow-lg hover:bg-gray-900 transition-colors cursor-pointer"
+          {/* Base gradient always visible at bottom */}
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/75 to-transparent z-10 pointer-events-none" />
+
+          {/* Hover full overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/45 to-black/0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+          {/* Category badge — top left */}
+          <div className="absolute top-4 left-4 z-30">
+            <span className="bg-black/50 backdrop-blur-sm text-white/90 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-white/15">
+              {project.category}
+            </span>
+          </div>
+
+          {/* Arrow indicator — top right, visible on hover */}
+          <div className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-accent flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300">
+            <ArrowRight className="w-4 h-4 text-white" />
+          </div>
+
+          {/* Content — slides up on hover */}
+          <div className="absolute inset-x-0 bottom-0 z-30 p-6">
+            {/* Title always partially visible at base */}
+            <h3
+              className="text-xl font-display font-black text-white leading-tight mb-1 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 ease-out"
+              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}
             >
-              Ansehen →
-            </motion.span>
-          </Link>
-        </div>
-      </motion.div>
+              {project.title}
+            </h3>
+
+            {/* Client + CTA — hidden until hover */}
+            <div className="overflow-hidden">
+              <div className="translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400 ease-out delay-75">
+                {project.clientName && (
+                  <p className="text-white/65 text-sm mb-3">{project.clientName}</p>
+                )}
+                <div className="flex items-center gap-2 text-accent text-sm font-bold">
+                  Projekt ansehen <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </Link>
     </motion.div>
   );
 }
