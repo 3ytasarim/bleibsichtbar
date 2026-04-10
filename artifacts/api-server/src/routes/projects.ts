@@ -79,6 +79,7 @@ router.post("/", requireAdmin, (req, res, next) => {
       websiteUrl: body.websiteUrl || null,
       tags,
       published: body.published === "true",
+      showOnHomepage: body.showOnHomepage === "true",
       sortOrder: body.sortOrder ? parseInt(body.sortOrder, 10) : 0,
       galleryImages,
       statFollowers: body.statFollowers || null,
@@ -113,6 +114,7 @@ router.put("/:id", requireAdmin, (req, res, next) => {
     if (body.clientName !== undefined) updates.clientName = body.clientName || null;
     if (body.websiteUrl !== undefined) updates.websiteUrl = body.websiteUrl || null;
     if (body.published !== undefined) updates.published = body.published === "true";
+    if (body.showOnHomepage !== undefined) updates.showOnHomepage = body.showOnHomepage === "true";
     if (body.sortOrder !== undefined) updates.sortOrder = parseInt(body.sortOrder, 10);
     if (body.statFollowers !== undefined) updates.statFollowers = body.statFollowers || null;
     if (body.statLikes !== undefined) updates.statLikes = body.statLikes || null;

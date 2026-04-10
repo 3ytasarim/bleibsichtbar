@@ -16,6 +16,7 @@ type FormState = {
   websiteUrl: string;
   tags: string;
   published: boolean;
+  showOnHomepage: boolean;
   sortOrder: number;
   statFollowers: string;
   statLikes: string;
@@ -30,6 +31,7 @@ const defaultForm: FormState = {
   websiteUrl: "",
   tags: "",
   published: true,
+  showOnHomepage: false,
   sortOrder: 0,
   statFollowers: "",
   statLikes: "",
@@ -80,6 +82,7 @@ export default function AdminProjects() {
       websiteUrl: (project as any).websiteUrl || "",
       tags: project.tags.join(", "),
       published: project.published,
+      showOnHomepage: (project as any).showOnHomepage ?? false,
       sortOrder: project.sortOrder,
       statFollowers: (project as any).statFollowers || "",
       statLikes: (project as any).statLikes || "",
@@ -135,6 +138,7 @@ export default function AdminProjects() {
       fd.append("websiteUrl", form.websiteUrl);
       fd.append("tags", form.tags);
       fd.append("published", String(form.published));
+      fd.append("showOnHomepage", String(form.showOnHomepage));
       fd.append("sortOrder", String(form.sortOrder));
       fd.append("statFollowers", form.statFollowers);
       fd.append("statLikes", form.statLikes);
@@ -223,10 +227,15 @@ export default function AdminProjects() {
                       </div>
                     </td>
                     <td className="p-4">
-                      {project.published ?
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><Check className="w-3 h-3 mr-1"/> Aktiv</span> :
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><X className="w-3 h-3 mr-1"/> Entwurf</span>
-                      }
+                      <div className="flex flex-col gap-1">
+                        {project.published ?
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><Check className="w-3 h-3 mr-1"/> Aktiv</span> :
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><X className="w-3 h-3 mr-1"/> Entwurf</span>
+                        }
+                        {(project as any).showOnHomepage && (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700">🏠 Startseite</span>
+                        )}
+                      </div>
                     </td>
                     <td className="p-4 text-right space-x-2">
                       <Button variant="outline" size="sm" onClick={() => openEdit(project)}>
@@ -386,9 +395,15 @@ export default function AdminProjects() {
 
           {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-border">
-            <div className="flex items-center space-x-2">
-              <input type="checkbox" id="published" checked={form.published} onChange={e => setForm(f => ({ ...f, published: e.target.checked }))} className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" />
-              <label htmlFor="published" className="text-sm font-medium">Veröffentlichen</label>
+            <div className="flex items-center gap-5">
+              <div className="flex items-center space-x-2">
+                <input type="checkbox" id="published" checked={form.published} onChange={e => setForm(f => ({ ...f, published: e.target.checked }))} className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" />
+                <label htmlFor="published" className="text-sm font-medium">Veröffentlichen</label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input type="checkbox" id="showOnHomepage" checked={form.showOnHomepage} onChange={e => setForm(f => ({ ...f, showOnHomepage: e.target.checked }))} className="w-4 h-4 accent-orange-500 rounded border-gray-300" />
+                <label htmlFor="showOnHomepage" className="text-sm font-medium text-orange-600">Auf Startseite anzeigen</label>
+              </div>
             </div>
             <div className="flex space-x-2">
               <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Abbrechen</Button>

@@ -685,9 +685,7 @@ function autoStat(seed: number, min: number, max: number): string {
 
 function SocialMediaSlider() {
   const { data: allProjects = [], isLoading } = useGetProjects({ published: true });
-  const projects = allProjects.filter(p =>
-    p.category?.toLowerCase().includes("social")
-  );
+  const projects = allProjects.filter((p: any) => p.showOnHomepage === true);
 
   const totalSlides = Math.max(0, projects.length - CARDS_PER_VIEW + 1);
   const [current, setCurrent] = useState(0);
@@ -702,8 +700,6 @@ function SocialMediaSlider() {
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [next, projects.length]);
-
-  const visible = projects.slice(current, current + CARDS_PER_VIEW);
 
   const FALLBACK = [
     {

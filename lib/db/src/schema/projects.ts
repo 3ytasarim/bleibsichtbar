@@ -16,6 +16,7 @@ export const projectsTable = pgTable("projects", {
   statLikes: text("stat_likes"),
   statViews: text("stat_views"),
   published: boolean("published").notNull().default(false),
+  showOnHomepage: boolean("show_on_homepage").notNull().default(false),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
