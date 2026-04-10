@@ -57,11 +57,11 @@ export function Navbar() {
           isScrolled ? "py-2.5 shadow-sm" : "py-3.5"
         )}
       >
-        <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
 
-            {/* Logo — with left margin to push it toward center */}
-            <Link href="/" className="flex items-center shrink-0 group lg:ml-44 xl:ml-56">
+            {/* Logo — aligned with hero content left edge */}
+            <Link href="/" className="flex items-center shrink-0 group">
               <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
                 Bleibsichtbar
               </span>
