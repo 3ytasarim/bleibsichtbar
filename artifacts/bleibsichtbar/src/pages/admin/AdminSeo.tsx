@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Globe, Search, CheckCircle2, AlertCircle, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
+import { Globe, Search, CheckCircle2, AlertCircle, ExternalLink, ChevronDown, ChevronUp, Code2, Tag } from "lucide-react";
 
 interface SeoRow {
   slug: string;
@@ -13,6 +13,8 @@ interface SeoRow {
   metaDescription: string;
   keywords: string;
   googleVerification: string;
+  headScript: string;
+  bodyScript: string;
 }
 
 async function fetchAllSeo(): Promise<SeoRow[]> {
@@ -34,6 +36,8 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
     metaDescription: row.metaDescription || "",
     keywords: row.keywords || "",
     googleVerification: row.googleVerification || "",
+    headScript: row.headScript || "",
+    bodyScript: row.bodyScript || "",
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -44,11 +48,14 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
       metaDescription: row.metaDescription || "",
       keywords: row.keywords || "",
       googleVerification: row.googleVerification || "",
+      headScript: row.headScript || "",
+      bodyScript: row.bodyScript || "",
     });
   }, [row]);
 
   const isGlobal = row.slug === "global";
   const hasContent = row.metaTitle || row.metaDescription;
+  const hasScripts = row.headScript || row.bodyScript;
 
   const handleSave = async () => {
     setSaving(true);
@@ -69,10 +76,13 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
         className="w-full flex items-center justify-between px-5 py-4 bg-white hover:bg-gray-50 transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className={`w-2 h-2 rounded-full ${hasContent ? "bg-green-500" : "bg-gray-300"}`} />
+          <div className={`w-2 h-2 rounded-full ${isGlobal ? (hasScripts ? "bg-orange-500" : "bg-gray-300") : hasContent ? "bg-green-500" : "bg-gray-300"}`} />
           <span className="font-semibold text-sm text-gray-800">{row.pageLabel}</span>
-          {hasContent && (
+          {!isGlobal && hasContent && (
             <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">SEO konfiguriert</span>
+          )}
+          {isGlobal && hasScripts && (
+            <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">Scripts aktiv</span>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -82,25 +92,65 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
       </button>
 
       {open && (
-        <div className="px-5 pb-5 pt-3 bg-gray-50 border-t border-gray-100 space-y-4">
+        <div className="px-5 pb-5 pt-3 bg-gray-50 border-t border-gray-100 space-y-5">
           {isGlobal ? (
             <>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
-                <strong>Global:</strong> Der Google Verification Code wird auf <em>allen</em> Seiten eingebunden.
+                <strong>Global:</strong> Diese Einstellungen gelten für <em>alle</em> Seiten der Website.
               </div>
+
+              {/* Google Search Console */}
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
-                    <Search className="w-3.5 h-3.5" /> Google Search Console Verification
-                  </label>
-                </div>
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-1">
+                  <Search className="w-3.5 h-3.5" /> Google Search Console – Verification
+                </label>
                 <Input
                   placeholder="z.B. google-site-verification=AbCdEfGhIjKlMnOpQr..."
                   value={form.googleVerification}
                   onChange={e => setForm(f => ({ ...f, googleVerification: e.target.value }))}
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  In Google Search Console → „HTML-Tag" auswählen → den <code>content="..."</code> Wert hier einfügen.
+                  In Search Console → „HTML-Tag" → den <code>content="..."</code> Wert hier einfügen.
+                </p>
+              </div>
+
+              <hr className="border-gray-200" />
+
+              {/* Head Script (GTM / GA) */}
+              <div>
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-1">
+                  <Code2 className="w-3.5 h-3.5 text-orange-500" />
+                  <span>&lt;head&gt; Script</span>
+                  <span className="text-xs font-normal text-gray-400 ml-1">— Google Tag Manager / Analytics</span>
+                </label>
+                <Textarea
+                  rows={7}
+                  className="font-mono text-xs bg-white"
+                  placeholder={"<!-- Google Tag Manager -->\n<script>(function(w,d,s,l,i){...})(window,document,'script','dataLayer','GTM-XXXXXX');</script>\n<!-- End Google Tag Manager -->"}
+                  value={form.headScript}
+                  onChange={e => setForm(f => ({ ...f, headScript: e.target.value }))}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Das komplette <code>&lt;script&gt;...&lt;/script&gt;</code> Tag aus GTM/GA hier einfügen. Wird in den <code>&lt;head&gt;</code> aller Seiten eingefügt.
+                </p>
+              </div>
+
+              {/* Body Script (GTM noscript) */}
+              <div>
+                <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-1">
+                  <Tag className="w-3.5 h-3.5 text-orange-500" />
+                  <span>&lt;body&gt; Script</span>
+                  <span className="text-xs font-normal text-gray-400 ml-1">— GTM &lt;noscript&gt; Snippet</span>
+                </label>
+                <Textarea
+                  rows={5}
+                  className="font-mono text-xs bg-white"
+                  placeholder={"<!-- Google Tag Manager (noscript) -->\n<noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX\"\nheight=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n<!-- End Google Tag Manager (noscript) -->"}
+                  value={form.bodyScript}
+                  onChange={e => setForm(f => ({ ...f, bodyScript: e.target.value }))}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Das <code>&lt;noscript&gt;</code> Tag aus GTM. Wird direkt nach dem <code>&lt;body&gt;</code>-Tag eingefügt.
                 </p>
               </div>
             </>
@@ -188,7 +238,7 @@ export default function AdminSeo() {
     <AdminLayout>
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-display">SEO-Verwaltung</h1>
-        <p className="text-muted-foreground mt-1">Meta-Titel, Beschreibungen und Keywords für jede Seite</p>
+        <p className="text-muted-foreground mt-1">Meta-Titel, Beschreibungen, Keywords und Google-Scripts</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -242,7 +292,7 @@ export default function AdminSeo() {
 
           {globalPage && (
             <>
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-4">Google Search Console</h2>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mt-8 mb-4">Global – Google Scripts & Verification</h2>
               <SeoPageRow key="global" row={globalPage} onSave={handleSave} />
             </>
           )}

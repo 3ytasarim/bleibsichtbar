@@ -19,20 +19,22 @@ const DEFAULT_PAGES = [
   { slug: "global", pageLabel: "Global (alle Seiten)" },
 ];
 
+const EMPTY_ROW = {
+  id: null,
+  metaTitle: "",
+  metaDescription: "",
+  keywords: "",
+  googleVerification: "",
+  headScript: "",
+  bodyScript: "",
+  updatedAt: null,
+};
+
 router.get("/", async (_req: Request, res: Response) => {
   try {
     const rows = await db.select().from(seoTable);
     const map = Object.fromEntries(rows.map(r => [r.slug, r]));
-    const result = DEFAULT_PAGES.map(p => map[p.slug] ?? {
-      id: null,
-      slug: p.slug,
-      pageLabel: p.pageLabel,
-      metaTitle: "",
-      metaDescription: "",
-      keywords: "",
-      googleVerification: "",
-      updatedAt: null,
-    });
+    const result = DEFAULT_PAGES.map(p => map[p.slug] ?? { ...EMPTY_ROW, slug: p.slug, pageLabel: p.pageLabel });
     res.json(result);
   } catch {
     res.status(500).json({ message: "Serverfehler" });
@@ -52,7 +54,7 @@ router.get("/:slug", async (req: Request, res: Response) => {
 router.put("/:slug", requireAdmin, async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
-    const { pageLabel, metaTitle, metaDescription, keywords, googleVerification } = req.body;
+    const { pageLabel, metaTitle, metaDescription, keywords, googleVerification, headScript, bodyScript } = req.body;
     const defaultPage = DEFAULT_PAGES.find(p => p.slug === slug);
     const label = pageLabel || defaultPage?.pageLabel || slug;
 
@@ -65,6 +67,8 @@ router.put("/:slug", requireAdmin, async (req: Request, res: Response) => {
         metaDescription: metaDescription ?? existing.metaDescription,
         keywords: keywords ?? existing.keywords,
         googleVerification: googleVerification ?? existing.googleVerification,
+        headScript: headScript ?? existing.headScript,
+        bodyScript: bodyScript ?? existing.bodyScript,
         updatedAt: new Date(),
       }).where(eq(seoTable.slug, slug)).returning();
     } else {
@@ -75,6 +79,8 @@ router.put("/:slug", requireAdmin, async (req: Request, res: Response) => {
         metaDescription: metaDescription ?? "",
         keywords: keywords ?? "",
         googleVerification: googleVerification ?? "",
+        headScript: headScript ?? "",
+        bodyScript: bodyScript ?? "",
         updatedAt: new Date(),
       }).returning();
     }

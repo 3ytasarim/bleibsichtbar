@@ -10,6 +10,8 @@ export const seoTable = pgTable("seo_settings", {
   metaDescription: text("meta_description").notNull().default(""),
   keywords: text("keywords").notNull().default(""),
   googleVerification: text("google_verification").notNull().default(""),
+  headScript: text("head_script").notNull().default(""),
+  bodyScript: text("body_script").notNull().default(""),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
