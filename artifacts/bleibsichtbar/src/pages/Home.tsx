@@ -1038,9 +1038,9 @@ export default function Home() {
               <div
                 className="relative select-none"
                 style={{
-                  width: "min(92vw, 390px)",
-                  height: "min(88vw, 540px)",
-                  perspective: "1200px",
+                  width: "min(92vw, 480px)",
+                  height: "min(88vw, 640px)",
+                  perspective: "1400px",
                   perspectiveOrigin: "50% 50%",
                 }}
               >
@@ -1052,8 +1052,8 @@ export default function Home() {
                     position: "absolute",
                     top: 0,
                     right: 0,
-                    width: "clamp(148px, 46vw, 206px)",
-                    height: "clamp(302px, 94vw, 420px)",
+                    width: "clamp(148px, 46vw, 252px)",
+                    height: "clamp(302px, 94vw, 513px)",
                     zIndex: 4,
                     rotateY: 10,
                     rotateZ: 4,
@@ -1063,7 +1063,7 @@ export default function Home() {
                     width: "100%", height: "100%",
                     borderRadius: 38, border: "8px solid #1a1a1c", background: "#1a1a1c",
                     overflow: "hidden", position: "relative", isolation: "isolate", willChange: "transform",
-                    boxShadow: "12px 24px 70px rgba(0,0,0,0.7), 0 0 50px rgba(34,197,94,0.18), 0 0 0 1px rgba(255,255,255,0.10)",
+                    boxShadow: "8px 16px 40px rgba(0,0,0,0.35), 0 0 40px rgba(34,197,94,0.15), 0 0 0 1px rgba(255,255,255,0.10)",
                   }}>
                     <div style={{ position: "absolute", inset: 0, borderRadius: 30, overflow: "hidden", background: "#06080f" }}>
                       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1088,8 +1088,8 @@ export default function Home() {
                     position: "absolute",
                     bottom: 0,
                     left: 0,
-                    width: "clamp(160px, 50vw, 222px)",
-                    height: "clamp(326px, 102vw, 452px)",
+                    width: "clamp(160px, 50vw, 272px)",
+                    height: "clamp(326px, 102vw, 554px)",
                     zIndex: 5,
                     rotateY: -10,
                     rotateZ: -4,
@@ -1099,7 +1099,7 @@ export default function Home() {
                     width: "100%", height: "100%",
                     borderRadius: 40, border: "8px solid #1a1a1c", background: "#1a1a1c",
                     overflow: "hidden", position: "relative", isolation: "isolate", willChange: "transform",
-                    boxShadow: "-12px 24px 80px rgba(0,0,0,0.75), 0 0 55px rgba(249,115,22,0.18), 0 0 0 1px rgba(255,255,255,0.12)",
+                    boxShadow: "-8px 16px 40px rgba(0,0,0,0.35), 0 0 45px rgba(249,115,22,0.15), 0 0 0 1px rgba(255,255,255,0.12)",
                   }}>
                     <div style={{ position: "absolute", inset: 0, borderRadius: 32, overflow: "hidden", background: "#f5f7fa" }}>
                       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
