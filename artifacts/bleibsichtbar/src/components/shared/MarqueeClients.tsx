@@ -28,7 +28,7 @@ function LogoCard({ item }: { item: MarqueeItem }) {
   );
 }
 
-function MarqueeTrack({ items, direction, delay = 0 }: { items: MarqueeItem[]; direction: "left" | "right"; delay?: number }) {
+function MarqueeTrack({ items, direction, duration = 40, delay = 0 }: { items: MarqueeItem[]; direction: "left" | "right"; duration?: number; delay?: number }) {
   const tripled = [...items, ...items, ...items];
   const animName = direction === "left" ? "marquee-left" : "marquee-right";
 
@@ -44,7 +44,7 @@ function MarqueeTrack({ items, direction, delay = 0 }: { items: MarqueeItem[]; d
         style={{
           width: "max-content",
           willChange: "transform",
-          animation: `${animName} 40s linear infinite`,
+          animation: `${animName} ${duration}s linear infinite`,
           animationDelay: `${delay}s`,
         }}
       >
@@ -118,8 +118,8 @@ export function MarqueeClients() {
 
       {items.length > 0 ? (
         <div className="flex flex-col gap-8">
-          <MarqueeTrack direction="left" items={row1} delay={0} />
-          {row2.length > 1 && <MarqueeTrack direction="right" items={row2} delay={-20} />}
+          <MarqueeTrack direction="left" items={row1} duration={40} delay={0} />
+          {row2.length > 1 && <MarqueeTrack direction="right" items={row2} duration={27} delay={0} />}
         </div>
       ) : (
         <p className="text-center text-gray-400 text-sm py-10">Kunden werden bald hinzugefügt.</p>
