@@ -176,7 +176,7 @@ export default function Services() {
             <motion.h1 variants={fadeUp} className="text-5xl md:text-6xl font-display font-bold mb-6 leading-tight">
               Alles, was Sie für Ihre<br /><span className="text-accent">digitale Sichtbarkeit</span> brauchen
             </motion.h1>
-            <motion.p variants={fadeUp} className="text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
+            <motion.p variants={fadeUp} className="text-xl text-white max-w-2xl mx-auto leading-relaxed">
               Von Social Media über KI-Automatisierung bis hin zu Performance Marketing – wir sind Ihr Full-Service-Partner für die digitale Welt.
             </motion.p>
           </motion.div>

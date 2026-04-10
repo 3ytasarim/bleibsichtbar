@@ -76,7 +76,7 @@ export default function MarketingAds() {
               Werbung, die <br />
               <span className="text-accent">wirklich wirkt.</span>
             </h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
+            <p className="text-xl text-white max-w-2xl mx-auto mb-10">
               Gezielte Werbung bei Google, Instagram und Co. – damit Ihre Kunden Sie genau dann finden, wenn sie suchen. Messbare Ergebnisse statt Streuverlust.
             </p>
             <div className="flex justify-center">

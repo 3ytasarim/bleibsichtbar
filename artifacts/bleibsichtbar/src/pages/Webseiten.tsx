@@ -323,7 +323,7 @@ export default function Webseiten() {
                 Ihr digitaler <br />
                 <span className="text-accent">erster Eindruck</span>
               </h1>
-              <p className="text-xl text-white/80 mb-10 max-w-lg">
+              <p className="text-xl text-white mb-10 max-w-lg">
                 Ihre Webseite entscheidet in Sekunden über Vertrauen. Wir entwickeln klare, moderne Auftritte, die Ihr Unternehmen hochwertig präsentieren und Besucher gezielt zu Anfragen führen.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">

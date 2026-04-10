@@ -941,7 +941,7 @@ export default function Home() {
                     ))}
                   </h1>
 
-                  <p className="text-base sm:text-xl text-white/70 max-w-lg leading-relaxed mt-4 sm:mt-6">
+                  <p className="text-base sm:text-xl text-white max-w-lg leading-relaxed mt-4 sm:mt-6">
                     {current.sub}
                   </p>
 

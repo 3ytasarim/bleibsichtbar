@@ -79,7 +79,7 @@ export default function Contact() {
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed"
+            className="text-white text-lg max-w-2xl mx-auto leading-relaxed"
           >
             Ob neue Webseite, mehr Sichtbarkeit oder KI-Automatisierung — wir beraten Sie ehrlich und kostenlos.
           </motion.p>

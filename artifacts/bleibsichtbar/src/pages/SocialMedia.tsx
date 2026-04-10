@@ -758,7 +758,7 @@ export default function SocialMedia() {
             <span className="text-accent">Mehr Kunden.</span>
           </motion.h1>
           <motion.p custom={2} variants={heroFadeUp} initial="hidden" animate="visible"
-            className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
+            className="text-xl text-white max-w-2xl mx-auto mb-10">
             Wir bauen eine starke Präsenz auf, die Vertrauen schafft und neue Kunden bringt. Strategie, Content und Betreuung aus einer Hand.
           </motion.p>
           <motion.div custom={3} variants={heroFadeUp} initial="hidden" animate="visible"

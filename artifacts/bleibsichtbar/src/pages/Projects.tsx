@@ -217,7 +217,7 @@ export default function Projects() {
             Unsere <span className="text-accent">Projekte</span>
           </motion.h1>
           <motion.p custom={2} variants={heroFadeUp} initial="hidden" animate="visible"
-            className="text-xl text-white/65 max-w-xl mx-auto mb-12">
+            className="text-xl text-white max-w-xl mx-auto mb-12">
             Einblicke in erfolgreiche Kundenprojekte — von Social Media bis Webdesign.
           </motion.p>
           <motion.div custom={3} variants={heroFadeUp} initial="hidden" animate="visible"

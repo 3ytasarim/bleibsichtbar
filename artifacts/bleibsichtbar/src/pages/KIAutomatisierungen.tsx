@@ -206,7 +206,7 @@ export default function KIAutomatisierungen() {
                 Mehr Effizienz durch <br />
                 <span className="text-accent">smarte KI-Lösungen</span>
               </h1>
-              <p className="text-xl text-white/80 mb-10">
+              <p className="text-xl text-white mb-10">
                 Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI. Mehr Effizienz, weniger Aufwand, mehr Wachstum.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
