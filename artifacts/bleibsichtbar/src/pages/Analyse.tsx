@@ -96,7 +96,7 @@ export default function Analyse() {
               Daten, die <br />
               <span className="text-accent">Entscheidungen tragen.</span>
             </h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto mb-10">
+            <p className="text-xl text-white max-w-2xl mx-auto mb-10">
               Wir analysieren Ihre Online-Präsenz, messen Ihre Performance und liefern Ihnen die Insights, die Sie brauchen, um besser zu werden.
             </p>
             <div className="flex justify-center">
