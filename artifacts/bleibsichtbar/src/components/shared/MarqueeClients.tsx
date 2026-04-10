@@ -6,6 +6,7 @@ interface MarqueeItem {
   name: string;
   imageUrl: string | null;
   sortOrder: number;
+  row?: number;
 }
 
 function LogoCard({ item }: { item: MarqueeItem }) {
@@ -65,11 +66,12 @@ export function MarqueeClients() {
       fetch("/api/references").then(r => r.json()).catch(() => []),
     ]).then(([clients, references]) => {
       const fromClients: MarqueeItem[] = Array.isArray(clients)
-        ? clients.map((c: { id: number; name: string; imageUrl: string | null; sortOrder: number }) => ({
+        ? clients.map((c: { id: number; name: string; imageUrl: string | null; sortOrder: number; row?: number }) => ({
             id: `c-${c.id}`,
             name: c.name,
             imageUrl: c.imageUrl,
             sortOrder: c.sortOrder ?? 0,
+            row: c.row ?? 1,
           }))
         : [];
 
@@ -81,6 +83,7 @@ export function MarqueeClients() {
               name: r.company,
               imageUrl: r.logoUrl,
               sortOrder: r.sortOrder ?? 0,
+              row: 2,
             }))
         : [];
 
@@ -89,9 +92,8 @@ export function MarqueeClients() {
     });
   }, []);
 
-  const half = Math.ceil(items.length / 2);
-  const row1 = items.length > 0 ? items : [];
-  const row2 = items.length > 0 ? [...items.slice(half), ...items.slice(0, half)] : [];
+  const row1 = items.filter(i => (i.row ?? 1) === 1);
+  const row2 = items.filter(i => (i.row ?? 1) === 2);
 
   return (
     <section className="py-24 overflow-hidden" style={{ background: "#f3f4f6" }}>
@@ -116,10 +118,10 @@ export function MarqueeClients() {
         </p>
       </motion.div>
 
-      {items.length > 0 ? (
+      {(row1.length > 0 || row2.length > 0) ? (
         <div className="flex flex-col gap-8">
-          <MarqueeTrack direction="left" items={row1} duration={40} delay={0} />
-          {row2.length > 1 && <MarqueeTrack direction="right" items={row2} duration={27} delay={0} />}
+          {row1.length > 0 && <MarqueeTrack direction="left" items={row1} duration={40} delay={0} />}
+          {row2.length > 0 && <MarqueeTrack direction="right" items={row2} duration={27} delay={0} />}
         </div>
       ) : (
         <p className="text-center text-gray-400 text-sm py-10">Kunden werden bald hinzugefügt.</p>

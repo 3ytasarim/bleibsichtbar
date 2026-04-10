@@ -19,7 +19,7 @@ const upload = multer({
 
 router.get("/", async (_req, res) => {
   try {
-    const clients = await db.select().from(clientsTable).orderBy(asc(clientsTable.sortOrder), asc(clientsTable.createdAt));
+    const clients = await db.select().from(clientsTable).orderBy(asc(clientsTable.row), asc(clientsTable.sortOrder), asc(clientsTable.createdAt));
     res.json(clients);
   } catch {
     res.status(500).json({ error: "Fehler beim Laden der Kunden" });
@@ -28,7 +28,7 @@ router.get("/", async (_req, res) => {
 
 router.post("/", requireAdmin, upload.single("image"), async (req, res) => {
   try {
-    const { name, sortOrder } = req.body as { name?: string; sortOrder?: string };
+    const { name, sortOrder, row } = req.body as { name?: string; sortOrder?: string; row?: string };
     if (!name) { res.status(400).json({ error: "Name ist erforderlich" }); return; }
     let imageUrl: string | null = null;
     if (req.file) {
@@ -38,6 +38,7 @@ router.post("/", requireAdmin, upload.single("image"), async (req, res) => {
       name,
       imageUrl,
       sortOrder: sortOrder ? parseInt(sortOrder, 10) : 0,
+      row: row ? parseInt(row, 10) : 1,
     }).returning();
     res.json(client);
   } catch {
@@ -48,10 +49,11 @@ router.post("/", requireAdmin, upload.single("image"), async (req, res) => {
 router.put("/:id", requireAdmin, upload.single("image"), async (req, res) => {
   try {
     const id = parseInt(req.params["id"]!, 10);
-    const { name, sortOrder } = req.body as { name?: string; sortOrder?: string };
+    const { name, sortOrder, row } = req.body as { name?: string; sortOrder?: string; row?: string };
     const updates: Partial<typeof clientsTable.$inferInsert> = {};
     if (name !== undefined) updates.name = name;
     if (sortOrder !== undefined) updates.sortOrder = parseInt(sortOrder, 10);
+    if (row !== undefined) updates.row = parseInt(row, 10);
     if (req.file) {
       updates.imageUrl = await uploadBufferToGCS(req.file.buffer, req.file.originalname, req.file.mimetype, "clients");
     }

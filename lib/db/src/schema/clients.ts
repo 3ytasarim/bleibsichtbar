@@ -7,6 +7,7 @@ export const clientsTable = pgTable("clients", {
   name: text("name").notNull(),
   imageUrl: text("image_url"),
   sortOrder: integer("sort_order").notNull().default(0),
+  row: integer("row").notNull().default(1),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
