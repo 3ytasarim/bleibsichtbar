@@ -120,9 +120,9 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: index * 0.06, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
     >
-      <Link href={`/projekte/${project.id}`} className="block">
+      <div className="block">
         <motion.div
-          className="relative overflow-hidden group cursor-pointer"
+          className="relative overflow-hidden group cursor-default"
           style={{ borderRadius: 20, aspectRatio: "4/5" }}
           whileHover={{ scale: 1.02 }}
           transition={{ type: "spring", stiffness: 300, damping: 24 }}
@@ -175,7 +175,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
             </div>
           </div>
         </motion.div>
-      </Link>
+      </div>
     </motion.div>
   );
 }

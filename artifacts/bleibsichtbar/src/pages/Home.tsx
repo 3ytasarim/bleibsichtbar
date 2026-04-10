@@ -781,7 +781,7 @@ function SocialMediaSlider() {
                     whileHover={{ y: -8, scale: 1.015 }}
                     transition={{ type: "spring", stiffness: 280, damping: 22 }}
                   >
-                    <Link href={p.id > 0 ? `/projekte/${p.id}` : "/projekte"} className="block group cursor-pointer">
+                    <div className="block group cursor-default">
                       <div
                         className="relative overflow-hidden"
                         style={{
@@ -833,7 +833,7 @@ function SocialMediaSlider() {
                           </div>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   </motion.div>
                   );
                 })}
