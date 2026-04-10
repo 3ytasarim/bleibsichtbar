@@ -28,18 +28,26 @@ function LogoCard({ item }: { item: MarqueeItem }) {
   );
 }
 
-function MarqueeTrack({ items, direction }: { items: MarqueeItem[]; direction: "left" | "right" }) {
+function MarqueeTrack({ items, direction, delay = 0 }: { items: MarqueeItem[]; direction: "left" | "right"; delay?: number }) {
   const tripled = [...items, ...items, ...items];
-  const animClass = direction === "left" ? "animate-marquee-left" : "animate-marquee-right";
+  const animName = direction === "left" ? "marquee-left" : "marquee-right";
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden marquee-row">
       <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-32 z-10"
         style={{ background: "linear-gradient(to right, #f3f4f6, transparent)" }} />
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-32 z-10"
         style={{ background: "linear-gradient(to left, #f3f4f6, transparent)" }} />
 
-      <div className={`flex py-3 ${animClass}`} style={{ width: "max-content", willChange: "transform" }}>
+      <div
+        className="flex py-3"
+        style={{
+          width: "max-content",
+          willChange: "transform",
+          animation: `${animName} 40s linear infinite`,
+          animationDelay: `${delay}s`,
+        }}
+      >
         {tripled.map((item, i) => (
           <LogoCard key={`${item.id}-${i}`} item={item} />
         ))}
@@ -110,8 +118,8 @@ export function MarqueeClients() {
 
       {items.length > 0 ? (
         <div className="flex flex-col gap-8">
-          <MarqueeTrack direction="left" items={row1} />
-          {row2.length > 1 && <MarqueeTrack direction="right" items={row2} />}
+          <MarqueeTrack direction="left" items={row1} delay={0} />
+          {row2.length > 1 && <MarqueeTrack direction="right" items={row2} delay={-20} />}
         </div>
       ) : (
         <p className="text-center text-gray-400 text-sm py-10">Kunden werden bald hinzugefügt.</p>

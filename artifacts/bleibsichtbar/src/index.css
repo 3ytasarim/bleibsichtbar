@@ -166,7 +166,8 @@
   animation: marquee-right 40s linear infinite;
 }
 .animate-marquee-left:hover,
-.animate-marquee-right:hover {
+.animate-marquee-right:hover,
+.marquee-row:hover > div {
   animation-play-state: paused;
 }
 
