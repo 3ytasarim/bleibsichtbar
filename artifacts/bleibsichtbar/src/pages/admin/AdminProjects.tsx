@@ -151,7 +151,17 @@ export default function AdminProjects() {
 
       const url = editingId ? `/api/projects/${editingId}` : "/api/projects";
       const method = editingId ? "PUT" : "POST";
-      await fetch(url, { method, body: fd });
+      const token = localStorage.getItem("bs_auth_token");
+      const res = await fetch(url, {
+        method,
+        body: fd,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        alert(err.message || "Fehler beim Speichern");
+        return;
+      }
       queryClient.invalidateQueries({ queryKey: ["/api/projects"] });
       setIsModalOpen(false);
     } finally {
@@ -168,6 +178,9 @@ export default function AdminProjects() {
           <h1 className="text-3xl font-bold font-display">Projekte</h1>
           <p className="text-muted-foreground">Portfolio-Elemente verwalten</p>
         </div>
+        <Button onClick={openCreate} className="bg-accent hover:bg-accent/90 text-white">
+          <Plus className="w-4 h-4 mr-2" /> Neues Projekt
+        </Button>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-border overflow-hidden">
@@ -252,6 +265,12 @@ export default function AdminProjects() {
                 required
               >
                 <option value="">Bitte wählen…</option>
+                <option value="Social Media">Social Media</option>
+                <option value="Webseite">Webseite</option>
+                <option value="Marketing Ads">Marketing Ads</option>
+                <option value="Branding">Branding</option>
+                <option value="Ki & Automatisierungen">Ki & Automatisierungen</option>
+                <option value="Analyse & Reporting">Analyse & Reporting</option>
                 <option value="Fotografie">Fotografie</option>
               </select>
             </div>
