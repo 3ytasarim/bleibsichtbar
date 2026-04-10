@@ -7,7 +7,7 @@ import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/Animated
 import { CtaBanner } from "@/components/shared/CtaBanner";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Globe, Folder, ShieldCheck, Mail } from "lucide-react";
+import { Globe, Folder, ShieldCheck, Mail } from "lucide-react";
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -147,10 +147,9 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
             </span>
           </div>
 
-          {/* Arrow indicator — top right, visible on hover */}
-          <div className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-accent flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300">
-            <ArrowRight className="w-4 h-4 text-white" />
-          </div>
+          {/* Glow border on hover */}
+          <div className="absolute inset-0 z-20 rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{ boxShadow: "inset 0 0 0 2px rgba(249,115,22,0.55)" }} />
 
           {/* Content — slides up on hover */}
           <div className="absolute inset-x-0 bottom-0 z-30 p-6">
@@ -162,15 +161,13 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
               {project.title}
             </h3>
 
-            {/* Client + CTA — hidden until hover */}
+            {/* Client + accent bar — hidden until hover */}
             <div className="overflow-hidden">
               <div className="translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400 ease-out delay-75">
                 {project.clientName && (
-                  <p className="text-white/65 text-sm mb-3">{project.clientName}</p>
+                  <p className="text-white/70 text-sm mb-3">{project.clientName}</p>
                 )}
-                <div className="flex items-center gap-2 text-accent text-sm font-bold">
-                  Projekt ansehen <ArrowRight className="w-3.5 h-3.5" />
-                </div>
+                <div className="h-0.5 w-10 rounded-full bg-accent" />
               </div>
             </div>
           </div>
