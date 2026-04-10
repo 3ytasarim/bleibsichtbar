@@ -1020,7 +1020,7 @@ export default function Home() {
             </div>
 
             {/* Right — Dual Phone Composition */}
-            <div className="flex justify-center relative mt-10 sm:mt-6 lg:mt-0">
+            <div className="flex justify-center relative mt-10 sm:mt-6 lg:mt-0 py-6 lg:py-10">
 
               {/* Ambient glows */}
               <div className="absolute pointer-events-none" style={{
