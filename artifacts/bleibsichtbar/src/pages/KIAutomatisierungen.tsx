@@ -1,4 +1,5 @@
 import React from "react";
+import { SeoHead } from "@/hooks/useSeoPage";
 import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
@@ -190,6 +191,7 @@ const steps = [
 export default function KIAutomatisierungen() {
   return (
     <PublicLayout>
+      <SeoHead slug="ki-automatisierungen" defaults={{ metaTitle: "KI <PublicLayout> Automatisierungen – Bleibsichtbar" }} />
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
         <AnimatedHeroBackground />

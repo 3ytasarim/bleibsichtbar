@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { SeoHead } from "@/hooks/useSeoPage";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useGetProjects } from "@workspace/api-client-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -200,6 +201,7 @@ export default function Projects() {
 
   return (
     <PublicLayout>
+      <SeoHead slug="projekte" defaults={{ metaTitle: "Unsere Projekte – Bleibsichtbar" }} />
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-36 pb-24">
         <AnimatedHeroBackground />

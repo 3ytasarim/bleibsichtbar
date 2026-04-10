@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { SeoHead } from "@/hooks/useSeoPage";
 import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion, AnimatePresence } from "framer-motion";
@@ -739,6 +740,7 @@ export default function SocialMedia() {
 
   return (
     <PublicLayout>
+      <SeoHead slug="social-media" defaults={{ metaTitle: "Social Media Management – Bleibsichtbar" }} />
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
         <AnimatedHeroBackground />

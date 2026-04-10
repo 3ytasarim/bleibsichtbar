@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { SeoHead } from "@/hooks/useSeoPage";
 import { Link } from "wouter";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
@@ -895,6 +896,7 @@ export default function Home() {
 
   return (
     <PublicLayout>
+      <SeoHead slug="home" defaults={{ metaTitle: "Bleibsichtbar – Social Media Agentur | Digitale Sichtbarkeit", metaDescription: "Bleibsichtbar ist Ihre Social Media Agentur für professionelles Marketing, Webseiten, KI-Automatisierungen und mehr." }} />
       {/* ─── Hero ────────────────────────────────────────────────────────── */}
       <div className="relative min-h-[auto] sm:min-h-[100svh] flex items-center overflow-hidden -mt-20 pb-4 sm:pb-4">
         {/* Animated bg */}

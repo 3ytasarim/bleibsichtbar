@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { SeoHead } from "@/hooks/useSeoPage";
 import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
@@ -82,6 +83,7 @@ export default function Analyse() {
 
   return (
     <PublicLayout>
+      <SeoHead slug="analyse" defaults={{ metaTitle: "Analyse <PublicLayout> Reporting – Bleibsichtbar" }} />
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
         <AnimatedHeroBackground />

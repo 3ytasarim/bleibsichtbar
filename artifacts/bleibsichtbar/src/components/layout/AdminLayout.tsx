@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "wouter";
 import { useGetMe, useAdminLogout } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboard, FileText, Image, MessageSquare, LogOut, Loader2, Menu, X, ClipboardList, Users } from "lucide-react";
+import { LayoutDashboard, FileText, Image, MessageSquare, LogOut, Loader2, Menu, X, ClipboardList, Users, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,7 @@ const adminLinks = [
   { name: "Referenzen", path: "/admin/referenzen", icon: <MessageSquare className="w-5 h-5" /> },
   { name: "Kunden", path: "/admin/kunden", icon: <Users className="w-5 h-5" /> },
   { name: "Onboarding", path: "/admin/onboarding", icon: <ClipboardList className="w-5 h-5" /> },
+  { name: "SEO", path: "/admin/seo", icon: <Search className="w-5 h-5" /> },
 ];
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {

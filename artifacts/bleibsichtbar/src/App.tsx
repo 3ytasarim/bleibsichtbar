@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 
 // Public Pages
@@ -29,6 +30,7 @@ import AdminBlog from "./pages/admin/AdminBlog";
 import AdminReferences from "./pages/admin/AdminReferences";
 import AdminOnboarding from "./pages/admin/AdminOnboarding";
 import AdminClients from "./pages/admin/AdminClients";
+import AdminSeo from "./pages/admin/AdminSeo";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,6 +62,7 @@ function Router() {
         <Route path="/admin/referenzen" component={AdminReferences} />
         <Route path="/admin/onboarding" component={AdminOnboarding} />
         <Route path="/admin/kunden" component={AdminClients} />
+        <Route path="/admin/seo" component={AdminSeo} />
 
         {/* Public Routes */}
         <Route path="/" component={Home} />
@@ -86,12 +89,14 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-        <Router />
-      </WouterRouter>
-      <Toaster />
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <Router />
+        </WouterRouter>
+        <Toaster />
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 

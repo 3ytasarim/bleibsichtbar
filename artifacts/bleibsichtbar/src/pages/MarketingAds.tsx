@@ -1,4 +1,5 @@
 import React from "react";
+import { SeoHead } from "@/hooks/useSeoPage";
 import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
@@ -62,6 +63,7 @@ const stats = [
 export default function MarketingAds() {
   return (
     <PublicLayout>
+      <SeoHead slug="marketing-ads" defaults={{ metaTitle: "Marketing Ads – Bleibsichtbar" }} />
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
         <AnimatedHeroBackground />

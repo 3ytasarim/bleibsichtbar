@@ -1,4 +1,5 @@
 import React from "react";
+import { SeoHead } from "@/hooks/useSeoPage";
 import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useGetBlogPosts } from "@workspace/api-client-react";
@@ -10,6 +11,7 @@ export default function Blog() {
 
   return (
     <PublicLayout>
+      <SeoHead slug="blog" defaults={{ metaTitle: "Blog – Bleibsichtbar" }} />
       <section className="py-24 bg-gray-50 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-display font-bold mb-6">Wissen & <span className="text-accent">Insights</span></h1>

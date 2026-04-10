@@ -1,4 +1,5 @@
 import React from "react";
+import { SeoHead } from "@/hooks/useSeoPage";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -52,6 +53,7 @@ export default function Contact() {
 
   return (
     <PublicLayout>
+      <SeoHead slug="kontakt" defaults={{ metaTitle: "Kontakt – Bleibsichtbar" }} />
       {/* Hero */}
       <section
         className="py-24 pt-36 text-white relative overflow-hidden"
