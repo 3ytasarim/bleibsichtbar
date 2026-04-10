@@ -255,7 +255,7 @@ export default function Projects() {
 
       {/* PROJECTS GRID */}
       <section className="py-20 min-h-[50vh] bg-white">
-        <div className="max-w-5xl mx-auto px-6 sm:px-10 lg:px-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatePresence mode="wait">
             {(PRIVATE_FILTERS as readonly string[]).includes(activeFilter) ? (
               <motion.div
@@ -366,9 +366,9 @@ export default function Projects() {
                 </div>
               </motion.div>
             ) : isLoading ? (
-              <motion.div key="loading" className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 pt-10">
-                {[1,2,3,4].map(i => (
-                  <div key={i} className="animate-pulse rounded-3xl bg-gray-100 h-60" />
+              <motion.div key="loading" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-8">
+                {[1,2,3,4,5,6].map(i => (
+                  <div key={i} className="animate-pulse rounded-2xl bg-gray-100" style={{ aspectRatio: "4/5" }} />
                 ))}
               </motion.div>
             ) : filtered.length === 0 ? (
@@ -381,7 +381,7 @@ export default function Projects() {
                 <p className="text-gray-400 text-sm">In dieser Kategorie sind aktuell keine Projekte vorhanden.</p>
               </motion.div>
             ) : (
-              <motion.div key="grid" layout className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16 pt-8">
+              <motion.div key="grid" layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-8">
                 <AnimatePresence mode="popLayout">
                   {filtered.map((project, index) => (
                     <ProjectCard key={project.id} project={project} index={index} />
