@@ -68,13 +68,13 @@ export function Navbar() {
             </Link>
 
             {/* Desktop Nav — centered */}
-            <nav className="hidden lg:flex items-center justify-center gap-6 xl:gap-8">
+            <nav className="hidden lg:flex items-center justify-center gap-3 xl:gap-5">
               {links.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   className={cn(
-                    "text-[15px] xl:text-[16px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
+                    "text-[12.5px] xl:text-[13.5px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
                     location === link.path
                       ? "text-accent"
                       : "text-foreground/80"
@@ -107,7 +107,7 @@ export function Navbar() {
                         ease: "easeInOut",
                       },
                     }}
-                    className="relative overflow-hidden px-7 py-3 rounded-full text-[15px] font-bold text-white inline-flex items-center cursor-pointer"
+                    className="relative overflow-hidden px-5 py-2.5 rounded-full text-[13px] font-bold text-white inline-flex items-center cursor-pointer"
                     style={{
                       background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)",
                       boxShadow: "0 4px 18px rgba(255,107,53,0.4)",
