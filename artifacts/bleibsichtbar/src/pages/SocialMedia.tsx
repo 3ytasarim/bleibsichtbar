@@ -548,13 +548,13 @@ function CaseStudyCarousel({ projects }: { projects: any[] }) {
 
           {/* Buttons row */}
           <div className="flex flex-wrap items-center gap-4">
-            <Link href={`/projekte/${active.id}`}>
+            <Link href="/projekte">
               <motion.span
                 whileHover={{ x: 4 }}
                 className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest border px-7 py-3 rounded-full transition-colors cursor-pointer hover:border-accent hover:text-accent"
                 style={{ color: "#0a1628", borderColor: "rgba(10,22,40,0.35)" }}
               >
-                Fallstudie ansehen
+                Mehr
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
