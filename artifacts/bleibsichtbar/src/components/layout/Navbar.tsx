@@ -74,7 +74,7 @@ export function Navbar() {
                   key={link.path}
                   href={link.path}
                   className={cn(
-                    "text-[12.5px] xl:text-[13.5px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
+                    "text-[14px] xl:text-[15px] font-semibold transition-all hover:text-accent relative py-1 whitespace-nowrap",
                     location === link.path
                       ? "text-accent"
                       : "text-foreground/80"
