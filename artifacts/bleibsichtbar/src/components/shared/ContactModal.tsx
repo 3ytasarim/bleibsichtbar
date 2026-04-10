@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight, CheckCircle2, Loader2, Instagram, Globe, Megaphone, AlertCircle } from "lucide-react";
+import { X, ArrowRight, CheckCircle2, Loader2, Instagram, Globe, Megaphone, AlertCircle, Zap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -37,6 +37,14 @@ const SERVICES = [
     color: "#F59E0B",
     glow: "rgba(245,158,11,0.18)",
     desc: "Google & Meta Ads",
+  },
+  {
+    id: "ki-automatisierung",
+    label: "KI & Automatisierung",
+    icon: Zap,
+    color: "#8B5CF6",
+    glow: "rgba(139,92,246,0.18)",
+    desc: "Workflows & KI-Tools",
   },
 ];
 
@@ -198,7 +206,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <p className="text-white/45 text-sm mt-1.5">Wählen Sie eine oder mehrere Optionen</p>
                     </motion.div>
 
-                    <div className="grid grid-cols-3 gap-3 mb-7">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-7">
                       {SERVICES.map((svc, i) => {
                         const Icon = svc.icon;
                         const isActive = selected.includes(svc.id);
