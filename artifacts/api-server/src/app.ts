@@ -13,6 +13,10 @@ app.disable("x-powered-by");
 app.use(compression());
 
 app.use((_req: Request, res: Response, next: NextFunction) => {
+  res.removeHeader("Server");
+  res.removeHeader("X-Powered-By");
+  res.removeHeader("Via");
+  res.setHeader("Server", "nginx");
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");

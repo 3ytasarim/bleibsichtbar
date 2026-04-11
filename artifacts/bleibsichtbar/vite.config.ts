@@ -26,14 +26,14 @@ if (!basePath) {
 }
 
 const isDev = process.env.NODE_ENV !== "production";
-const isReplit = isDev && process.env.REPL_ID !== undefined;
+const useDevTools = isDev && process.env.REPL_ID !== undefined;
 
 export default defineConfig({
   base: basePath,
   plugins: [
     react(),
     tailwindcss(),
-    ...(isReplit
+    ...(useDevTools
       ? [
           await import("@replit/vite-plugin-runtime-error-modal").then((m) =>
             m.default()
@@ -62,6 +62,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false,
     cssCodeSplit: false,
+    minify: "esbuild",
     rollupOptions: {
       output: {
         entryFileNames: "assets/app-core.js",
