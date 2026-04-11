@@ -9,6 +9,7 @@ import onboardingRouter from "./onboarding.js";
 import clientsRouter from "./clients.js";
 import gcsRouter from "./gcs.js";
 import seoRouter from "./seo.js";
+import analyseRouter from "./analyse.js";
 import { db, projectsTable, blogPostsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 
@@ -24,6 +25,7 @@ router.use("/onboarding", onboardingRouter);
 router.use("/clients", clientsRouter);
 router.use("/gcs", gcsRouter);
 router.use("/seo", seoRouter);
+router.use("/analyse", analyseRouter);
 
 router.get("/sitemap.xml", async (_req: Request, res: Response) => {
   try {

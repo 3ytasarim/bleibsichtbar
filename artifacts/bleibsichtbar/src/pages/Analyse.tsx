@@ -79,7 +79,8 @@ const vorteile = [
 export default function Analyse() {
   const [form, setForm] = useState({ company: "", instagram: "", tiktok: "", linkedin: "", goals: "", contact: "" });
   const [submitted, setSubmitted] = useState(false);
-  const [errors, setErrors] = useState<{ company?: string; goals?: string; contact?: string }>({});
+  const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState<{ company?: string; goals?: string; contact?: string; submit?: string }>({});
 
   return (
     <PublicLayout>
@@ -331,7 +332,7 @@ export default function Analyse() {
               </motion.div>
             ) : (
               <motion.form noValidate variants={fadeUp}
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
                   const errs: typeof errors = {};
                   if (!form.company.trim()) errs.company = "Bitte geben Sie Ihren Unternehmensnamen ein.";
@@ -343,7 +344,20 @@ export default function Analyse() {
                   }
                   if (Object.keys(errs).length > 0) { setErrors(errs); return; }
                   setErrors({});
-                  setSubmitted(true);
+                  setSending(true);
+                  try {
+                    const res = await fetch("/api/analyse", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(form),
+                    });
+                    if (!res.ok) throw new Error("Server error");
+                    setSubmitted(true);
+                  } catch {
+                    setErrors({ submit: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut." });
+                  } finally {
+                    setSending(false);
+                  }
                 }}
                 className="bg-white rounded-3xl p-8 border border-gray-100 shadow-lg space-y-6">
                 <div>
@@ -405,8 +419,15 @@ export default function Analyse() {
                     </motion.div>
                   )}
                 </div>
-                <Button type="submit" size="lg" className="w-full rounded-full font-bold bg-accent hover:bg-accent/90 text-white">
-                  Kostenlose Analyse anfordern <ArrowRight className="ml-2 w-4 h-4 inline" />
+                {errors.submit && (
+                  <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{errors.submit}</span>
+                  </motion.div>
+                )}
+                <Button type="submit" size="lg" disabled={sending} className="w-full rounded-full font-bold bg-accent hover:bg-accent/90 text-white disabled:opacity-60">
+                  {sending ? "Wird gesendet..." : <><span>Kostenlose Analyse anfordern</span><ArrowRight className="ml-2 w-4 h-4 inline" /></>}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
                   100% kostenlos & unverbindlich. Wir melden uns innerhalb von 48 Stunden.

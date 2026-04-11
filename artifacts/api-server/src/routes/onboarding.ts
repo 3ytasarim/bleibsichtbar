@@ -2,6 +2,7 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import { db, onboardingsTable } from "@workspace/db";
 import { desc } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/auth.js";
+import { sendOnboardingEmail } from "../lib/mailer.js";
 
 const router: IRouter = Router();
 
@@ -16,6 +17,13 @@ router.post("/", async (req: Request, res: Response) => {
       ansprechpartner: ansprechpartner || null,
       data,
     });
+
+    sendOnboardingEmail({
+      companyName,
+      ansprechpartner,
+      formData: data || {},
+    }).catch((err) => console.error("[mailer] onboarding email error:", err));
+
     res.json({ success: true, message: "Onboarding erfolgreich übermittelt" });
   } catch (err) {
     console.error(err);
