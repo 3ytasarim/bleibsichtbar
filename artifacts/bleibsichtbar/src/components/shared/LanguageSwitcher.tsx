@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+
 import { useT, LangOption } from "@/i18n";
 
 interface LangDef {
@@ -44,10 +44,6 @@ export function LanguageSwitcher() {
       >
         <span className="text-base leading-none">{current.flag}</span>
         <span className="text-xs font-bold tracking-wide">{current.short}</span>
-        <ChevronDown
-          className="w-3 h-3 transition-transform duration-200"
-          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
-        />
       </button>
 
       <AnimatePresence>
