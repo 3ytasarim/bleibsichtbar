@@ -1,22 +1,36 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import { useT, LangOption } from "@/i18n";
 
 interface LangDef {
   code: LangOption;
-  flag: string;
+  iso: string;
   label: string;
   short: string;
+  badge?: string;
 }
 
 const LANGS: LangDef[] = [
-  { code: "de",    flag: "🇩🇪", label: "Deutsch",    short: "DE" },
-  { code: "en",    flag: "🇬🇧", label: "English",    short: "EN" },
-  { code: "nl-be", flag: "🇧🇪", label: "Nederlands", short: "NL" },
-  { code: "fr",    flag: "🇫🇷", label: "Français",   short: "FR" },
-  { code: "nl-nl", flag: "🇳🇱", label: "Nederlands", short: "NL" },
+  { code: "de",    iso: "de", label: "Deutsch",    short: "DE" },
+  { code: "en",    iso: "gb", label: "English",    short: "EN" },
+  { code: "nl-be", iso: "be", label: "Nederlands", short: "NL", badge: "BE" },
+  { code: "fr",    iso: "fr", label: "Français",   short: "FR" },
+  { code: "nl-nl", iso: "nl", label: "Nederlands", short: "NL", badge: "NL" },
 ];
+
+function FlagImg({ iso, size = 20 }: { iso: string; size?: number }) {
+  return (
+    <img
+      src={`https://flagcdn.com/${size}x${Math.round(size * 0.75)}/${iso}.png`}
+      srcSet={`https://flagcdn.com/${size * 2}x${Math.round(size * 0.75 * 2)}/${iso}.png 2x`}
+      width={size}
+      height={Math.round(size * 0.75)}
+      alt={iso.toUpperCase()}
+      className="rounded-sm object-cover shrink-0"
+      style={{ display: "inline-block" }}
+    />
+  );
+}
 
 export function LanguageSwitcher() {
   const { lang, setLang } = useT();
@@ -42,7 +56,7 @@ export function LanguageSwitcher() {
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold text-foreground/70 hover:text-foreground hover:bg-gray-100 transition-all duration-200 select-none border border-transparent hover:border-gray-200"
         aria-label="Select language"
       >
-        <span className="text-base leading-none">{current.flag}</span>
+        <FlagImg iso={current.iso} size={20} />
         <span className="text-xs font-bold tracking-wide">{current.short}</span>
       </button>
 
@@ -67,10 +81,8 @@ export function LanguageSwitcher() {
                   <button
                     key={l.code}
                     onClick={() => { setLang(l.code); setOpen(false); }}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150 group"
-                    style={{
-                      background: isActive ? "rgba(255,107,53,0.15)" : "transparent",
-                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-150"
+                    style={{ background: isActive ? "rgba(255,107,53,0.15)" : "transparent" }}
                     onMouseEnter={e => {
                       if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)";
                     }}
@@ -78,25 +90,21 @@ export function LanguageSwitcher() {
                       if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent";
                     }}
                   >
-                    <span className="text-lg leading-none">{l.flag}</span>
+                    <FlagImg iso={l.iso} size={22} />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <span
                           className="text-xs font-black tracking-widest uppercase"
                           style={{ color: isActive ? "#ff6b35" : "rgba(255,255,255,0.8)" }}
                         >
                           {l.short}
                         </span>
-                        {l.code === "nl-be" && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-full font-semibold"
-                            style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}>
-                            BE
-                          </span>
-                        )}
-                        {l.code === "nl-nl" && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-full font-semibold"
-                            style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}>
-                            NL
+                        {l.badge && (
+                          <span
+                            className="text-[9px] px-1.5 py-0.5 rounded-full font-semibold"
+                            style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}
+                          >
+                            {l.badge}
                           </span>
                         )}
                       </div>
