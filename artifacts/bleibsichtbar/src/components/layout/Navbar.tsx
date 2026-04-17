@@ -96,10 +96,14 @@ export function Navbar() {
 
             {/* Right: Language Switcher + CTA + Mobile toggle */}
             <div className="flex items-center gap-2">
-              {/* Language Switcher — desktop only */}
-              <div className="hidden lg:block">
+              {/* Language Switcher — always visible */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 280, damping: 22 }}
+              >
                 <LanguageSwitcher />
-              </div>
+              </motion.div>
 
               <div className="hidden lg:flex items-center shrink-0">
                 <Link href="/kontakt">
@@ -233,11 +237,6 @@ export function Navbar() {
                 >
                   <X className="w-5 h-5" />
                 </button>
-              </div>
-
-              {/* Language Switcher in drawer */}
-              <div className="px-6 pb-3">
-                <LanguageSwitcher />
               </div>
 
               <div className="mx-6 h-px mb-4" style={{ background: "rgba(255,255,255,0.08)" }} />
