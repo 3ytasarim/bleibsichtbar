@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
 import { CtaBanner } from "@/components/shared/CtaBanner";
 import { useGetProjects } from "@workspace/api-client-react";
+import { useT } from "@/i18n";
 import { Monitor, Zap, Smartphone, Search, Palette, RefreshCw, CheckCircle2, ArrowRight } from "lucide-react";
 
 const WEB_RE = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|landing/i;
@@ -259,50 +260,18 @@ const fadeUp = {
 };
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
-const leistungen = [
-  { icon: <Monitor className="w-6 h-6" />, title: "Webseiten-Design & Neuerstellung", desc: "Individuelle, moderne Webseiten von Grund auf – angepasst an Ihre Marke und Zielgruppe." },
-  { icon: <RefreshCw className="w-6 h-6" />, title: "Optimierung bestehender Seiten", desc: "Wir analysieren Ihre bestehende Webseite und verbessern Design, Struktur und Performance." },
-  { icon: <Palette className="w-6 h-6" />, title: "Struktur & Nutzerführung", desc: "Klare Seitenarchitektur, die Besucher gezielt zu Anfragen und Conversions führt." },
-  { icon: <Search className="w-6 h-6" />, title: "Inhalte & visuelles Design", desc: "Überzeugende Texte, starke Bilder und ein kohärentes visuelles Erscheinungsbild." },
-  { icon: <Smartphone className="w-6 h-6" />, title: "Mobile & Ladezeit-Optimierung", desc: "Vollständig mobiloptimiert und blitzschnell – für bestmögliche Nutzererfahrung." },
-  { icon: <Zap className="w-6 h-6" />, title: "Laufende Betreuung", desc: "Auch nach dem Launch bleiben wir an Ihrer Seite und optimieren kontinuierlich." },
-];
-
-const steps = [
-  {
-    num: "1",
-    title: "Analyse",
-    desc: "Wir analysieren Ihr Unternehmen, Ihre Ziele und Ihre aktuelle Online-Präsenz. Darauf basierend definieren wir Struktur, Inhalte und eine klare Ausrichtung für Ihre neue Webseite.",
-  },
-  {
-    num: "2",
-    title: "Konzept",
-    desc: "Wir entwickeln ein modernes Design und eine klare Seitenstruktur, abgestimmt auf Ihre Marke und Zielgruppe. So entsteht ein Auftritt, der professionell wirkt und Vertrauen schafft.",
-  },
-  {
-    num: "3",
-    title: "Umsetzung",
-    desc: "Wir setzen Ihre Webseite technisch sauber und performant um. Schnell, mobiloptimiert und bereit für einen starken digitalen Auftritt.",
-  },
-  {
-    num: "4",
-    title: "Betreuung",
-    desc: "Auch nach dem Launch bleiben wir an Ihrer Seite. Ihre Webseite wird laufend optimiert, erweitert und an Ihr Wachstum angepasst.",
-  },
-];
-
-const includes = [
-  "Individuelles Webdesign",
-  "Mobile First Entwicklung",
-  "SEO-Grundoptimierung",
-  "Ladezeit-Optimierung",
-  "Kontaktformulare & CTAs",
-  "Google Analytics Integration",
-  "SSL & Sicherheit",
-  "Laufende Betreuung optional",
+const SERVICE_ICONS = [
+  <Monitor className="w-6 h-6" />,
+  <RefreshCw className="w-6 h-6" />,
+  <Palette className="w-6 h-6" />,
+  <Search className="w-6 h-6" />,
+  <Smartphone className="w-6 h-6" />,
+  <Zap className="w-6 h-6" />,
 ];
 
 export default function Webseiten() {
+  const { t } = useT();
+  const wb = t.webseiten;
   const { data: allProjects = [] } = useGetProjects({ published: true });
   const webProjects = allProjects.filter(p => WEB_RE.test(p.category ?? ""));
 
@@ -317,21 +286,21 @@ export default function Webseiten() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="inline-block bg-white/10 border border-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6 tracking-wide">
-                Webseiten Optimierung & Design
+                {wb.heroBadge}
               </span>
               <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 leading-tight">
-                Ihr digitaler <br />
-                <span className="text-accent">erster Eindruck</span>
+                {wb.heroTitle1} <br />
+                <span className="text-accent">{wb.heroTitle2}</span>
               </h1>
               <p className="text-xl text-white mb-10 max-w-lg">
-                Ihre Webseite entscheidet in Sekunden über Vertrauen. Wir entwickeln klare, moderne Auftritte, die Ihr Unternehmen hochwertig präsentieren und Besucher gezielt zu Anfragen führen.
+                {wb.heroSub}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold">
-                  <Link href="/kontakt">Webseite anfragen</Link>
+                  <Link href="/kontakt">{wb.heroCta1}</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white bg-transparent hover:bg-white/10">
-                  <Link href="/projekte">Projekte ansehen</Link>
+                  <Link href="/projekte">{wb.heroCta2}</Link>
                 </Button>
               </div>
             </motion.div>
@@ -387,16 +356,16 @@ export default function Webseiten() {
             >
               <span className="inline-flex items-center gap-2 bg-accent/10 border border-accent/25 text-accent text-xs font-bold px-4 py-1.5 rounded-full tracking-widest uppercase mb-5">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                Unsere Leistungen im Überblick
+                {wb.servicesLabel}
               </span>
             </motion.div>
             <motion.h2
               variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }}
               className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-primary leading-tight"
             >
-              Alles aus{" "}
+              {wb.servicesTitle1}{" "}
               <span className="relative inline-block">
-                <span className="text-accent">einer Hand</span>
+                <span className="text-accent">{wb.servicesTitle2}</span>
                 <motion.span
                   initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
                   transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
@@ -408,7 +377,7 @@ export default function Webseiten() {
               variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, delay: 0.1 } } }}
               className="mt-5 text-gray-500 text-lg max-w-xl mx-auto"
             >
-              Professionelle Webauftritte, die überzeugen — vom ersten Pixel bis zum laufenden Betrieb.
+              {wb.servicesSub}
             </motion.p>
           </motion.div>
 
@@ -418,7 +387,7 @@ export default function Webseiten() {
             variants={{ visible: { transition: { staggerChildren: 0.09 } } }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
           >
-            {leistungen.map((l, i) => (
+            {wb.services.map((l, i) => (
               <motion.div
                 key={i}
                 variants={{ hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } } }}
@@ -441,7 +410,7 @@ export default function Webseiten() {
                   whileHover={{ rotate: [0, -8, 8, 0], transition: { duration: 0.4 } }}
                   className="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-all duration-300 shadow-sm"
                 >
-                  {l.icon}
+                  {SERVICE_ICONS[i]}
                 </motion.div>
 
                 <h3 className="text-lg font-display font-bold text-primary mb-3 group-hover:text-accent transition-colors duration-300 leading-snug pr-6">
@@ -532,12 +501,12 @@ export default function Webseiten() {
               >
                 <span className="inline-flex items-center gap-2 bg-accent/8 border border-accent/20 text-accent text-xs font-bold px-4 py-1.5 rounded-full tracking-widest uppercase mb-4">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                  Unser Projektvorgehen
+                  {wb.processLabel}
                 </span>
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary mt-3 leading-tight">
-                  Webseiten{" "}
+                  {wb.processTitle1}{" "}
                   <span className="relative inline-block">
-                    <span className="text-accent">Projektprozess</span>
+                    <span className="text-accent">{wb.processTitle2}</span>
                     <motion.span
                       initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
                       transition={{ duration: 0.7, delay: 0.6, ease: "easeOut" }}
@@ -601,7 +570,7 @@ export default function Webseiten() {
                 className="mt-10"
               >
                 <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold shadow-lg shadow-accent/25 hover:shadow-accent/40 transition-shadow">
-                  <Link href="/kontakt">Jetzt Projekt starten <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
+                  <Link href="/kontakt">{wb.heroCta1} <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
                 </Button>
               </motion.div>
             </motion.div>
@@ -624,7 +593,7 @@ export default function Webseiten() {
                 </p>
               </motion.div>
               <motion.div variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {includes.map((item, i) => (
+                {wb.includes.map((item, i) => (
                   <motion.div key={i} variants={fadeUp} className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-accent shrink-0" />
                     <span className="text-sm font-medium">{item}</span>

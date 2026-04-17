@@ -10,13 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useSubmitContact } from "@workspace/api-client-react";
+import { useT } from "@/i18n";
 
 const contactSchema = z.object({
-  name: z.string().min(2, "Name ist erforderlich (mind. 2 Zeichen)"),
-  email: z.string().email("Bitte geben Sie eine gültige E-Mail-Adresse ein"),
+  name: z.string().min(2, "Name erforderlich"),
+  email: z.string().email("Ungültige E-Mail"),
   phone: z.string().optional(),
   company: z.string().optional(),
-  message: z.string().min(10, "Nachricht muss mindestens 10 Zeichen lang sein"),
+  message: z.string().min(10, "Nachricht erforderlich"),
   service: z.string().optional(),
 });
 
@@ -41,8 +42,9 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 export default function Contact() {
-  const { mutate, isPending, isSuccess } = useSubmitContact();
+  const { t } = useT();
 
+  const { mutate, isPending, isSuccess } = useSubmitContact();
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
   });
@@ -67,21 +69,21 @@ export default function Contact() {
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
             className="text-xs font-bold tracking-widest uppercase text-accent/80 mb-4"
           >
-            // Kontakt
+            {t.contact.label}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
             className="font-display font-black text-white leading-tight mb-5"
             style={{ fontSize: "clamp(2.2rem, 5vw, 3.6rem)" }}
           >
-            Lassen Sie uns über<br />
-            <em className="not-italic text-accent">Ihr Projekt</em> sprechen
+            {t.contact.title1}<br />
+            <em className="not-italic text-accent">{t.contact.title2}</em> {t.contact.title3}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
             className="text-white text-lg max-w-2xl mx-auto leading-relaxed"
           >
-            Ob neue Webseite, mehr Sichtbarkeit oder KI-Automatisierung — wir beraten Sie ehrlich und kostenlos.
+            {t.footer.sub}
           </motion.p>
         </div>
       </section>
@@ -96,28 +98,28 @@ export default function Contact() {
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
               className="bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-100"
             >
-              <h2 className="text-2xl font-display font-bold mb-2">Kostenlose Erstanfrage</h2>
-              <p className="text-muted-foreground text-sm mb-8">Füllen Sie das Formular aus — wir melden uns innerhalb von 24 Stunden.</p>
+              <h2 className="text-2xl font-display font-bold mb-2">{t.contact.formTitle}</h2>
+              <p className="text-muted-foreground text-sm mb-8">{t.contact.formSub}</p>
 
               {isSuccess ? (
                 <div className="min-h-[360px] flex flex-col items-center justify-center text-center space-y-4">
                   <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-2">
                     <CheckCircle2 className="w-10 h-10 text-green-500" />
                   </div>
-                  <h3 className="text-2xl font-bold font-display">Vielen Dank!</h3>
+                  <h3 className="text-2xl font-bold font-display">{t.contact.thanks}</h3>
                   <p className="text-muted-foreground max-w-md">
-                    Ihre Nachricht wurde erfolgreich gesendet. Wir melden uns in Kürze bei Ihnen.
+                    {t.footer.thanksSub}
                   </p>
                   <Button variant="outline" className="mt-4" onClick={() => reset()}>
-                    Weitere Nachricht senden
+                    {t.footer.sendMore}
                   </Button>
                 </div>
               ) : (
                 <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium">Name *</label>
-                      <Input {...register("name")} placeholder="Max Mustermann" className={errors.name ? "border-destructive" : ""} />
+                      <label className="text-sm font-medium">{t.contact.labelName}</label>
+                      <Input {...register("name")} placeholder={t.contact.placeholderName} className={errors.name ? "border-destructive" : ""} />
                       {errors.name && (
                         <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
                           className="flex items-center gap-2 mt-1.5 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
@@ -127,8 +129,8 @@ export default function Contact() {
                       )}
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium">E-Mail *</label>
-                      <Input {...register("email")} type="email" placeholder="max@beispiel.de" className={errors.email ? "border-destructive" : ""} />
+                      <label className="text-sm font-medium">{t.contact.labelEmail}</label>
+                      <Input {...register("email")} type="email" placeholder={t.contact.placeholderEmail} className={errors.email ? "border-destructive" : ""} />
                       {errors.email && (
                         <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
                           className="flex items-center gap-2 mt-1.5 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
@@ -141,20 +143,20 @@ export default function Contact() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium">Telefon</label>
-                      <Input {...register("phone")} placeholder="+49 123 456789" />
+                      <label className="text-sm font-medium">{t.contact.labelPhone}</label>
+                      <Input {...register("phone")} placeholder={t.contact.placeholderPhone} />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium">Unternehmen</label>
-                      <Input {...register("company")} placeholder="Ihre Firma GmbH" />
+                      <label className="text-sm font-medium">{t.contact.labelCompany}</label>
+                      <Input {...register("company")} placeholder={t.contact.placeholderCompany} />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Nachricht *</label>
+                    <label className="text-sm font-medium">{t.contact.labelMessage}</label>
                     <Textarea
                       {...register("message")}
-                      placeholder="Wie können wir Ihnen helfen?"
+                      placeholder={t.contact.placeholderMessage}
                       rows={5}
                       className={errors.message ? "border-destructive" : ""}
                     />
@@ -176,9 +178,9 @@ export default function Contact() {
                     style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
                   >
                     {isPending ? (
-                      <><Loader2 className="w-5 h-5 animate-spin" /> Wird gesendet…</>
+                      <><Loader2 className="w-5 h-5 animate-spin" /> {t.contact.sending}</>
                     ) : (
-                      <><Send className="w-5 h-5" /> Nachricht senden</>
+                      <><Send className="w-5 h-5" /> {t.contact.submit}</>
                     )}
                   </motion.button>
                 </form>
@@ -207,46 +209,32 @@ export default function Contact() {
                     <WhatsAppIcon className="w-9 h-9 text-white" />
                   </div>
                   <div>
-                    <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">Sofort schreiben</p>
-                    <p className="text-xl font-display font-black">WhatsApp Nachricht</p>
-                    <p className="text-white/70 text-sm mt-1">Wir antworten innerhalb weniger Stunden</p>
+                    <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">{t.contact.whatsappLabel}</p>
+                    <p className="text-xl font-display font-black">{t.contact.whatsappTitle}</p>
+                    <p className="text-white/70 text-sm mt-1">{t.contact.whatsappSub}</p>
                   </div>
                 </a>
               </motion.div>
 
-              {/* Info cards */}
-              {[
-                {
-                  label: "E-Mail",
-                  value: "info@bleibsichtbar.com",
-                  href: "mailto:info@bleibsichtbar.com",
-                  desc: "Wir antworten innerhalb von 24 Stunden",
-                },
-              ].map((item, i) => (
-                <motion.div key={i} variants={fadeUp}>
-                  <a
-                    href={item.href}
-                    className="block p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 group"
-                  >
-                    <p className="text-xs font-bold tracking-widest uppercase text-accent/70 mb-2">{item.label}</p>
-                    <p className="text-lg font-bold font-display text-foreground group-hover:text-accent transition-colors">{item.value}</p>
-                    <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
-                  </a>
-                </motion.div>
-              ))}
+              {/* Info card */}
+              <motion.div variants={fadeUp}>
+                <a
+                  href="mailto:info@bleibsichtbar.com"
+                  className="block p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-accent/30 transition-all duration-300 group"
+                >
+                  <p className="text-xs font-bold tracking-widest uppercase text-accent/70 mb-2">E-Mail</p>
+                  <p className="text-lg font-bold font-display text-foreground group-hover:text-accent transition-colors">info@bleibsichtbar.com</p>
+                  <p className="text-sm text-muted-foreground mt-1">{t.contact.whatsappSub}</p>
+                </a>
+              </motion.div>
 
               {/* Trust badges */}
               <motion.div variants={fadeUp}
                 className="p-6 rounded-2xl border border-gray-100 bg-white shadow-sm"
               >
-                <p className="text-xs font-bold tracking-widest uppercase text-muted-foreground mb-4">Warum Bleibsichtbar?</p>
+                <p className="text-xs font-bold tracking-widest uppercase text-muted-foreground mb-4">{t.contact.whyLabel}</p>
                 <ul className="space-y-3">
-                  {[
-                    "Kostenlose & unverbindliche Erstberatung",
-                    "Antwort innerhalb von 24 Stunden",
-                    "Individuelle Lösungen — kein Standard",
-                    "Transparente Kommunikation immer",
-                  ].map((point, i) => (
+                  {t.contactSection.trustPoints.map((point, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
                       <span className="w-5 h-5 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0 mt-0.5">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

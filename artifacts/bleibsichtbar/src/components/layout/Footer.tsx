@@ -6,15 +6,19 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useSubmitContact } from "@workspace/api-client-react";
+import { useT } from "@/i18n";
 
 const TICKER_ITEMS = Array(14).fill(null);
 
-const schema = z.object({
-  name: z.string().min(2, "Name erforderlich"),
-  email: z.string().email("Ungültige E-Mail"),
-  message: z.string().min(5, "Nachricht erforderlich"),
-});
-type FormValues = z.infer<typeof schema>;
+function makeSchema(t: ReturnType<typeof useT>["t"]) {
+  return z.object({
+    name: z.string().min(2, t.footer.validation.nameRequired),
+    email: z.string().email(t.footer.validation.emailInvalid),
+    message: z.string().min(5, t.footer.validation.messageRequired),
+  });
+}
+
+type FormValues = { name: string; email: string; message: string };
 
 const fieldVariants = {
   hidden: { opacity: 0, y: 18 },
@@ -92,6 +96,8 @@ function FooterField({
 }
 
 function FooterContactForm() {
+  const { t } = useT();
+  const schema = makeSchema(t);
   const { mutate, isPending, isSuccess } = useSubmitContact();
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -112,10 +118,10 @@ function FooterContactForm() {
         >
           <CheckCircle2 className="w-16 h-16 text-accent" />
         </motion.div>
-        <h3 className="text-2xl font-display font-bold text-white">Vielen Dank!</h3>
-        <p className="text-white/55 max-w-xs text-sm">Wir melden uns in Kürze bei Ihnen.</p>
+        <h3 className="text-2xl font-display font-bold text-white">{t.footer.thanks}</h3>
+        <p className="text-white/55 max-w-xs text-sm">{t.footer.thanksSub}</p>
         <button onClick={() => reset()} className="mt-3 text-sm text-accent/70 hover:text-accent transition-colors">
-          Weitere Nachricht senden
+          {t.footer.sendMore}
         </button>
       </motion.div>
     );
@@ -123,19 +129,11 @@ function FooterContactForm() {
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-      <FooterField field={register("name")} placeholder="Name und Vorname" index={0} error={errors.name?.message} />
-      <FooterField field={register("email")} placeholder="E-Mail" type="email" index={1} error={errors.email?.message} />
+      <FooterField field={register("name")} placeholder={t.footer.namePlaceholder} index={0} error={errors.name?.message} />
+      <FooterField field={register("email")} placeholder={t.footer.emailPlaceholder} type="email" index={1} error={errors.email?.message} />
+      <FooterField field={register("message")} placeholder={t.footer.messagePlaceholder} index={2} error={errors.message?.message} rows={5} />
 
-      <FooterField field={register("message")} placeholder="Nachricht" index={2} error={errors.message?.message} rows={5} />
-
-      {/* Submit */}
-      <motion.div
-        custom={3}
-        variants={fieldVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
+      <motion.div custom={3} variants={fieldVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <motion.button
           type="submit"
           disabled={isPending}
@@ -145,9 +143,9 @@ function FooterContactForm() {
           style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
         >
           {isPending ? (
-            <><Loader2 className="w-4 h-4 animate-spin" /> Wird gesendet…</>
+            <><Loader2 className="w-4 h-4 animate-spin" /> {t.footer.sending}</>
           ) : (
-            <>Kostenlos Anfragen <ArrowRight className="w-4 h-4" /></>
+            <>{t.footer.submit} <ArrowRight className="w-4 h-4" /></>
           )}
         </motion.button>
       </motion.div>
@@ -156,6 +154,8 @@ function FooterContactForm() {
 }
 
 export function Footer() {
+  const { t } = useT();
+
   return (
     <div className="bg-white">
       <footer
@@ -165,14 +165,9 @@ export function Footer() {
           borderRadius: "32px 32px 0 0",
         }}
       >
-
-        {/* ═══════════════════════════════════════════
-            CONTACT SECTION (top of footer)
-        ════════════════════════════════════════════ */}
+        {/* CONTACT SECTION */}
         <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-16 pb-14 border-b border-white/[0.06]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-
-            {/* Left — Heading + description */}
             <motion.div
               initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -186,15 +181,15 @@ export function Footer() {
                 transition={{ duration: 0.4, delay: 0.1 }}
                 className="text-xs font-bold tracking-widest uppercase text-accent/80 mb-5"
               >
-                // Kontakt
+                {t.footer.label}
               </motion.p>
               <h2
                 className="font-display font-black text-white leading-tight mb-5"
                 style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)" }}
               >
-                Lassen Sie uns<br />
-                <em className="not-italic text-accent">über</em> Ihr Projekt<br />
-                sprechen
+                {t.footer.heading1}<br />
+                <em className="not-italic text-accent">{t.footer.heading2}</em> {t.footer.heading3}
+                {t.footer.heading4 && <><br />{t.footer.heading4}</>}
               </h2>
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
@@ -203,20 +198,17 @@ export function Footer() {
                 transition={{ duration: 0.4, delay: 0.3 }}
                 className="text-white/50 text-sm leading-relaxed max-w-sm"
               >
-                Ob neue Webseite, mehr Sichtbarkeit oder KI-Automatisierung — wir beraten Sie ehrlich und zeigen Ihnen, wie Ihr Unternehmen endlich sinnvoll ist. Kostenlos &amp; unverbindlich.
+                {t.footer.sub}
               </motion.p>
             </motion.div>
 
-            {/* Right — Form */}
             <div>
               <FooterContactForm />
             </div>
           </div>
         </div>
 
-        {/* ═══════════════════════════════════════════
-            SCROLLING TICKER
-        ════════════════════════════════════════════ */}
+        {/* SCROLLING TICKER */}
         <div
           className="overflow-hidden border-b border-white/[0.06]"
           style={{ paddingTop: "18px", paddingBottom: "18px" }}
@@ -245,30 +237,26 @@ export function Footer() {
           </motion.div>
         </div>
 
-        {/* ═══════════════════════════════════════════
-            BOTTOM FOOTER — 3 Columns
-        ════════════════════════════════════════════ */}
+        {/* BOTTOM FOOTER */}
         <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-12 pb-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 items-start pb-10 border-b border-white/[0.06]">
 
-            {/* Col 1 — Big Statement */}
             <div>
               <h3
                 className="font-display font-black text-white uppercase leading-none"
                 style={{ fontSize: "clamp(1.4rem, 2.8vw, 2rem)", letterSpacing: "-0.01em", lineHeight: 1.1 }}
               >
-                LASSEN SIE UNS IHR<br />
-                UNTERNEHMEN<br />
-                <span className="text-accent">SICHTBAR</span> MACHEN.
+                {t.footer.statement1}<br />
+                {t.footer.statement2}<br />
+                <span className="text-accent">{t.footer.statement3}</span> {t.footer.statement4}
               </h3>
             </div>
 
-            {/* Col 2 — Datenschutz / Impressum */}
             <div className="md:px-4">
               <ul className="space-y-3">
                 {[
-                  { label: "Datenschutz", href: "/datenschutz" },
-                  { label: "Impressum", href: "/impressum" },
+                  { label: t.footer.datenschutz, href: "/datenschutz" },
+                  { label: t.footer.impressum, href: "/impressum" },
                 ].map(l => (
                   <li key={l.href}>
                     <Link
@@ -282,9 +270,8 @@ export function Footer() {
               </ul>
             </div>
 
-            {/* Col 3 — Kontakt */}
             <div>
-              <h4 className="text-xs font-bold tracking-widest uppercase text-white/30 mb-5">Kontakt</h4>
+              <h4 className="text-xs font-bold tracking-widest uppercase text-white/30 mb-5">{t.footer.contactLabel}</h4>
               <ul className="space-y-4">
                 <li>
                   <a
@@ -301,7 +288,7 @@ export function Footer() {
                     className="flex items-center gap-2 text-white/55 hover:text-white transition-colors text-sm font-medium group"
                   >
                     <span className="w-3.5 h-3.5 shrink-0 text-accent text-base leading-none">✦</span>
-                    Kostenlose Erstberatung
+                    {t.footer.freeConsult}
                   </Link>
                 </li>
                 <li>
@@ -312,17 +299,16 @@ export function Footer() {
                     className="flex items-center gap-2 text-white/55 hover:text-white transition-colors text-sm font-medium"
                   >
                     <Instagram className="w-3.5 h-3.5 text-accent shrink-0" />
-                    Folgen Sie uns auf Instagram
+                    {t.footer.followInsta}
                   </a>
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Copyright */}
           <div className="pt-7 flex flex-col md:flex-row justify-between items-center gap-2">
             <p className="text-white/25 text-xs tracking-wide">
-              © Bleibsichtbar {new Date().getFullYear()}, Alle Rechte vorbehalten
+              © Bleibsichtbar {new Date().getFullYear()}, {t.footer.copyright}
             </p>
             <Link href="/admin/login" className="text-white/10 text-xs hover:text-white/30 transition-colors">
               Admin

@@ -5,6 +5,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
+import { useT } from "@/i18n";
 import { Brain, Bot, Zap, MessageSquare, RefreshCw, BarChart3, CheckCircle2, ArrowRight, Settings } from "lucide-react";
 
 // ─── Floating AI Brand Icons ─────────────────────────────────────────────────
@@ -141,54 +142,19 @@ const fadeUp = {
 };
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
-const solutions = [
-  {
-    icon: <MessageSquare className="w-6 h-6" />,
-    title: "KI-Chatbots & Kundenservice",
-    desc: "Automatisierter Kundenservice rund um die Uhr. Unser KI-Bot beantwortet häufige Fragen, qualifiziert Leads und übergibt an Ihr Team – wenn nötig.",
-  },
-  {
-    icon: <RefreshCw className="w-6 h-6" />,
-    title: "Automatisierte Anfragen & Follow-ups",
-    desc: "Keine Anfrage geht mehr verloren. Eingehende Kontakte werden automatisch erfasst, bewertet und mit personalisierten Nachrichten weiterbetreut.",
-  },
-  {
-    icon: <Brain className="w-6 h-6" />,
-    title: "KI-gestützte Content-Erstellung",
-    desc: "Texte, Captions und Kampagnenideen in Minuten – mit KI als kreativen Assistenten, der Ihre Markenstimme kennt.",
-  },
-  {
-    icon: <Settings className="w-6 h-6" />,
-    title: "Workflow-Automatisierung",
-    desc: "Wiederkehrende Prozesse – von der Terminbuchung bis zum Reporting – werden automatisiert. Sie sparen Zeit, Ihr Team bleibt fokussiert.",
-  },
-  {
-    icon: <Zap className="w-6 h-6" />,
-    title: "E-Mail- & WhatsApp-Automatisierung",
-    desc: "Automatische Begrüßungssequenzen, Angebotsnachrichten und Erinnerungen über alle relevanten Kanäle." ,
-  },
-  {
-    icon: <BarChart3 className="w-6 h-6" />,
-    title: "KI-Analysen & Insights",
-    desc: "Wir nutzen KI, um Ihre Daten zu analysieren und Handlungsempfehlungen abzuleiten – schneller und präziser als manuell möglich.",
-  },
-];
-
-const benefits = [
-  { value: "80%", label: "Weniger manuelle Anfragen" },
-  { value: "24/7", label: "Automatischer Kundenservice" },
-  { value: "3x", label: "Schnellere Reaktionszeiten" },
-  { value: "-60%", label: "Reduzierter Zeitaufwand" },
-];
-
-const steps = [
-  { num: "01", title: "Analyse Ihrer Prozesse", desc: "Wir identifizieren Aufgaben und Abläufe in Ihrem Unternehmen, die sich optimal für Automatisierung eignen." },
-  { num: "02", title: "Lösung entwickeln", desc: "Passgenau auf Ihr Business zugeschnitten – keine Standardlösung, sondern maßgeschneiderte KI-Integration." },
-  { num: "03", title: "Integration & Setup", desc: "Wir richten die Systeme ein, verbinden Ihre bestehenden Tools und testen alles gründlich." },
-  { num: "04", title: "Laufende Optimierung", desc: "KI lernt kontinuierlich dazu. Wir überwachen die Performance und passen Prozesse fortlaufend an." },
+const SOLUTION_ICONS = [
+  <MessageSquare className="w-6 h-6" />,
+  <RefreshCw className="w-6 h-6" />,
+  <Brain className="w-6 h-6" />,
+  <Settings className="w-6 h-6" />,
+  <Zap className="w-6 h-6" />,
+  <BarChart3 className="w-6 h-6" />,
 ];
 
 export default function KIAutomatisierungen() {
+  const { t } = useT();
+  const ki = t.ki;
+
   return (
     <PublicLayout>
       <SeoHead slug="ki-automatisierungen" defaults={{ metaTitle: "KI <PublicLayout> Automatisierungen – Bleibsichtbar" }} />
@@ -200,21 +166,21 @@ export default function KIAutomatisierungen() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="inline-block bg-white/10 border border-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6 tracking-wide">
-                Ki & Automatisierungen
+                {ki.heroBadge}
               </span>
               <h1 className="text-5xl md:text-6xl font-display font-bold mb-6 leading-tight">
-                Mehr Effizienz durch <br />
-                <span className="text-accent">smarte KI-Lösungen</span>
+                {ki.heroTitle1} <br />
+                <span className="text-accent">{ki.heroTitle2}</span>
               </h1>
               <p className="text-xl text-white mb-10">
-                Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI. Mehr Effizienz, weniger Aufwand, mehr Wachstum.
+                {ki.heroSub}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold">
-                  <Link href="/kontakt">KI-Potenzial analysieren</Link>
+                  <Link href="/kontakt">{ki.heroCta1}</Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white bg-transparent hover:bg-white/10">
-                  <Link href="/kontakt">Angebot anfragen</Link>
+                  <Link href="/kontakt">{ki.heroCta2}</Link>
                 </Button>
               </div>
             </motion.div>
@@ -228,16 +194,11 @@ export default function KIAutomatisierungen() {
                       <Bot className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <div className="text-white font-bold text-sm">KI-Assistent</div>
-                      <div className="text-green-400 text-xs flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full inline-block" /> Online – 24/7 aktiv</div>
+                      <div className="text-white font-bold text-sm">{ki.chatBot}</div>
+                      <div className="text-green-400 text-xs flex items-center gap-1"><span className="w-2 h-2 bg-green-400 rounded-full inline-block" /> {ki.chatOnline}</div>
                     </div>
                   </div>
-                  {[
-                    { from: "user", msg: "Hallo, ich hätte eine Frage zu Ihren Preisen." },
-                    { from: "bot", msg: "Hallo! Natürlich helfe ich gerne. Für welche Leistung interessieren Sie sich?" },
-                    { from: "user", msg: "Social Media Management für mein Restaurant." },
-                    { from: "bot", msg: "Perfekt! Ich leite Ihre Anfrage weiter und ein Berater meldet sich innerhalb von 24h bei Ihnen. 🍽️" },
-                  ].map((m, i) => (
+                  {ki.chatMessages.map((m, i) => (
                     <div key={i} className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs ${m.from === "user" ? "bg-white/20 text-white" : "bg-accent/20 text-white border border-accent/30"}`}>
                         {m.msg}
@@ -255,7 +216,7 @@ export default function KIAutomatisierungen() {
       <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {benefits.map((b, i) => (
+            {ki.benefits.map((b, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
                 <div className="text-3xl md:text-4xl font-display font-black text-accent mb-2">{b.value}</div>
                 <div className="text-sm text-muted-foreground font-medium">{b.label}</div>
@@ -270,17 +231,17 @@ export default function KIAutomatisierungen() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
             <motion.div variants={fadeUp} className="text-center mb-16">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unsere KI-Lösungen</p>
-              <h2 className="text-4xl md:text-5xl font-display font-bold">Was wir <span className="text-accent">automatisieren</span></h2>
+              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">{ki.solutionsLabel}</p>
+              <h2 className="text-4xl md:text-5xl font-display font-bold">{ki.solutionsTitle1} <span className="text-accent">{ki.solutionsTitle2}</span></h2>
               <p className="text-lg text-muted-foreground max-w-xl mx-auto mt-4">
-                Wir identifizieren die Prozesse, die Ihnen Zeit kosten – und automatisieren sie intelligent.
+                {ki.solutionsSub}
               </p>
             </motion.div>
             <motion.div variants={stagger} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {solutions.map((s, i) => (
+              {ki.solutions.map((s, i) => (
                 <motion.div key={i} variants={fadeUp} className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-accent/30 hover:shadow-md transition-all group">
                   <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all">
-                    {s.icon}
+                    {SOLUTION_ICONS[i]}
                   </div>
                   <h3 className="text-xl font-display font-bold mb-3">{s.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
@@ -296,11 +257,11 @@ export default function KIAutomatisierungen() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
             <motion.div variants={fadeUp} className="text-center mb-16">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unsere Vorgehensweise</p>
-              <h2 className="text-4xl md:text-5xl font-display font-bold">Von der Idee zur <span className="text-accent">Automatisierung</span></h2>
+              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">{ki.processLabel}</p>
+              <h2 className="text-4xl md:text-5xl font-display font-bold">{ki.processTitle1} <span className="text-accent">{ki.processTitle2}</span></h2>
             </motion.div>
             <div className="space-y-4">
-              {steps.map((step, i) => (
+              {ki.steps.map((step, i) => (
                 <motion.div key={i} variants={fadeUp} className="flex gap-6 bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-sm transition-shadow">
                   <div className="text-4xl font-display font-black text-accent/20 leading-none shrink-0 w-12">{step.num}</div>
                   <div>
@@ -330,14 +291,14 @@ export default function KIAutomatisierungen() {
             {/* Left */}
             <div>
               <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">
-                Jetzt starten
+                {ki.ctaLabel}
               </motion.p>
               <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-black leading-tight mb-6" style={{ color: "#0a1628" }}>
-                Bereit, Zeit zu sparen{" "}
-                <span className="text-accent">und zu wachsen?</span>
+                {ki.ctaTitle1}{" "}
+                <span className="text-accent">{ki.ctaTitle2}</span>
               </motion.h2>
               <motion.p variants={fadeUp} className="text-gray-500 text-lg leading-relaxed">
-                Lassen Sie uns gemeinsam herausfinden, welche Prozesse in Ihrem Unternehmen automatisiert werden können.
+                {ki.ctaSub}
               </motion.p>
             </div>
 
@@ -358,10 +319,10 @@ export default function KIAutomatisierungen() {
                   <Brain className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-2xl font-display font-bold text-white mb-4 leading-snug">
-                  KI-Potenzial<br />kostenlos analysieren
+                  {ki.ctaCardTitle1}<br />{ki.ctaCardTitle2}
                 </h3>
                 <p className="text-white/60 mb-8 leading-relaxed">
-                  Wir identifizieren Automatisierungspotenzial in Ihrem Unternehmen – kostenlos und unverbindlich.
+                  {ki.ctaCardSub}
                 </p>
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   {[{ value: "80%", label: "Zeitersparnis" }, { value: "24/7", label: "Verfügbarkeit" }].map(s => (
@@ -372,7 +333,7 @@ export default function KIAutomatisierungen() {
                   ))}
                 </div>
                 <Button asChild size="lg" className="w-full rounded-full bg-accent hover:bg-accent/90 text-white font-bold text-base">
-                  <Link href="/kontakt">Jetzt analysieren <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
+                  <Link href="/kontakt">{ki.ctaCardBtn} <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
                 </Button>
               </div>
             </motion.div>

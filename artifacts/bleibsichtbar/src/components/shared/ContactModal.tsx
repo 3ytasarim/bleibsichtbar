@@ -5,47 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useSubmitContact } from "@workspace/api-client-react";
+import { useT } from "@/i18n";
 
-const schema = z.object({
-  name: z.string().min(2, "Name erforderlich"),
-  email: z.string().email("Ungültige E-Mail"),
-  message: z.string().min(5, "Nachricht erforderlich"),
-});
-type FormValues = z.infer<typeof schema>;
-
-const SERVICES = [
-  {
-    id: "social-media",
-    label: "Social Media",
-    icon: Instagram,
-    color: "#E1306C",
-    glow: "rgba(225,48,108,0.18)",
-    desc: "Instagram, TikTok, LinkedIn",
-  },
-  {
-    id: "webseiten",
-    label: "Webseiten",
-    icon: Globe,
-    color: "#3B82F6",
-    glow: "rgba(59,130,246,0.18)",
-    desc: "Design & Entwicklung",
-  },
-  {
-    id: "marketing-ads",
-    label: "Marketing Ads",
-    icon: Megaphone,
-    color: "#F59E0B",
-    glow: "rgba(245,158,11,0.18)",
-    desc: "Google & Meta Ads",
-  },
-  {
-    id: "ki-automatisierung",
-    label: "KI & Automatisierung",
-    icon: Zap,
-    color: "#8B5CF6",
-    glow: "rgba(139,92,246,0.18)",
-    desc: "Workflows & KI-Tools",
-  },
+const SERVICE_META = [
+  { id: "social-media",       icon: Instagram, color: "#E1306C", glow: "rgba(225,48,108,0.18)" },
+  { id: "webseiten",          icon: Globe,     color: "#3B82F6", glow: "rgba(59,130,246,0.18)" },
+  { id: "marketing-ads",      icon: Megaphone, color: "#F59E0B", glow: "rgba(245,158,11,0.18)" },
+  { id: "ki-automatisierung", icon: Zap,       color: "#8B5CF6", glow: "rgba(139,92,246,0.18)" },
 ];
 
 const inputBase: React.CSSProperties = {
@@ -68,8 +34,23 @@ interface ContactModalProps {
 }
 
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
+  const { t } = useT();
   const [selected, setSelected] = useState<string[]>([]);
   const { mutate, isPending, isSuccess, reset: resetMutation } = useSubmitContact();
+
+  const schema = React.useMemo(() => z.object({
+    name: z.string().min(2, t.modal.validation.nameRequired),
+    email: z.string().email(t.modal.validation.emailInvalid),
+    message: z.string().min(5, t.modal.validation.messageRequired),
+  }), [t]);
+
+  type FormValues = z.infer<typeof schema>;
+
+  const SERVICES = SERVICE_META.map((m, i) => ({
+    ...m,
+    label: t.modal.services[i].label,
+    desc: t.modal.services[i].desc,
+  }));
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -101,7 +82,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop — clicking closes modal */}
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -113,7 +93,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             onClick={handleClose}
           />
 
-          {/* Modal wrapper — clicking outside closes */}
           <motion.div
             key="modal"
             initial={{ opacity: 0, scale: 0.92, y: 24 }}
@@ -123,7 +102,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             className="fixed inset-0 z-[101] flex items-center justify-center px-4 py-8"
             onClick={handleClose}
           >
-            {/* Modal card — stop propagation so inner clicks don't close */}
             <div
               className="relative w-full max-w-xl"
               style={{
@@ -138,7 +116,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
               }}
               onClick={e => e.stopPropagation()}
             >
-              {/* Decorative orbs */}
               <div
                 className="pointer-events-none absolute -top-20 -right-20 w-64 h-64 rounded-full"
                 style={{ background: "radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%)" }}
@@ -148,7 +125,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 style={{ background: "radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)" }}
               />
 
-              {/* Close button — fixed inside card, above scrollable area */}
               <button
                 type="button"
                 onClick={handleClose}
@@ -157,7 +133,6 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Scrollable content area */}
               <div
                 className="relative z-10 flex-1 overflow-y-auto px-7 pt-8 pb-8"
                 style={{ scrollbarWidth: "none" } as React.CSSProperties}
@@ -176,17 +151,15 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <CheckCircle2 className="w-20 h-20 text-accent" />
                     </motion.div>
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-                      <h3 className="text-2xl font-display font-black text-white mb-2">Anfrage gesendet!</h3>
-                      <p className="text-white/55 text-sm max-w-xs mx-auto">
-                        Wir melden uns innerhalb von 24 Stunden bei Ihnen. Kostenlos &amp; unverbindlich.
-                      </p>
+                      <h3 className="text-2xl font-display font-black text-white mb-2">{t.modal.successTitle}</h3>
+                      <p className="text-white/55 text-sm max-w-xs mx-auto">{t.modal.successSub}</p>
                     </motion.div>
                     <motion.button
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
                       onClick={handleClose}
                       className="mt-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white/60 hover:text-white border border-white/10 hover:border-white/20 transition-all"
                     >
-                      Schließen
+                      {t.modal.close}
                     </motion.button>
                   </motion.div>
                 ) : (
@@ -198,12 +171,12 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       className="mb-7"
                     >
                       <p className="text-xs font-bold tracking-widest uppercase text-accent/80 mb-2">
-                        // Kostenloses Angebot
+                        {t.modal.label}
                       </p>
                       <h2 className="font-display font-black text-white text-2xl leading-snug">
-                        Welche Leistung interessiert Sie?
+                        {t.modal.title}
                       </h2>
-                      <p className="text-white/45 text-sm mt-1.5">Wählen Sie eine oder mehrere Optionen</p>
+                      <p className="text-white/45 text-sm mt-1.5">{t.modal.sub}</p>
                     </motion.div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-7">
@@ -264,7 +237,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.32 }}>
                         <input
                           {...register("name")}
-                          placeholder="Ihr Name"
+                          placeholder={t.modal.namePlaceholder}
                           className="w-full px-4 py-3.5 rounded-xl text-sm text-white placeholder-white/30 outline-none"
                           style={inputBase}
                           onFocus={e => Object.assign(e.target.style, inputFocus)}
@@ -283,7 +256,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         <input
                           {...register("email")}
                           type="email"
-                          placeholder="Ihre E-Mail-Adresse"
+                          placeholder={t.modal.emailPlaceholder}
                           className="w-full px-4 py-3.5 rounded-xl text-sm text-white placeholder-white/30 outline-none"
                           style={inputBase}
                           onFocus={e => Object.assign(e.target.style, inputFocus)}
@@ -301,7 +274,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.44 }}>
                         <textarea
                           {...register("message")}
-                          placeholder="Kurze Beschreibung Ihres Projekts…"
+                          placeholder={t.modal.messagePlaceholder}
                           rows={3}
                           className="w-full px-4 py-3.5 rounded-xl text-sm text-white placeholder-white/30 outline-none resize-none"
                           style={inputBase}
@@ -327,13 +300,13 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                           style={{ background: "linear-gradient(135deg, #ff6b35 0%, #e8522a 100%)" }}
                         >
                           {isPending ? (
-                            <><Loader2 className="w-4 h-4 animate-spin" /> Wird gesendet…</>
+                            <><Loader2 className="w-4 h-4 animate-spin" /> {t.modal.sending}</>
                           ) : (
-                            <>Kostenlos Anfragen <ArrowRight className="w-4 h-4" /></>
+                            <>{t.modal.submit} <ArrowRight className="w-4 h-4" /></>
                           )}
                         </motion.button>
                         <p className="text-center text-white/25 text-xs mt-3">
-                          100% kostenlos &amp; unverbindlich · Antwort innerhalb 24h
+                          {t.modal.disclaimer}
                         </p>
                       </motion.div>
                     </form>

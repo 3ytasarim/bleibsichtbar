@@ -4,14 +4,16 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ContactModal } from "@/components/shared/ContactModal";
+import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
+import { useT } from "@/i18n";
 
-const links = [
-  { name: "Start", path: "/" },
-  { name: "Social Media", path: "/social-media" },
-  { name: "Webseiten", path: "/webseiten" },
-  { name: "Marketing Ads", path: "/marketing-ads" },
-  { name: "Ki & Automatisierungen", path: "/ki-automatisierungen" },
-  { name: "Analyse & Reporting", path: "/analyse" },
+const NAV_PATHS = [
+  { key: "start" as const,       path: "/" },
+  { key: "socialMedia" as const, path: "/social-media" },
+  { key: "websites" as const,    path: "/webseiten" },
+  { key: "marketingAds" as const,path: "/marketing-ads" },
+  { key: "ki" as const,          path: "/ki-automatisierungen" },
+  { key: "analyse" as const,     path: "/analyse" },
 ];
 
 const WHATSAPP_NUMBER = "4915567152351";
@@ -28,6 +30,7 @@ function WhatsAppSVG({ className }: { className?: string }) {
 }
 
 export function Navbar() {
+  const { t } = useT();
   const [location] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -60,7 +63,7 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
 
-            {/* Logo — aligned with hero content left edge */}
+            {/* Logo */}
             <Link href="/" className="flex items-center shrink-0 group">
               <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
                 Bleibsichtbar
@@ -69,7 +72,7 @@ export function Navbar() {
 
             {/* Desktop Nav — centered */}
             <nav className="hidden lg:flex items-center justify-center gap-3 xl:gap-5">
-              {links.map((link) => (
+              {NAV_PATHS.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
@@ -80,7 +83,7 @@ export function Navbar() {
                       : "text-foreground/80"
                   )}
                 >
-                  {link.name}
+                  {t.nav[link.key]}
                   {location === link.path && (
                     <motion.div
                       layoutId="nav-underline"
@@ -91,8 +94,13 @@ export function Navbar() {
               ))}
             </nav>
 
-            {/* Right: CTA Button + Mobile toggle */}
-            <div className="flex items-center gap-3">
+            {/* Right: Language Switcher + CTA + Mobile toggle */}
+            <div className="flex items-center gap-2">
+              {/* Language Switcher — desktop only */}
+              <div className="hidden lg:block">
+                <LanguageSwitcher />
+              </div>
+
               <div className="hidden lg:flex items-center shrink-0">
                 <Link href="/kontakt">
                   <motion.span
@@ -125,7 +133,7 @@ export function Navbar() {
                       transition={{ duration: 1.4, repeat: Infinity, ease: "easeOut" }}
                     />
                     <span className="relative z-10 flex items-center gap-2 tracking-wide">
-                      Kontakt
+                      {t.nav.contact}
                     </span>
                   </motion.span>
                 </Link>
@@ -134,7 +142,7 @@ export function Navbar() {
               <button
                 className="lg:hidden p-2 rounded-lg transition-colors text-foreground"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Menü öffnen"
+                aria-label="Menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -144,9 +152,8 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* ─── Floating Side Buttons (right, vertically centered) ─────────────── */}
+      {/* ─── Floating Side Buttons ─────────────── */}
       <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 items-end">
-        {/* WhatsApp */}
         <motion.a
           href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`}
           target="_blank"
@@ -162,10 +169,9 @@ export function Navbar() {
           }}
         >
           <WhatsAppSVG className="w-5 h-5 text-white shrink-0" />
-          <span className="hidden sm:inline whitespace-nowrap">WhatsApp</span>
+          <span className="hidden sm:inline whitespace-nowrap">{t.nav.whatsapp}</span>
         </motion.a>
 
-        {/* Kontakt aufnehmen → opens modal */}
         <motion.button
           onClick={() => setModalOpen(true)}
           initial={{ x: 56 }}
@@ -182,7 +188,7 @@ export function Navbar() {
           <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
-          <span className="hidden sm:inline whitespace-nowrap">Kontakt aufnehmen</span>
+          <span className="hidden sm:inline whitespace-nowrap">{t.nav.contactUs}</span>
         </motion.button>
       </div>
 
@@ -190,7 +196,6 @@ export function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            {/* Dark backdrop */}
             <motion.div
               key="drawer-backdrop"
               initial={{ opacity: 0 }}
@@ -202,7 +207,6 @@ export function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
             />
 
-            {/* Left panel */}
             <motion.div
               key="drawer-panel"
               initial={{ x: "-100%" }}
@@ -231,12 +235,16 @@ export function Navbar() {
                 </button>
               </div>
 
-              {/* Divider */}
+              {/* Language Switcher in drawer */}
+              <div className="px-6 pb-3">
+                <LanguageSwitcher />
+              </div>
+
               <div className="mx-6 h-px mb-4" style={{ background: "rgba(255,255,255,0.08)" }} />
 
               {/* Nav links */}
               <nav className="flex flex-col px-4 flex-1">
-                {links.map((link, i) => (
+                {NAV_PATHS.map((link, i) => (
                   <motion.div
                     key={link.path}
                     initial={{ opacity: 0, x: -24 }}
@@ -251,21 +259,19 @@ export function Navbar() {
                           ? "text-accent bg-accent/10"
                           : "text-white/75 hover:text-white hover:bg-white/06"
                       )}
-                      style={location !== link.path ? { "--tw-bg-opacity": 1 } as React.CSSProperties : undefined}
                     >
                       {location === link.path && (
                         <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
                       )}
-                      {link.name}
+                      {t.nav[link.key]}
                     </Link>
                   </motion.div>
                 ))}
 
-                {/* Kontakt link in mobile menu too */}
                 <motion.div
                   initial={{ opacity: 0, x: -24 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.08 + links.length * 0.06, ease: [0.22, 1, 0.36, 1], duration: 0.35 }}
+                  transition={{ delay: 0.08 + NAV_PATHS.length * 0.06, ease: [0.22, 1, 0.36, 1], duration: 0.35 }}
                 >
                   <Link
                     href="/kontakt"
@@ -279,12 +285,12 @@ export function Navbar() {
                     {location === "/kontakt" && (
                       <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
                     )}
-                    Kontakt
+                    {t.nav.contact}
                   </Link>
                 </motion.div>
               </nav>
 
-              {/* CTA buttons (mobile bottom) */}
+              {/* CTA buttons */}
               <div className="px-5 pb-8 space-y-3">
                 <a
                   href={`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_TEXT}`}
@@ -295,7 +301,7 @@ export function Navbar() {
                   style={{ background: "linear-gradient(135deg, #128C7E, #25D366)" }}
                 >
                   <WhatsAppSVG className="w-5 h-5" />
-                  WhatsApp schreiben
+                  {t.nav.whatsappWrite}
                 </a>
                 <motion.button
                   initial={{ opacity: 0, y: 12 }}
@@ -306,7 +312,7 @@ export function Navbar() {
                   className="w-full py-3.5 rounded-2xl text-sm font-bold text-white"
                   style={{ background: "linear-gradient(135deg, #ff6b35, #e8522a)" }}
                 >
-                  Kontakt aufnehmen
+                  {t.nav.contactUs}
                 </motion.button>
               </div>
             </motion.div>
@@ -314,7 +320,6 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Contact Modal */}
       <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );

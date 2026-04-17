@@ -2,17 +2,20 @@ import React from "react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useGetReferences } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
+import { useT } from "@/i18n";
 
 export default function References() {
+  const { t } = useT();
+  const rf = t.references;
   const { data: references = [], isLoading } = useGetReferences({ published: true });
 
   return (
     <PublicLayout>
       <section className="py-24 bg-primary text-primary-foreground text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl md:text-6xl font-display font-bold mb-6">Unsere <span className="text-accent">Referenzen</span></h1>
+          <h1 className="text-5xl md:text-6xl font-display font-bold mb-6">{rf.title1} <span className="text-accent">{rf.title2}</span></h1>
           <p className="text-xl text-primary-foreground/80 max-w-2xl mx-auto">
-            Erfolgsgeschichten und Stimmen unserer zufriedenen Kunden.
+            {rf.sub}
           </p>
         </div>
       </section>
@@ -20,10 +23,10 @@ export default function References() {
       <section className="py-24 bg-gray-50 min-h-[50vh]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {isLoading ? (
-            <div className="text-center py-12">Lade Referenzen...</div>
+            <div className="text-center py-12">{rf.loading}</div>
           ) : references.length === 0 ? (
             <div className="text-center text-muted-foreground py-12">
-              Noch keine Referenzen vorhanden.
+              {rf.empty}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

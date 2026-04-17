@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { MarqueeClients } from "@/components/shared/MarqueeClients";
 import { StarfieldOverlay } from "@/components/shared/StarfieldOverlay";
 import { useGetProjects } from "@workspace/api-client-react";
+import { useT } from "@/i18n";
+import type { Translations } from "@/i18n/translations";
 
 // ─── Like Notification Bubble ─────────────────────────────────────────────────
 interface LikeNotif { id: number; name: string; }
@@ -451,32 +453,23 @@ function SocialMediaPhone() {
 }
 
 // ─── Hero Slides ──────────────────────────────────────────────────────────────
-const heroSlides = [
-  {
-    headline: ["Sichtbarkeit", "beginnt mit uns"],
-    sub: "Digitale Präsenz, die Kunden überzeugt und messbar mehr Umsatz generiert.",
-    cta: "Jetzt starten",
-    ctaLink: "/kontakt",
-    bg: "from-[#1e4080] via-[#2d5fbe] to-[#1e4080]",
-    pill: "Ihre Agentur für digitale Sichtbarkeit",
-  },
-  {
-    headline: ["Webseiten,", "die überzeugen."],
-    sub: "Moderne, schnelle Webseiten, die nicht nur gut aussehen, sondern Anfragen generieren.",
-    cta: "Webseiten anfragen",
-    ctaLink: "/kontakt",
-    bg: "from-[#1e4080] via-[#264fa8] to-[#1e4080]",
-    pill: "Webseiten Optimierung & Design",
-  },
-  {
-    headline: ["Smarte KI-", "Lösungen für Sie"],
-    sub: "Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI.",
-    cta: "Mehr erfahren",
-    ctaLink: "/ki-automatisierungen",
-    bg: "from-[#1e4080] via-[#1e6080] to-[#1e4080]",
-    pill: "KI & Automatisierung",
-  },
+const HERO_BG = [
+  "from-[#1e4080] via-[#2d5fbe] to-[#1e4080]",
+  "from-[#1e4080] via-[#264fa8] to-[#1e4080]",
+  "from-[#1e4080] via-[#1e6080] to-[#1e4080]",
 ];
+const HERO_LINKS = ["/kontakt", "/kontakt", "/ki-automatisierungen"];
+
+function makeHeroSlides(t: Translations) {
+  return t.home.hero.map((h, i) => ({
+    headline: [h.line1, h.line2],
+    sub: h.sub,
+    cta: h.cta,
+    ctaLink: HERO_LINKS[i],
+    bg: HERO_BG[i],
+    pill: h.pill,
+  }));
+}
 
 // ─── Animated Star Field ─────────────────────────────────────────────────────
 function rng(seed: number): number {
@@ -561,82 +554,39 @@ function FloatingDots() {
 }
 
 // ─── Services ────────────────────────────────────────────────────────────────
-const services = [
-  {
-    icon: Users,
-    title: "Social Media Management",
-    desc: "Wir bauen eine starke Präsenz auf, die Vertrauen schafft und neue Kunden bringt. Strategie, Content und Betreuung aus einer Hand.",
-    color: "from-pink-500 to-rose-600",
-    link: "/social-media",
-  },
-  {
-    icon: Brain,
-    title: "KI & Automatisierung",
-    desc: "Automatisieren Sie Anfragen, Prozesse und Kundenservice mit moderner KI. Mehr Effizienz, weniger Aufwand, mehr Wachstum.",
-    color: "from-violet-500 to-purple-700",
-    link: "/ki-automatisierungen",
-  },
-  {
-    icon: Monitor,
-    title: "Webseiten Optimierung & Design",
-    desc: "Moderne Webseiten, die nicht nur gut aussehen, sondern Anfragen generieren. Schnell, professionell und zugeschnitten.",
-    color: "from-blue-500 to-indigo-700",
-    link: "/webseiten",
-  },
-  {
-    icon: Target,
-    title: "Strategie & Beratung",
-    desc: "Wir analysieren Ihr Unternehmen und entwickeln eine digitale Strategie, die wirklich zu Ihnen passt.",
-    color: "from-orange-400 to-amber-600",
-    link: "/analyse",
-  },
-  {
-    icon: BarChart3,
-    title: "Performance Marketing & Ads",
-    desc: "Gezielte Werbung bei Google, damit Kunden Sie genau dann finden, wenn sie suchen. Messbare Ergebnisse statt Streuverlust.",
-    color: "from-green-500 to-emerald-700",
-    link: "/marketing-ads",
-  },
-  {
-    icon: Clock,
-    title: "Langfristige Betreuung",
-    desc: "Wir begleiten Unternehmen langfristig – von der ersten Idee bis zur laufenden Optimierung.",
-    color: "from-slate-500 to-gray-700",
-    link: "/kontakt",
-  },
+const SERVICE_META = [
+  { icon: Users,    color: "from-pink-500 to-rose-600",    link: "/social-media" },
+  { icon: Brain,    color: "from-violet-500 to-purple-700", link: "/ki-automatisierungen" },
+  { icon: Monitor,  color: "from-blue-500 to-indigo-700",  link: "/webseiten" },
+  { icon: Target,   color: "from-orange-400 to-amber-600", link: "/analyse" },
+  { icon: BarChart3,color: "from-green-500 to-emerald-700",link: "/marketing-ads" },
+  { icon: Clock,    color: "from-slate-500 to-gray-700",   link: "/kontakt" },
 ];
+
+function makeServices(t: Translations) {
+  return t.home.services.map((s, i) => ({
+    ...SERVICE_META[i],
+    title: s.title,
+    desc: s.desc,
+  }));
+}
 
 // ─── Process Steps ───────────────────────────────────────────────────────────
-const steps = [
-  {
-    num: "01",
-    title: "Analyse",
-    desc: "Wir analysieren Ihr Unternehmen, Ihre Zielgruppe und Ihren aktuellen Auftritt – und definieren eine klare Strategie für nachhaltige Sichtbarkeit.",
-  },
-  {
-    num: "02",
-    title: "Strategie",
-    desc: "Wir entwickeln einen strukturierten Content-Plan mit klarer Linie, Design und Wiedererkennungswert – abgestimmt auf Ihre Marke und Ziele.",
-  },
-  {
-    num: "03",
-    title: "Umsetzung",
-    desc: "Wir erstellen hochwertige Inhalte und betreuen Ihre Kanäle professionell und zuverlässig. Einheitlich, modern und markengerecht.",
-  },
-  {
-    num: "04",
-    title: "Optimierung",
-    desc: "Wir analysieren die Performance laufend und entwickeln Inhalte gezielt weiter. So entstehen planbare Sichtbarkeit und neue Anfragen.",
-  },
-];
+const STEP_NUMS = ["01", "02", "03", "04"];
+function makeSteps(t: Translations) {
+  return t.home.steps.map((s, i) => ({ num: STEP_NUMS[i], title: s.title, desc: s.desc }));
+}
 
-// ─── Stats ───────────────────────────────────────────────────────────────────
-const stats = [
-  { value: 5, suffix: "+", label: "Jahre Erfahrung" },
-  { value: 200, suffix: "+", label: "Betreute Projekte & Anfragen" },
-  { value: 4, suffix: "", label: "Bereiche: Web · Social · Ads · KI" },
-  { value: 1, suffix: "", label: "Ziel – Mehr Kunden für Sie" },
+// ─── Counter Stats ─────────────────────────────────────────────────────────────
+const STAT_VALUES = [
+  { value: 5,   suffix: "+" },
+  { value: 200, suffix: "+" },
+  { value: 4,   suffix: ""  },
+  { value: 1,   suffix: ""  },
 ];
+function makeStats(t: Translations) {
+  return t.home.counterStats.map((s, i) => ({ ...STAT_VALUES[i], label: s.label }));
+}
 
 
 // ─── Animated Counter ─────────────────────────────────────────────────────────
@@ -685,6 +635,7 @@ function autoStat(seed: number, min: number, max: number): string {
 }
 
 function SocialMediaSlider() {
+  const { t } = useT();
   const { data: allProjects = [], isLoading } = useGetProjects({ published: true });
   const projects = allProjects.filter((p: any) => p.showOnHomepage === true);
 
@@ -737,10 +688,10 @@ function SocialMediaSlider() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
           <div>
-            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-3">Unsere Referenzen</p>
+            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-3">{t.home.refsLabel}</p>
             <h2 className="text-4xl md:text-5xl font-display font-black leading-tight text-white">
-              Einblick in unsere{" "}
-              <span className="text-accent">bisherigen Projekte</span>
+              {t.home.refsTitle1}{" "}
+              <span className="text-accent">{t.home.refsTitle2}</span>
             </h2>
           </div>
           <Link
@@ -748,7 +699,7 @@ function SocialMediaSlider() {
             className="group hidden md:inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border rounded-full px-7 py-3 transition-all duration-300 text-white hover:bg-white hover:text-[#0a1628]"
             style={{ borderColor: "rgba(255,255,255,0.25)" }}
           >
-            Alle ansehen <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+            {t.home.refsViewAll} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
           </Link>
         </div>
 
@@ -876,7 +827,7 @@ function SocialMediaSlider() {
             className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest border rounded-full px-8 py-3 text-white transition-all duration-300 hover:bg-white hover:text-[#0a1628]"
             style={{ borderColor: "rgba(255,255,255,0.25)" }}
           >
-            Alle Projekte ansehen <ArrowRight className="w-4 h-4" />
+            {t.home.refsViewAllBottom} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>
@@ -885,12 +836,17 @@ function SocialMediaSlider() {
 }
 
 export default function Home() {
+  const { t } = useT();
+  const heroSlides = makeHeroSlides(t);
+  const services = makeServices(t);
+  const steps = makeSteps(t);
+  const stats = makeStats(t);
   const [slide, setSlide] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % heroSlides.length), 8000);
-    return () => clearInterval(t);
-  }, []);
+    const timer = setInterval(() => setSlide(s => (s + 1) % heroSlides.length), 8000);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
 
   const current = heroSlides[slide];
 
@@ -998,7 +954,7 @@ export default function Home() {
                           className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
                           style={{ background: "rgba(255,255,255,0.1)" }}
                         />
-                        <span className="relative">Projekte ansehen</span>
+                        <span className="relative">{t.home.viewProjects}</span>
                         <ChevronRight className="relative w-4 h-4 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" />
                       </Link>
                     </motion.div>
@@ -1006,7 +962,7 @@ export default function Home() {
 
                   {/* Trust badges */}
                   <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6 sm:mt-10 pt-5 sm:pt-8 border-t border-white/10">
-                    {["Sichtbar werden", "Kunden gewinnen", "Zielorientiert"].map(badge => (
+                    {t.home.badges.map(badge => (
                       <div key={badge} className="flex items-center space-x-2 text-white/70">
                         <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
                         <span className="text-sm font-medium">{badge}</span>
@@ -1131,7 +1087,7 @@ export default function Home() {
 
         {/* Scroll indicator — desktop only */}
         <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
-          <span className="text-white/80 text-[13px] font-semibold tracking-[0.25em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">Entdecken</span>
+          <span className="text-white/80 text-[13px] font-semibold tracking-[0.25em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">{t.home.discover}</span>
           <button
             onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
             className="relative flex items-center justify-center focus:outline-none group"
@@ -1179,13 +1135,13 @@ export default function Home() {
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
           >
-            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-6">Die entscheidende Frage</p>
+            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-6">{t.home.problemLabel}</p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold leading-tight mb-8">
-              Wie viele Kunden verlieren Sie, weil Ihr Unternehmen{" "}
-              <span className="text-accent">online nicht sichtbar</span> ist?
+              {t.home.problemQ1}{" "}
+              <span className="text-accent">{t.home.problemQ2}</span> {t.home.problemQ3}
             </h2>
             <p className="text-xl text-white/60 max-w-3xl mx-auto leading-relaxed">
-              Digitale Sichtbarkeit entsteht dort, wo Entscheidungen getroffen werden – auf Webseiten, Social Media und bei Google. Wir sorgen dafür, dass Ihr Unternehmen genau dort gefunden wird, wo Kunden suchen.
+              {t.home.problemSub}
             </p>
           </motion.div>
 
@@ -1196,11 +1152,11 @@ export default function Home() {
             variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15, delayChildren: 0.2 } } }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16"
           >
-            {[
-              { icon: Globe, label: "Social Media", val: "70%", desc: "der Kaufentscheidungen werden durch Social Media beeinflusst" },
-              { icon: Monitor, label: "Webseite", val: "3 Sek.", desc: "haben Sie, um einen Besucher zu überzeugen" },
-              { icon: Target, label: "Google Ads", val: "200%", desc: "höherer ROI mit gezielten Performance-Kampagnen möglich" },
-            ].map((item, i) => (
+            {t.home.stats.map((item, i) => {
+              const icons = [Globe, Monitor, Target];
+              const Icon = icons[i];
+              return { ...item, icon: Icon };
+            }).map((item, i) => (
               <motion.div key={i} variants={fadeUp} className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm hover:bg-white/10 transition-colors">
                 <item.icon className="w-8 h-8 text-accent mb-4" />
                 <div className="text-3xl font-bold text-white mb-2">{item.val}</div>
@@ -1224,13 +1180,13 @@ export default function Home() {
               className="inline-flex items-center gap-2 bg-accent/10 text-accent font-semibold text-xs tracking-[0.18em] uppercase px-4 py-2 rounded-full mb-5"
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-accent" /> Was wir tun
+              <span className="w-1.5 h-1.5 rounded-full bg-accent" /> {t.home.servicesLabel}
             </motion.span>
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-5">
-              Unsere Leistungen im <span className="text-accent">Überblick</span>
+              {t.home.servicesTitle1} <span className="text-accent">{t.home.servicesTitle2}</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Maßgeschneiderte digitale Lösungen für Unternehmen, die online wachsen wollen.
+              {t.home.servicesSub}
             </p>
           </motion.div>
 
@@ -1282,7 +1238,7 @@ export default function Home() {
 
                       {/* CTA row */}
                       <div className="flex items-center gap-1.5 text-accent text-sm font-bold">
-                        Mehr erfahren
+                        {t.home.learnMore}
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
                       </div>
 
@@ -1306,12 +1262,12 @@ export default function Home() {
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={fadeUp} className="text-center mb-16">
-            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-4">Unser Prozess</p>
+            <p className="text-accent font-semibold tracking-widest uppercase text-sm mb-4">{t.home.processLabel}</p>
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-              Der Weg zu mehr <span className="text-accent">Sichtbarkeit</span>
+              {t.home.processTitle1} <span className="text-accent">{t.home.processTitle2}</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Wir analysieren Ihr Unternehmen, entwickeln eine klare Strategie und setzen alles strukturiert für Sie um.
+              {t.home.processSub}
             </p>
           </motion.div>
 

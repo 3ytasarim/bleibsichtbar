@@ -5,6 +5,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground } from "@/components/shared/AnimatedHero";
+import { useT } from "@/i18n";
 import {
   BarChart3, TrendingUp, Users, Eye, Target, CheckCircle2,
   ArrowRight, PieChart, Activity, Shield, Zap, Star, AlertCircle,
@@ -16,67 +17,18 @@ const fadeUp = {
 };
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
-const stats = [
-  { value: "48h", label: "Erstbericht in 48 Stunden" },
-  { value: "+46%", label: "Ø Reichweiten-Steigerung" },
-  { value: "100%", label: "Kostenlos & unverbindlich" },
-  { value: "6+", label: "Analysebereiche" },
-];
-
-const analyseLeistungen = [
-  {
-    icon: <BarChart3 className="w-6 h-6" />,
-    title: "Social Media Audit",
-    desc: "Vollständige Analyse Ihrer Kanäle: Reichweite, Engagement, Follower-Qualität und Wettbewerbsvergleich.",
-  },
-  {
-    icon: <TrendingUp className="w-6 h-6" />,
-    title: "Performance-Tracking",
-    desc: "Monatliche KPI-Auswertung mit allen relevanten Metriken – verständlich aufbereitet, nicht nur Zahlen.",
-  },
-  {
-    icon: <Users className="w-6 h-6" />,
-    title: "Zielgruppenanalyse",
-    desc: "Wer sind Ihre Follower? Wir analysieren Demografie, Interessen und das Verhalten Ihrer Community.",
-  },
-  {
-    icon: <Eye className="w-6 h-6" />,
-    title: "Wettbewerbsanalyse",
-    desc: "Was machen Ihre Mitbewerber besser? Wir identifizieren Chancen und Lücken in Ihrem Markt.",
-  },
-  {
-    icon: <Target className="w-6 h-6" />,
-    title: "Content-Performance",
-    desc: "Welche Inhalte funktionieren am besten? Wir analysieren und nutzen das für Ihre zukünftige Strategie.",
-  },
-  {
-    icon: <PieChart className="w-6 h-6" />,
-    title: "ROI-Messung",
-    desc: "Wir machen messbar, was Ihre Social-Media-Aktivitäten wirklich bringen – in Leads, Anfragen und Umsatz.",
-  },
-];
-
-
-const reportItems = [
-  "Reichweite & Impressionen",
-  "Follower-Wachstum",
-  "Engagement-Rate",
-  "Beste Beiträge & Formate",
-  "Zielgruppendemografie",
-  "Wettbewerbsvergleich",
-  "Google Analytics Integration",
-  "Handlungsempfehlungen",
-];
-
-const vorteile = [
-  "Keine Mindestlaufzeit – fair und transparent",
-  "Individueller Report für Ihr Unternehmen",
-  "Klare Empfehlungen statt Datenberge",
-  "Monatliche Updates & Fortschrittsmessung",
-  "Direkter Ansprechpartner für Ihre Fragen",
+const ANALYSE_ICONS = [
+  <BarChart3 className="w-6 h-6" />,
+  <TrendingUp className="w-6 h-6" />,
+  <Users className="w-6 h-6" />,
+  <Eye className="w-6 h-6" />,
+  <Target className="w-6 h-6" />,
+  <PieChart className="w-6 h-6" />,
 ];
 
 export default function Analyse() {
+  const { t } = useT();
+  const an = t.analyse;
   const [form, setForm] = useState({ company: "", instagram: "", tiktok: "", linkedin: "", goals: "", contact: "" });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
@@ -91,18 +43,18 @@ export default function Analyse() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <span className="inline-block bg-white/10 border border-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6 tracking-wide">
-              Analyse & Reporting
+              {an.heroBadge}
             </span>
             <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
-              Daten, die <br />
-              <span className="text-accent">Entscheidungen tragen.</span>
+              {an.heroTitle1} <br />
+              <span className="text-accent">{an.heroTitle2}</span>
             </h1>
             <p className="text-xl text-white max-w-2xl mx-auto mb-10">
-              Wir analysieren Ihre Online-Präsenz, messen Ihre Performance und liefern Ihnen die Insights, die Sie brauchen, um besser zu werden.
+              {an.heroSub}
             </p>
             <div className="flex justify-center">
               <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white bg-transparent hover:bg-white/10">
-                <Link href="/kontakt">Jetzt beraten lassen</Link>
+                <Link href="/kontakt">{an.heroCta}</Link>
               </Button>
             </div>
           </motion.div>
@@ -113,7 +65,7 @@ export default function Analyse() {
       <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((s, i) => (
+            {an.stats.map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
                 <div className="text-3xl md:text-4xl font-display font-black text-accent mb-2">{s.value}</div>
@@ -129,18 +81,18 @@ export default function Analyse() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
             <motion.div variants={fadeUp} className="text-center mb-16">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Was wir analysieren</p>
-              <h2 className="text-4xl md:text-5xl font-display font-bold">Vollständige <span className="text-accent">Performance-Analyse</span></h2>
+              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">{an.servicesLabel}</p>
+              <h2 className="text-4xl md:text-5xl font-display font-bold">{an.servicesTitle1} <span className="text-accent">{an.servicesTitle2}</span></h2>
               <p className="text-lg text-muted-foreground max-w-xl mx-auto mt-4">
-                Keine Spekulation, sondern Fakten. Wir liefern Ihnen ein klares Bild davon, was funktioniert und was nicht.
+                {an.servicesSub}
               </p>
             </motion.div>
             <motion.div variants={stagger} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {analyseLeistungen.map((l, i) => (
+              {an.services.map((l, i) => (
                 <motion.div key={i} variants={fadeUp}
                   className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-accent/30 hover:shadow-md transition-all group">
                   <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all">
-                    {l.icon}
+                    {ANALYSE_ICONS[i]}
                   </div>
                   <h3 className="text-xl font-display font-bold mb-3">{l.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{l.desc}</p>
@@ -167,7 +119,7 @@ export default function Analyse() {
                 </p>
               </motion.div>
               <motion.div variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {reportItems.map((item, i) => (
+                {an.reportItems.map((item, i) => (
                   <motion.div key={i} variants={fadeUp} className="flex items-center gap-3 group">
                     <div className="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent transition-colors">
                       <CheckCircle2 className="w-3.5 h-3.5 text-accent group-hover:text-white transition-colors" />
@@ -252,7 +204,7 @@ export default function Analyse() {
                 Daten allein bringen nichts. Erst die richtige Interpretation macht aus Zahlen echte Entscheidungen.
               </motion.p>
               <motion.div variants={stagger} className="space-y-4">
-                {vorteile.map((item, i) => (
+                {an.benefits.map((item, i) => (
                   <motion.div key={i} variants={fadeUp} className="flex items-center gap-4 group">
                     <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent transition-colors duration-300">
                       <CheckCircle2 className="w-4 h-4 text-accent group-hover:text-white transition-colors duration-300" />
@@ -314,12 +266,12 @@ export default function Analyse() {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
             <motion.div variants={fadeUp} className="text-center mb-12">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Kostenlos & unverbindlich</p>
+              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">{an.heroBadge}</p>
               <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-                Kostenlose <span className="text-accent">Social-Media-Analyse</span>
+                {an.formTitle}
               </h2>
               <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-                Tragen Sie Ihre Daten ein – wir analysieren Ihre Kanäle und senden Ihnen innerhalb von 48 Stunden einen kostenlosen Erstbericht.
+                {an.formSub}
               </p>
             </motion.div>
 
@@ -327,20 +279,20 @@ export default function Analyse() {
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-16 bg-green-50 rounded-3xl border border-green-100">
                 <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-display font-bold mb-2">Anfrage erhalten!</h3>
-                <p className="text-muted-foreground">Ihr kostenloser Analysebericht wird innerhalb von 48 Stunden zugesendet.</p>
+                <h3 className="text-2xl font-display font-bold mb-2">{an.formSuccess}</h3>
+                <p className="text-muted-foreground">{an.formSuccessSub}</p>
               </motion.div>
             ) : (
               <motion.form noValidate variants={fadeUp}
                 onSubmit={async (e) => {
                   e.preventDefault();
                   const errs: typeof errors = {};
-                  if (!form.company.trim()) errs.company = "Bitte geben Sie Ihren Unternehmensnamen ein.";
-                  if (!form.goals.trim()) errs.goals = "Bitte beschreiben Sie Ihre Ziele.";
+                  if (!form.company.trim()) errs.company = an.formValidation.companyRequired;
+                  if (!form.goals.trim()) errs.goals = an.formValidation.goalsRequired;
                   if (!form.contact.trim()) {
-                    errs.contact = "Bitte geben Sie Ihre E-Mail-Adresse ein.";
+                    errs.contact = an.formValidation.contactRequired;
                   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contact)) {
-                    errs.contact = "Bitte geben Sie eine gültige E-Mail-Adresse ein.";
+                    errs.contact = an.formValidation.contactRequired;
                   }
                   if (Object.keys(errs).length > 0) { setErrors(errs); return; }
                   setErrors({});
@@ -354,14 +306,14 @@ export default function Analyse() {
                     if (!res.ok) throw new Error("Server error");
                     setSubmitted(true);
                   } catch {
-                    setErrors({ submit: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut." });
+                    setErrors({ submit: an.formValidation.submitError });
                   } finally {
                     setSending(false);
                   }
                 }}
                 className="bg-white rounded-3xl p-8 border border-gray-100 shadow-lg space-y-6">
                 <div>
-                  <label className="block text-sm font-bold mb-2">Unternehmensname *</label>
+                  <label className="block text-sm font-bold mb-2">{an.formCompany}</label>
                   <input value={form.company}
                     onChange={e => { setForm(f => ({ ...f, company: e.target.value })); setErrors(ev => ({ ...ev, company: undefined })); }}
                     className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors ${errors.company ? "border-red-400" : "border-gray-200"}`}
@@ -391,7 +343,7 @@ export default function Analyse() {
                   ))}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold mb-2">Was möchten Sie mit Social Media erreichen? *</label>
+                  <label className="block text-sm font-bold mb-2">{an.formGoals}</label>
                   <textarea value={form.goals}
                     onChange={e => { setForm(f => ({ ...f, goals: e.target.value })); setErrors(ev => ({ ...ev, goals: undefined })); }}
                     rows={3}
@@ -406,7 +358,7 @@ export default function Analyse() {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold mb-2">Ihre E-Mail-Adresse *</label>
+                  <label className="block text-sm font-bold mb-2">{an.formContact}</label>
                   <input type="text" value={form.contact}
                     onChange={e => { setForm(f => ({ ...f, contact: e.target.value })); setErrors(ev => ({ ...ev, contact: undefined })); }}
                     className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors ${errors.contact ? "border-red-400" : "border-gray-200"}`}
@@ -427,7 +379,7 @@ export default function Analyse() {
                   </motion.div>
                 )}
                 <Button type="submit" size="lg" disabled={sending} className="w-full rounded-full font-bold bg-accent hover:bg-accent/90 text-white disabled:opacity-60">
-                  {sending ? "Wird gesendet..." : <><span>Kostenlose Analyse anfordern</span><ArrowRight className="ml-2 w-4 h-4 inline" /></>}
+                  {sending ? an.formSending : <><span>{an.formSubmit}</span><ArrowRight className="ml-2 w-4 h-4 inline" /></>}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground">
                   100% kostenlos & unverbindlich. Wir melden uns innerhalb von 48 Stunden.
