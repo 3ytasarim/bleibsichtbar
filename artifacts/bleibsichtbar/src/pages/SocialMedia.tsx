@@ -484,6 +484,8 @@ function PhoneFrame({ project, size, rotate, opacity, zIndex, onClick }: {
 }
 
 function CaseStudyCarousel({ projects }: { projects: any[] }) {
+  const { t } = useT();
+  const sm = t.pages.socialMedia;
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const n = projects.length;
@@ -517,7 +519,7 @@ function CaseStudyCarousel({ projects }: { projects: any[] }) {
         >
           {/* Category + client */}
           <div className="flex items-center gap-3 mb-5">
-            <span className="text-xs font-black text-accent uppercase tracking-widest">{active.category}</span>
+            <span className="text-xs font-black text-accent uppercase tracking-widest">{(t.categoryLabels as Record<string, string>)[active.category] ?? active.category}</span>
             {active.clientName && (
               <>
                 <span className="w-1 h-1 rounded-full bg-gray-400" />
@@ -556,7 +558,7 @@ function CaseStudyCarousel({ projects }: { projects: any[] }) {
                 className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest border px-7 py-3 rounded-full transition-colors cursor-pointer hover:border-accent hover:text-accent"
                 style={{ color: "#0a1628", borderColor: "rgba(10,22,40,0.35)" }}
               >
-                Mehr
+                {sm.casesBtn}
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
