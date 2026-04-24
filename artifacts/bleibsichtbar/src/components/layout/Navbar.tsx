@@ -56,7 +56,8 @@ export function Navbar() {
       <header
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-          "bg-white/98 backdrop-blur-xl border-b border-gray-100",
+          "bg-[#0a1628] border-b border-[#1a2a50]",
+          "lg:bg-white/98 lg:backdrop-blur-xl lg:border-gray-100",
           isScrolled ? "py-2.5 shadow-sm" : "py-3.5"
         )}
       >
@@ -65,7 +66,7 @@ export function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center shrink-0 group">
-              <span className="font-display font-black text-[17px] sm:text-[22px] tracking-[0.18em] uppercase text-foreground">
+              <span className="font-display font-black text-[17px] sm:text-[22px] tracking-[0.18em] uppercase text-white lg:text-foreground">
                 Bleibsichtbar
               </span>
             </Link>
@@ -144,7 +145,7 @@ export function Navbar() {
               </div>
 
               <button
-                className="lg:hidden p-2 rounded-lg transition-colors text-foreground"
+                className="lg:hidden p-2 rounded-lg transition-colors text-white"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Menu"
               >

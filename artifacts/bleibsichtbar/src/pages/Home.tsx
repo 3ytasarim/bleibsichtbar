@@ -277,17 +277,14 @@ function VoiceAgentPhone() {
         }}>
           <PhoneOff size={20} color="white" />
         </div>
-        <motion.div
-          animate={{ scale: [1, 1.06, 1] }}
-          transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-          style={{
+        <div style={{
             width: 48, height: 48, borderRadius: "50%", background: "#22c55e",
             display: "flex", alignItems: "center", justifyContent: "center",
             boxShadow: "0 4px 20px rgba(34,197,94,0.55)",
           }}
         >
           <Phone size={20} color="white" />
-        </motion.div>
+        </div>
       </div>
     </div>
   );
