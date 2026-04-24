@@ -1068,13 +1068,14 @@ export default function Home() {
                           zIndex: 4,
                           rotateY: 10,
                           rotateZ: 4,
+                          willChange: "transform",
                         }}
                       >
                         <div style={{
                           width: "100%", height: "100%",
                           borderRadius: 38, border: "8px solid #1a1a1c", background: "#1a1a1c",
-                          overflow: "hidden", position: "relative", isolation: "isolate", willChange: "transform",
-                          boxShadow: "8px 16px 40px rgba(0,0,0,0.35), 0 0 40px rgba(34,197,94,0.15), 0 0 0 1px rgba(255,255,255,0.10)",
+                          overflow: "hidden", position: "relative", isolation: "isolate",
+                          boxShadow: "8px 16px 40px rgba(0,0,0,0.35), 0 0 40px rgba(249,115,22,0.12), 0 0 0 1px rgba(255,255,255,0.10)",
                         }}>
                           <div style={{ position: "absolute", inset: 0, borderRadius: 30, overflow: "hidden", background: "#06080f" }}>
                             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1086,7 +1087,6 @@ export default function Home() {
                             <div style={{ position: "absolute", bottom: 5, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 20 }}>
                               <div style={{ width: 60, height: 4, background: "#333", borderRadius: 3 }} />
                             </div>
-                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "30%", background: "linear-gradient(170deg,rgba(255,255,255,0.05) 0%,transparent 100%)", pointerEvents: "none", zIndex: 10 }} />
                           </div>
                         </div>
                       </motion.div>
@@ -1104,12 +1104,13 @@ export default function Home() {
                           zIndex: 5,
                           rotateY: -10,
                           rotateZ: -4,
+                          willChange: "transform",
                         }}
                       >
                         <div style={{
                           width: "100%", height: "100%",
                           borderRadius: 40, border: "8px solid #1a1a1c", background: "#1a1a1c",
-                          overflow: "hidden", position: "relative", isolation: "isolate", willChange: "transform",
+                          overflow: "hidden", position: "relative", isolation: "isolate",
                           boxShadow: "-8px 16px 40px rgba(0,0,0,0.35), 0 0 45px rgba(249,115,22,0.15), 0 0 0 1px rgba(255,255,255,0.12)",
                         }}>
                           <div style={{ position: "absolute", inset: 0, borderRadius: 32, overflow: "hidden", background: "#f5f7fa" }}>
@@ -1122,7 +1123,6 @@ export default function Home() {
                             <div style={{ position: "absolute", bottom: 5, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 20 }}>
                               <div style={{ width: 70, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
                             </div>
-                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "35%", background: "linear-gradient(170deg,rgba(255,255,255,0.09) 0%,transparent 100%)", pointerEvents: "none", zIndex: 10 }} />
                           </div>
                         </div>
                       </motion.div>
