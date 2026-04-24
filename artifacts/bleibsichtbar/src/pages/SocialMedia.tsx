@@ -647,47 +647,18 @@ function makeServices(t: Translations) {
   ];
 }
 
-const steps = [
-  {
-    num: "01", title: "Analyse",
-    desc: "Wir durchleuchten Ihren Ist-Zustand, analysieren Wettbewerber und definieren Ihre genaue Zielgruppe.",
-    icon: Search,
-    tags: ["Kanal-Audit", "Wettbewerber-Check", "Zielgruppe"],
-    color: "from-blue-500 to-cyan-400",
-  },
-  {
-    num: "02", title: "Strategie",
-    desc: "Entwicklung einer maßgeschneiderten Content- und Plattformstrategie. Wer, was, wann und wo.",
-    icon: Target,
-    tags: ["Content-Plan", "Plattformwahl", "Posting-Rhythmus"],
-    color: "from-violet-500 to-purple-400",
-  },
-  {
-    num: "03", title: "Content Creation",
-    desc: "Produktion hochwertiger Bilder, Reels und Texte, die Ihre Marke authentisch repräsentieren.",
-    icon: Camera,
-    tags: ["Fotografie", "Videoproduktion", "Copywriting"],
-    color: "from-pink-500 to-rose-400",
-  },
-  {
-    num: "04", title: "Publishing",
-    desc: "Vollständige Übernahme der Veröffentlichung und aktives Community Management.",
-    icon: Send,
-    tags: ["Scheduling", "Hashtag-Optimierung", "Community-Mgmt."],
-    color: "from-orange-500 to-amber-400",
-  },
-  {
-    num: "05", title: "Reporting",
-    desc: "Monatliche Auswertung aller KPIs und kontinuierliche Strategieanpassung auf Basis der Daten.",
-    icon: BarChart3,
-    tags: ["KPI-Dashboard", "Monatsbericht", "Strategieanpassung"],
-    color: "from-green-500 to-emerald-400",
-  },
+const STEP_META = [
+  { icon: Search, color: "from-blue-500 to-cyan-400" },
+  { icon: Target, color: "from-violet-500 to-purple-400" },
+  { icon: Camera, color: "from-pink-500 to-rose-400" },
+  { icon: Send, color: "from-orange-500 to-amber-400" },
+  { icon: BarChart3, color: "from-green-500 to-emerald-400" },
 ];
 
 const platforms = ["Instagram", "TikTok", "YouTube", "Facebook", "LinkedIn"];
 
-function StepCard({ step, Icon, isLeft }: { step: typeof steps[0]; Icon: React.ElementType; isLeft: boolean }) {
+type StepData = { num: string; title: string; desc: string; tags: string[]; color: string };
+function StepCard({ step, Icon, isLeft }: { step: StepData; Icon: React.ElementType; isLeft: boolean }) {
   return (
     <div className={`group relative bg-white/5 border border-white/10 rounded-3xl p-7 hover:bg-white/10 hover:border-accent/30 transition-all duration-300 hover:shadow-2xl hover:shadow-accent/10 ${isLeft ? "lg:mr-10" : "lg:ml-10"}`}>
       <div className="flex items-start gap-4 mb-5">
@@ -833,9 +804,11 @@ export default function SocialMedia() {
             <div className="hidden lg:block absolute left-1/2 top-6 bottom-6 w-px bg-gradient-to-b from-accent/60 via-white/10 to-transparent -translate-x-1/2 pointer-events-none" />
 
             <div className="space-y-10 lg:space-y-0">
-              {steps.map((step, i) => {
+              {sm.steps.map((stepTxt, i) => {
+                const meta = STEP_META[i] ?? STEP_META[0];
+                const step: StepData = { ...stepTxt, color: meta.color };
                 const isLeft = i % 2 === 0;
-                const Icon = step.icon;
+                const Icon = meta.icon;
                 return (
                   <div key={i} className="relative lg:grid lg:grid-cols-2 lg:gap-12 lg:mb-14 items-center">
 
