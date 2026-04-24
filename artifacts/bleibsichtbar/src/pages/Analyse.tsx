@@ -110,12 +110,12 @@ export default function Analyse() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
               <motion.div variants={fadeUp}>
-                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Monatliches Reporting</p>
+                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">{an.reportLabel}</p>
                 <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-                  Ihr Report enthält <span className="text-accent">alles, was zählt.</span>
+                  {an.reportTitle} <span className="text-accent">{an.reportTitleAccent}</span>
                 </h2>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Kein Zahlenfriedhof – unser Reporting ist klar strukturiert, visuell aufbereitet und enthält immer konkrete Handlungsempfehlungen.
+                  {an.reportSub}
                 </p>
               </motion.div>
               <motion.div variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -138,17 +138,17 @@ export default function Analyse() {
                     <Activity className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <div className="font-bold">Monatsbericht März 2026</div>
+                    <div className="font-bold">{an.mockTitle}</div>
                     <div className="text-sm text-muted-foreground">bleibsichtbar.com</div>
                   </div>
                   <span className="ml-auto text-xs font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">Live</span>
                 </div>
                 <div className="space-y-4">
                   {[
-                    { label: "Reichweite", value: "+46%", bar: 72, color: "bg-accent", textColor: "text-accent" },
-                    { label: "Engagement", value: "+38%", bar: 58, color: "bg-blue-500", textColor: "text-blue-500" },
-                    { label: "Follower-Wachstum", value: "+385", bar: 85, color: "bg-green-500", textColor: "text-green-600" },
-                    { label: "Anfragen via Social", value: "+12", bar: 45, color: "bg-purple-500", textColor: "text-purple-500" },
+                    { label: an.mockStats[0].label, value: "+46%", bar: 72, color: "bg-accent", textColor: "text-accent" },
+                    { label: an.mockStats[1].label, value: "+38%", bar: 58, color: "bg-blue-500", textColor: "text-blue-500" },
+                    { label: an.mockStats[2].label, value: "+385", bar: 85, color: "bg-green-500", textColor: "text-green-600" },
+                    { label: an.mockStats[3].label, value: "+12", bar: 45, color: "bg-purple-500", textColor: "text-purple-500" },
                   ].map((stat, i) => (
                     <div key={i}>
                       <div className="flex justify-between text-sm mb-1.5">
@@ -171,7 +171,7 @@ export default function Analyse() {
                   <div className="flex items-start gap-2">
                     <Star className="w-4 h-4 text-accent shrink-0 mt-0.5" />
                     <p className="text-sm text-muted-foreground">
-                      <span className="font-semibold text-gray-700">Empfehlung:</span> Erhöhung der Reels-Frequenz auf 3×/Woche basierend auf Best Performers.
+                      {an.mockRecommendation}
                     </p>
                   </div>
                 </div>
@@ -194,14 +194,14 @@ export default function Analyse() {
 
             <div>
               <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">
-                Ihre Vorteile
+                {an.whyLabel}
               </motion.p>
               <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-black mb-6 leading-tight" style={{ color: "#0a1628" }}>
-                Warum Bleibsichtbar{" "}
-                <span className="text-accent">für Ihre Analyse?</span>
+                {an.whyTitle}{" "}
+                <span className="text-accent">{an.whyTitleAccent}</span>
               </motion.h2>
               <motion.p variants={fadeUp} className="text-gray-500 text-lg mb-10 leading-relaxed">
-                Daten allein bringen nichts. Erst die richtige Interpretation macht aus Zahlen echte Entscheidungen.
+                {an.whySub}
               </motion.p>
               <motion.div variants={stagger} className="space-y-4">
                 {an.benefits.map((item, i) => (
@@ -232,13 +232,13 @@ export default function Analyse() {
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-2xl font-display font-bold text-white mb-4 leading-snug">
-                  Kostenlose<br />Social-Media-Analyse
+                  {an.cardTitle}
                 </h3>
                 <p className="text-white/60 mb-8 leading-relaxed">
-                  Wir analysieren Ihre Kanäle und senden Ihnen innerhalb von 48 Stunden einen kostenlosen Erstbericht.
+                  {an.cardSub}
                 </p>
                 <div className="grid grid-cols-2 gap-4 mb-8">
-                  {[{ value: "48h", label: "Erstbericht" }, { value: "100%", label: "Kostenlos" }].map(s => (
+                  {[{ value: "48h", label: an.cardStat1Label }, { value: "100%", label: an.cardStat2Label }].map(s => (
                     <div key={s.label} className="rounded-xl p-4 border border-white/10"
                       style={{ background: "rgba(255,255,255,0.06)" }}>
                       <div className="text-2xl font-black text-accent mb-1">{s.value}</div>
@@ -248,7 +248,7 @@ export default function Analyse() {
                 </div>
                 <Button asChild size="lg" className="w-full rounded-full bg-accent hover:bg-accent/90 text-white font-bold text-base">
                   <a href="#kostenlose-analyse">
-                    Jetzt Analyse starten <ArrowRight className="ml-2 w-4 h-4 inline" />
+                    {an.cardBtn} <ArrowRight className="ml-2 w-4 h-4 inline" />
                   </a>
                 </Button>
               </div>

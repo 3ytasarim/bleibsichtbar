@@ -515,7 +515,7 @@ export default function Webseiten() {
                   </span>
                 </h2>
                 <p className="text-gray-500 mt-4 text-base leading-relaxed">
-                  Von der ersten Anfrage bis zur Veröffentlichung — transparent, strukturiert und termingerecht.
+                  {wb.workflowSub}
                 </p>
               </motion.div>
 
@@ -528,19 +528,7 @@ export default function Webseiten() {
                 />
 
                 <div className="space-y-2">
-                  {[
-                    "Kundenanfrage aufnehmen",
-                    "Zielanalyse und Lösungsvorschläge erarbeiten",
-                    "Arbeitsablauf gemeinsam präsentieren",
-                    "Angebot erstellen und freigeben",
-                    "Erstentwurf und Seitenstruktur festlegen",
-                    "Kodierung und visuelles Design abstimmen",
-                    "Inhalte und Texte einpflegen",
-                    "Testphase und Qualitätsprüfung",
-                    "Fehlerbehebung und Optimierung",
-                    "Projektabnahme durch den Kunden",
-                    "Webseite veröffentlichen",
-                  ].map((step, i) => (
+                  {wb.workflowSteps.map((step, i) => (
                     <motion.div
                       key={i}
                       variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
@@ -689,11 +677,11 @@ export default function Webseiten() {
       )}
 
       <CtaBanner
-        label="Jetzt durchstarten"
-        heading="Bereit für Ihre neue"
-        headingAccent="Webseite?"
-        subtext="Lassen Sie uns gemeinsam einen digitalen Auftritt entwickeln, der Ihr Unternehmen von seiner besten Seite zeigt."
-        buttonText="Jetzt kostenlos anfragen"
+        label={wb.ctaLabel}
+        heading={wb.ctaHeading}
+        headingAccent={wb.ctaHeadingAccent}
+        subtext={wb.ctaSub}
+        buttonText={wb.ctaBtn}
         buttonHref="/kontakt"
       />
     </PublicLayout>

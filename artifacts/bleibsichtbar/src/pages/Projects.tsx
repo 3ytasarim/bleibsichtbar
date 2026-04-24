@@ -110,6 +110,7 @@ function BrowserMockup({ src, alt }: { src?: string; alt: string }) {
 }
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
+  const { t } = useT();
   const placeholder = "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80&fit=crop";
 
   return (
@@ -143,7 +144,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
           {/* Category badge — top left */}
           <div className="absolute top-4 left-4 z-30">
             <span className="bg-black/50 backdrop-blur-sm text-white/90 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-white/15">
-              {project.category}
+              {(t.categoryLabels as Record<string, string>)[project.category] ?? project.category}
             </span>
           </div>
 

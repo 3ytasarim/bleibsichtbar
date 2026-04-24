@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Globe, Tag, ExternalLink, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CtaBanner } from "@/components/shared/CtaBanner";
+import { useT } from "@/i18n";
 
 const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
 const WEB_RE    = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|app|landing/i;
@@ -80,6 +81,7 @@ const PALETTES = [
 ];
 
 export default function ProjectDetail() {
+  const { t } = useT();
   const { id } = useParams<{ id: string }>();
   const { data: project, isLoading, isError } = useGetProject(parseInt(id!));
 
@@ -146,7 +148,7 @@ export default function ProjectDetail() {
                 className="inline-block text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest mb-5"
                 style={{ background: accent }}
               >
-                {project.category}
+                {(t.categoryLabels as Record<string, string>)[project.category] ?? project.category}
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-4">
                 {project.title}
@@ -253,7 +255,7 @@ export default function ProjectDetail() {
             )}
             <div className="text-center p-6 rounded-2xl bg-gray-50 border border-gray-100">
               <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Kategorie</p>
-              <p className="text-lg font-bold" style={{ color: accent }}>{project.category}</p>
+              <p className="text-lg font-bold" style={{ color: accent }}>{(t.categoryLabels as Record<string, string>)[project.category] ?? project.category}</p>
             </div>
             {project.tags?.length > 0 && (
               <div className="text-center p-6 rounded-2xl bg-gray-50 border border-gray-100">
