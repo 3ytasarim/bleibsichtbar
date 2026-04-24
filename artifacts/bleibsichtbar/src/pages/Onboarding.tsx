@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useT } from "@/i18n";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle2, ChevronRight, Palette, Users, Crosshair,
@@ -332,6 +333,8 @@ function QLabel({ n, text, required }: { n: number; text: string; required?: boo
 
 /* ---------- main component ---------- */
 export default function Onboarding() {
+  const { t } = useT();
+  const ob = t.onboarding;
   const [f, setF] = useState({
     q0: "",                    // Unternehmensname
     q1: [] as string[],        // Corporate Design Ja/Nein
@@ -403,11 +406,11 @@ export default function Onboarding() {
             <span className="text-orange-400 text-sm font-semibold tracking-wide">🚀 BleibSichtbar – Onboarding</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-5 leading-tight">
-            Ihr persönliches<br /><span className="text-orange-400">Onboarding</span>
+            {ob.title1}<br /><span className="text-orange-400">{ob.title2}</span>
           </h1>
           <div className="inline-block rounded-2xl px-6 py-3" style={{ background: "rgba(6,13,31,0.65)", backdropFilter: "blur(8px)" }}>
             <p className="text-white/80 text-base max-w-xl mx-auto leading-relaxed">
-              Damit wir Ihre Betreuung optimal vorbereiten können, bitten wir Sie, die folgenden Fragen zu beantworten. Mit <span className="text-orange-400 font-semibold">*</span> markierte Felder sind Pflichtfelder.
+              {ob.intro}
             </p>
           </div>
         </motion.div>
@@ -429,15 +432,11 @@ export default function Onboarding() {
             transition={{ duration: 0.5, delay: 0.5 }}
             className="text-white font-bold text-xl mb-5 pl-4"
           >
-            Willkommen bei Bleibsichtbar! 🚀
+            {ob.welcome}
           </motion.h3>
 
           <div className="pl-4 space-y-4">
-            {[
-              "In diesem Formular finden Sie unseren Onboarding-Fragebogen. Bitte nehmen Sie sich einen Moment Zeit, um alle Pflichtfelder vollständig auszufüllen, so können wir optimal auf Ihre Wünsche und Ziele eingehen.",
-              "Sollten Sie bei einzelnen Fragen unsicher sein oder Unterstützung benötigen, zögern Sie bitte nicht, uns jederzeit zu kontaktieren. Wir helfen Ihnen gerne weiter.",
-              "Wir freuen uns auf die Zusammenarbeit! 🎯",
-            ].map((text, i) => (
+            {(ob.welcomeInfo as string[]).map((text, i) => (
               <motion.p
                 key={i}
                 initial={{ opacity: 0, y: 10 }}
@@ -460,179 +459,179 @@ export default function Onboarding() {
                 className="border border-white/20 rounded-2xl p-6 sm:p-8 backdrop-blur-md"
                 style={{ background: "rgba(8,18,38,0.82)" }}>
                 <p className="text-white/85 text-sm font-semibold leading-snug mb-3">
-                  Wie heißt Ihr Unternehmen oder Ihre Marke?<span className="text-orange-400 ml-1">*</span>
+                  {ob.q0Label}<span className="text-orange-400 ml-1">*</span>
                 </p>
-                <TextInput value={f.q0} onChange={v => set("q0", v)} placeholder="Ihr Unternehmens- oder Markenname …" required />
+                <TextInput value={f.q0} onChange={v => set("q0", v)} placeholder={ob.q0Placeholder} required />
               </motion.div>
 
               {/* ── 1. Marke & Wirkung ── */}
-              <Section icon={Palette} color="bg-purple-500/20 text-purple-300" title="1. Marke & Wirkung" subtitle="Wie soll Ihre Marke auftreten?">
+              <Section icon={Palette} color="bg-purple-500/20 text-purple-300" title={ob.sec1Title} subtitle={ob.sec1Sub}>
                 <div>
-                  <QLabel n={1} text="Gibt es ein bestehendes Corporate Design? (Logo, Farben, Schriftarten etc.)" required />
-                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q1} onChange={v => toggleMulti("q1", v)} multi />
+                  <QLabel n={1} text={ob.q1Text} required />
+                  <OptionGrid options={ob.q1Options as string[]} selected={f.q1} onChange={v => toggleMulti("q1", v)} multi />
                 </div>
                 <div>
-                  <QLabel n={2} text="Wie soll Ihre Marke wirken?" required />
-                  <OptionGrid options={["seriös", "modern", "premium", "jung", "humorvoll"]} selected={f.q2} onChange={v => toggleMulti("q2", v)} multi />
+                  <QLabel n={2} text={ob.q2Text} required />
+                  <OptionGrid options={ob.q2Options as string[]} selected={f.q2} onChange={v => toggleMulti("q2", v)} multi />
                 </div>
                 <div>
-                  <QLabel n={3} text="Welche Tonalität wünschen Sie sich?" required />
-                  <OptionGrid options={["professionell", "locker", "verkaufsorientiert", "informativ", "emotional"]} selected={f.q3} onChange={v => toggleMulti("q3", v)} multi />
+                  <QLabel n={3} text={ob.q3Text} required />
+                  <OptionGrid options={ob.q3Options as string[]} selected={f.q3} onChange={v => toggleMulti("q3", v)} multi />
                 </div>
               </Section>
 
               {/* ── 2. Zielgruppe ── */}
-              <Section icon={Users} color="bg-blue-500/20 text-blue-300" title="2. Zielgruppe" subtitle="Wen möchten Sie erreichen?">
+              <Section icon={Users} color="bg-blue-500/20 text-blue-300" title={ob.sec2Title} subtitle={ob.sec2Sub}>
                 <div>
-                  <QLabel n={4} text="Wer ist Ihre aktuelle Zielgruppe? (Alter, Geschlecht, Kurzbeschreibung)" required />
-                  <TextArea value={f.q4} onChange={v => set("q4", v)} placeholder="z. B. Frauen 25–45, berufstätig, interessiert an Lifestyle & Mode …" required />
+                  <QLabel n={4} text={ob.q4Text} required />
+                  <TextArea value={f.q4} onChange={v => set("q4", v)} placeholder={ob.q4Placeholder} required />
                 </div>
                 <div>
-                  <QLabel n={5} text="Möchten Sie eine neue Zielgruppe erreichen?" required />
-                  <p className="text-white/40 text-xs mb-3 -mt-1 pl-7">(Falls ja, welche?)</p>
+                  <QLabel n={5} text={ob.q5Text} required />
+                  <p className="text-white/40 text-xs mb-3 -mt-1 pl-7">{ob.q5Note}</p>
                   <OptionGrid
-                    options={["Ja → welche?", "Wir möchten unsere bisherige Zielgruppe weiterhin ansprechen"]}
+                    options={ob.q5Options as string[]}
                     selected={f.q5} onChange={v => toggleMulti("q5", v)} multi
                   />
-                  {f.q5.includes("Ja → welche?") && (
+                  {f.q5.includes((ob.q5Options as string[])[0]) && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-3 overflow-hidden">
-                      <TextInput value={f.q5detail} onChange={v => set("q5detail", v)} placeholder="Neue Zielgruppe beschreiben …" />
+                      <TextInput value={f.q5detail} onChange={v => set("q5detail", v)} placeholder={ob.q5detailPlaceholder} />
                     </motion.div>
                   )}
                 </div>
               </Section>
 
               {/* ── 3. Positionierung ── */}
-              <Section icon={Crosshair} color="bg-green-500/20 text-green-300" title="3. Positionierung" subtitle="Was macht Sie einzigartig?">
+              <Section icon={Crosshair} color="bg-green-500/20 text-green-300" title={ob.sec3Title} subtitle={ob.sec3Sub}>
                 <div>
-                  <QLabel n={6} text="Was unterscheidet Sie von Ihrer Konkurrenz?" required />
-                  <TextArea value={f.q6} onChange={v => set("q6", v)} placeholder="Unser Alleinstellungsmerkmal ist …" required />
+                  <QLabel n={6} text={ob.q6Text} required />
+                  <TextArea value={f.q6} onChange={v => set("q6", v)} placeholder={ob.q6Placeholder} required />
                 </div>
                 <div>
-                  <QLabel n={7} text="Warum sollten Kunden genau bei Ihnen kaufen?" />
-                  <TextArea value={f.q7} onChange={v => set("q7", v)} placeholder="Bei uns kaufen Kunden, weil …" />
+                  <QLabel n={7} text={ob.q7Text} />
+                  <TextArea value={f.q7} onChange={v => set("q7", v)} placeholder={ob.q7Placeholder} />
                 </div>
               </Section>
 
               {/* ── 4. Content-Richtung ── */}
-              <Section icon={Film} color="bg-pink-500/20 text-pink-300" title="4. Content-Richtung" subtitle="Welche Inhalte passen zu Ihnen?">
+              <Section icon={Film} color="bg-pink-500/20 text-pink-300" title={ob.sec4Title} subtitle={ob.sec4Sub}>
                 <div>
-                  <QLabel n={8} text="Welche Inhalte gefallen Ihnen besonders?" />
-                  <OptionGrid options={["Reels / Videos", "Bilder / Carousels", "informative Inhalte", "Verkaufsposts", "Humor / Trends"]} selected={f.q8} onChange={v => toggleMulti("q8", v)} multi />
+                  <QLabel n={8} text={ob.q8Text} />
+                  <OptionGrid options={ob.q8Options as string[]} selected={f.q8} onChange={v => toggleMulti("q8", v)} multi />
                 </div>
                 <div>
-                  <QLabel n={9} text="Gibt es Inhalte oder Dinge, die Sie nicht möchten? (No-Gos)" />
-                  <TextArea value={f.q9} onChange={v => set("q9", v)} placeholder="Wir möchten keinesfalls …" />
+                  <QLabel n={9} text={ob.q9Text} />
+                  <TextArea value={f.q9} onChange={v => set("q9", v)} placeholder={ob.q9Placeholder} />
                 </div>
                 <div>
-                  <QLabel n={10} text="Gibt es Themen, Produkte oder Aussagen, die wir häufig hervorheben sollen?" required />
-                  <TextArea value={f.q10} onChange={v => set("q10", v)} placeholder="Besonders wichtig für uns ist …" required />
+                  <QLabel n={10} text={ob.q10Text} required />
+                  <TextArea value={f.q10} onChange={v => set("q10", v)} placeholder={ob.q10Placeholder} required />
                 </div>
               </Section>
 
               {/* ── 5. Kamera & Stil ── */}
-              <Section icon={Camera} color="bg-yellow-500/20 text-yellow-300" title="5. Kamera & Stil" subtitle="Auftreten vor der Kamera">
+              <Section icon={Camera} color="bg-yellow-500/20 text-yellow-300" title={ob.sec5Title} subtitle={ob.sec5Sub}>
                 <div>
-                  <QLabel n={11} text="Wären Sie oder Ihr Team bereit, vor die Kamera zu gehen?" />
-                  <OptionGrid options={["Ja", "Nein"]} selected={f.q11} onChange={v => set("q11", v === f.q11 ? "" : v)} />
+                  <QLabel n={11} text={ob.q11Text} />
+                  <OptionGrid options={ob.q11Options as string[]} selected={f.q11} onChange={v => set("q11", v === f.q11 ? "" : v)} />
                 </div>
                 <div>
-                  <QLabel n={12} text="Sind Sie offen für …?" required />
-                  <OptionGrid options={["humorvolle Inhalte", "Trends / virale Videos"]} selected={f.q12} onChange={v => toggleMulti("q12", v)} multi />
+                  <QLabel n={12} text={ob.q12Text} required />
+                  <OptionGrid options={ob.q12Options as string[]} selected={f.q12} onChange={v => toggleMulti("q12", v)} multi />
                 </div>
               </Section>
 
               {/* ── 6. Inspiration & Konkurrenz ── */}
-              <Section icon={Search} color="bg-cyan-500/20 text-cyan-300" title="6. Inspiration & Konkurrenz" subtitle="Referenzen und Mitbewerber">
+              <Section icon={Search} color="bg-cyan-500/20 text-cyan-300" title={ob.sec6Title} subtitle={ob.sec6Sub}>
                 <div>
-                  <QLabel n={13} text="Nennen Sie 1–3 Accounts, die Ihnen gefallen" required />
-                  <TextArea value={f.q13} onChange={v => set("q13", v)} placeholder="z. B. @beispiel1, @beispiel2 – weil …" required />
+                  <QLabel n={13} text={ob.q13Text} required />
+                  <TextArea value={f.q13} onChange={v => set("q13", v)} placeholder={ob.q13Placeholder} required />
                 </div>
               </Section>
 
               {/* ── 7. Grenzen & Sensibilität ── */}
-              <Section icon={ShieldOff} color="bg-red-500/20 text-red-300" title="7. Grenzen & Sensibilität" subtitle="Was soll vermieden werden?">
+              <Section icon={ShieldOff} color="bg-red-500/20 text-red-300" title={ob.sec7Title} subtitle={ob.sec7Sub}>
                 <div>
-                  <QLabel n={15} text="Gibt es Themen, Wörter oder Zielgruppen, die wir vermeiden sollen?" />
-                  <TextArea value={f.q15} onChange={v => set("q15", v)} placeholder="Wir möchten folgendes unbedingt vermeiden: …" />
+                  <QLabel n={15} text={ob.q15Text} />
+                  <TextArea value={f.q15} onChange={v => set("q15", v)} placeholder={ob.q15Placeholder} />
                 </div>
               </Section>
 
               {/* ── 8. Fokus & Priorität ── */}
-              <Section icon={Target} color="bg-orange-500/20 text-orange-300" title="8. Fokus & Priorität" subtitle="Was ist am wichtigsten?">
+              <Section icon={Target} color="bg-orange-500/20 text-orange-300" title={ob.sec8Title} subtitle={ob.sec8Sub}>
                 <div>
-                  <QLabel n={16} text="Was hat für Sie oberste Priorität?" required />
-                  <OptionGrid options={["Verkäufe", "Reichweite", "Vertrauen", "Branding", "Reservierungen", "Buchungen", "Kontaktanfragen"]} selected={f.q16} onChange={v => toggleMulti("q16", v)} multi />
+                  <QLabel n={16} text={ob.q16Text} required />
+                  <OptionGrid options={ob.q16Options as string[]} selected={f.q16} onChange={v => toggleMulti("q16", v)} multi />
                 </div>
                 <div>
-                  <QLabel n={17} text="Welche Produkte/Dienstleistungen sollen besonders gepusht werden?" />
-                  <TextArea value={f.q17} onChange={v => set("q17", v)} placeholder="Diese Produkte / Angebote sollen im Fokus stehen: …" />
+                  <QLabel n={17} text={ob.q17Text} />
+                  <TextArea value={f.q17} onChange={v => set("q17", v)} placeholder={ob.q17Placeholder} />
                 </div>
               </Section>
 
               {/* ── 9. Inhalte & Material ── */}
-              <Section icon={Package} color="bg-indigo-500/20 text-indigo-300" title="9. Inhalte & Material" subtitle="Vorhandenes Material">
+              <Section icon={Package} color="bg-indigo-500/20 text-indigo-300" title={ob.sec9Title} subtitle={ob.sec9Sub}>
                 <div>
-                  <QLabel n={18} text="Haben Sie Fotos/Videos, die wir nutzen können?" required />
-                  <OptionGrid options={["Ja (bitte zusenden)", "Nein – haben Sie bereits einen Content-Tag gebucht?"]} selected={f.q18} onChange={v => set("q18", v === f.q18 ? "" : v)} />
-                  {f.q18 === "Nein – haben Sie bereits einen Content-Tag gebucht?" && (
+                  <QLabel n={18} text={ob.q18Text} required />
+                  <OptionGrid options={ob.q18Options as string[]} selected={f.q18} onChange={v => set("q18", v === f.q18 ? "" : v)} />
+                  {f.q18 === (ob.q18Options as string[])[1] && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-3 overflow-hidden">
-                      <TextInput value={f.q18detail} onChange={v => set("q18detail", v)} placeholder="Details zum Content-Tag …" />
+                      <TextInput value={f.q18detail} onChange={v => set("q18detail", v)} placeholder={ob.q18detailPlaceholder} />
                     </motion.div>
                   )}
                 </div>
                 <div>
-                  <QLabel n={19} text="Haben Sie zusätzliche Materialien? (z. B. Menükarte, Leistungen, Angebote etc.)" required />
-                  <OptionGrid options={["Ja (bitte zusenden)", "Nein"]} selected={f.q19} onChange={v => set("q19", v === f.q19 ? "" : v)} />
+                  <QLabel n={19} text={ob.q19Text} required />
+                  <OptionGrid options={ob.q19Options as string[]} selected={f.q19} onChange={v => set("q19", v === f.q19 ? "" : v)} />
                 </div>
               </Section>
 
               {/* ── 10. Kundenverständnis ── */}
-              <Section icon={ShoppingBag} color="bg-teal-500/20 text-teal-300" title="10. Kundenverständnis" subtitle="Was Ihre Kunden wollen">
+              <Section icon={ShoppingBag} color="bg-teal-500/20 text-teal-300" title={ob.sec10Title} subtitle={ob.sec10Sub}>
                 <div>
-                  <QLabel n={20} text="Was ist Ihr meistverkauftes Produkt/Dienstleistung?" required />
-                  <TextArea value={f.q20} onChange={v => set("q20", v)} placeholder="Unser Bestseller ist …" required />
+                  <QLabel n={20} text={ob.q20Text} required />
+                  <TextArea value={f.q20} onChange={v => set("q20", v)} placeholder={ob.q20Placeholder} required />
                 </div>
                 <div>
-                  <QLabel n={21} text="Welche Fragen stellen Kunden vor dem Kauf am häufigsten?" required />
-                  <TextArea value={f.q21} onChange={v => set("q21", v)} placeholder="Häufige Fragen sind z. B. …" required />
+                  <QLabel n={21} text={ob.q21Text} required />
+                  <TextArea value={f.q21} onChange={v => set("q21", v)} placeholder={ob.q21Placeholder} required />
                 </div>
               </Section>
 
               {/* ── 11. Marke & Kommunikation ── */}
-              <Section icon={BookOpen} color="bg-violet-500/20 text-violet-300" title="11. Marke & Kommunikation" subtitle="Ihre Markenbotschaft">
+              <Section icon={BookOpen} color="bg-violet-500/20 text-violet-300" title={ob.sec11Title} subtitle={ob.sec11Sub}>
                 <div>
-                  <QLabel n={22} text="Gibt es eine Markenstory oder Hintergrundgeschichte?" />
-                  <TextArea value={f.q22} onChange={v => set("q22", v)} placeholder="Unsere Geschichte begann …" />
+                  <QLabel n={22} text={ob.q22Text} />
+                  <TextArea value={f.q22} onChange={v => set("q22", v)} placeholder={ob.q22Placeholder} />
                 </div>
                 <div>
-                  <QLabel n={23} text="Gibt es feste Slogans oder Botschaften, die wir verwenden sollen?" />
-                  <TextArea value={f.q23} onChange={v => set("q23", v)} placeholder="Unser Slogan lautet …" />
+                  <QLabel n={23} text={ob.q23Text} />
+                  <TextArea value={f.q23} onChange={v => set("q23", v)} placeholder={ob.q23Placeholder} />
                 </div>
               </Section>
 
               {/* ── 12. Organisation ── */}
-              <Section icon={UserCheck} color="bg-sky-500/20 text-sky-300" title="12. Organisation" subtitle="Ansprechpartner & Freigaben">
+              <Section icon={UserCheck} color="bg-sky-500/20 text-sky-300" title={ob.sec12Title} subtitle={ob.sec12Sub}>
                 <div>
-                  <QLabel n={24} text="Wer ist Ansprechpartner für Feedback & Freigaben?" />
-                  <p className="text-white/40 text-xs mb-3 -mt-1 pl-7">(Bitte Vorname/Name und Telefonnummer angeben)</p>
-                  <TextInput value={f.q24} onChange={v => set("q24", v)} placeholder="Name, E-Mail, Telefon …" />
+                  <QLabel n={24} text={ob.q24Text} />
+                  <p className="text-white/40 text-xs mb-3 -mt-1 pl-7">{ob.q24Note}</p>
+                  <TextInput value={f.q24} onChange={v => set("q24", v)} placeholder={ob.q24Placeholder} />
                 </div>
               </Section>
 
-              {/* ── 13. Optional ── */}
-              <Section icon={MessageCircle} color="bg-rose-500/20 text-rose-300" title="13. Sonstiges" subtitle="Gibt es noch etwas Wichtiges?">
+              {/* ── 13. Sonstiges ── */}
+              <Section icon={MessageCircle} color="bg-rose-500/20 text-rose-300" title={ob.sec13Title} subtitle={ob.sec13Sub}>
                 <div>
-                  <QLabel n={25} text="Gibt es noch etwas, das wir unbedingt beachten sollten?" required />
-                  <TextArea value={f.q25} onChange={v => set("q25", v)} placeholder="Wichtig für uns ist außerdem …" required />
+                  <QLabel n={25} text={ob.q25Text} required />
+                  <TextArea value={f.q25} onChange={v => set("q25", v)} placeholder={ob.q25Placeholder} required />
                 </div>
               </Section>
 
               {/* Submit */}
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center pt-4">
                 <p className="text-white/35 text-sm mb-6">
-                  Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer{" "}
-                  <a href="/datenschutz" className="text-orange-400 hover:underline" target="_blank">Datenschutzerklärung</a> zu.
+                  {ob.privacyNote}{" "}
+                  <a href="/datenschutz" className="text-orange-400 hover:underline" target="_blank">{ob.privacyLink}</a> zu.
                 </p>
                 <motion.button
                   type="submit"
@@ -647,7 +646,7 @@ export default function Onboarding() {
                     animate={{ x: ["-100%", "200%"] }}
                     transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 1.4 }}
                   />
-                  <span className="relative">Formular absenden →</span>
+                  <span className="relative">{ob.submitBtn}</span>
                 </motion.button>
               </motion.div>
             </motion.form>
@@ -666,13 +665,13 @@ export default function Onboarding() {
                 </motion.div>
               </div>
               <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="text-4xl sm:text-5xl font-bold text-white mb-4">
-                Vielen Dank!
+                {ob.successTitle}
               </motion.h2>
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="text-xl text-white/70 mb-3 max-w-lg mx-auto leading-relaxed">
-                Vielen Dank für Ihre Angaben.
+                {ob.successMsg}
               </motion.p>
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="text-white/55 text-base max-w-xl mx-auto leading-relaxed mb-10">
-                Im folgenden Video erfahren Sie, was nach dem Onboarding als nächstes passiert und was Sie erwartet.
+                {ob.successVideoSub}
               </motion.p>
               {/* ── inline video player ── */}
               <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.6 }}
@@ -683,7 +682,7 @@ export default function Onboarding() {
                     <div className="flex gap-1.5">
                       {["bg-red-500/70","bg-yellow-500/70","bg-green-500/70"].map(c => <div key={c} className={`w-3 h-3 rounded-full ${c}`} />)}
                     </div>
-                    <span className="text-white/50 text-sm font-medium ml-2">Was passiert nach dem Onboarding?</span>
+                    <span className="text-white/50 text-sm font-medium ml-2">{ob.successVideoTitle}</span>
                   </div>
                   <video ref={videoRef} src="/onboarding-video.mp4" controls playsInline className="w-full aspect-video bg-black block" />
                 </div>
