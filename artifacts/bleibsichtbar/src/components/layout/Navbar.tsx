@@ -65,7 +65,7 @@ export function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center shrink-0 group">
-              <span className="font-display font-black text-[22px] tracking-[0.18em] uppercase text-foreground">
+              <span className="font-display font-black text-[17px] sm:text-[22px] tracking-[0.18em] uppercase text-foreground">
                 Bleibsichtbar
               </span>
             </Link>
@@ -95,7 +95,7 @@ export function Navbar() {
             </nav>
 
             {/* Right: Language Switcher + CTA + Mobile toggle */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pr-2 lg:pr-0">
               {/* Language Switcher — always visible */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.85 }}
