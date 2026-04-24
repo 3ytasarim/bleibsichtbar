@@ -70,6 +70,7 @@ export default defineConfig({
           const name = chunk.name;
           if (name === "vendor") return "assets/vendor-libs.js";
           if (name === "motion") return "assets/ui-motion.js";
+          if (name === "admin") return "assets/admin-panel.js";
           return `assets/${name.replace(/[^a-z0-9]/gi, "-").toLowerCase()}.js`;
         },
         assetFileNames: (asset) => {
@@ -79,9 +80,12 @@ export default defineConfig({
           if (/\.(woff2?|ttf|eot|otf)$/i.test(name)) return "assets/fonts/[name][extname]";
           return "assets/[name][extname]";
         },
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-          motion: ["framer-motion"],
+        manualChunks(id) {
+          if (id.includes("node_modules/react-dom") || id.includes("node_modules/react/")) return "vendor";
+          if (id.includes("node_modules/framer-motion")) return "motion";
+          if (id.includes("/pages/admin/")) return "admin";
+          if (id.includes("node_modules/lucide-react")) return "icons";
+          if (id.includes("node_modules/@radix-ui")) return "radix";
         },
       },
     },

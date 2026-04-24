@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { StarfieldOverlay } from "./StarfieldOverlay";
+
+function useMotionPrefs() {
+  const [reduced, setReduced] = useState(false);
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener("change", onChange);
+
+    setMobile(window.innerWidth < 768);
+
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return { reduced, mobile };
+}
 
 interface Orb { x: string; y: string; size: string; color: string; delay: number; dur: number; }
 
@@ -12,6 +30,11 @@ const orbs: Orb[] = [
   { x: "85%",  y: "55%", size: "180px", color: "bg-cyan-500/10",   delay: 0.3, dur: 10 },
 ];
 
+const mobileOrbs: Orb[] = [
+  { x: "5%",   y: "10%", size: "200px", color: "bg-accent/15",     delay: 0,   dur: 8  },
+  { x: "65%",  y: "5%",  size: "250px", color: "bg-blue-600/12",   delay: 1,   dur: 10 },
+];
+
 const dots = Array.from({ length: 28 }, (_, i) => ({
   id: i,
   x: `${(i * 137.5 + 5) % 95}%`,
@@ -21,32 +44,56 @@ const dots = Array.from({ length: 28 }, (_, i) => ({
 }));
 
 export function AnimatedHeroBackground() {
+  const { reduced, mobile } = useMotionPrefs();
+  const activeOrbs = mobile ? mobileOrbs : orbs;
+  const blurClass = mobile ? "blur-[50px]" : "blur-[80px]";
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       <StarfieldOverlay />
-      {orbs.map((orb, i) => (
-        <motion.div
-          key={i}
-          className={`absolute rounded-full blur-[80px] ${orb.color}`}
-          style={{ left: orb.x, top: orb.y, width: orb.size, height: orb.size }}
-          animate={{
-            scale: [1, 1.2, 0.95, 1],
-            opacity: [0.6, 1, 0.7, 0.6],
-            x: [0, 30, -20, 0],
-            y: [0, -20, 15, 0],
-          }}
-          transition={{ duration: orb.dur, repeat: Infinity, delay: orb.delay, ease: "easeInOut" }}
-        />
+
+      {activeOrbs.map((orb, i) => (
+        reduced ? (
+          <div
+            key={i}
+            className={`absolute rounded-full ${blurClass} ${orb.color}`}
+            style={{
+              left: orb.x, top: orb.y,
+              width: orb.size, height: orb.size,
+              willChange: "auto",
+            }}
+          />
+        ) : (
+          <motion.div
+            key={i}
+            className={`absolute rounded-full ${blurClass} ${orb.color}`}
+            style={{
+              left: orb.x, top: orb.y,
+              width: orb.size, height: orb.size,
+              willChange: "transform",
+              transform: "translateZ(0)",
+            }}
+            animate={{
+              scale: [1, 1.15, 0.95, 1],
+              opacity: [0.6, 1, 0.7, 0.6],
+              x: [0, mobile ? 15 : 30, mobile ? -10 : -20, 0],
+              y: [0, mobile ? -10 : -20, mobile ? 8 : 15, 0],
+            }}
+            transition={{ duration: orb.dur, repeat: Infinity, delay: orb.delay, ease: "easeInOut" }}
+          />
+        )
       ))}
-      {dots.map(dot => (
+
+      {!mobile && !reduced && dots.map(dot => (
         <motion.div
           key={dot.id}
           className="absolute w-1 h-1 rounded-full bg-white/25"
-          style={{ left: dot.x, top: dot.y }}
+          style={{ left: dot.x, top: dot.y, willChange: "opacity, transform" }}
           animate={{ opacity: [0, 0.8, 0], scale: [0.5, 1.5, 0.5] }}
           transition={{ duration: dot.dur, repeat: Infinity, delay: dot.delay, ease: "easeInOut" }}
         />
       ))}
+
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(249,115,22,0.08),transparent_60%)]" />
     </div>
   );

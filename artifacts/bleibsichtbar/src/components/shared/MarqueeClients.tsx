@@ -16,6 +16,8 @@ function LogoCard({ item }: { item: MarqueeItem }) {
         <img
           src={item.imageUrl}
           alt={item.name}
+          loading="lazy"
+          decoding="async"
           style={{ height: 80, width: "auto", maxWidth: 260 }}
           className="object-contain transition-opacity duration-300 opacity-90 hover:opacity-100"
           draggable={false}

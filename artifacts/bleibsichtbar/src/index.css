@@ -180,6 +180,34 @@
   animation: code-scroll-up var(--code-dur, 40s) linear infinite;
 }
 
+/* ── GPU acceleration hints ── */
+.marquee-row > div {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ── prefers-reduced-motion: disable all animations ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-marquee-left,
+  .animate-marquee-right,
+  .animate-code-scroll {
+    animation: none !important;
+  }
+}
+
+/* ── Mobile animation savings ── */
+@media (max-width: 767px) {
+  .animate-code-scroll {
+    animation-duration: calc(var(--code-dur, 40s) * 1.5);
+  }
+}
+
 /* ── Resim & içerik koruma ── */
 img {
   -webkit-user-drag: none;

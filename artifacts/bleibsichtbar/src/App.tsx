@@ -1,36 +1,36 @@
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { LanguageProvider } from "@/i18n";
 
-// Public Pages
-import Home from "./pages/Home";
-import SocialMedia from "./pages/SocialMedia";
-import Webseiten from "./pages/Webseiten";
-import MarketingAds from "./pages/MarketingAds";
-import KIAutomatisierungen from "./pages/KIAutomatisierungen";
-import Analyse from "./pages/Analyse";
-import Projects from "./pages/Projects";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import References from "./pages/References";
-import Contact from "./pages/Contact";
-import Datenschutz from "./pages/Datenschutz";
-import Impressum from "./pages/Impressum";
-import Onboarding from "./pages/Onboarding";
-import NotFound from "./pages/not-found";
+// Public Pages — lazy loaded
+const Home = lazy(() => import("./pages/Home"));
+const SocialMedia = lazy(() => import("./pages/SocialMedia"));
+const Webseiten = lazy(() => import("./pages/Webseiten"));
+const MarketingAds = lazy(() => import("./pages/MarketingAds"));
+const KIAutomatisierungen = lazy(() => import("./pages/KIAutomatisierungen"));
+const Analyse = lazy(() => import("./pages/Analyse"));
+const Projects = lazy(() => import("./pages/Projects"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const References = lazy(() => import("./pages/References"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Datenschutz = lazy(() => import("./pages/Datenschutz"));
+const Impressum = lazy(() => import("./pages/Impressum"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
+const NotFound = lazy(() => import("./pages/not-found"));
 
-// Admin Pages
-import AdminLogin from "./pages/admin/Login";
-import AdminDashboard from "./pages/admin/Dashboard";
-import AdminProjects from "./pages/admin/AdminProjects";
-import AdminBlog from "./pages/admin/AdminBlog";
-import AdminReferences from "./pages/admin/AdminReferences";
-import AdminOnboarding from "./pages/admin/AdminOnboarding";
-import AdminClients from "./pages/admin/AdminClients";
-import AdminSeo from "./pages/admin/AdminSeo";
+// Admin Pages — separate lazy chunk
+const AdminLogin = lazy(() => import("./pages/admin/Login"));
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminProjects = lazy(() => import("./pages/admin/AdminProjects"));
+const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
+const AdminReferences = lazy(() => import("./pages/admin/AdminReferences"));
+const AdminOnboarding = lazy(() => import("./pages/admin/AdminOnboarding"));
+const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
+const AdminSeo = lazy(() => import("./pages/admin/AdminSeo"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,6 +40,14 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+function PageFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-8 h-8 rounded-full border-2 border-accent border-t-transparent animate-spin" />
+    </div>
+  );
+}
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -51,7 +59,7 @@ function ScrollToTop() {
 
 function Router() {
   return (
-    <>
+    <Suspense fallback={<PageFallback />}>
       <ScrollToTop />
       <Switch>
         {/* Admin Routes */}
@@ -82,7 +90,7 @@ function Router() {
 
         <Route component={NotFound} />
       </Switch>
-    </>
+    </Suspense>
   );
 }
 
