@@ -205,14 +205,28 @@ function VoiceAgentPhone() {
 
       {/* Avatar */}
       <div style={{ position: "relative", width: 80, height: 80, marginBottom: 14 }}>
-        <div style={{
-          position: "absolute", inset: 0, borderRadius: "50%",
-          background: "linear-gradient(135deg, #f97316 0%, #ef4444 100%)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 1, boxShadow: "0 0 24px rgba(249,115,22,0.45)",
-        }}>
+        {/* Orange pulse rings */}
+        {[0, 1, 2].map(i => (
+          <motion.div key={i}
+            animate={{ scale: [1, 2.2], opacity: [0.5, 0] }}
+            transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.8, ease: "easeOut" }}
+            style={{
+              position: "absolute", inset: 0, borderRadius: "50%",
+              border: "2px solid rgba(249,115,22,0.7)",
+            }}
+          />
+        ))}
+        <motion.div
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: "absolute", inset: 0, borderRadius: "50%",
+            background: "linear-gradient(135deg, #f97316 0%, #ef4444 100%)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            zIndex: 1, boxShadow: "0 0 28px rgba(249,115,22,0.55)",
+          }}>
           <span style={{ fontSize: 20, fontWeight: 800, color: "white", letterSpacing: -0.5 }}>KI</span>
-        </div>
+        </motion.div>
       </div>
 
       {/* Name */}
