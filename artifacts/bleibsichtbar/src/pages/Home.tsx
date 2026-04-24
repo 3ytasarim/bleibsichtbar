@@ -842,11 +842,21 @@ export default function Home() {
   const steps = makeSteps(t);
   const stats = makeStats(t);
   const [slide, setSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 768
+  );
 
   useEffect(() => {
     const timer = setInterval(() => setSlide(s => (s + 1) % heroSlides.length), 8000);
     return () => clearInterval(timer);
   }, [heroSlides.length]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const current = heroSlides[slide];
 
@@ -854,28 +864,37 @@ export default function Home() {
     <PublicLayout>
       <SeoHead slug="home" defaults={{ metaTitle: "Bleibsichtbar – Social Media Agentur | Digitale Sichtbarkeit", metaDescription: "Bleibsichtbar ist Ihre Social Media Agentur für professionelles Marketing, Webseiten, KI-Automatisierungen und mehr." }} />
       {/* ─── Hero ────────────────────────────────────────────────────────── */}
-      <div className="relative min-h-[auto] sm:min-h-[100svh] flex items-center overflow-hidden -mt-20 pb-4 sm:pb-4">
-        {/* Animated bg */}
-        <AnimatePresence mode="sync">
-          <motion.div
-            key={slide}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            className={`absolute inset-0 bg-gradient-to-br ${current.bg}`}
-          />
-        </AnimatePresence>
+      <div
+        className="relative min-h-[auto] sm:min-h-[100svh] flex items-center overflow-hidden -mt-20 pb-4 sm:pb-4"
+        style={isMobile ? { background: "#ffffff" } : undefined}
+      >
+        {/* Animated bg — desktop/tablet only */}
+        {!isMobile && (
+          <AnimatePresence mode="sync">
+            <motion.div
+              key={slide}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+              className={`absolute inset-0 bg-gradient-to-br ${current.bg}`}
+            />
+          </AnimatePresence>
+        )}
 
-        {/* Starfield + shooting stars overlay */}
-        <StarfieldOverlay />
+        {/* Starfield + shooting stars overlay — desktop/tablet only */}
+        {!isMobile && <StarfieldOverlay />}
 
-        {/* Animated floating dots */}
-        <FloatingDots />
+        {/* Animated floating dots — desktop/tablet only */}
+        {!isMobile && <FloatingDots />}
 
-        {/* Glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/25 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
+        {/* Glow orbs — desktop/tablet only */}
+        {!isMobile && (
+          <>
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/25 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
+          </>
+        )}
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-4 sm:pt-24 sm:pb-6 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-6 lg:gap-12 items-center">
@@ -884,12 +903,26 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 <motion.div key={slide} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.6 }}>
                   {/* Pill */}
-                  <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-5 sm:mb-8">
+                  <div
+                    className="inline-flex items-center space-x-2 rounded-full px-4 py-2 mb-5 sm:mb-8"
+                    style={isMobile
+                      ? { background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)" }
+                      : { background: "rgba(255,255,255,0.10)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.20)" }
+                    }
+                  >
                     <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                    <span className="text-white/90 text-sm font-medium">{current.pill}</span>
+                    <span
+                      className="text-sm font-medium"
+                      style={isMobile ? { color: "#0a1628" } : { color: "rgba(255,255,255,0.9)" }}
+                    >
+                      {current.pill}
+                    </span>
                   </div>
 
-                  <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-[1.08] tracking-tight">
+                  <h1
+                    className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.08] tracking-tight"
+                    style={isMobile ? { color: "#0a1628" } : { color: "#ffffff" }}
+                  >
                     {current.headline.map((line, i) => (
                       <span key={i} className="block">
                         {i === 1 ? <span className="text-accent">{line}</span> : line}
@@ -897,7 +930,10 @@ export default function Home() {
                     ))}
                   </h1>
 
-                  <p className="text-base sm:text-xl text-white max-w-lg leading-relaxed mt-4 sm:mt-6">
+                  <p
+                    className="text-base sm:text-xl max-w-lg leading-relaxed mt-4 sm:mt-6"
+                    style={isMobile ? { color: "#374151" } : { color: "#ffffff" }}
+                  >
                     {current.sub}
                   </p>
 
@@ -934,7 +970,7 @@ export default function Home() {
                       </Link>
                     </motion.div>
 
-                    {/* Secondary — Ghost */}
+                    {/* Secondary */}
                     <motion.div
                       whileHover={{ scale: 1.04, y: -2 }}
                       whileTap={{ scale: 0.97 }}
@@ -942,17 +978,15 @@ export default function Home() {
                     >
                       <Link
                         href="/projekte"
-                        className="relative inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-bold text-base text-white/90 group overflow-hidden"
-                        style={{
-                          background: "rgba(255,255,255,0.08)",
-                          border: "1.5px solid rgba(255,255,255,0.18)",
-                          backdropFilter: "blur(10px)",
-                        }}
+                        className="relative inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-bold text-base group overflow-hidden"
+                        style={isMobile
+                          ? { color: "#0a1628", background: "transparent", border: "1.5px solid #0a162820" }
+                          : { color: "rgba(255,255,255,0.9)", background: "rgba(255,255,255,0.08)", border: "1.5px solid rgba(255,255,255,0.18)", backdropFilter: "blur(10px)" }
+                        }
                       >
-                        {/* Hover fill */}
                         <motion.span
                           className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
-                          style={{ background: "rgba(255,255,255,0.1)" }}
+                          style={isMobile ? { background: "rgba(0,0,0,0.04)" } : { background: "rgba(255,255,255,0.1)" }}
                         />
                         <span className="relative">{t.home.viewProjects}</span>
                         <ChevronRight className="relative w-4 h-4 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" />
@@ -961,9 +995,16 @@ export default function Home() {
                   </div>
 
                   {/* Trust badges */}
-                  <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6 sm:mt-10 pt-5 sm:pt-8 border-t border-white/10">
+                  <div
+                    className="flex flex-wrap items-center gap-4 sm:gap-6 mt-6 sm:mt-10 pt-5 sm:pt-8 border-t"
+                    style={isMobile ? { borderColor: "rgba(10,22,40,0.10)" } : { borderColor: "rgba(255,255,255,0.10)" }}
+                  >
                     {t.home.badges.map(badge => (
-                      <div key={badge} className="flex items-center space-x-2 text-white/70">
+                      <div
+                        key={badge}
+                        className="flex items-center space-x-2"
+                        style={isMobile ? { color: "#4b5563" } : { color: "rgba(255,255,255,0.70)" }}
+                      >
                         <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0" />
                         <span className="text-sm font-medium">{badge}</span>
                       </div>
