@@ -203,19 +203,8 @@ function VoiceAgentPhone() {
         {ph.incomingCall}
       </div>
 
-      {/* Pulsing rings + Avatar */}
+      {/* Avatar */}
       <div style={{ position: "relative", width: 80, height: 80, marginBottom: 14 }}>
-        {[0, 1, 2].map(i => (
-          <motion.div key={i}
-            animate={{ scale: [1, 2.4], opacity: [0.55, 0] }}
-            transition={{ duration: 5.5, repeat: Infinity, delay: i * 1.8, ease: "easeOut" }}
-            style={{
-              position: "absolute", inset: 0, borderRadius: "50%",
-              border: "1.5px solid rgba(34,197,94,0.6)",
-            }}
-          />
-        ))}
-        {/* Avatar */}
         <div style={{
           position: "absolute", inset: 0, borderRadius: "50%",
           background: "linear-gradient(135deg, #f97316 0%, #ef4444 100%)",
