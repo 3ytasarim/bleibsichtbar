@@ -1146,26 +1146,18 @@ export default function Home() {
         </div>
 
         {/* Scroll indicator — desktop only */}
-        <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
-          <span className="text-white/80 text-[13px] font-semibold tracking-[0.25em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">{t.home.discover}</span>
+        <button
+          onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
+          className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-1 focus:outline-none group"
+          aria-label="Zu Leistungen scrollen"
+        >
+          {/* Label floats directly above the circle */}
+          <span className="text-white/75 text-[11px] font-bold tracking-[0.28em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.35)] group-hover:text-white transition-colors duration-300">
+            {t.home.discover}
+          </span>
 
-          {/* Slide dots — desktop, shown here to avoid overlap with content */}
-          <div className="flex items-center justify-center space-x-2 mb-1">
-            {heroSlides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setSlide(i)}
-                className={`transition-all duration-500 rounded-full ${i === slide ? "w-6 h-1.5 bg-accent" : "w-1.5 h-1.5 bg-white/30 hover:bg-white/50"}`}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
-            className="relative flex items-center justify-center focus:outline-none group"
-            aria-label="Zu Leistungen scrollen"
-          >
-            {/* Pulsing rings */}
+          {/* Circle with pulsing rings */}
+          <div className="relative flex items-center justify-center mt-0.5">
             <motion.span
               className="absolute w-12 h-12 rounded-full border border-white/20"
               animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
@@ -1176,9 +1168,8 @@ export default function Home() {
               animate={{ scale: [1, 1.6], opacity: [0.3, 0] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut", delay: 0.6 }}
             />
-            {/* Circle */}
             <motion.span
-              className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/25 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300"
+              className="relative w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/25 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -1191,8 +1182,8 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </motion.svg>
             </motion.span>
-          </button>
-        </div>
+          </div>
+        </button>
       </div>
 
       {/* ─── Problem Statement ─────────────────────────────────────────────── */}
