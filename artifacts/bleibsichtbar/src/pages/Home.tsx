@@ -194,13 +194,6 @@ function VoiceAgentPhone() {
       paddingTop: 36, paddingBottom: 20,
       position: "relative", overflow: "hidden",
     }}>
-      {/* Background ambient glow */}
-      <div style={{
-        position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)",
-        width: 200, height: 200, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%)",
-        filter: "blur(24px)", pointerEvents: "none",
-      }} />
 
       {/* Incoming call label */}
       <div style={{
