@@ -11,11 +11,24 @@ interface SeoRow {
   pageLabel: string;
   metaTitle: string;
   metaDescription: string;
+  metaTitleEn: string;
+  metaDescriptionEn: string;
+  metaTitleNl: string;
+  metaDescriptionNl: string;
+  metaTitleFr: string;
+  metaDescriptionFr: string;
   keywords: string;
   googleVerification: string;
   headScript: string;
   bodyScript: string;
 }
+
+const LANG_TABS = [
+  { key: "de", label: "DE", flag: "🇩🇪", titleField: "metaTitle" as keyof SeoRow, descField: "metaDescription" as keyof SeoRow },
+  { key: "en", label: "EN", flag: "🇬🇧", titleField: "metaTitleEn" as keyof SeoRow, descField: "metaDescriptionEn" as keyof SeoRow },
+  { key: "nl", label: "NL", flag: "🇳🇱", titleField: "metaTitleNl" as keyof SeoRow, descField: "metaDescriptionNl" as keyof SeoRow },
+  { key: "fr", label: "FR", flag: "🇫🇷", titleField: "metaTitleFr" as keyof SeoRow, descField: "metaDescriptionFr" as keyof SeoRow },
+];
 
 async function fetchAllSeo(): Promise<SeoRow[]> {
   const res = await fetch("/api/seo");
@@ -24,16 +37,23 @@ async function fetchAllSeo(): Promise<SeoRow[]> {
 }
 
 function CharCount({ value, max }: { value: string; max: number }) {
-  const len = value.length;
+  const len = (value || "").length;
   const color = len > max ? "text-red-500" : len > max * 0.85 ? "text-yellow-500" : "text-green-600";
   return <span className={`text-xs font-mono ${color}`}>{len}/{max}</span>;
 }
 
 function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data: Partial<SeoRow>) => Promise<void> }) {
   const [open, setOpen] = useState(false);
+  const [activeLang, setActiveLang] = useState("de");
   const [form, setForm] = useState({
     metaTitle: row.metaTitle || "",
     metaDescription: row.metaDescription || "",
+    metaTitleEn: row.metaTitleEn || "",
+    metaDescriptionEn: row.metaDescriptionEn || "",
+    metaTitleNl: row.metaTitleNl || "",
+    metaDescriptionNl: row.metaDescriptionNl || "",
+    metaTitleFr: row.metaTitleFr || "",
+    metaDescriptionFr: row.metaDescriptionFr || "",
     keywords: row.keywords || "",
     googleVerification: row.googleVerification || "",
     headScript: row.headScript || "",
@@ -46,6 +66,12 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
     setForm({
       metaTitle: row.metaTitle || "",
       metaDescription: row.metaDescription || "",
+      metaTitleEn: row.metaTitleEn || "",
+      metaDescriptionEn: row.metaDescriptionEn || "",
+      metaTitleNl: row.metaTitleNl || "",
+      metaDescriptionNl: row.metaDescriptionNl || "",
+      metaTitleFr: row.metaTitleFr || "",
+      metaDescriptionFr: row.metaDescriptionFr || "",
       keywords: row.keywords || "",
       googleVerification: row.googleVerification || "",
       headScript: row.headScript || "",
@@ -54,7 +80,7 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
   }, [row]);
 
   const isGlobal = row.slug === "global";
-  const hasContent = row.metaTitle || row.metaDescription;
+  const hasContent = row.metaTitle || row.metaTitleEn || row.metaTitleNl || row.metaTitleFr;
   const hasScripts = row.headScript || row.bodyScript;
 
   const handleSave = async () => {
@@ -67,6 +93,13 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
       setSaving(false);
     }
   };
+
+  const activeLangTab = LANG_TABS.find(l => l.key === activeLang)!;
+  const currentTitle = form[activeLangTab.titleField] as string;
+  const currentDesc = form[activeLangTab.descField] as string;
+
+  const langHasContent = (lang: typeof LANG_TABS[0]) =>
+    !!(form[lang.titleField] as string) || !!(form[lang.descField] as string);
 
   return (
     <div className="border border-gray-200 rounded-xl overflow-hidden">
@@ -84,6 +117,9 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
           {isGlobal && hasScripts && (
             <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">Scripts aktiv</span>
           )}
+          {!isGlobal && !hasContent && (
+            <span className="text-xs bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full font-medium">Nicht konfiguriert</span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           {saved && <CheckCircle2 className="w-4 h-4 text-green-500" />}
@@ -99,7 +135,6 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
                 <strong>Global:</strong> Diese Einstellungen gelten für <em>alle</em> Seiten der Website.
               </div>
 
-              {/* Google Search Console */}
               <div>
                 <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-1">
                   <Search className="w-3.5 h-3.5" /> Google Search Console – Verification
@@ -116,7 +151,6 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
 
               <hr className="border-gray-200" />
 
-              {/* Head Script (GTM / GA) */}
               <div>
                 <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-1">
                   <Code2 className="w-3.5 h-3.5 text-orange-500" />
@@ -135,7 +169,6 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
                 </p>
               </div>
 
-              {/* Body Script (GTM noscript) */}
               <div>
                 <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-1">
                   <Tag className="w-3.5 h-3.5 text-orange-500" />
@@ -156,31 +189,91 @@ function SeoPageRow({ row, onSave }: { row: SeoRow; onSave: (slug: string, data:
             </>
           ) : (
             <>
+              {/* Language Tab Bar */}
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-semibold text-gray-700">Meta Title</label>
-                  <CharCount value={form.metaTitle} max={60} />
+                <div className="flex items-center gap-0.5 mb-4 bg-white border border-gray-200 rounded-lg p-1 w-fit">
+                  {LANG_TABS.map(lang => (
+                    <button
+                      key={lang.key}
+                      type="button"
+                      onClick={() => setActiveLang(lang.key)}
+                      className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                        activeLang === lang.key
+                          ? "bg-gray-900 text-white shadow-sm"
+                          : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                      }`}
+                    >
+                      <span className="text-base leading-none">{lang.flag}</span>
+                      <span>{lang.label}</span>
+                      {langHasContent(lang) && (
+                        <span className={`w-1.5 h-1.5 rounded-full ${activeLang === lang.key ? "bg-green-400" : "bg-green-500"}`} />
+                      )}
+                    </button>
+                  ))}
                 </div>
-                <Input
-                  placeholder="Seitentitel für Google (max. 60 Zeichen)"
-                  value={form.metaTitle}
-                  onChange={e => setForm(f => ({ ...f, metaTitle: e.target.value }))}
-                  maxLength={80}
-                />
-              </div>
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-semibold text-gray-700">Meta Description</label>
-                  <CharCount value={form.metaDescription} max={160} />
+
+                {/* Meta Title */}
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm font-semibold text-gray-700">
+                      Meta Title
+                      <span className="ml-2 text-xs font-normal text-gray-400">{activeLangTab.flag} {activeLangTab.label}</span>
+                    </label>
+                    <CharCount value={currentTitle} max={60} />
+                  </div>
+                  <Input
+                    placeholder={`Seitentitel auf ${activeLangTab.label} (max. 60 Zeichen)`}
+                    value={currentTitle}
+                    onChange={e => setForm(f => ({ ...f, [activeLangTab.titleField]: e.target.value }))}
+                    maxLength={80}
+                  />
+                  {activeLang === "de" && (
+                    <p className="text-xs text-gray-400 mt-1">Standard: wird auch verwendet, wenn keine andere Sprache gesetzt ist.</p>
+                  )}
                 </div>
-                <Textarea
-                  rows={3}
-                  placeholder="Kurzbeschreibung für Google-Suchergebnisse (max. 160 Zeichen)"
-                  value={form.metaDescription}
-                  onChange={e => setForm(f => ({ ...f, metaDescription: e.target.value }))}
-                  maxLength={200}
-                />
+
+                {/* Meta Description */}
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm font-semibold text-gray-700">
+                      Meta Description
+                      <span className="ml-2 text-xs font-normal text-gray-400">{activeLangTab.flag} {activeLangTab.label}</span>
+                    </label>
+                    <CharCount value={currentDesc} max={160} />
+                  </div>
+                  <Textarea
+                    rows={3}
+                    placeholder={`Kurzbeschreibung auf ${activeLangTab.label} für Google-Suchergebnisse (max. 160 Zeichen)`}
+                    value={currentDesc}
+                    onChange={e => setForm(f => ({ ...f, [activeLangTab.descField]: e.target.value }))}
+                    maxLength={200}
+                  />
+                  {activeLang === "de" && (
+                    <p className="text-xs text-gray-400 mt-1">Standard: wird auch verwendet, wenn keine andere Sprache gesetzt ist.</p>
+                  )}
+                </div>
+
+                {/* Language overview indicator */}
+                <div className="flex items-center gap-3 mt-2 p-3 bg-white rounded-lg border border-gray-100">
+                  <span className="text-xs text-gray-400 font-medium">Sprachen:</span>
+                  <div className="flex gap-2">
+                    {LANG_TABS.map(lang => (
+                      <span
+                        key={lang.key}
+                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                          langHasContent(lang)
+                            ? "bg-green-100 text-green-700"
+                            : "bg-gray-100 text-gray-400"
+                        }`}
+                      >
+                        {lang.flag} {lang.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
+
+              {/* Keywords (shared, language-independent) */}
               <div>
                 <label className="text-sm font-semibold text-gray-700 mb-1 block">Keywords</label>
                 <Input
@@ -233,12 +326,13 @@ export default function AdminSeo() {
 
   const normalPages = pages.filter(p => p.slug !== "global");
   const globalPage = pages.find(p => p.slug === "global");
+  const configuredCount = pages.filter(p => p.slug !== "global" && (p.metaTitle || p.metaTitleEn || p.metaTitleNl || p.metaTitleFr)).length;
 
   return (
     <AdminLayout>
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-display">SEO-Verwaltung</h1>
-        <p className="text-muted-foreground mt-1">Meta-Titel, Beschreibungen, Keywords und Google-Scripts</p>
+        <p className="text-muted-foreground mt-1">Meta-Titel & Beschreibungen pro Sprache, Keywords und Google-Scripts</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -273,9 +367,20 @@ export default function AdminSeo() {
           <div>
             <p className="font-semibold text-sm">Seiten mit SEO</p>
             <p className="text-xs text-gray-500 mt-0.5">
-              {pages.filter(p => p.slug !== "global" && p.metaTitle).length} von {normalPages.length} konfiguriert
+              {configuredCount} von {normalPages.length} konfiguriert
             </p>
           </div>
+        </div>
+      </div>
+
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+        <div className="text-2xl leading-none mt-0.5">🌍</div>
+        <div>
+          <p className="text-sm font-semibold text-blue-800 mb-1">Mehrsprachige SEO</p>
+          <p className="text-xs text-blue-700">
+            Für jede Seite können Sie Meta Title und Meta Description in <strong>Deutsch (DE)</strong>, <strong>Englisch (EN)</strong>, <strong>Niederländisch (NL)</strong> und <strong>Französisch (FR)</strong> hinterlegen.
+            Der Besucher sieht automatisch die Version seiner gewählten Sprache. Ist eine Übersetzung leer, wird <strong>DE</strong> als Fallback verwendet.
+          </p>
         </div>
       </div>
 

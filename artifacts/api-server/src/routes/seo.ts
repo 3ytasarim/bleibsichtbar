@@ -23,6 +23,12 @@ const EMPTY_ROW = {
   id: null,
   metaTitle: "",
   metaDescription: "",
+  metaTitleEn: "",
+  metaDescriptionEn: "",
+  metaTitleNl: "",
+  metaDescriptionNl: "",
+  metaTitleFr: "",
+  metaDescriptionFr: "",
   keywords: "",
   googleVerification: "",
   headScript: "",
@@ -54,7 +60,14 @@ router.get("/:slug", async (req: Request, res: Response) => {
 router.put("/:slug", requireAdmin, async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
-    const { pageLabel, metaTitle, metaDescription, keywords, googleVerification, headScript, bodyScript } = req.body;
+    const {
+      pageLabel,
+      metaTitle, metaDescription,
+      metaTitleEn, metaDescriptionEn,
+      metaTitleNl, metaDescriptionNl,
+      metaTitleFr, metaDescriptionFr,
+      keywords, googleVerification, headScript, bodyScript,
+    } = req.body;
     const defaultPage = DEFAULT_PAGES.find(p => p.slug === slug);
     const label = pageLabel || defaultPage?.pageLabel || slug;
 
@@ -65,6 +78,12 @@ router.put("/:slug", requireAdmin, async (req: Request, res: Response) => {
       [row] = await db.update(seoTable).set({
         metaTitle: metaTitle ?? existing.metaTitle,
         metaDescription: metaDescription ?? existing.metaDescription,
+        metaTitleEn: metaTitleEn ?? existing.metaTitleEn,
+        metaDescriptionEn: metaDescriptionEn ?? existing.metaDescriptionEn,
+        metaTitleNl: metaTitleNl ?? existing.metaTitleNl,
+        metaDescriptionNl: metaDescriptionNl ?? existing.metaDescriptionNl,
+        metaTitleFr: metaTitleFr ?? existing.metaTitleFr,
+        metaDescriptionFr: metaDescriptionFr ?? existing.metaDescriptionFr,
         keywords: keywords ?? existing.keywords,
         googleVerification: googleVerification ?? existing.googleVerification,
         headScript: headScript ?? existing.headScript,
@@ -77,6 +96,12 @@ router.put("/:slug", requireAdmin, async (req: Request, res: Response) => {
         pageLabel: label,
         metaTitle: metaTitle ?? "",
         metaDescription: metaDescription ?? "",
+        metaTitleEn: metaTitleEn ?? "",
+        metaDescriptionEn: metaDescriptionEn ?? "",
+        metaTitleNl: metaTitleNl ?? "",
+        metaDescriptionNl: metaDescriptionNl ?? "",
+        metaTitleFr: metaTitleFr ?? "",
+        metaDescriptionFr: metaDescriptionFr ?? "",
         keywords: keywords ?? "",
         googleVerification: googleVerification ?? "",
         headScript: headScript ?? "",
