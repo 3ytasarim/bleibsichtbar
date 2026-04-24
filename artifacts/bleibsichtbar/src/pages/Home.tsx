@@ -1133,15 +1133,38 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Slide indicators — mobile only (desktop version is merged into the scroll indicator below) */}
-          <div className="flex sm:hidden items-center justify-center space-x-3 mt-4">
+          {/* Slide indicators — mobile only */}
+          <div className="flex sm:hidden items-center justify-center gap-2 mt-5 px-4">
             {heroSlides.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setSlide(i)}
-                className={`transition-all duration-500 rounded-full ${i === slide ? "w-8 h-2 bg-accent" : "w-2 h-2 bg-white/30 hover:bg-white/50"}`}
-              />
+                className="relative flex-1 max-w-[56px] h-[5px] rounded-full overflow-hidden focus:outline-none"
+                style={{ background: "rgba(255,255,255,0.15)" }}
+                aria-label={`Slide ${i + 1}`}
+              >
+                {/* Active fill */}
+                {i === slide ? (
+                  <motion.span
+                    layoutId="slideTrackFill"
+                    className="absolute inset-0 rounded-full"
+                    style={{ background: "linear-gradient(90deg,#ff6b35,#ea580c)" }}
+                    initial={{ scaleX: 0, originX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                  />
+                ) : (
+                  <span
+                    className="absolute inset-0 rounded-full"
+                    style={{ background: "rgba(255,255,255,0.18)" }}
+                  />
+                )}
+              </button>
             ))}
+            {/* Slide counter */}
+            <span className="text-[10px] font-bold text-white/40 tabular-nums ml-1 select-none">
+              {slide + 1}/{heroSlides.length}
+            </span>
           </div>
         </div>
 
