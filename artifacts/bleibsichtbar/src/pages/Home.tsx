@@ -1146,44 +1146,57 @@ export default function Home() {
         </div>
 
         {/* Scroll indicator — desktop only */}
-        <button
-          onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
-          className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-1 focus:outline-none group"
+        <div
+          className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-1 z-50 cursor-pointer group"
+          onClick={() => {
+            const el = document.getElementById("leistungen");
+            if (el) {
+              const top = el.getBoundingClientRect().top + window.scrollY - 80;
+              window.scrollTo({ top, behavior: "smooth" });
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={e => {
+            if (e.key === "Enter" || e.key === " ") {
+              const el = document.getElementById("leistungen");
+              if (el) {
+                const top = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top, behavior: "smooth" });
+              }
+            }
+          }}
           aria-label="Zu Leistungen scrollen"
         >
-          {/* Label floats directly above the circle */}
-          <span className="text-white/75 text-[11px] font-bold tracking-[0.28em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.35)] group-hover:text-white transition-colors duration-300">
+          {/* Label — orange accent */}
+          <span className="text-accent text-[11px] font-bold tracking-[0.28em] uppercase select-none drop-shadow-[0_0_10px_rgba(234,88,12,0.5)] group-hover:brightness-125 transition-all duration-300">
             {t.home.discover}
           </span>
 
           {/* Circle with pulsing rings */}
-          <div className="relative flex items-center justify-center mt-0.5">
+          <div className="relative flex items-center justify-center mt-0.5 pointer-events-none">
             <motion.span
-              className="absolute w-12 h-12 rounded-full border border-white/20"
+              className="absolute w-12 h-12 rounded-full border border-accent/30"
               animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
             />
             <motion.span
-              className="absolute w-12 h-12 rounded-full border border-white/15"
+              className="absolute w-12 h-12 rounded-full border border-accent/20"
               animate={{ scale: [1, 1.6], opacity: [0.3, 0] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut", delay: 0.6 }}
             />
-            <motion.span
-              className="relative w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/25 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <span className="relative w-10 h-10 rounded-full bg-accent/15 backdrop-blur-sm border border-accent/35 flex items-center justify-center group-hover:bg-accent/25 transition-colors duration-300">
               <motion.svg
-                className="w-4 h-4 text-white"
+                className="w-4 h-4 text-accent"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 animate={{ y: [0, 4, 0] }}
                 transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </motion.svg>
-            </motion.span>
+            </span>
           </div>
-        </button>
+        </div>
       </div>
 
       {/* ─── Problem Statement ─────────────────────────────────────────────── */}
