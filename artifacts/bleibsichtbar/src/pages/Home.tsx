@@ -69,8 +69,8 @@ function SoundWaveBars() {
       {heights.map((h, i) => (
         <motion.div
           key={i}
-          animate={{ scaleY: [1, 1.8, 0.6, 1.4, 1] }}
-          transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
+          animate={{ scaleY: [1, 1.6, 0.7, 1.3, 1] }}
+          transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.18, ease: "easeInOut" }}
           style={{
             width: 3, height: h, borderRadius: 2,
             background: "rgba(34,197,94,0.85)",
@@ -184,6 +184,8 @@ function IPhoneFrame({ children, dark = false }: { children: React.ReactNode; da
 }
 
 function VoiceAgentPhone() {
+  const { t } = useT();
+  const ph = t.home.phone;
   return (
     <div style={{
       width: "100%", height: "100%",
@@ -205,7 +207,7 @@ function VoiceAgentPhone() {
         color: "rgba(255,255,255,0.40)", fontSize: 9, letterSpacing: 1.5,
         fontWeight: 600, textTransform: "uppercase", marginBottom: 8,
       }}>
-        Eingehender Anruf
+        {ph.incomingCall}
       </div>
 
       {/* Pulsing rings + Avatar */}
@@ -213,7 +215,7 @@ function VoiceAgentPhone() {
         {[0, 1, 2].map(i => (
           <motion.div key={i}
             animate={{ scale: [1, 2.4], opacity: [0.55, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.7, ease: "easeOut" }}
+            transition={{ duration: 3.5, repeat: Infinity, delay: i * 1.1, ease: "easeOut" }}
             style={{
               position: "absolute", inset: 0, borderRadius: "50%",
               border: "1.5px solid rgba(34,197,94,0.6)",
@@ -233,22 +235,22 @@ function VoiceAgentPhone() {
 
       {/* Name */}
       <div style={{ color: "white", fontSize: 16, fontWeight: 700, marginBottom: 3 }}>
-        Voice Agent
+        {ph.voiceAgent}
       </div>
       <div style={{ color: "rgba(255,255,255,0.40)", fontSize: 10, marginBottom: 14 }}>
-        KI Assistent • Bleibsichtbar
+        {ph.kiSubtitle}
       </div>
 
       {/* Sound wave */}
       <SoundWaveBars />
 
-      {/* Call duration */}
+      {/* Call status */}
       <motion.div
-        animate={{ opacity: [1, 0.3, 1] }}
-        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [1, 0.35, 1] }}
+        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
         style={{ color: "rgba(34,197,94,0.8)", fontSize: 10, fontWeight: 600, marginTop: 8, letterSpacing: 0.5 }}
       >
-        Verbinde…
+        {ph.connecting}
       </motion.div>
 
       {/* Mic indicator */}
@@ -259,11 +261,11 @@ function VoiceAgentPhone() {
       }}>
         <motion.div
           animate={{ opacity: [1, 0.3, 1] }}
-          transition={{ duration: 0.8, repeat: Infinity }}
+          transition={{ duration: 1.8, repeat: Infinity }}
           style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }}
         />
         <Mic size={10} color="rgba(255,255,255,0.5)" />
-        <span style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>KI spricht...</span>
+        <span style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>{ph.kiSpeaks}</span>
       </div>
 
       {/* Accept / Decline buttons */}
@@ -276,8 +278,8 @@ function VoiceAgentPhone() {
           <PhoneOff size={20} color="white" />
         </div>
         <motion.div
-          animate={{ scale: [1, 1.08, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1.06, 1] }}
+          transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
           style={{
             width: 48, height: 48, borderRadius: "50%", background: "#22c55e",
             display: "flex", alignItems: "center", justifyContent: "center",
@@ -293,6 +295,8 @@ function VoiceAgentPhone() {
 
 // ─── Social Media Phone ───────────────────────────────────────────────────────
 function SocialMediaPhone() {
+  const { t } = useT();
+  const ph = t.home.phone;
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(2847);
   const [activePost, setActivePost] = useState(0);
@@ -425,7 +429,7 @@ function SocialMediaPhone() {
         <div className="bg-white rounded-xl p-2.5 border border-gray-100 shadow-sm">
           <div className="flex items-center space-x-1 mb-1.5">
             <TrendingUp className="w-3 h-3 text-accent" />
-            <span className="text-[9px] text-gray-500 font-medium">Reichweite</span>
+            <span className="text-[9px] text-gray-500 font-medium">{ph.reach}</span>
           </div>
           <div className="text-base font-bold text-gray-900">46%</div>
           <div className="mt-1.5 h-1 bg-gray-100 rounded-full overflow-hidden">
@@ -435,7 +439,7 @@ function SocialMediaPhone() {
         <div className="bg-white rounded-xl p-2.5 border border-gray-100 shadow-sm">
           <div className="flex items-center space-x-1 mb-1.5">
             <Users className="w-3 h-3 text-blue-500" />
-            <span className="text-[9px] text-gray-500 font-medium">Follower</span>
+            <span className="text-[9px] text-gray-500 font-medium">{ph.followers}</span>
           </div>
           <div className="text-base font-bold text-green-600">+{counter.toLocaleString("de")}</div>
           <div className="mt-1 h-1 bg-gray-100 rounded-full overflow-hidden">
@@ -1033,8 +1037,8 @@ export default function Home() {
               <div
                 className="relative select-none"
                 style={{
-                  width: "min(92vw, 480px)",
-                  height: "min(88vw, 640px)",
+                  width: "min(78vw, 480px)",
+                  height: "min(74vw, 640px)",
                   perspective: "1400px",
                   perspectiveOrigin: "50% 50%",
                 }}
@@ -1047,8 +1051,8 @@ export default function Home() {
                     position: "absolute",
                     top: 0,
                     right: 0,
-                    width: "clamp(160px, 50vw, 252px)",
-                    height: "clamp(326px, 102vw, 513px)",
+                    width: "clamp(130px, 40vw, 252px)",
+                    height: "clamp(265px, 82vw, 513px)",
                     zIndex: 4,
                     rotateY: 10,
                     rotateZ: 4,
@@ -1083,8 +1087,8 @@ export default function Home() {
                     position: "absolute",
                     bottom: 0,
                     left: 0,
-                    width: "clamp(160px, 50vw, 272px)",
-                    height: "clamp(326px, 102vw, 554px)",
+                    width: "clamp(140px, 42vw, 272px)",
+                    height: "clamp(285px, 86vw, 554px)",
                     zIndex: 5,
                     rotateY: -10,
                     rotateZ: -4,
