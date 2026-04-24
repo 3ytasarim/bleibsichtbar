@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+/* ShootingStar & Starfield logic from @manufosela (copyleft 2013-2023, ES6 2023/12/03) */
+
 const isMobileDevice = () =>
   typeof window !== "undefined" && window.innerWidth < 768;
 
@@ -7,124 +9,152 @@ const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-class Starfield {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
-  private starCount: number;
-  private animFrameId: number | null = null;
-  private stars: { x: number; y: number; r: number; blur: boolean }[] = [];
-
-  constructor(canvas: HTMLCanvasElement, starCount: number) {
-    this.canvas = canvas;
-    this.ctx = canvas.getContext("2d", { alpha: true })!;
-    this.starCount = starCount;
-    this.resizeCanvas();
-    const ro = new ResizeObserver(() => this.resizeCanvas());
-    ro.observe(canvas.parentElement!);
-    (canvas as any)._ro = ro;
-  }
-
-  resizeCanvas() {
-    const parent = this.canvas.parentElement;
-    this.canvas.width = parent?.clientWidth ?? window.innerWidth;
-    this.canvas.height = parent?.clientHeight ?? window.innerHeight;
-    this.buildStars();
-    this.draw();
-  }
-
-  private buildStars() {
-    this.stars = Array.from({ length: this.starCount }, () => ({
-      x: Math.random() * this.canvas.width,
-      y: Math.random() * this.canvas.height,
-      r: Math.random() * 1.2 + 0.2,
-      blur: Math.random() > 0.7,
-    }));
-  }
-
-  private draw() {
-    const { ctx, canvas } = this;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    g.addColorStop(0, "black");
-    g.addColorStop(0.5, "rgba(0,0,50,0.7)");
-    g.addColorStop(1, "black");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (const s of this.stars) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = "white";
-      if (s.blur) {
-        ctx.shadowColor = "white";
-        ctx.shadowBlur = s.r * 4;
-      }
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  destroy() {
-    if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
-    const ro = (this.canvas as any)._ro;
-    if (ro) ro.disconnect();
-  }
-}
-
+// ─── Original ShootingStar (beam effect) ────────────────────────────────────
 class ShootingStar {
-  private el: HTMLElement;
+  private n = 0;
+  private m = 0;
+  private defaultOptions = { velocity: 8, starSize: 10, life: 300, beamSize: 400, dir: -1 };
+  private options: typeof this.defaultOptions = { ...this.defaultOptions };
+  private capa: HTMLElement;
+  private wW: number;
+  private hW: number;
   private intervalId: ReturnType<typeof setInterval> | null = null;
 
   constructor(el: HTMLElement) {
-    this.el = el;
+    this.capa = el;
+    this.wW = el.clientWidth;
+    this.hW = el.clientHeight;
+  }
+
+  private addBeamPart(x: number, y: number) {
+    this.n++;
+    const name = this.getRandom(100, 1);
+    const oldStar = document.getElementById(`star${name}`);
+    if (oldStar) oldStar.remove();
+
+    const starDiv = document.createElement("div");
+    starDiv.id = `star${name}`;
+    this.capa.appendChild(starDiv);
+
+    const hazDiv = document.createElement("div");
+    hazDiv.id = `haz${this.n}`;
+    hazDiv.className = "haz";
+    hazDiv.style.cssText = `position:absolute; color:#FF0; width:10px; height:10px; font-weight:bold; font-size:${this.options.starSize}px; pointer-events:none; z-index:10;`;
+    hazDiv.textContent = "·";
+    starDiv.appendChild(hazDiv);
+
+    if (this.n > 1) {
+      const prev = document.getElementById(`haz${this.n - 1}`);
+      if (prev) prev.style.color = "rgba(255,255,255,0.5)";
+    }
+
+    hazDiv.style.top = `${y + this.n}px`;
+    hazDiv.style.left = `${x + this.n * this.options.dir}px`;
+  }
+
+  private delTrozoHaz() {
+    this.m++;
+    const haz = document.getElementById(`haz${this.m}`);
+    if (haz) haz.style.opacity = "0";
   }
 
   private getRandom(max: number, min: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  private launch() {
-    const wW = this.el.clientWidth;
-    const hW = this.el.clientHeight;
-    const beamSize = this.getRandom(500, 300);
-    const velocity = this.getRandom(8, 4);
-    const life = this.getRandom(300, 100);
-    const dir = this.getRandom(1, 0) ? 1 : -1;
-    const x = this.getRandom(wW - beamSize - 50, 50);
-    const y = this.getRandom(hW - beamSize - 50, 50);
-    const uid = Math.random().toString(36).slice(2);
+  launchStar(opts?: Partial<typeof this.defaultOptions>) {
+    this.options = Object.assign({}, this.defaultOptions, opts);
+    this.n = 0;
+    this.m = 0;
+    const x = this.getRandom(this.wW - this.options.beamSize - 100, 100);
+    const y = this.getRandom(this.hW - this.options.beamSize - 100, 100);
 
-    const timeouts: ReturnType<typeof setTimeout>[] = [];
-
-    for (let i = 0; i < beamSize; i++) {
-      const t1 = setTimeout(() => {
-        const dot = document.createElement("div");
-        dot.className = `ss-dot-${uid}`;
-        dot.style.cssText = `position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,255,200,0.9);pointer-events:none;will-change:opacity;top:${y + i}px;left:${x + i * dir}px;`;
-        this.el.appendChild(dot);
-      }, life + i * velocity);
-      timeouts.push(t1);
+    for (let i = 0; i < this.options.beamSize; i++) {
+      setTimeout(() => this.addBeamPart(x, y), this.options.life + i * this.options.velocity);
     }
-
-    const t2 = setTimeout(() => {
-      this.el.querySelectorAll(`.ss-dot-${uid}`).forEach(el => el.remove());
-    }, life + beamSize * velocity + 200);
-    timeouts.push(t2);
+    for (let i = 0; i < this.options.beamSize; i++) {
+      setTimeout(() => this.delTrozoHaz(), this.options.beamSize + i * this.options.velocity);
+    }
   }
 
-  start(everySeconds: number) {
-    this.launch();
-    this.intervalId = setInterval(() => this.launch(), everySeconds * 1000);
+  launch(everySeconds: number) {
+    this.launchStar();
+    this.intervalId = setInterval(() => {
+      this.launchStar({
+        dir: this.getRandom(1, 0) ? 1 : -1,
+        life: this.getRandom(400, 100),
+        beamSize: this.getRandom(700, 400),
+        velocity: this.getRandom(10, 4),
+      });
+    }, everySeconds * 1000);
   }
 
   stop() {
     if (this.intervalId) clearInterval(this.intervalId);
-    this.el.querySelectorAll("[class^='ss-dot-']").forEach(el => el.remove());
+    this.intervalId = null;
+    this.capa.querySelectorAll("[id^='star']").forEach(el => el.remove());
+    this.capa.querySelectorAll("[id^='haz']").forEach(el => el.remove());
   }
 }
 
+// ─── Starfield canvas (static stars) ────────────────────────────────────────
+class Starfield {
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
+  private starCount: number;
+  private stars: { x: number; y: number; r: number; blur: boolean }[] = [];
+  private ro: ResizeObserver;
+
+  constructor(canvas: HTMLCanvasElement, starCount: number) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d")!;
+    this.starCount = starCount;
+    this.ro = new ResizeObserver(() => this.resizeCanvas());
+    this.ro.observe(canvas.parentElement!);
+    this.resizeCanvas();
+  }
+
+  resizeCanvas() {
+    this.canvas.width = this.canvas.parentElement?.clientWidth ?? window.innerWidth;
+    this.canvas.height = this.canvas.parentElement?.clientHeight ?? window.innerHeight;
+    this.drawStars();
+  }
+
+  private drawStars() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.drawBackground();
+    this.stars = Array.from({ length: this.starCount }, () => ({
+      x: Math.random() * this.canvas.width,
+      y: Math.random() * this.canvas.height,
+      r: Math.random() * 1.5,
+      blur: Math.random() > 0.5,
+    }));
+    for (const s of this.stars) {
+      this.ctx.save();
+      this.ctx.beginPath();
+      this.ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2, false);
+      this.ctx.fillStyle = "white";
+      if (s.blur) { this.ctx.shadowColor = "white"; this.ctx.shadowBlur = s.r * 5; }
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+  }
+
+  private drawBackground() {
+    const g = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+    g.addColorStop(0, "black");
+    g.addColorStop(0.5, "rgba(0,0,50,0.7)");
+    g.addColorStop(1, "black");
+    this.ctx.fillStyle = g;
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  destroy() {
+    this.ro.disconnect();
+  }
+}
+
+// ─── Component ───────────────────────────────────────────────────────────────
 export function StarfieldOverlay() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -142,17 +172,17 @@ export function StarfieldOverlay() {
 
     let shooters: ShootingStar[] = [];
     if (!mobile && !reduced) {
-      const s1 = new ShootingStar(container);
-      const s2 = new ShootingStar(container);
-      s1.start(5);
-      s2.start(8);
-      shooters = [s1, s2];
+      const ss1 = new ShootingStar(container);
+      ss1.launch(5);
+      const ss2 = new ShootingStar(container);
+      ss2.launch(6);
+      const ss3 = new ShootingStar(container);
+      ss3.launch(7);
+      shooters = [ss1, ss2, ss3];
     }
 
     const handleVisibility = () => {
-      if (document.hidden) {
-        shooters.forEach(s => s.stop());
-      }
+      if (document.hidden) shooters.forEach(s => s.stop());
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
@@ -167,7 +197,7 @@ export function StarfieldOverlay() {
     <div
       ref={containerRef}
       className="absolute inset-0 pointer-events-none"
-      style={{ zIndex: 1 }}
+      style={{ zIndex: 1, position: "absolute" }}
     >
       <canvas
         ref={canvasRef}
