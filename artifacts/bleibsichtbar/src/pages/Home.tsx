@@ -215,7 +215,7 @@ function VoiceAgentPhone() {
         {[0, 1, 2].map(i => (
           <motion.div key={i}
             animate={{ scale: [1, 2.4], opacity: [0.55, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, delay: i * 1.1, ease: "easeOut" }}
+            transition={{ duration: 5.5, repeat: Infinity, delay: i * 1.8, ease: "easeOut" }}
             style={{
               position: "absolute", inset: 0, borderRadius: "50%",
               border: "1.5px solid rgba(34,197,94,0.6)",
