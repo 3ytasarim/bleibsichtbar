@@ -72,7 +72,13 @@ router.post("/", requireAdmin, (req, res, next) => {
 
     const [project] = await db.insert(projectsTable).values({
       title: body.title,
+      titleEn: body.titleEn || null,
+      titleNl: body.titleNl || null,
+      titleFr: body.titleFr || null,
       description: body.description,
+      descriptionEn: body.descriptionEn || null,
+      descriptionNl: body.descriptionNl || null,
+      descriptionFr: body.descriptionFr || null,
       category: body.category,
       imageUrl,
       clientName: body.clientName || null,
@@ -109,7 +115,13 @@ router.put("/:id", requireAdmin, (req, res, next) => {
     const updates: Partial<typeof projectsTable.$inferInsert> = { updatedAt: new Date() };
 
     if (body.title !== undefined) updates.title = body.title;
+    if (body.titleEn !== undefined) updates.titleEn = body.titleEn || null;
+    if (body.titleNl !== undefined) updates.titleNl = body.titleNl || null;
+    if (body.titleFr !== undefined) updates.titleFr = body.titleFr || null;
     if (body.description !== undefined) updates.description = body.description;
+    if (body.descriptionEn !== undefined) updates.descriptionEn = body.descriptionEn || null;
+    if (body.descriptionNl !== undefined) updates.descriptionNl = body.descriptionNl || null;
+    if (body.descriptionFr !== undefined) updates.descriptionFr = body.descriptionFr || null;
     if (body.category !== undefined) updates.category = body.category;
     if (body.clientName !== undefined) updates.clientName = body.clientName || null;
     if (body.websiteUrl !== undefined) updates.websiteUrl = body.websiteUrl || null;

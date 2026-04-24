@@ -7,6 +7,7 @@ import { ArrowLeft, Globe, Tag, ExternalLink, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CtaBanner } from "@/components/shared/CtaBanner";
 import { useT } from "@/i18n";
+import { getLocalizedField } from "@/lib/utils";
 
 const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
 const WEB_RE    = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|app|landing/i;
@@ -81,7 +82,7 @@ const PALETTES = [
 ];
 
 export default function ProjectDetail() {
-  const { t } = useT();
+  const { t, lang } = useT();
   const { id } = useParams<{ id: string }>();
   const { data: project, isLoading, isError } = useGetProject(parseInt(id!));
 
@@ -151,7 +152,7 @@ export default function ProjectDetail() {
                 {(t.categoryLabels as Record<string, string>)[project.category] ?? project.category}
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-4">
-                {project.title}
+                {getLocalizedField(project, "title", lang)}
               </h1>
               {project.clientName && (
                 <p className="text-white/50 text-lg flex items-center gap-2 mb-6">
@@ -160,7 +161,7 @@ export default function ProjectDetail() {
                 </p>
               )}
               <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-lg">
-                {project.description}
+                {getLocalizedField(project, "description", lang)}
               </p>
 
               {/* Tags */}

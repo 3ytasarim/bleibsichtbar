@@ -5,7 +5,13 @@ import { z } from "zod/v4";
 export const projectsTable = pgTable("projects", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
+  titleEn: text("title_en"),
+  titleNl: text("title_nl"),
+  titleFr: text("title_fr"),
   description: text("description").notNull(),
+  descriptionEn: text("description_en"),
+  descriptionNl: text("description_nl"),
+  descriptionFr: text("description_fr"),
   category: text("category").notNull(),
   imageUrl: text("image_url"),
   clientName: text("client_name"),

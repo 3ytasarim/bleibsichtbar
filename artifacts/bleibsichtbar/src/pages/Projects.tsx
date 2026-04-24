@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Globe, Folder, ShieldCheck, Mail } from "lucide-react";
 import { useT } from "@/i18n";
+import { getLocalizedField } from "@/lib/utils";
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -110,7 +111,7 @@ function BrowserMockup({ src, alt }: { src?: string; alt: string }) {
 }
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const placeholder = "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80&fit=crop";
 
   return (
@@ -159,7 +160,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
               className="text-xl font-display font-black text-white leading-tight mb-1 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 ease-out"
               style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}
             >
-              {project.title}
+              {getLocalizedField(project, "title", lang)}
             </h3>
 
             {/* Client + accent bar — hidden until hover */}

@@ -8,6 +8,7 @@ import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/Animated
 import { CtaBanner } from "@/components/shared/CtaBanner";
 import { useGetProjects } from "@workspace/api-client-react";
 import { useT } from "@/i18n";
+import { getLocalizedField } from "@/lib/utils";
 import { Monitor, Zap, Smartphone, Search, Palette, RefreshCw, CheckCircle2, ArrowRight } from "lucide-react";
 
 const WEB_RE = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|landing/i;
@@ -270,7 +271,7 @@ const SERVICE_ICONS = [
 ];
 
 export default function Webseiten() {
-  const { t } = useT();
+  const { t, lang } = useT();
   const wb = t.webseiten;
   const { data: allProjects = [] } = useGetProjects({ published: true });
   const webProjects = allProjects.filter(p => WEB_RE.test(p.category ?? ""));
@@ -633,7 +634,7 @@ export default function Webseiten() {
                       {/* Device showcase panel */}
                       <div className={`relative flex items-center justify-center p-8 md:p-10 ${i % 2 === 1 ? "lg:order-2" : ""}`}
                         style={{ background: "rgba(0,0,0,0.25)" }}>
-                        <MultiDeviceShowcase src={project.imageUrl ?? undefined} alt={project.title} />
+                        <MultiDeviceShowcase src={project.imageUrl ?? undefined} alt={getLocalizedField(project, "title", lang)} />
                         {/* Panel separator */}
                         <div className={`hidden lg:block absolute top-8 bottom-8 w-px ${i % 2 === 1 ? "left-0" : "right-0"}`}
                           style={{ background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.1) 30%, rgba(255,255,255,0.1) 70%, transparent)" }} />
@@ -643,7 +644,7 @@ export default function Webseiten() {
                       <div className={`flex flex-col justify-center p-8 md:p-12 ${i % 2 === 1 ? "lg:order-1" : ""}`}>
                         <div className="flex items-center gap-3 mb-5">
                           <span className="inline-flex items-center bg-accent/15 text-accent text-xs font-bold px-3.5 py-1.5 rounded-full border border-accent/20">
-                            {project.category}
+                            {(t.categoryLabels as Record<string, string>)[project.category] ?? project.category}
                           </span>
                           {project.clientName && (
                             <span className="text-white/30 text-sm">·</span>
@@ -653,9 +654,9 @@ export default function Webseiten() {
                           )}
                         </div>
                         <h3 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-white mb-4 leading-tight">
-                          {project.title}
+                          {getLocalizedField(project, "title", lang)}
                         </h3>
-                        <p className="text-white/60 leading-relaxed text-base md:text-lg">{project.description}</p>
+                        <p className="text-white/60 leading-relaxed text-base md:text-lg">{getLocalizedField(project, "description", lang)}</p>
                         {project.tags && project.tags.length > 0 && (
                           <div className="flex flex-wrap gap-2 mt-7">
                             {project.tags.map(tag => (

@@ -8,6 +8,7 @@ import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/Animated
 import { useGetProjects } from "@workspace/api-client-react";
 import { useT } from "@/i18n";
 import type { Translations } from "@/i18n/translations";
+import { getLocalizedField } from "@/lib/utils";
 import {
   Camera, Edit3, BarChart3, MessageSquare,
   CheckCircle2, Clock, Search, Target, Send, TrendingUp, Zap, AlertCircle,
@@ -484,7 +485,7 @@ function PhoneFrame({ project, size, rotate, opacity, zIndex, onClick }: {
 }
 
 function CaseStudyCarousel({ projects }: { projects: any[] }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const sm = t.pages.socialMedia;
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -529,14 +530,14 @@ function CaseStudyCarousel({ projects }: { projects: any[] }) {
           </div>
 
           <h3 className="text-3xl md:text-4xl lg:text-[2.8rem] font-display font-black leading-tight mb-5" style={{ color: "#0a1628" }}>
-            {active.title}
+            {getLocalizedField(active, "title", lang)}
           </h3>
 
           <div className="w-12 h-1 bg-accent rounded-full mb-6" />
 
           {active.description && (
             <p className="text-gray-600 text-base leading-relaxed mb-8 max-w-md">
-              {active.description}
+              {getLocalizedField(active, "description", lang)}
             </p>
           )}
 

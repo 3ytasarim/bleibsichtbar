@@ -10,7 +10,13 @@ import { useQueryClient } from "@tanstack/react-query";
 
 type FormState = {
   title: string;
+  titleEn: string;
+  titleNl: string;
+  titleFr: string;
   description: string;
+  descriptionEn: string;
+  descriptionNl: string;
+  descriptionFr: string;
   category: string;
   clientName: string;
   websiteUrl: string;
@@ -25,7 +31,13 @@ type FormState = {
 
 const defaultForm: FormState = {
   title: "",
+  titleEn: "",
+  titleNl: "",
+  titleFr: "",
   description: "",
+  descriptionEn: "",
+  descriptionNl: "",
+  descriptionFr: "",
   category: "",
   clientName: "",
   websiteUrl: "",
@@ -76,7 +88,13 @@ export default function AdminProjects() {
     setEditingId(project.id);
     setForm({
       title: project.title,
+      titleEn: (project as any).titleEn || "",
+      titleNl: (project as any).titleNl || "",
+      titleFr: (project as any).titleFr || "",
       description: project.description,
+      descriptionEn: (project as any).descriptionEn || "",
+      descriptionNl: (project as any).descriptionNl || "",
+      descriptionFr: (project as any).descriptionFr || "",
       category: project.category,
       clientName: project.clientName || "",
       websiteUrl: (project as any).websiteUrl || "",
@@ -132,7 +150,13 @@ export default function AdminProjects() {
     try {
       const fd = new FormData();
       fd.append("title", form.title);
+      fd.append("titleEn", form.titleEn);
+      fd.append("titleNl", form.titleNl);
+      fd.append("titleFr", form.titleFr);
       fd.append("description", form.description);
+      fd.append("descriptionEn", form.descriptionEn);
+      fd.append("descriptionNl", form.descriptionNl);
+      fd.append("descriptionFr", form.descriptionFr);
       fd.append("category", form.category);
       fd.append("clientName", form.clientName);
       fd.append("websiteUrl", form.websiteUrl);
@@ -287,9 +311,36 @@ export default function AdminProjects() {
 
           {/* Description */}
           <div>
-            <label className="text-sm font-medium mb-1 block">Beschreibung *</label>
+            <label className="text-sm font-medium mb-1 block">Beschreibung (DE) *</label>
             <Textarea rows={3} placeholder="Kurze Projektbeschreibung..." value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} required />
           </div>
+
+          {/* Translations */}
+          <details className="border border-dashed border-gray-300 rounded-lg p-4">
+            <summary className="text-sm font-semibold cursor-pointer text-gray-600 select-none">
+              🌍 Übersetzungen (EN / NL / FR) — optional
+            </summary>
+            <div className="mt-4 space-y-4">
+              {/* EN */}
+              <div className="space-y-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400">🇬🇧 Englisch</p>
+                <Input value={form.titleEn} onChange={e => setForm(f => ({ ...f, titleEn: e.target.value }))} placeholder="Title (EN)" />
+                <Textarea rows={2} value={form.descriptionEn} onChange={e => setForm(f => ({ ...f, descriptionEn: e.target.value }))} placeholder="Description (EN)" />
+              </div>
+              {/* NL */}
+              <div className="space-y-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400">🇳🇱 Niederländisch</p>
+                <Input value={form.titleNl} onChange={e => setForm(f => ({ ...f, titleNl: e.target.value }))} placeholder="Titel (NL)" />
+                <Textarea rows={2} value={form.descriptionNl} onChange={e => setForm(f => ({ ...f, descriptionNl: e.target.value }))} placeholder="Beschrijving (NL)" />
+              </div>
+              {/* FR */}
+              <div className="space-y-2">
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400">🇫🇷 Französisch</p>
+                <Input value={form.titleFr} onChange={e => setForm(f => ({ ...f, titleFr: e.target.value }))} placeholder="Titre (FR)" />
+                <Textarea rows={2} value={form.descriptionFr} onChange={e => setForm(f => ({ ...f, descriptionFr: e.target.value }))} placeholder="Description (FR)" />
+              </div>
+            </div>
+          </details>
 
           {/* Client + Website */}
           <div className="grid grid-cols-2 gap-4">
