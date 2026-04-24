@@ -208,11 +208,11 @@ function VoiceAgentPhone() {
         {/* Orange pulse rings */}
         {[0, 1, 2].map(i => (
           <motion.div key={i}
-            animate={{ scale: [1, 2.2], opacity: [0.5, 0] }}
-            transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.8, ease: "easeOut" }}
+            animate={{ scale: [1, 2.6], opacity: [0.35, 0] }}
+            transition={{ duration: 5.5, repeat: Infinity, delay: i * 1.85, ease: "easeOut" }}
             style={{
               position: "absolute", inset: 0, borderRadius: "50%",
-              border: "2px solid rgba(249,115,22,0.7)",
+              border: "1.5px solid rgba(249,115,22,0.55)",
             }}
           />
         ))}
