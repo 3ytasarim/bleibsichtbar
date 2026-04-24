@@ -1133,8 +1133,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Slide indicators */}
-          <div className="flex items-center justify-center space-x-3 mt-4 sm:mt-8">
+          {/* Slide indicators — mobile only (desktop version is merged into the scroll indicator below) */}
+          <div className="flex sm:hidden items-center justify-center space-x-3 mt-4">
             {heroSlides.map((_, i) => (
               <button
                 key={i}
@@ -1148,6 +1148,18 @@ export default function Home() {
         {/* Scroll indicator — desktop only */}
         <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2">
           <span className="text-white/80 text-[13px] font-semibold tracking-[0.25em] uppercase select-none drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">{t.home.discover}</span>
+
+          {/* Slide dots — desktop, shown here to avoid overlap with content */}
+          <div className="flex items-center justify-center space-x-2 mb-1">
+            {heroSlides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setSlide(i)}
+                className={`transition-all duration-500 rounded-full ${i === slide ? "w-6 h-1.5 bg-accent" : "w-1.5 h-1.5 bg-white/30 hover:bg-white/50"}`}
+              />
+            ))}
+          </div>
+
           <button
             onClick={() => document.getElementById("leistungen")?.scrollIntoView({ behavior: "smooth" })}
             className="relative flex items-center justify-center focus:outline-none group"
