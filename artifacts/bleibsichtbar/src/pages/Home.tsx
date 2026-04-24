@@ -1033,88 +1033,110 @@ export default function Home() {
                 filter: "blur(48px)",
               }} />
 
-              {/* ── Dual Phone Stage ── */}
-              <div
-                className="relative select-none"
-                style={{
-                  width: "min(78vw, 480px)",
-                  height: "min(74vw, 640px)",
-                  perspective: "1400px",
-                  perspectiveOrigin: "50% 50%",
-                }}
-              >
-                {/* ── Voice Agent Phone — top-right, tilted right ── */}
-                <motion.div
-                  animate={{ y: [0, -12, 0] }}
-                  transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    width: "clamp(130px, 40vw, 252px)",
-                    height: "clamp(265px, 82vw, 513px)",
-                    zIndex: 4,
-                    rotateY: 10,
-                    rotateZ: 4,
-                  }}
-                >
-                  <div style={{
-                    width: "100%", height: "100%",
-                    borderRadius: 38, border: "8px solid #1a1a1c", background: "#1a1a1c",
-                    overflow: "hidden", position: "relative", isolation: "isolate", willChange: "transform",
-                    boxShadow: "8px 16px 40px rgba(0,0,0,0.35), 0 0 40px rgba(34,197,94,0.15), 0 0 0 1px rgba(255,255,255,0.10)",
-                  }}>
-                    <div style={{ position: "absolute", inset: 0, borderRadius: 30, overflow: "hidden", background: "#06080f" }}>
-                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <div style={{ width: 64, height: 9, background: "#0a0a0a", borderRadius: 5 }} />
-                      </div>
-                      <div style={{ width: "100%", paddingTop: 24, height: "100%" }}>
-                        <VoiceAgentPhone />
-                      </div>
-                      <div style={{ position: "absolute", bottom: 5, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 20 }}>
-                        <div style={{ width: 60, height: 4, background: "#333", borderRadius: 3 }} />
-                      </div>
-                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "30%", background: "linear-gradient(170deg,rgba(255,255,255,0.05) 0%,transparent 100%)", pointerEvents: "none", zIndex: 10 }} />
-                    </div>
-                  </div>
-                </motion.div>
+              {/* ── Dual Phone Stage — fixed desktop size, CSS-scaled on mobile ── */}
+              {(() => {
+                const STAGE_W = 480;
+                const STAGE_H = 640;
+                // On mobile clamp available width to viewport minus 32px padding
+                const availW = isMobile ? Math.min(typeof window !== "undefined" ? window.innerWidth - 32 : 340, 420) : STAGE_W;
+                const scale = isMobile ? availW / STAGE_W : 1;
+                return (
+                  <div
+                    style={{
+                      width: isMobile ? availW : STAGE_W,
+                      height: isMobile ? STAGE_H * scale : STAGE_H,
+                      position: "relative",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <div
+                      className="select-none"
+                      style={{
+                        position: "absolute",
+                        top: 0, left: 0,
+                        width: STAGE_W,
+                        height: STAGE_H,
+                        transform: isMobile ? `scale(${scale})` : undefined,
+                        transformOrigin: "top left",
+                        perspective: "1400px",
+                        perspectiveOrigin: "50% 50%",
+                      }}
+                    >
+                      {/* ── Voice Agent Phone — top-right, tilted right ── */}
+                      <motion.div
+                        animate={{ y: [0, -12, 0] }}
+                        transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                          width: 252,
+                          height: 513,
+                          zIndex: 4,
+                          rotateY: 10,
+                          rotateZ: 4,
+                        }}
+                      >
+                        <div style={{
+                          width: "100%", height: "100%",
+                          borderRadius: 38, border: "8px solid #1a1a1c", background: "#1a1a1c",
+                          overflow: "hidden", position: "relative", isolation: "isolate", willChange: "transform",
+                          boxShadow: "8px 16px 40px rgba(0,0,0,0.35), 0 0 40px rgba(34,197,94,0.15), 0 0 0 1px rgba(255,255,255,0.10)",
+                        }}>
+                          <div style={{ position: "absolute", inset: 0, borderRadius: 30, overflow: "hidden", background: "#06080f" }}>
+                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <div style={{ width: 64, height: 9, background: "#0a0a0a", borderRadius: 5 }} />
+                            </div>
+                            <div style={{ width: "100%", paddingTop: 24, height: "100%" }}>
+                              <VoiceAgentPhone />
+                            </div>
+                            <div style={{ position: "absolute", bottom: 5, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 20 }}>
+                              <div style={{ width: 60, height: 4, background: "#333", borderRadius: 3 }} />
+                            </div>
+                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "30%", background: "linear-gradient(170deg,rgba(255,255,255,0.05) 0%,transparent 100%)", pointerEvents: "none", zIndex: 10 }} />
+                          </div>
+                        </div>
+                      </motion.div>
 
-                {/* ── Social Media Phone — bottom-left, tilted left ── */}
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: "clamp(140px, 42vw, 272px)",
-                    height: "clamp(285px, 86vw, 554px)",
-                    zIndex: 5,
-                    rotateY: -10,
-                    rotateZ: -4,
-                  }}
-                >
-                  <div style={{
-                    width: "100%", height: "100%",
-                    borderRadius: 40, border: "8px solid #1a1a1c", background: "#1a1a1c",
-                    overflow: "hidden", position: "relative", isolation: "isolate", willChange: "transform",
-                    boxShadow: "-8px 16px 40px rgba(0,0,0,0.35), 0 0 45px rgba(249,115,22,0.15), 0 0 0 1px rgba(255,255,255,0.12)",
-                  }}>
-                    <div style={{ position: "absolute", inset: 0, borderRadius: 32, overflow: "hidden", background: "#f5f7fa" }}>
-                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <div style={{ width: 70, height: 10, background: "#0a0a0a", borderRadius: 5 }} />
-                      </div>
-                      <div style={{ width: "100%", paddingTop: 26, height: "100%" }}>
-                        <SocialMediaPhone />
-                      </div>
-                      <div style={{ position: "absolute", bottom: 5, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 20 }}>
-                        <div style={{ width: 70, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
-                      </div>
-                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "35%", background: "linear-gradient(170deg,rgba(255,255,255,0.09) 0%,transparent 100%)", pointerEvents: "none", zIndex: 10 }} />
+                      {/* ── Social Media Phone — bottom-left, tilted left ── */}
+                      <motion.div
+                        animate={{ y: [0, 10, 0] }}
+                        transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          width: 272,
+                          height: 554,
+                          zIndex: 5,
+                          rotateY: -10,
+                          rotateZ: -4,
+                        }}
+                      >
+                        <div style={{
+                          width: "100%", height: "100%",
+                          borderRadius: 40, border: "8px solid #1a1a1c", background: "#1a1a1c",
+                          overflow: "hidden", position: "relative", isolation: "isolate", willChange: "transform",
+                          boxShadow: "-8px 16px 40px rgba(0,0,0,0.35), 0 0 45px rgba(249,115,22,0.15), 0 0 0 1px rgba(255,255,255,0.12)",
+                        }}>
+                          <div style={{ position: "absolute", inset: 0, borderRadius: 32, overflow: "hidden", background: "#f5f7fa" }}>
+                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 26, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <div style={{ width: 70, height: 10, background: "#0a0a0a", borderRadius: 5 }} />
+                            </div>
+                            <div style={{ width: "100%", paddingTop: 26, height: "100%" }}>
+                              <SocialMediaPhone />
+                            </div>
+                            <div style={{ position: "absolute", bottom: 5, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 20 }}>
+                              <div style={{ width: 70, height: 4, background: "#1a1a1c", borderRadius: 3 }} />
+                            </div>
+                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "35%", background: "linear-gradient(170deg,rgba(255,255,255,0.09) 0%,transparent 100%)", pointerEvents: "none", zIndex: 10 }} />
+                          </div>
+                        </div>
+                      </motion.div>
                     </div>
                   </div>
-                </motion.div>
-              </div>
+                );
+              })()}
             </div>
           </div>
 
