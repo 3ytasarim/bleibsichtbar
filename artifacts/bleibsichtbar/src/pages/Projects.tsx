@@ -8,6 +8,7 @@ import { CtaBanner } from "@/components/shared/CtaBanner";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Globe, Folder, ShieldCheck, Mail } from "lucide-react";
+import { useT } from "@/i18n";
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -17,8 +18,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-const PRIVATE_FILTERS = ["Social Media", "Webseiten", "Content"] as const;
-type PrivateFilter = (typeof PRIVATE_FILTERS)[number];
+type PrivateFilter = "Social Media" | "Webseiten" | "Content";
 
 const SOCIAL_RE = /social.?media|instagram|tiktok|linkedin|content|reels?|stories/i;
 const WEB_RE    = /websei?ten?|web.?design|e.?commerce|webseite|online.?shop|app|landing/i;
@@ -177,22 +177,25 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
   );
 }
 
-const FILTERS = ["Alle", "Social Media", "Webseiten", "Content", "Fotografie"] as const;
-type Filter = (typeof FILTERS)[number];
+type FilterKey = "all" | "socialMedia" | "websites" | "content" | "photography";
+const FILTER_KEYS: FilterKey[] = ["all", "socialMedia", "websites", "content", "photography"];
+const PRIVATE_FILTER_KEYS: FilterKey[] = ["socialMedia", "websites", "content"];
 
-function matchesFilter(project: any, filter: Filter): boolean {
-  if (filter === "Alle") return true;
+function matchesFilter(project: any, filter: FilterKey): boolean {
+  if (filter === "all") return true;
   const cat = project.category ?? "";
-  if (filter === "Social Media") return /social.?media|instagram|tiktok|linkedin/i.test(cat);
-  if (filter === "Webseiten")    return WEB_RE.test(cat);
-  if (filter === "Content")      return /content/i.test(cat);
-  if (filter === "Fotografie")   return /fotografie|photo|food|report/i.test(cat);
+  if (filter === "socialMedia") return /social.?media|instagram|tiktok|linkedin/i.test(cat);
+  if (filter === "websites")    return WEB_RE.test(cat);
+  if (filter === "content")     return /content/i.test(cat);
+  if (filter === "photography") return /fotografie|photo|food|report/i.test(cat);
   return false;
 }
 
 export default function Projects() {
+  const { t } = useT();
+  const pr = t.projects;
   const { data: projects = [], isLoading } = useGetProjects({ published: true });
-  const [activeFilter, setActiveFilter] = useState<Filter>("Alle");
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
 
   const filtered = projects.filter(p => matchesFilter(p, activeFilter));
 
@@ -209,20 +212,20 @@ export default function Projects() {
           <motion.div custom={0} variants={heroFadeUp} initial="hidden" animate="visible">
             <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-sm font-semibold px-5 py-2 rounded-full mb-7">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              Unsere Arbeit
+              {pr.badge}
             </span>
           </motion.div>
           <motion.h1 custom={1} variants={heroFadeUp} initial="hidden" animate="visible"
             className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
-            Unsere <span className="text-accent">Projekte</span>
+            {pr.title1} <span className="text-accent">{pr.title2}</span>
           </motion.h1>
           <motion.p custom={2} variants={heroFadeUp} initial="hidden" animate="visible"
             className="text-xl text-white max-w-xl mx-auto mb-12">
-            Einblicke in erfolgreiche Kundenprojekte — von Social Media bis Webdesign.
+            {pr.sub}
           </motion.p>
           <motion.div custom={3} variants={heroFadeUp} initial="hidden" animate="visible"
             className="flex flex-wrap justify-center gap-10 md:gap-16">
-            {[{ value: "50+", label: "Projekte" }, { value: "4.9★", label: "Kundenbewertung" }, { value: "3+", label: "Jahre Erfahrung" }].map(s => (
+            {pr.stats.map(s => (
               <div key={s.label} className="text-center">
                 <div className="text-3xl font-black text-accent">{s.value}</div>
                 <div className="text-white/50 text-sm mt-0.5">{s.label}</div>
@@ -236,16 +239,16 @@ export default function Projects() {
       <section className="sticky top-16 z-30 bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
           <div className="flex flex-wrap gap-2 justify-center">
-            {FILTERS.map(filter => (
-              <button key={filter} onClick={() => setActiveFilter(filter)}
+            {FILTER_KEYS.map(key => (
+              <button key={key} onClick={() => setActiveFilter(key)}
                 className={`relative px-5 py-2 rounded-full text-sm font-semibold transition-all duration-250 ${
-                  activeFilter === filter ? "text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-primary"
+                  activeFilter === key ? "text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-primary"
                 }`}>
-                {activeFilter === filter && (
+                {activeFilter === key && (
                   <motion.div layoutId="filter-pill" className="absolute inset-0 bg-primary rounded-full -z-10"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }} />
                 )}
-                {filter}
+                {pr.filters[key]}
               </button>
             ))}
           </div>
@@ -256,7 +259,7 @@ export default function Projects() {
       <section className="py-20 min-h-[50vh] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatePresence mode="wait">
-            {(PRIVATE_FILTERS as readonly string[]).includes(activeFilter) ? (
+            {(PRIVATE_FILTER_KEYS as readonly string[]).includes(activeFilter) ? (
               <motion.div
                 key="privacy"
                 initial={{ opacity: 0, y: 32, scale: 0.97 }}
@@ -295,7 +298,7 @@ export default function Projects() {
                         transition={{ delay: 0.15 }}
                         className="text-xs font-black tracking-[0.25em] uppercase text-orange-400 mb-4"
                       >
-                        Datenschutz & Vertraulichkeit
+                        {pr.privacy.badge}
                       </motion.p>
 
                       {/* Heading */}
@@ -304,7 +307,7 @@ export default function Projects() {
                         transition={{ delay: 0.22 }}
                         className="text-2xl md:text-3xl font-display font-black text-white leading-snug mb-6"
                       >
-                        Referenzen auf Anfrage
+                        {pr.privacy.title}
                       </motion.h2>
 
                       {/* Divider */}
@@ -320,12 +323,8 @@ export default function Projects() {
                         transition={{ delay: 0.35 }}
                         className="space-y-3 text-white/70 text-base leading-relaxed mb-10"
                       >
-                        <p>
-                          Aus Datenschutz- und Vertraulichkeitsgründen verzichten wir auf die öffentliche Darstellung unserer Kundenprojekte.
-                        </p>
-                        <p>
-                          Selbstverständlich stellen wir Ihnen ausgewählte Referenzen gerne persönlich zur Verfügung.
-                        </p>
+                        <p>{pr.privacy.body1}</p>
+                        <p>{pr.privacy.body2}</p>
                       </motion.div>
 
                       {/* CTA buttons */}
@@ -342,7 +341,7 @@ export default function Projects() {
                             style={{ background: "linear-gradient(135deg, #f97316, #ff6b35)", color: "#fff", boxShadow: "0 4px 24px rgba(249,115,22,0.35)" }}
                           >
                             <Mail className="w-4 h-4" />
-                            Kontaktformular
+                            {pr.privacy.contactForm}
                           </motion.span>
                         </Link>
                         <a
@@ -356,7 +355,7 @@ export default function Projects() {
                             style={{ background: "#25D366", color: "#fff", boxShadow: "0 4px 20px rgba(37,211,102,0.35)" }}
                           >
                             <WhatsAppIcon className="w-4 h-4" />
-                            Per WhatsApp
+                            {pr.privacy.whatsapp}
                           </motion.span>
                         </a>
                       </motion.div>
@@ -376,8 +375,8 @@ export default function Projects() {
                 <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Folder className="w-9 h-9 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-display font-bold text-gray-500 mb-2">Keine Projekte gefunden</h3>
-                <p className="text-gray-400 text-sm">In dieser Kategorie sind aktuell keine Projekte vorhanden.</p>
+                <h3 className="text-xl font-display font-bold text-gray-500 mb-2">{pr.empty.title}</h3>
+                <p className="text-gray-400 text-sm">{pr.empty.sub}</p>
               </motion.div>
             ) : (
               <motion.div key="grid" layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-8">
@@ -393,11 +392,11 @@ export default function Projects() {
       </section>
 
       <CtaBanner
-        label="Ihr Projekt als nächstes?"
-        heading="Lassen Sie uns etwas"
-        headingAccent="Großartiges schaffen."
-        subtext="Kontaktieren Sie uns und wir zeigen Ihnen, wie wir Ihr Projekt zum Erfolg führen können."
-        buttonText="Jetzt Kontakt aufnehmen"
+        label={pr.cta.label}
+        heading={pr.cta.heading}
+        headingAccent={pr.cta.headingAccent}
+        subtext={pr.cta.sub}
+        buttonText={pr.cta.button}
         buttonHref="/kontakt"
       />
     </PublicLayout>

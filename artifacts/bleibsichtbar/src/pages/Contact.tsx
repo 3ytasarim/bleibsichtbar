@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { SeoHead } from "@/hooks/useSeoPage";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { motion } from "framer-motion";
@@ -12,16 +12,14 @@ import { Button } from "@/components/ui/button";
 import { useSubmitContact } from "@workspace/api-client-react";
 import { useT } from "@/i18n";
 
-const contactSchema = z.object({
-  name: z.string().min(2, "Name erforderlich"),
-  email: z.string().email("Ungültige E-Mail"),
-  phone: z.string().optional(),
-  company: z.string().optional(),
-  message: z.string().min(10, "Nachricht erforderlich"),
-  service: z.string().optional(),
-});
-
-type ContactFormValues = z.infer<typeof contactSchema>;
+type ContactFormValues = {
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  message: string;
+  service?: string;
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -43,6 +41,16 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export default function Contact() {
   const { t } = useT();
+  const v = t.footer.validation;
+
+  const contactSchema = useMemo(() => z.object({
+    name: z.string().min(2, v.nameRequired),
+    email: z.string().email(v.emailInvalid),
+    phone: z.string().optional(),
+    company: z.string().optional(),
+    message: z.string().min(10, v.messageRequired),
+    service: z.string().optional(),
+  }), [v.nameRequired, v.emailInvalid, v.messageRequired]);
 
   const { mutate, isPending, isSuccess } = useSubmitContact();
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormValues>({

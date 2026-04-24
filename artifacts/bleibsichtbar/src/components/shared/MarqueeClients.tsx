@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useT } from "@/i18n";
 
 interface MarqueeItem {
   id: string;
@@ -60,6 +61,8 @@ function MarqueeTrack({ items, direction, duration = 40, delay = 0 }: { items: M
 }
 
 export function MarqueeClients() {
+  const { t } = useT();
+  const cl = t.clients;
   const [items, setItems] = useState<MarqueeItem[]>([]);
 
   useEffect(() => {
@@ -115,14 +118,14 @@ export function MarqueeClients() {
         <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-4">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           <p className="text-accent font-semibold text-xs tracking-widest uppercase">
-            Vertrauen seit Tag 1
+            {cl.badge}
           </p>
         </div>
         <h2 className="text-3xl md:text-5xl font-display font-bold mb-4" style={{ color: "#0a1628" }}>
-          Unsere <span className="text-accent">Kunden</span>
+          {cl.title1} <span className="text-accent">{cl.title2}</span>
         </h2>
         <p className="text-gray-500 text-lg max-w-xl mx-auto">
-          Starke Marken, die uns vertrauen – gemeinsam für Ihren Erfolg.
+          {cl.sub}
         </p>
       </motion.div>
 
@@ -132,7 +135,7 @@ export function MarqueeClients() {
           {row2.length > 0 && <MarqueeTrack direction="right" items={row2} duration={27} delay={0} />}
         </div>
       ) : (
-        <p className="text-center text-gray-400 text-sm py-10">Kunden werden bald hinzugefügt.</p>
+        <p className="text-center text-gray-400 text-sm py-10">{cl.empty}</p>
       )}
 
       <motion.div
@@ -142,11 +145,7 @@ export function MarqueeClients() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        {[
-          { value: "50+", label: "Kunden" },
-          { value: "4.9★", label: "Bewertung" },
-          { value: "5 Jahre", label: "Erfahrung" },
-        ].map((s, i) => (
+        {cl.stats.map((s, i) => (
           <motion.div
             key={s.label}
             initial={{ opacity: 0, y: 16 }}

@@ -586,10 +586,10 @@ export default function Webseiten() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
               <motion.div variants={fadeUp}>
-                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">Unser Anspruch</p>
-                <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">Modern. Klar. <span className="text-accent">Überzeugend.</span></h2>
+                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">{wb.claimLabel}</p>
+                <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">{wb.claimTitle1} <span className="text-accent">{wb.claimTitle2}</span></h2>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Wir verbinden Design, Struktur und Nutzerführung zu einer Webseite, die professionell wirkt und messbar funktioniert. Von der ersten Idee bis zur finalen Umsetzung entsteht ein digitaler Auftritt, der Ihre Marke stärkt und langfristig Ergebnisse liefert.
+                  {wb.claimSub}
                 </p>
               </motion.div>
               <motion.div variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -623,12 +623,12 @@ export default function Webseiten() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
               <motion.div variants={fadeUp} className="text-center mb-20">
-                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">Referenzprojekte</p>
+                <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">{wb.referenzLabel}</p>
                 <h2 className="text-4xl md:text-6xl font-display font-bold text-white">
-                  Webseiten, die <span className="text-accent">überzeugen</span>
+                  {wb.referenzTitle1} <span className="text-accent">{wb.referenzTitle2}</span>
                 </h2>
                 <p className="text-white/60 text-lg mt-5 max-w-xl mx-auto">
-                  Vollständig responsiv – auf Desktop, Tablet und Smartphone perfekt.
+                  {wb.referenzSub}
                 </p>
               </motion.div>
 
