@@ -19,6 +19,7 @@ const References = lazy(() => import("./pages/References"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Datenschutz = lazy(() => import("./pages/Datenschutz"));
 const Impressum = lazy(() => import("./pages/Impressum"));
+const AGB = lazy(() => import("./pages/AGB"));
 const Onboarding = lazy(() => import("./pages/Onboarding"));
 const NotFound = lazy(() => import("./pages/not-found"));
 
@@ -86,6 +87,7 @@ function Router() {
         <Route path="/kontakt" component={Contact} />
         <Route path="/datenschutz" component={Datenschutz} />
         <Route path="/impressum" component={Impressum} />
+        <Route path="/agb" component={AGB} />
         <Route path="/onboarding" component={Onboarding} />
 
         <Route component={NotFound} />

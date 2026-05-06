@@ -257,6 +257,7 @@ export function Footer() {
                 {[
                   { label: t.footer.datenschutz, href: "/datenschutz" },
                   { label: t.footer.impressum, href: "/impressum" },
+                  { label: t.footer.agb, href: "/agb" },
                 ].map(l => (
                   <li key={l.href}>
                     <Link
