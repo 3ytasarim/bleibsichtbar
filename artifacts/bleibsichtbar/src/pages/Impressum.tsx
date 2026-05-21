@@ -40,7 +40,7 @@ export default function Impressum() {
           >
             <div>
               <h2 className="text-xl font-display font-bold mb-4 flex items-baseline gap-2">
-                <span className="text-accent font-black">§1</span>
+                <span className="text-accent font-black">1.</span>
                 Angaben gemäß § 5 DDG
               </h2>
               <div className="space-y-2 pl-6 border-l-2 border-gray-100">
@@ -51,7 +51,7 @@ export default function Impressum() {
 
             <div>
               <h2 className="text-xl font-display font-bold mb-4 flex items-baseline gap-2">
-                <span className="text-accent font-black">§2</span>
+                <span className="text-accent font-black">2.</span>
                 Vertreten durch
               </h2>
               <div className="space-y-2 pl-6 border-l-2 border-gray-100">
@@ -62,7 +62,7 @@ export default function Impressum() {
 
             <div>
               <h2 className="text-xl font-display font-bold mb-4 flex items-baseline gap-2">
-                <span className="text-accent font-black">§3</span>
+                <span className="text-accent font-black">3.</span>
                 Kontakt
               </h2>
               <div className="space-y-2 pl-6 border-l-2 border-gray-100">
@@ -83,7 +83,7 @@ export default function Impressum() {
 
             <div>
               <h2 className="text-xl font-display font-bold mb-4 flex items-baseline gap-2">
-                <span className="text-accent font-black">§4</span>
+                <span className="text-accent font-black">4.</span>
                 Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
               </h2>
               <div className="space-y-2 pl-6 border-l-2 border-gray-100">
@@ -95,12 +95,23 @@ export default function Impressum() {
 
             <div>
               <h2 className="text-xl font-display font-bold mb-4 flex items-baseline gap-2">
-                <span className="text-accent font-black">§5</span>
+                <span className="text-accent font-black">5.</span>
                 Verbraucherstreitbeilegung
               </h2>
               <div className="pl-6 border-l-2 border-gray-100">
                 <p className="text-muted-foreground leading-relaxed">
                   Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+                </p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-xl font-display font-bold mb-4 flex items-baseline gap-2">
+                <span className="text-accent font-black">6.</span>
+                Haftungsausschluss
+              </h2>
+              <div className="pl-6 border-l-2 border-gray-100">
+                <p className="text-muted-foreground leading-relaxed">
+                  Die Inhalte dieser Webseite werden mit größtmöglicher Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
                 </p>
               </div>
             </div>
