@@ -7,7 +7,7 @@ const sections = [
     num: "1.",
     title: "Geltungsbereich",
     content: [
-      '(1) Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen Bleibsichtbar (nachfolgend \u201EAgentur\u201C) und ihren Kunden (nachfolgend \u201EKunde\u201C) über Social Media, Webseiten, Online-Werbung (Ads), KI-Dienstleistungen sowie damit verbundene Leistungen.',
+      '(1) Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen Bleibsichtbar LLC (nachfolgend \u201EAgentur\u201C) und ihren Kunden (nachfolgend \u201EKunde\u201C) über Social Media Dienstleistungen, Webseiten, Online-Werbung (Ads), KI-Dienstleistungen sowie damit verbundene Leistungen.',
       "(2) Abweichende oder entgegenstehende Bedingungen des Kunden werden nicht Vertragsbestandteil, es sei denn, die Agentur stimmt deren Geltung ausdrücklich schriftlich zu.",
     ],
   },
@@ -21,118 +21,204 @@ const sections = [
       "· Webseiten",
       "· Online-Werbung (Ads)",
       "· KI-Dienstleistungen",
-      "(2) Der konkrete Leistungsumfang ergibt sich ausschließlich aus dem jeweiligen Angebot/Vertrag. Leistungen, die dort nicht aufgeführt sind, sind nicht geschuldet.",
+      "· Branding & Designleistungen",
+      "· Strategieberatung & Marketing",
+      "(2) Der konkrete Leistungsumfang ergibt sich ausschließlich aus dem jeweiligen Angebot, Vertrag oder der schriftlichen Vereinbarung.",
+      "(3) Leistungen, die dort nicht ausdrücklich aufgeführt sind, gelten nicht als geschuldet und werden gesondert berechnet.",
     ],
   },
   {
     num: "3.",
     title: "Zusatzleistungen",
     content: [
-      "(1) Alle Leistungen außerhalb der vereinbarten Social Media Betreuung sind kostenpflichtig.",
+      "(1) Alle Leistungen außerhalb des vereinbarten Leistungsumfangs gelten als Zusatzleistungen und sind kostenpflichtig.",
       "(2) Dies betrifft insbesondere, aber nicht abschließend:",
       "· Flyer",
       "· Menükarten",
       "· Plakatdesigns",
       "· Branding",
-      "· sonstige Grafik- und Designleistungen",
-      "(3) Zusatzleistungen werden nur nach gesonderter Vereinbarung erbracht und entsprechend vergütet.",
+      "· Logos",
+      "· zusätzliche Designarbeiten",
+      "· Druckdaten-Erstellungen",
+      "· zusätzliche Content-Produktionen",
+      "· Sonderanfragen außerhalb des Pakets",
+      "(3) Zusatzleistungen werden ausschließlich nach gesonderter Vereinbarung erbracht und vergütet.",
     ],
   },
   {
     num: "4.",
     title: "Werbung (Ads)",
     content: [
-      "(1) Die Schaltung und Betreuung von Werbeanzeigen (Ads) ist nicht Bestandteil der regulären Social Media Betreuung.",
-      "(2) Ads-Leistungen werden ausschließlich separat beauftragt und vergütet.",
+      "(1) Die Erstellung, Verwaltung und Betreuung von Werbeanzeigen (Ads) ist nicht automatisch Bestandteil der regulären Social Media Betreuung.",
+      "(2) Werbeanzeigen werden ausschließlich nach separater Beauftragung erstellt und verwaltet.",
+      "(3) Werbebudgets für Plattformen wie Meta, Google, TikTok oder ähnliche Plattformen sind vom Kunden separat zu tragen.",
+      "(4) Eine Garantie für Reichweite, Leads, Verkäufe oder Umsätze wird ausdrücklich nicht übernommen.",
     ],
   },
   {
     num: "5.",
     title: "Vertragslaufzeit und Kündigung",
     content: [
-      "(1) Social Media, Webseiten, Ads und KI-Dienstleistungen werden ausschließlich auf Vertragsbasis erbracht.",
-      "(2) Die Kündigungsfrist beträgt 1 Monat zum nächsten Abrechnungszeitraum.",
-      "(3) Maßgeblich ist der individuelle Zahlungstag.",
+      "(1) Dienstleistungen werden ausschließlich auf Vertragsbasis erbracht.",
+      "(2) Die Kündigungsfrist beträgt 1 Monat zum nächsten Abrechnungszeitraum, sofern keine andere schriftliche Vereinbarung getroffen wurde.",
+      "(3) Maßgeblich ist der individuelle Zahlungstag des Kunden.",
       "Beispiel: Erfolgt die Zahlung am 25. eines Monats, muss die Kündigung spätestens am 25. des Vormonats eingehen.",
-      "(4) Erfolgt keine fristgerechte Kündigung, verlängert sich der Vertrag automatisch und die bis dahin erbrachten sowie anfallenden Leistungen werden vollständig berechnet.",
+      "(4) Erfolgt keine fristgerechte Kündigung, verlängert sich der Vertrag automatisch um den jeweiligen vereinbarten Zeitraum.",
     ],
   },
   {
     num: "6.",
     title: "Preise und Zahlungsbedingungen",
     content: [
-      "(1) Alle Preise verstehen sich netto zzgl. gesetzlicher Umsatzsteuer.",
-      "(2) Rechnungen sind innerhalb von 7 Tagen nach Rechnungsstellung zu begleichen.",
-      "(3) Bei Zahlungsverzug ist die Agentur berechtigt:",
-      "· die Leistungserbringung (insbesondere Social Media Postings) sofort einzustellen",
-      "· bereits erstellte Leistungen vollständig in Rechnung zu stellen",
-      "· Nutzungsrechte an erstellten Inhalten bis zur vollständigen Zahlung auszusetzen",
+      "(1) Alle Preise verstehen sich netto zzgl. gesetzlicher Umsatzsteuer, sofern anwendbar.",
+      "(2) Rechnungen sind innerhalb von 7 Tagen nach Rechnungsstellung ohne Abzug zu begleichen.",
+      "(3) Die Agentur behält sich vor, Dienstleistungen ausschließlich gegen Vorkasse anzubieten.",
+      "(4) Bei Zahlungsverzug ist die Agentur berechtigt:",
+      "· die Leistungserbringung sofort einzustellen",
+      "· geplante Veröffentlichungen auszusetzen",
+      "· Nutzungsrechte vorübergehend zu entziehen",
+      "· offene Leistungen vollständig in Rechnung zu stellen",
+      "· veröffentlichte Inhalte vorübergehend zu deaktivieren oder zu entfernen",
     ],
   },
   {
     num: "7.",
-    title: "Content-Produktion und Fotografie",
+    title: "Erreichbarkeit und Kommunikation",
     content: [
-      "(1) Content- und Fototage werden im Voraus abgestimmt.",
-      "(2) Sofern keine Änderungen kommuniziert werden, erfolgt die Umsetzung wie vereinbart.",
-      "(3) Ein Anspruch auf Rückerstattung besteht nicht, sofern die Inhalte wie vereinbart umgesetzt wurden.",
-      "Fotografie-Leistungen:",
-      "· 350 € für bis zu 3 Stunden",
-      "· jede angefangene weitere Stunde: 80 €",
-      "(4) Content-Tage sind nur dann inklusive, wenn dies ausdrücklich vereinbart wurde. Andernfalls gelten die oben genannten Preise.",
+      "(1) Die regulären Erreichbarkeitszeiten der Agentur für telefonische sowie Chat-/Supportanfragen liegen werktags von Montag bis Freitag zwischen 10:00 Uhr und 14:00 Uhr deutscher Zeit.",
+      "(2) Außerhalb dieser Zeiten erfolgen interne Arbeitsprozesse, Content-Erstellung, Strategien, Kampagnenoptimierungen sowie organisatorische Abläufe.",
+      "(3) Außerhalb der regulären Erreichbarkeitszeiten erfolgt die Kommunikation ausschließlich per E-Mail.",
+      "(4) Nachrichten außerhalb der Geschäftszeiten werden schnellstmöglich innerhalb der regulären Geschäftszeiten bearbeitet.",
+      "(5) Die Agentur schuldet keine permanente Soforterreichbarkeit.",
     ],
   },
   {
     num: "8.",
-    title: "Leistungsdurchführung",
+    title: "Bearbeitungszeiten und Expressleistungen",
     content: [
-      "(1) Die Agentur ist berechtigt, Leistungen durch Dritte (Subunternehmer) erbringen zu lassen.",
-      "(2) Die Agentur schuldet keinen bestimmten wirtschaftlichen Erfolg.",
+      "(1) Reguläre Arbeitsaufträge, Änderungswünsche sowie Content-Anfragen werden innerhalb von bis zu 3 Werktagen bearbeitet, sofern keine andere Vereinbarung getroffen wurde.",
+      "(2) Expressleistungen, insbesondere kurzfristige Umsetzungen innerhalb von 24 Stunden, erfolgen ausschließlich nach vorheriger Absprache.",
+      "(3) Für Expressleistungen fällt abhängig vom Umfang und Arbeitsaufwand ein zusätzlicher Expresszuschlag an.",
+      "(4) Die Agentur behält sich vor, Expressanfragen aufgrund aktueller Auslastung abzulehnen.",
     ],
   },
   {
     num: "9.",
-    title: "Mitwirkungspflichten des Kunden",
+    title: "Revisionen und Änderungswünsche",
     content: [
-      "(1) Der Kunde stellt alle zur Leistungserbringung erforderlichen Inhalte, Informationen und Zugänge rechtzeitig zur Verfügung.",
-      "(2) Verzögerungen aufgrund fehlender Mitwirkung gehen nicht zu Lasten der Agentur.",
-      "(3) Der Kunde ist für die rechtliche Zulässigkeit bereitgestellter Inhalte selbst verantwortlich.",
+      "(1) Im vereinbarten Leistungsumfang sind maximal 2 Revisions- bzw. Korrekturrunden enthalten, sofern nichts anderes schriftlich vereinbart wurde.",
+      "(2) Weitere Änderungswünsche oder zusätzliche Revisionsrunden werden gesondert berechnet.",
+      "(3) Umfangreiche Konzept-, Stil- oder Strukturänderungen nach bereits erfolgter Freigabe gelten als neue Zusatzleistung.",
     ],
   },
   {
     num: "10.",
+    title: "Content-Produktion und Fotografie",
+    content: [
+      "(1) Content-, Video- und Fototage werden im Voraus abgestimmt.",
+      "(2) Sofern keine Änderungen kommuniziert werden, erfolgt die Umsetzung wie vereinbart.",
+      "(3) Ein Anspruch auf Rückerstattung besteht nicht, sofern die Inhalte wie vereinbart umgesetzt wurden.",
+      "(4) Content-Tage sind ausschließlich dann inklusive, wenn dies ausdrücklich schriftlich vereinbart wurde.",
+    ],
+  },
+  {
+    num: "11.",
+    title: "Freigaben und Veröffentlichung",
+    content: [
+      "(1) Inhalte gelten als freigegeben, sofern der Kunde nicht innerhalb von 24 Stunden nach Übersendung Änderungswünsche mitteilt.",
+      "(2) Erfolgt innerhalb dieser Frist keine Rückmeldung, ist die Agentur berechtigt, die Inhalte wie geplant zu veröffentlichen.",
+      "(3) Verzögerungen aufgrund verspäteter Kundenfreigaben gehen nicht zu Lasten der Agentur.",
+    ],
+  },
+  {
+    num: "12.",
+    title: "Plattformen und Drittanbieter",
+    content: [
+      "(1) Die Agentur haftet nicht für Einschränkungen, Sperrungen, Shadowbans, technische Fehler oder Ausfälle von Drittplattformen wie Instagram, Facebook, TikTok, Google oder vergleichbaren Diensten.",
+      "(2) Änderungen von Algorithmen, Reichweiten oder Plattformfunktionen liegen außerhalb des Einflussbereichs der Agentur.",
+      "(3) Die Agentur übernimmt keine Haftung für verlorene Daten, gesperrte Accounts oder technische Probleme seitens der Plattformanbieter.",
+    ],
+  },
+  {
+    num: "13.",
+    title: "Webseiten und technische Leistungen",
+    content: [
+      "(1) Nach Übergabe der Webseite liegt die Verantwortung für Inhalte, rechtliche Pflichtangaben, Datenschutztexte sowie laufende Aktualisierungen beim Kunden, sofern keine laufende Betreuung vereinbart wurde.",
+      "(2) Nach Fertigstellung der Webseite stehen dem Kunden ausschließlich die im jeweiligen Angebot oder Vertrag festgelegten Revisions- und Änderungsrechte zu.",
+      "(3) Weitere Änderungen nach Ausschöpfung der vereinbarten Revisionsrunden gelten als kostenpflichtige Zusatzleistung.",
+      "(4) Die Agentur haftet nicht für spätere Änderungen durch den Kunden oder Dritte.",
+      "(5) Externe Kosten wie Domains, Hosting, Plugins, Drittanbieter-Software oder Lizenzgebühren sind — sofern nicht ausdrücklich anders vereinbart — vom Kunden separat zu tragen.",
+    ],
+  },
+  {
+    num: "14.",
+    title: "KI-Dienstleistungen",
+    content: [
+      "(1) KI-generierte Inhalte können trotz sorgfältiger Prüfung Fehler, Abweichungen oder unvollständige Informationen enthalten.",
+      "(2) Die finale Prüfung und Freigabe sämtlicher KI-generierter Inhalte obliegt dem Kunden.",
+      "(3) Die Agentur übernimmt keine Haftung für Entscheidungen oder wirtschaftliche Folgen aufgrund KI-generierter Inhalte oder Automatisierungen.",
+    ],
+  },
+  {
+    num: "15.",
+    title: "Leistungsdurchführung",
+    content: [
+      "(1) Die Agentur ist berechtigt, Leistungen ganz oder teilweise durch Dritte oder Subunternehmer erbringen zu lassen.",
+      "(2) Die Agentur schuldet keinen bestimmten wirtschaftlichen Erfolg.",
+      "(3) Zeitangaben zu Veröffentlichungen oder Projekten gelten, sofern nicht ausdrücklich anders vereinbart, als Richtwerte.",
+    ],
+  },
+  {
+    num: "16.",
+    title: "Mitwirkungspflichten des Kunden",
+    content: [
+      "(1) Der Kunde verpflichtet sich, sämtliche zur Leistungserbringung erforderlichen Informationen, Inhalte, Materialien und Zugänge rechtzeitig bereitzustellen.",
+      "(2) Verzögerungen aufgrund fehlender Mitwirkung, verspäteter Antworten oder nicht bereitgestellter Inhalte gehen nicht zu Lasten der Agentur.",
+      "(3) Vereinbarte Veröffentlichungs- oder Projekttermine verschieben sich entsprechend.",
+      "(4) Der Kunde ist für die rechtliche Zulässigkeit bereitgestellter Inhalte selbst verantwortlich.",
+      "(5) Die Agentur übernimmt keine Haftung für Verzögerungen oder Schäden aufgrund fehlerhafter oder fehlender Zugangsdaten.",
+    ],
+  },
+  {
+    num: "17.",
     title: "Haftung",
     content: [
       "(1) Die Agentur haftet nicht für:",
       "· Umsätze",
       "· Verkaufszahlen",
+      "· Reichweiten",
       "· Kundengewinnung",
-      "· sonstige wirtschaftliche Ergebnisse",
-      "(2) Eine Erfolgsgarantie wird ausdrücklich nicht übernommen.",
+      "· wirtschaftliche Ergebnisse",
+      "· algorithmische Änderungen von Plattformen",
+      "(2) Eine Erfolgs- oder Umsatzgarantie wird ausdrücklich nicht übernommen.",
+      "(3) Die Haftung der Agentur ist — soweit gesetzlich zulässig — auf Vorsatz und grobe Fahrlässigkeit beschränkt.",
     ],
   },
   {
-    num: "11.",
+    num: "18.",
     title: "Nutzungsrechte",
     content: [
-      "(1) Nutzungsrechte an erstellten Inhalten gehen erst nach vollständiger Zahlung auf den Kunden über.",
-      "(2) Bis zur vollständigen Zahlung verbleiben alle Rechte bei der Agentur.",
+      "(1) Nutzungsrechte an erstellten Designs, Inhalten, Webseiten oder Medien gehen erst nach vollständiger Zahlung auf den Kunden über.",
+      "(2) Bis zur vollständigen Zahlung verbleiben sämtliche Rechte bei der Agentur.",
+      "(3) Die Agentur ist berechtigt, erstellte Projekte, Designs oder Inhalte zu Präsentations- und Referenzzwecken auf Webseiten, Social Media oder Präsentationen zu verwenden, sofern der Kunde dem nicht ausdrücklich schriftlich widerspricht.",
     ],
   },
   {
-    num: "12.",
+    num: "19.",
     title: "Geheimhaltung",
     content: [
-      "Beide Parteien verpflichten sich, vertrauliche Informationen der jeweils anderen Partei nicht an Dritte weiterzugeben.",
+      "(1) Beide Parteien verpflichten sich, vertrauliche Informationen der jeweils anderen Partei nicht an Dritte weiterzugeben.",
+      "(2) Diese Verpflichtung gilt auch nach Beendigung des Vertragsverhältnisses fort.",
     ],
   },
   {
-    num: "13.",
+    num: "20.",
     title: "Schlussbestimmungen",
     content: [
-      "(1) Es gilt das Recht der Bundesrepublik Deutschland.",
-      "(2) Gerichtsstand ist, soweit zulässig, der Sitz der Agentur.",
-      "(3) Sollten einzelne Bestimmungen unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.",
+      "(1) Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.",
+      "(2) Gerichtsstand ist — soweit gesetzlich zulässig — der Sitz der Agentur.",
+      "(3) Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.",
+      "(4) Änderungen oder Ergänzungen bedürfen der Schriftform.",
     ],
   },
 ];
@@ -177,7 +263,7 @@ export default function AGB() {
             transition={{ duration: 0.4, delay: 0.2 }}
             className="mt-3 text-white/50 text-sm"
           >
-            Stand: Mai 2026
+            für Dienstleistungen der Bleibsichtbar LLC · Stand: Mai 2026
           </motion.p>
         </div>
       </section>
@@ -200,26 +286,19 @@ export default function AGB() {
                 <div className="space-y-2 pl-6 border-l-2 border-gray-100">
                   {section.content.map((line, i) => {
                     const isBullet = line.startsWith("·");
-                    const isSubLabel = line.endsWith(":");
-                    return (
-                      <p
-                        key={i}
-                        className={
-                          isBullet
-                            ? "text-muted-foreground leading-relaxed pl-3 flex gap-2"
-                            : isSubLabel
-                            ? "text-sm font-semibold text-foreground/70 mt-3"
-                            : "text-muted-foreground leading-relaxed"
-                        }
-                      >
-                        {isBullet ? (
-                          <>
-                            <span className="text-accent font-bold mt-0.5 shrink-0">—</span>
-                            <span>{line.replace("· ", "")}</span>
-                          </>
-                        ) : (
-                          line
-                        )}
+                    const isSubLabel = !isBullet && line.endsWith(":") && line.length < 60;
+                    return isBullet ? (
+                      <p key={i} className="text-muted-foreground leading-relaxed flex gap-2 pl-2">
+                        <span className="text-accent font-bold shrink-0 mt-0.5">—</span>
+                        <span>{line.replace("· ", "")}</span>
+                      </p>
+                    ) : isSubLabel ? (
+                      <p key={i} className="text-sm font-semibold text-foreground/60 mt-3">
+                        {line}
+                      </p>
+                    ) : (
+                      <p key={i} className="text-muted-foreground leading-relaxed">
+                        {line}
                       </p>
                     );
                   })}
