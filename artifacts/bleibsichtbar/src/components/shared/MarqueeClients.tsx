@@ -162,15 +162,16 @@ export function MarqueeClients() {
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.1 }}
               whileHover={{ y: -4, scale: 1.07 }}
-              className="flex items-center justify-center transition-all duration-300 group"
+              className={`flex items-center justify-center transition-all duration-300 group
+                ${i === 1 ? "rounded-2xl bg-[#0a1628] px-5 py-4" : ""}`}
             >
               <img
                 src={p.logo}
                 alt={p.name}
                 loading="eager"
                 draggable={false}
-                className="w-full h-auto max-h-20 sm:max-h-24 object-contain select-none
-                  opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                className="w-full h-auto max-h-28 sm:max-h-32 object-contain select-none
+                  opacity-70 group-hover:opacity-100 transition-opacity duration-300"
               />
             </motion.a>
           ))}
