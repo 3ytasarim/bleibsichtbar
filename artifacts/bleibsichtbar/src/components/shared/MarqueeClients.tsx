@@ -170,8 +170,7 @@ export function MarqueeClients() {
                 alt={p.name}
                 loading="eager"
                 draggable={false}
-                className="w-full h-auto max-h-28 sm:max-h-32 object-contain select-none
-                  opacity-70 group-hover:opacity-100 transition-opacity duration-300"
+                className="w-full h-auto max-h-28 sm:max-h-32 object-contain select-none"
               />
             </motion.a>
           ))}
