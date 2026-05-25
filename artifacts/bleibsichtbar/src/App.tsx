@@ -31,6 +31,7 @@ const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
 const AdminReferences = lazy(() => import("./pages/admin/AdminReferences"));
 const AdminOnboarding = lazy(() => import("./pages/admin/AdminOnboarding"));
 const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
+const AdminPartners = lazy(() => import("./pages/admin/AdminPartners"));
 const AdminSeo = lazy(() => import("./pages/admin/AdminSeo"));
 
 const queryClient = new QueryClient({
@@ -71,6 +72,7 @@ function Router() {
         <Route path="/admin/referenzen" component={AdminReferences} />
         <Route path="/admin/onboarding" component={AdminOnboarding} />
         <Route path="/admin/kunden" component={AdminClients} />
+        <Route path="/admin/partner" component={AdminPartners} />
         <Route path="/admin/seo" component={AdminSeo} />
 
         {/* Public Routes */}

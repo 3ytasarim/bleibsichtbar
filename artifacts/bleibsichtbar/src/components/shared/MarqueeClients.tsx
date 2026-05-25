@@ -60,6 +60,79 @@ function MarqueeTrack({ items, direction, duration = 40, delay = 0 }: { items: M
   );
 }
 
+interface PartnerItem {
+  id: number;
+  name: string;
+  imageUrl: string | null;
+  websiteUrl: string | null;
+  sortOrder: number;
+}
+
+function PartnerLogos() {
+  const [partners, setPartners] = useState<PartnerItem[]>([]);
+
+  useEffect(() => {
+    fetch("/api/partners")
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setPartners(data); })
+      .catch(() => {});
+  }, []);
+
+  if (partners.length === 0) return null;
+
+  const cols = partners.length === 1 ? 1 : partners.length === 2 ? 2 : 3;
+
+  return (
+    <motion.div
+      className="max-w-3xl mx-auto mt-16 px-4"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+    >
+      <div
+        className="grid gap-4 sm:gap-6"
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+      >
+        {partners.map((p, i) => {
+          const isMiddle = partners.length === 3 && i === 1;
+          const inner = (
+            <motion.div
+              key={p.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: i * 0.1 }}
+              whileHover={{ y: -4, scale: 1.07 }}
+              className={`flex items-center justify-center transition-all duration-300 cursor-pointer
+                ${isMiddle ? "rounded-2xl bg-[#0a1628] px-5 py-4" : ""}`}
+            >
+              {p.imageUrl ? (
+                <img
+                  src={p.imageUrl}
+                  alt={p.name}
+                  loading="eager"
+                  draggable={false}
+                  className="w-full h-auto max-h-28 sm:max-h-32 object-contain select-none"
+                />
+              ) : (
+                <span className="text-gray-400 font-bold text-xl">{p.name}</span>
+              )}
+            </motion.div>
+          );
+          return p.websiteUrl ? (
+            <a key={p.id} href={p.websiteUrl} target="_blank" rel="noopener noreferrer">
+              {inner}
+            </a>
+          ) : (
+            <div key={p.id}>{inner}</div>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+}
+
 export function MarqueeClients() {
   const { t } = useT();
   const cl = t.clients;
@@ -139,43 +212,7 @@ export function MarqueeClients() {
       )}
 
       {/* ─── Partner Logos ──────────────────────────────────────── */}
-      <motion.div
-        className="max-w-3xl mx-auto mt-16 px-4"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="grid grid-cols-3 gap-4 sm:gap-6">
-          {[
-            { name: "Strom Strategen", logo: `${import.meta.env.BASE_URL}partners/strom-strategen-t.png`, href: "https://strom-strategen.de/" },
-            { name: "Rufschmiede",     logo: `${import.meta.env.BASE_URL}partners/rufschmiede-t.png`,     href: "https://rufschniede.com/"    },
-            { name: "B2B Voice",       logo: `${import.meta.env.BASE_URL}partners/b2b-voice-t.png`,       href: "https://b2b-voice.com/"      },
-          ].map((p, i) => (
-            <motion.a
-              key={p.name}
-              href={p.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.1 }}
-              whileHover={{ y: -4, scale: 1.07 }}
-              className={`flex items-center justify-center transition-all duration-300 group
-                ${i === 1 ? "rounded-2xl bg-[#0a1628] px-5 py-4" : ""}`}
-            >
-              <img
-                src={p.logo}
-                alt={p.name}
-                loading="eager"
-                draggable={false}
-                className="w-full h-auto max-h-28 sm:max-h-32 object-contain select-none"
-              />
-            </motion.a>
-          ))}
-        </div>
-      </motion.div>
+      <PartnerLogos />
 
       {/* ─── Stats ──────────────────────────────────────────────── */}
       <motion.div
