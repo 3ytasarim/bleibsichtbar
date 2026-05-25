@@ -148,9 +148,9 @@ export function MarqueeClients() {
       >
         <div className="grid grid-cols-3 gap-4 sm:gap-6">
           {[
-            { name: "Strom Strategen", logo: `${import.meta.env.BASE_URL}partners/strom-strategen-t.png`, href: "https://strom-strategen.de/", navyBg: false },
-            { name: "Rufschmiede",     logo: `${import.meta.env.BASE_URL}partners/rufschmiede-t.png`,     href: "https://rufschniede.com/",    navyBg: true  },
-            { name: "B2B Voice",       logo: `${import.meta.env.BASE_URL}partners/b2b-voice-t.png`,       href: "https://b2b-voice.com/",      navyBg: false },
+            { name: "Strom Strategen", logo: `${import.meta.env.BASE_URL}partners/strom-strategen-t.png`, href: "https://strom-strategen.de/" },
+            { name: "Rufschmiede",     logo: `${import.meta.env.BASE_URL}partners/rufschmiede-t.png`,     href: "https://rufschniede.com/"    },
+            { name: "B2B Voice",       logo: `${import.meta.env.BASE_URL}partners/b2b-voice-t.png`,       href: "https://b2b-voice.com/"      },
           ].map((p, i) => (
             <motion.a
               key={p.name}
@@ -161,23 +161,16 @@ export function MarqueeClients() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.1 }}
-              whileHover={{ y: -5, scale: 1.05 }}
-              className={`relative flex items-center justify-center rounded-2xl border-2 px-5 py-8 sm:px-8 sm:py-10 overflow-hidden
-                shadow-md hover:border-accent hover:shadow-[0_8px_32px_rgba(249,115,22,0.25)]
-                transition-all duration-300 group
-                ${p.navyBg
-                  ? "bg-[#0a1628] border-[#1e3a5f]"
-                  : "bg-white/5 backdrop-blur-sm border-white/10"}`}
+              whileHover={{ y: -4, scale: 1.07 }}
+              className="flex items-center justify-center transition-all duration-300 group"
             >
-              <span className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: "radial-gradient(circle at 50% 50%, rgba(249,115,22,0.10), transparent 70%)" }} />
               <img
                 src={p.logo}
                 alt={p.name}
                 loading="eager"
                 draggable={false}
-                className="relative z-10 w-full h-auto max-h-24 sm:max-h-28 object-contain select-none
-                  opacity-70 group-hover:opacity-100 transition-opacity duration-300"
+                className="w-full h-auto max-h-20 sm:max-h-24 object-contain select-none
+                  opacity-60 group-hover:opacity-100 transition-opacity duration-300"
               />
             </motion.a>
           ))}
