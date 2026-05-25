@@ -138,8 +138,55 @@ export function MarqueeClients() {
         <p className="text-center text-gray-400 text-sm py-10">{cl.empty}</p>
       )}
 
+      {/* ─── Partner Logos ──────────────────────────────────────── */}
       <motion.div
-        className="max-w-3xl mx-auto mt-16 px-4 grid grid-cols-3 gap-3 sm:gap-5 text-center"
+        className="max-w-3xl mx-auto mt-16 px-4"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="grid grid-cols-3 gap-3 sm:gap-5">
+          {[
+            { name: "Strom Strategen", logo: `${import.meta.env.BASE_URL}partners/strom-strategen.png`, href: "https://strom-strategen.de/", dark: false },
+            { name: "Rufschmiede",     logo: `${import.meta.env.BASE_URL}partners/rufschmiede.png`,     href: "https://rufschniede.com/",    dark: true  },
+            { name: "B2B Voice",       logo: `${import.meta.env.BASE_URL}partners/b2b-voice.png`,       href: "https://b2b-voice.com/",      dark: false },
+          ].map((p, i) => (
+            <motion.a
+              key={p.name}
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: i * 0.1 }}
+              whileHover={{ y: -4, scale: 1.03 }}
+              className={`relative flex items-center justify-center rounded-2xl border-2 px-3 py-4 sm:px-5 sm:py-6 overflow-hidden
+                shadow-sm transition-all duration-300 group
+                ${p.dark
+                  ? "bg-[#14213d] border-[#1e3260] hover:border-accent hover:shadow-[0_8px_30px_rgba(249,115,22,0.25)]"
+                  : "bg-white border-gray-200 hover:border-accent hover:shadow-[0_8px_30px_rgba(249,115,22,0.18)]"}`}
+            >
+              {/* Subtle glow on hover */}
+              <span className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: "radial-gradient(circle at 50% 50%, rgba(249,115,22,0.08), transparent 70%)" }} />
+              <img
+                src={p.logo}
+                alt={p.name}
+                loading="lazy"
+                draggable={false}
+                className="relative z-10 w-full h-auto max-h-14 sm:max-h-16 object-contain select-none
+                  filter grayscale group-hover:grayscale-0 transition-all duration-400"
+              />
+            </motion.a>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* ─── Stats ──────────────────────────────────────────────── */}
+      <motion.div
+        className="max-w-3xl mx-auto mt-5 px-4 grid grid-cols-3 gap-3 sm:gap-5 text-center"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

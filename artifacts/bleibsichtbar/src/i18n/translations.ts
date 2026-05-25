@@ -704,7 +704,7 @@ export const translations = {
     clients: {
       badge: "Vertrauen seit Tag 1",
       title1: "Unsere",
-      title2: "Kunden",
+      title2: "Kunden & Partner",
       sub: "Starke Marken, die uns vertrauen – gemeinsam für Ihren Erfolg.",
       empty: "Kunden werden bald hinzugefügt.",
       stats: [
@@ -1468,7 +1468,7 @@ export const translations = {
     clients: {
       badge: "Trusted from day 1",
       title1: "Our",
-      title2: "Clients",
+      title2: "Clients & Partners",
       sub: "Strong brands that trust us — together for your success.",
       empty: "Clients will be added soon.",
       stats: [
@@ -2232,7 +2232,7 @@ export const translations = {
     clients: {
       badge: "Vertrouwen vanaf dag 1",
       title1: "Onze",
-      title2: "Klanten",
+      title2: "Klanten & Partners",
       sub: "Sterke merken die ons vertrouwen – samen voor uw succes.",
       empty: "Klanten worden binnenkort toegevoegd.",
       stats: [
@@ -2996,7 +2996,7 @@ export const translations = {
     clients: {
       badge: "Confiance dès le 1er jour",
       title1: "Nos",
-      title2: "Clients",
+      title2: "Clients & Partenaires",
       sub: "Des marques fortes qui nous font confiance — ensemble pour votre succès.",
       empty: "Les clients seront ajoutés prochainement.",
       stats: [
