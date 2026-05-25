@@ -162,7 +162,7 @@ export function MarqueeClients() {
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.1 }}
               whileHover={{ y: -5, scale: 1.05 }}
-              className={`relative flex items-center justify-center rounded-2xl border-2 px-4 py-5 sm:px-6 sm:py-7 overflow-hidden
+              className={`relative flex items-center justify-center rounded-2xl border-2 px-5 py-8 sm:px-8 sm:py-10 overflow-hidden
                 shadow-md hover:border-accent hover:shadow-[0_8px_32px_rgba(249,115,22,0.25)]
                 transition-all duration-300 group
                 ${p.navyBg
@@ -176,7 +176,7 @@ export function MarqueeClients() {
                 alt={p.name}
                 loading="eager"
                 draggable={false}
-                className="relative z-10 w-full h-auto max-h-16 sm:max-h-20 object-contain select-none
+                className="relative z-10 w-full h-auto max-h-24 sm:max-h-28 object-contain select-none
                   opacity-70 group-hover:opacity-100 transition-opacity duration-300"
               />
             </motion.a>
