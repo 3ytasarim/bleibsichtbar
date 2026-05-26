@@ -70,41 +70,34 @@ interface PartnerItem {
 
 function PartnerLogos() {
   const [partners, setPartners] = useState<PartnerItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     fetch("/api/partners")
       .then(r => r.json())
-      .then(data => { if (Array.isArray(data)) setPartners(data); })
-      .catch(() => {});
+      .then(data => {
+        if (Array.isArray(data)) setPartners(data);
+        setLoaded(true);
+      })
+      .catch(() => setLoaded(true));
   }, []);
 
-  if (partners.length === 0) return null;
+  if (!loaded || partners.length === 0) return null;
 
   const cols = partners.length === 1 ? 1 : partners.length === 2 ? 2 : 3;
 
   return (
-    <motion.div
-      className="max-w-3xl mx-auto mt-16 px-4"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-    >
+    <div className="max-w-3xl mx-auto mt-16 px-4">
       <div
-        className="grid gap-4 sm:gap-6"
+        className="grid gap-6 sm:gap-8"
         style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
       >
         {partners.map((p, i) => {
           const isMiddle = partners.length === 3 && i === 1;
           const inner = (
-            <motion.div
+            <div
               key={p.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.1 }}
-              whileHover={{ y: -4, scale: 1.07 }}
-              className={`flex items-center justify-center transition-all duration-300 cursor-pointer
+              className={`flex items-center justify-center transition-transform duration-300 hover:-translate-y-1 hover:scale-105 cursor-pointer
                 ${isMiddle ? "rounded-2xl bg-[#0a1628] px-5 py-4" : ""}`}
             >
               {p.imageUrl ? (
@@ -118,7 +111,7 @@ function PartnerLogos() {
               ) : (
                 <span className="text-gray-400 font-bold text-xl">{p.name}</span>
               )}
-            </motion.div>
+            </div>
           );
           return p.websiteUrl ? (
             <a key={p.id} href={p.websiteUrl} target="_blank" rel="noopener noreferrer">
@@ -129,7 +122,7 @@ function PartnerLogos() {
           );
         })}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
