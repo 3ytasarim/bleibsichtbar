@@ -87,7 +87,13 @@ export default function AdminPartners() {
 
       const url = editingPartner ? `/api/partners/${editingPartner.id}` : "/api/partners";
       const method = editingPartner ? "PUT" : "POST";
-      await fetch(url, { method, body: fd, credentials: "include" });
+      const res = await fetch(url, { method, body: fd, credentials: "include" });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Unbekannter Fehler" })) as { error?: string };
+        alert(err.error ?? "Fehler beim Speichern");
+        setSubmitting(false);
+        return;
+      }
       closeModal();
       await load();
     } catch {}
