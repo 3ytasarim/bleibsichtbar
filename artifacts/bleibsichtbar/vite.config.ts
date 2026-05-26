@@ -65,17 +65,17 @@ export default defineConfig({
     minify: "esbuild",
     rollupOptions: {
       output: {
-        entryFileNames: "assets/app-core.js",
+        entryFileNames: "assets/app-core-[hash].js",
         chunkFileNames: (chunk) => {
           const name = chunk.name;
-          if (name === "vendor") return "assets/vendor-libs.js";
-          if (name === "motion") return "assets/ui-motion.js";
-          if (name === "admin") return "assets/admin-panel.js";
-          return `assets/${name.replace(/[^a-z0-9]/gi, "-").toLowerCase()}.js`;
+          if (name === "vendor") return "assets/vendor-libs-[hash].js";
+          if (name === "motion") return "assets/ui-motion-[hash].js";
+          if (name === "admin") return "assets/admin-panel-[hash].js";
+          return `assets/${name.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-[hash].js`;
         },
         assetFileNames: (asset) => {
           const name = asset.names?.[0] ?? asset.name ?? "";
-          if (name.endsWith(".css")) return "assets/global-theme.css";
+          if (name.endsWith(".css")) return "assets/global-theme-[hash].css";
           if (/\.(png|jpe?g|webp|svg|gif|ico)$/i.test(name)) return "assets/media/[name][extname]";
           if (/\.(woff2?|ttf|eot|otf)$/i.test(name)) return "assets/fonts/[name][extname]";
           return "assets/[name][extname]";
