@@ -38,24 +38,37 @@ export default function Analyse() {
     <PublicLayout>
       <SeoHead slug="analyse" defaults={{ metaTitle: "LLC Gründung – Bleibsichtbar" }} />
       {/* HERO */}
-      <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
+      <section className="relative bg-primary text-white overflow-hidden pt-32 pb-28">
         <AnimatedHeroBackground />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <span className="inline-block bg-white/10 border border-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6 tracking-wide">
+            <span className="inline-block bg-white/10 border border-white/20 text-white text-sm font-semibold px-4 py-2 rounded-full mb-8 tracking-wide">
               {an.heroBadge}
             </span>
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
-              {an.heroTitle1} <br />
-              <span className="text-accent">{an.heroTitle2}</span>
+            <h1 className="text-5xl md:text-7xl font-display font-bold mb-4 leading-tight">
+              {an.heroTitle1}
             </h1>
-            <p className="text-xl text-white max-w-2xl mx-auto mb-10">
+            <h2 className="text-3xl md:text-5xl font-display font-bold text-accent mb-8 leading-snug">
+              {an.heroTitle2}
+            </h2>
+            <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
               {an.heroSub}
             </p>
-            <div className="flex justify-center">
-              <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white bg-transparent hover:bg-white/10">
-                <Link href="/kontakt">{an.heroCta}</Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+              <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold text-base">
+                <Link href="#llc-anfrage">{an.heroCta}</Link>
               </Button>
+              <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-white/30 text-white bg-transparent hover:bg-white/10 font-bold text-base">
+                <Link href="/kontakt">{(an as any).heroCta2 ?? "Kostenlos beraten lassen"}</Link>
+              </Button>
+            </div>
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-3">
+              {((an as any).heroChecks ?? ["100% online & papierlos", "Rechtssicher & zuverlässig", "Schnell & unkompliziert"]).map((check: string, i: number) => (
+                <span key={i} className="flex items-center gap-2 text-white/80 text-sm font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                  {check}
+                </span>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -63,13 +76,16 @@ export default function Analyse() {
 
       {/* STATS */}
       <section className="py-16 bg-white border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-4">
             {an.stats.map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
-                <div className="text-3xl md:text-4xl font-display font-black text-accent mb-2">{s.value}</div>
-                <div className="text-sm text-muted-foreground font-medium">{s.label}</div>
+                viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="text-center px-2">
+                <div className="text-3xl md:text-4xl font-display font-black text-accent mb-1">{s.value}</div>
+                <div className="text-sm font-bold text-gray-800 mb-0.5">{s.label}</div>
+                {(s as any).sublabel && (
+                  <div className="text-xs text-muted-foreground">{(s as any).sublabel}</div>
+                )}
               </motion.div>
             ))}
           </div>
