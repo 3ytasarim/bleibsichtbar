@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground } from "@/components/shared/AnimatedHero";
 import { useT } from "@/i18n";
 import {
-  BarChart3, TrendingUp, Users, Eye, Target, CheckCircle2,
-  ArrowRight, PieChart, Activity, Shield, Zap, Star, AlertCircle,
+  Clock, CreditCard, FileText, Landmark, BookOpen, Globe, CheckCircle2,
+  ArrowRight, Activity, Shield, Star, AlertCircle,
 } from "lucide-react";
 
 const fadeUp = {
@@ -17,13 +17,13 @@ const fadeUp = {
 };
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
-const ANALYSE_ICONS = [
-  <BarChart3 className="w-6 h-6" />,
-  <TrendingUp className="w-6 h-6" />,
-  <Users className="w-6 h-6" />,
-  <Eye className="w-6 h-6" />,
-  <Target className="w-6 h-6" />,
-  <PieChart className="w-6 h-6" />,
+const LLC_ICONS = [
+  <Clock className="w-6 h-6" />,
+  <CreditCard className="w-6 h-6" />,
+  <FileText className="w-6 h-6" />,
+  <Landmark className="w-6 h-6" />,
+  <BookOpen className="w-6 h-6" />,
+  <Globe className="w-6 h-6" />,
 ];
 
 export default function Analyse() {
@@ -108,10 +108,21 @@ export default function Analyse() {
                 <motion.div key={i} variants={fadeUp}
                   className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-accent/30 hover:shadow-md transition-all group">
                   <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all">
-                    {ANALYSE_ICONS[i]}
+                    {LLC_ICONS[i]}
                   </div>
-                  <h3 className="text-xl font-display font-bold mb-3">{l.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{l.desc}</p>
+                  <h3 className="text-xl font-display font-bold mb-4">{l.title}</h3>
+                  {(l as any).items ? (
+                    <ul className="space-y-2">
+                      {(l as any).items.map((item: string, j: number) => (
+                        <li key={j} className="flex items-start gap-2.5">
+                          <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                          <span className="text-sm text-muted-foreground leading-snug">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted-foreground leading-relaxed">{(l as any).desc}</p>
+                  )}
                 </motion.div>
               ))}
             </motion.div>
