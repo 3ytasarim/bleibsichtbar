@@ -145,7 +145,7 @@ export default function Analyse() {
                               <motion.span
                                 className="absolute inset-0 rounded-full"
                                 style={{ background: color, opacity: 0.35 }}
-                                animate={{ scale: [1, 2.2, 1], opacity: [0.35, 0, 0.35] }}
+                                animate={{ scale: [1, 1.55, 1], opacity: [0.4, 0, 0.4] }}
                                 transition={{
                                   duration: 2.4,
                                   repeat: Infinity,
