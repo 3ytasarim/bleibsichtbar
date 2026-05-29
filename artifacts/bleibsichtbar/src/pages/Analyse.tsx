@@ -285,6 +285,88 @@ export default function Analyse() {
         </div>
       </section>
 
+      {/* INKLUSIVE LEISTUNGEN */}
+      <section className="py-28 bg-white relative overflow-hidden">
+        {/* subtle background decoration */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-accent/5 blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Header */}
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="text-center mb-16"
+          >
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 text-accent text-sm font-semibold px-4 py-1.5 rounded-full mb-5 tracking-wide uppercase">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              Komplettpaket
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-bold text-primary">
+              {(an as any).inclusiveTitle}{" "}
+              <span className="text-accent">{(an as any).inclusiveTitleAccent}</span>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-muted-foreground text-lg mt-4 max-w-xl mx-auto">
+              {(an as any).inclusiveSub}
+            </motion.p>
+          </motion.div>
+
+          {/* Grid */}
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="grid grid-cols-1 md:grid-cols-2 gap-5"
+          >
+            {((an as any).inclusiveItems as Array<{title:string;desc:string}>).map((item, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(249,115,22,0.10)" }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="group relative flex items-start gap-5 bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:border-accent/30 hover:bg-white transition-all duration-300"
+              >
+                {/* animated check bubble */}
+                <div className="shrink-0 mt-0.5">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -30 }}
+                    whileInView={{ scale: 1, rotate: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08, type: "spring", stiffness: 260, damping: 18 }}
+                    className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-orange-400 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform"
+                  >
+                    <CheckCircle2 className="w-5 h-5 text-white" />
+                  </motion.div>
+                </div>
+                <div>
+                  <h3 className="text-base font-display font-bold text-primary mb-1 group-hover:text-accent transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+                {/* hover shimmer */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/0 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* bottom CTA strip */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.55 }}
+            className="mt-14 flex flex-col sm:flex-row items-center justify-between gap-6 bg-primary rounded-2xl px-8 py-6"
+          >
+            <p className="text-white font-display font-semibold text-lg text-center sm:text-left">
+              Alles aus einer Hand – starten Sie noch heute.
+            </p>
+            <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold shrink-0">
+              <a href="#kontakt">Jetzt LLC gründen</a>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
       {/* REPORT INHALTE */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
