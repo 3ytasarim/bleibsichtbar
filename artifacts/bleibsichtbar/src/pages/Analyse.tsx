@@ -379,7 +379,7 @@ export default function Analyse() {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
             <motion.div variants={fadeUp} className="text-center mb-12">
-              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">{an.heroBadge}</p>
+              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-3">{(an as any).formLabel}</p>
               <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
                 {an.formTitle}
               </h2>
@@ -401,7 +401,6 @@ export default function Analyse() {
                   e.preventDefault();
                   const errs: typeof errors = {};
                   if (!form.company.trim()) errs.company = an.formValidation.companyRequired;
-                  if (!form.goals.trim()) errs.goals = an.formValidation.goalsRequired;
                   if (!form.contact.trim()) {
                     errs.contact = an.formValidation.contactRequired;
                   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contact)) {
@@ -436,37 +435,6 @@ export default function Analyse() {
                       className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{errors.company}</span>
-                    </motion.div>
-                  )}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {[
-                    { key: "instagram", label: "Instagram", placeholder: "@handle" },
-                    { key: "tiktok", label: "TikTok", placeholder: "@handle" },
-                    { key: "linkedin", label: "LinkedIn", placeholder: an.linkedinPlaceholder },
-                  ].map(f => (
-                    <div key={f.key}>
-                      <label className="block text-sm font-bold mb-2">{f.label}</label>
-                      <input
-                        value={(form as any)[f.key]}
-                        onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors"
-                        placeholder={f.placeholder} />
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <label className="block text-sm font-bold mb-2">{an.formGoals}</label>
-                  <textarea value={form.goals}
-                    onChange={e => { setForm(f => ({ ...f, goals: e.target.value })); setErrors(ev => ({ ...ev, goals: undefined })); }}
-                    rows={3}
-                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 bg-gray-50 hover:bg-white transition-colors resize-none ${errors.goals ? "border-red-400" : "border-gray-200"}`}
-                    placeholder={an.placeholderGoals} />
-                  {errors.goals && (
-                    <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
-                      className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-200/80 text-xs text-red-600 font-medium">
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span>{errors.goals}</span>
                     </motion.div>
                   )}
                 </div>
