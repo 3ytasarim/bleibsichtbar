@@ -326,8 +326,8 @@ export const translations = {
         { value: "50+", label: "Begleitete Gründungen", sublabel: "Zufriedene Kunden" },
       ],
       servicesLabel: "Alles was Sie wissen müssen",
-      servicesTitle1: "Ihre US LLC Gründung,",
-      servicesTitle2: "einfach erklärt",
+      servicesTitle1: "Die wichtigsten Infos über",
+      servicesTitle2: "die US LLC",
       servicesSub: "Transparente Antworten auf die wichtigsten Fragen rund um Ihre US LLC – klar, verständlich und ohne Fachjargon.",
       services: [
         { title: "Wie lange dauert die LLC-Gründung?", items: ["Gründung meist noch am selben Tag", "Wyoming oft in 24–48 Stunden aktiv", "Andere Staaten je nach Bearbeitung etwas länger"] },
