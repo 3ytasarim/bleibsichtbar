@@ -317,52 +317,29 @@ export default function Analyse() {
             initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
             className="grid grid-cols-1 md:grid-cols-2 gap-5"
           >
-            {((an as any).inclusiveItems as Array<{title:string;desc:string}>).map((item, i) => (
+            {((an as any).inclusiveItems as Array<{title:string}>).map((item, i) => (
               <motion.div
                 key={i}
                 variants={fadeUp}
-                whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(249,115,22,0.10)" }}
+                whileHover={{ y: -3, boxShadow: "0 16px 32px rgba(249,115,22,0.08)" }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="group relative flex items-start gap-5 bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:border-accent/30 hover:bg-white transition-all duration-300"
+                className="group relative flex items-center gap-4 bg-gray-50 border border-gray-100 rounded-2xl px-6 py-5 hover:border-accent/30 hover:bg-white transition-all duration-300"
               >
-                {/* animated check bubble */}
-                <div className="shrink-0 mt-0.5">
-                  <motion.div
-                    initial={{ scale: 0, rotate: -30 }}
-                    whileInView={{ scale: 1, rotate: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08, type: "spring", stiffness: 260, damping: 18 }}
-                    className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-orange-400 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform"
-                  >
-                    <CheckCircle2 className="w-5 h-5 text-white" />
-                  </motion.div>
-                </div>
-                <div>
-                  <h3 className="text-base font-display font-bold text-primary mb-1 group-hover:text-accent transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                </div>
-                {/* hover shimmer */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -30 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.07, type: "spring", stiffness: 260, damping: 18 }}
+                  className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent to-orange-400 flex items-center justify-center shadow-md shrink-0 group-hover:scale-110 transition-transform"
+                >
+                  <CheckCircle2 className="w-4.5 h-4.5 text-white" />
+                </motion.div>
+                <span className="text-base font-semibold text-primary group-hover:text-accent transition-colors">
+                  {item.title}
+                </span>
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/0 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </motion.div>
             ))}
-          </motion.div>
-
-          {/* bottom CTA strip */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.55 }}
-            className="mt-14 flex flex-col sm:flex-row items-center justify-between gap-6 bg-primary rounded-2xl px-8 py-6"
-          >
-            <p className="text-white font-display font-semibold text-lg text-center sm:text-left">
-              Alles aus einer Hand – starten Sie noch heute.
-            </p>
-            <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold shrink-0">
-              <a href="#kontakt">Jetzt LLC gründen</a>
-            </Button>
           </motion.div>
         </div>
       </section>
