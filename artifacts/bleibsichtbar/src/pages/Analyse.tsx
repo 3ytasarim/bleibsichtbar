@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground } from "@/components/shared/AnimatedHero";
 import { useT } from "@/i18n";
 import {
-  Clock, CreditCard, FileText, Landmark, BookOpen, Globe, CheckCircle2,
-  ArrowRight, Activity, Shield, Star, AlertCircle,
+  Timer, Wallet, FileCheck, Building2, Calculator, Rocket,
+  CheckCircle2, ArrowRight, Activity, Shield, Star, AlertCircle,
 } from "lucide-react";
 
 const fadeUp = {
@@ -18,12 +18,12 @@ const fadeUp = {
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
 const LLC_ICONS = [
-  <Clock className="w-6 h-6" />,
-  <CreditCard className="w-6 h-6" />,
-  <FileText className="w-6 h-6" />,
-  <Landmark className="w-6 h-6" />,
-  <BookOpen className="w-6 h-6" />,
-  <Globe className="w-6 h-6" />,
+  { icon: Timer, color: "#f97316", bg: "rgba(249,115,22,0.12)" },
+  { icon: Wallet, color: "#3b82f6", bg: "rgba(59,130,246,0.12)" },
+  { icon: FileCheck, color: "#10b981", bg: "rgba(16,185,129,0.12)" },
+  { icon: Building2, color: "#8b5cf6", bg: "rgba(139,92,246,0.12)" },
+  { icon: Calculator, color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
+  { icon: Rocket, color: "#f97316", bg: "rgba(249,115,22,0.12)" },
 ];
 
 export default function Analyse() {
@@ -104,27 +104,58 @@ export default function Analyse() {
               </p>
             </motion.div>
             <motion.div variants={stagger} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {an.services.map((l, i) => (
-                <motion.div key={i} variants={fadeUp}
-                  className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-accent/30 hover:shadow-md transition-all group">
-                  <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-5 group-hover:bg-accent group-hover:text-white transition-all">
-                    {LLC_ICONS[i]}
-                  </div>
-                  <h3 className="text-xl font-display font-bold mb-4">{l.title}</h3>
-                  {(l as any).items ? (
-                    <ul className="space-y-2">
-                      {(l as any).items.map((item: string, j: number) => (
-                        <li key={j} className="flex items-start gap-2.5">
-                          <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
-                          <span className="text-sm text-muted-foreground leading-snug">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-muted-foreground leading-relaxed">{(l as any).desc}</p>
-                  )}
-                </motion.div>
-              ))}
+              {an.services.map((l, i) => {
+                const { icon: Icon, color, bg } = LLC_ICONS[i] ?? LLC_ICONS[0];
+                return (
+                  <motion.div
+                    key={i}
+                    variants={fadeUp}
+                    whileHover={{ y: -6, boxShadow: "0 20px 40px -8px rgba(0,0,0,0.12)" }}
+                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                    className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-transparent cursor-default"
+                    style={{ transition: "border-color 0.2s" }}
+                  >
+                    {/* Animasyonlu ikon */}
+                    <motion.div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6"
+                      style={{ background: bg }}
+                      whileHover={{ scale: 1.12, rotate: 6 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                    >
+                      <Icon className="w-7 h-7" style={{ color }} strokeWidth={1.8} />
+                    </motion.div>
+
+                    <h3 className="text-lg font-display font-bold mb-4 leading-snug" style={{ color: "#0a1628" }}>
+                      {l.title}
+                    </h3>
+
+                    {(l as any).items ? (
+                      <ul className="space-y-2.5">
+                        {(l as any).items.map((item: string, j: number) => (
+                          <motion.li
+                            key={j}
+                            initial={{ opacity: 0, x: -8 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.06 + j * 0.05, duration: 0.35 }}
+                            className="flex items-start gap-2.5"
+                          >
+                            <span
+                              className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                              style={{ background: bg }}
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
+                            </span>
+                            <span className="text-sm text-gray-600 leading-snug">{item}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-muted-foreground leading-relaxed">{(l as any).desc}</p>
+                    )}
+                  </motion.div>
+                );
+              })}
             </motion.div>
           </motion.div>
         </div>
