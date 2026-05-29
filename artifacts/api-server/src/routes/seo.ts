@@ -11,7 +11,7 @@ const DEFAULT_PAGES = [
   { slug: "webseiten", pageLabel: "Webseiten (/webseiten)" },
   { slug: "marketing-ads", pageLabel: "Marketing Ads (/marketing-ads)" },
   { slug: "ki-automatisierungen", pageLabel: "KI & Automatisierungen (/ki-automatisierungen)" },
-  { slug: "analyse", pageLabel: "Analyse & Reporting (/analyse)" },
+  { slug: "analyse", pageLabel: "LLC Gründung (/analyse)" },
   { slug: "projekte", pageLabel: "Projekte (/projekte)" },
   { slug: "blog", pageLabel: "Blog (/blog)" },
   { slug: "kontakt", pageLabel: "Kontakt (/kontakt)" },

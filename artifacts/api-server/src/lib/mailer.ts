@@ -190,7 +190,7 @@ export async function sendAnalyseEmail(data: {
     to: TO_EMAIL,
     replyTo: data.contact,
     subject: `📊 Analyse-Anfrage von ${data.company}`,
-    html: baseTemplate("Kostenlose Analyse angefordert", "#3b82f6", "Analyse & Reporting", body),
+    html: baseTemplate("Kostenlose Analyse angefordert", "#3b82f6", "LLC Gründung", body),
   });
 }
 

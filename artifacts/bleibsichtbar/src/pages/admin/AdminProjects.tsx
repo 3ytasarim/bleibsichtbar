@@ -303,7 +303,7 @@ export default function AdminProjects() {
                 <option value="Marketing Ads">Marketing Ads</option>
                 <option value="Branding">Branding</option>
                 <option value="Ki & Automatisierungen">Ki & Automatisierungen</option>
-                <option value="Analyse & Reporting">Analyse & Reporting</option>
+                <option value="LLC Gründung">LLC Gründung</option>
                 <option value="Fotografie">Fotografie</option>
               </select>
             </div>

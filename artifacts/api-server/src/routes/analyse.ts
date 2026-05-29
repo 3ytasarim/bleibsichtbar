@@ -25,7 +25,7 @@ router.post("/", async (req: Request, res: Response) => {
       email: contact,
       company,
       message,
-      service: "Analyse & Reporting",
+      service: "LLC Gründung",
     });
 
     sendAnalyseEmail({ company, instagram, tiktok, linkedin, goals, contact }).catch((err) =>

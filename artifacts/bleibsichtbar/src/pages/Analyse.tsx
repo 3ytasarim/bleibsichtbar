@@ -36,7 +36,7 @@ export default function Analyse() {
 
   return (
     <PublicLayout>
-      <SeoHead slug="analyse" defaults={{ metaTitle: "Analyse <PublicLayout> Reporting – Bleibsichtbar" }} />
+      <SeoHead slug="analyse" defaults={{ metaTitle: "LLC Gründung – Bleibsichtbar" }} />
       {/* HERO */}
       <section className="relative bg-primary text-white overflow-hidden pt-32 pb-24">
         <AnimatedHeroBackground />
