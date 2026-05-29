@@ -140,11 +140,24 @@ export default function Analyse() {
                             transition={{ delay: i * 0.06 + j * 0.05, duration: 0.35 }}
                             className="flex items-start gap-2.5"
                           >
-                            <span
-                              className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                              style={{ background: bg }}
-                            >
-                              <span className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
+                            <span className="relative w-4 h-4 flex items-center justify-center shrink-0 mt-0.5">
+                              {/* Ping halkası */}
+                              <motion.span
+                                className="absolute inset-0 rounded-full"
+                                style={{ background: color, opacity: 0.35 }}
+                                animate={{ scale: [1, 2.2, 1], opacity: [0.35, 0, 0.35] }}
+                                transition={{
+                                  duration: 2.4,
+                                  repeat: Infinity,
+                                  ease: "easeInOut",
+                                  delay: (i * 0.4 + j * 0.7) % 2,
+                                }}
+                              />
+                              {/* Sabit iç nokta */}
+                              <span
+                                className="w-2 h-2 rounded-full shrink-0"
+                                style={{ background: color }}
+                              />
                             </span>
                             <span className="text-sm text-gray-600 leading-snug">{item}</span>
                           </motion.li>
