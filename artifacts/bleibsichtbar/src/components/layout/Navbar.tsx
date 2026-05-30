@@ -13,7 +13,7 @@ const NAV_PATHS = [
   { key: "websites" as const,    path: "/webseiten" },
   { key: "marketingAds" as const,path: "/marketing-ads" },
   { key: "ki" as const,          path: "/ki-automatisierungen" },
-  { key: "analyse" as const,     path: "/analyse" },
+  { key: "analyse" as const,     path: "/llc-grundung" },
 ];
 
 const WHATSAPP_NUMBER = "4915567152351";

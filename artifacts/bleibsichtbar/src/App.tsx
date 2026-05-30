@@ -82,6 +82,7 @@ function Router() {
         <Route path="/marketing-ads" component={MarketingAds} />
         <Route path="/ki-automatisierungen" component={KIAutomatisierungen} />
         <Route path="/analyse" component={Analyse} />
+        <Route path="/llc-grundung" component={Analyse} />
         <Route path="/projekte" component={Projects} />
         <Route path="/blog" component={Blog} />
         <Route path="/blog/:id" component={BlogPost} />
