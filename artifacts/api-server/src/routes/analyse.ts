@@ -6,33 +6,24 @@ const router: IRouter = Router();
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const { company, instagram, tiktok, linkedin, goals, contact } = req.body;
-    if (!company || !goals || !contact) {
-      return res.status(400).json({ message: "Unternehmensname, Ziele und E-Mail sind erforderlich" });
+    const { company, contact } = req.body;
+    if (!company || !contact) {
+      return res.status(400).json({ message: "Name und Kontakt sind erforderlich" });
     }
-
-    const message = [
-      goals,
-      instagram ? `Instagram: ${instagram}` : "",
-      tiktok ? `TikTok: ${tiktok}` : "",
-      linkedin ? `LinkedIn: ${linkedin}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
 
     await db.insert(contactsTable).values({
       name: company,
       email: contact,
-      company,
-      message,
+      company: "",
+      message: "",
       service: "LLC Gründung",
     });
 
-    sendAnalyseEmail({ company, instagram, tiktok, linkedin, goals, contact }).catch((err) =>
+    sendAnalyseEmail({ name: company, contact }).catch((err) =>
       console.error("[mailer] analyse email error:", err)
     );
 
-    res.json({ success: true, message: "Analyseanfrage erfolgreich gesendet" });
+    res.json({ success: true, message: "Anfrage erfolgreich gesendet" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Serverfehler" });

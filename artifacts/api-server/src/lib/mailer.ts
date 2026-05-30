@@ -152,33 +152,23 @@ export async function sendContactEmail(data: {
 /*  2. ANALYSE REQUEST                                     */
 /* ─────────────────────────────────────────────────────── */
 export async function sendAnalyseEmail(data: {
-  company: string;
-  instagram?: string;
-  tiktok?: string;
-  linkedin?: string;
-  goals: string;
+  name: string;
   contact: string;
 }) {
   const body = `
     <p style="margin:0 0 24px;color:#475569;font-size:15px;line-height:1.6;">
-      Ein Unternehmen hat eine <strong style="color:#1e293b;">kostenlose Social Media Analyse</strong> angefordert. Bitte erstelle den Bericht innerhalb von 48 Stunden.
+      Eine neue <strong style="color:#1e293b;">Erstgespräch-Anfrage</strong> für die US LLC Gründung ist eingegangen. Bitte nehme innerhalb von 48 Stunden Kontakt auf.
     </p>
     <table width="100%" cellpadding="0" cellspacing="0">
-      ${sectionHeader("Unternehmensdaten")}
-      ${field("Unternehmensname", data.company)}
-      ${field("E-Mail-Adresse", data.contact)}
-      ${sectionHeader("Social Media Kanäle")}
-      ${field("Instagram", data.instagram || "—")}
-      ${field("TikTok", data.tiktok || "—")}
-      ${field("LinkedIn", data.linkedin || "—")}
-      ${sectionHeader("Ziele & Erwartungen")}
-      ${field("Ziele mit Social Media", data.goals, true)}
+      ${sectionHeader("Kontaktdaten")}
+      ${field("Name & Vorname", data.name)}
+      ${field("E-Mail / Telefon", data.contact)}
     </table>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
       <tr>
         <td>
           <a href="mailto:${escHtml(data.contact)}" style="display:inline-block;background:#f97316;color:#fff;font-size:14px;font-weight:700;padding:13px 28px;border-radius:999px;text-decoration:none;">
-            Antworten an ${escHtml(data.company)}
+            Antworten an ${escHtml(data.name)}
           </a>
         </td>
       </tr>
@@ -189,8 +179,8 @@ export async function sendAnalyseEmail(data: {
     from: FROM_EMAIL,
     to: TO_EMAIL,
     replyTo: data.contact,
-    subject: `📊 Analyse-Anfrage von ${data.company}`,
-    html: baseTemplate("Kostenlose Analyse angefordert", "#3b82f6", "LLC Gründung", body),
+    subject: `🏢 LLC Erstgespräch-Anfrage von ${data.name}`,
+    html: baseTemplate("Kostenloses Erstgespräch angefragt", "#f97316", "LLC Gründung", body),
   });
 }
 
