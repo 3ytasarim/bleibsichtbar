@@ -210,57 +210,56 @@ function AudioDemoSection({ ki: _ki }: { ki: any }) {
     <section className="py-20 relative overflow-hidden" style={{ background: "#060d1f" }}>
       <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.07) 0%, transparent 65%)" }} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-[360px_1fr] gap-14 items-start">
 
-          {/* Left: text */}
-          <div className="lg:sticky lg:top-24">
-            <span style={{ display: "inline-block", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.55)", fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", borderRadius: 4, padding: "3px 10px", marginBottom: 22 }}>
-              Audio-Demos
-            </span>
-            <h2 className="font-display font-bold leading-tight text-white mb-5" style={{ fontSize: "clamp(24px,3.2vw,36px)" }}>
-              Hören Sie, wie Bleibsichtbar Anrufe beantworten könnte für{" "}
-              <span style={{ color: "#60a5fa" }}>verschiedene Unternehmen.</span>
-            </h2>
-            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13.5, lineHeight: 1.75 }}>
-              Dies sind Demo-Beispiele. Jeder KI Voice Agent wird individuell für das jeweilige Unternehmen entwickelt – mit spezifischen Dienstleistungen, Kundenfragen, Tonfall und Workflow.
-            </p>
-          </div>
+        {/* Header — full width, above the grid */}
+        <div className="mb-10">
+          <span style={{ display: "inline-block", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.55)", fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", borderRadius: 4, padding: "3px 10px", marginBottom: 18 }}>
+            Audio-Demos
+          </span>
+          <h2 className="font-display font-bold leading-tight text-white mb-4" style={{ fontSize: "clamp(26px,3.5vw,42px)", maxWidth: 640 }}>
+            Hören Sie, wie Bleibsichtbar Anrufe beantworten könnte für{" "}
+            <span style={{ color: "#60a5fa" }}>verschiedene Unternehmen.</span>
+          </h2>
+          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13.5, lineHeight: 1.75, maxWidth: 520 }}>
+            Dies sind Demo-Beispiele. Jeder KI Voice Agent wird individuell für das jeweilige Unternehmen entwickelt – mit spezifischen Dienstleistungen, Kundenfragen, Tonfall und Workflow.
+          </p>
+        </div>
 
-          {/* Right: 3-col card grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
-            {VOICE_AGENTS.map((agent, i) => {
-              const isPlaying = playingIdx === i;
-              return (
-                <div key={i}
-                  onClick={() => toggle(i)}
-                  style={{
-                    position: "relative", overflow: "hidden",
-                    background: isPlaying ? "rgba(249,115,22,0.06)" : "rgba(255,255,255,0.035)",
-                    border: isPlaying ? "1px solid rgba(249,115,22,0.30)" : "1px solid rgba(255,255,255,0.07)",
-                    borderRadius: 10, padding: "10px 12px",
-                    display: "flex", alignItems: "center", gap: 10,
-                    cursor: "pointer", transition: "background 0.2s, border-color 0.2s",
-                  }}
-                >
-                  {/* photo */}
+        {/* Card grid — 3 cols desktop, 2 cols tablet, 1 col mobile */}
+        <div style={{ display: "grid", gap: 8 }}
+          className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {VOICE_AGENTS.map((agent, i) => {
+            const isPlaying = playingIdx === i;
+            return (
+              <div key={i}
+                onClick={() => toggle(i)}
+                style={{
+                  position: "relative", overflow: "hidden",
+                  background: isPlaying ? "rgba(249,115,22,0.06)" : "rgba(255,255,255,0.035)",
+                  border: isPlaying ? "1px solid rgba(249,115,22,0.30)" : "1px solid rgba(255,255,255,0.07)",
+                  borderRadius: 10,
+                  cursor: "pointer", transition: "background 0.2s, border-color 0.2s",
+                }}
+              >
+                {/* industry label row */}
+                <div style={{ padding: "7px 12px 0 12px", fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.32)", letterSpacing: 1.3, textTransform: "uppercase" }}>
+                  {agent.industry}
+                </div>
+
+                {/* main row: photo + name/desc + play */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 12px 9px 12px" }}>
                   <img
                     src={agent.photo}
                     alt={agent.name}
                     style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: isPlaying ? "2px solid rgba(249,115,22,0.6)" : "2px solid rgba(255,255,255,0.10)" }}
                   />
-
-                  {/* text */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.32)", letterSpacing: 1.3, textTransform: "uppercase", marginBottom: 2 }}>
-                      {agent.industry}
-                    </div>
-                    <div style={{ fontSize: 12.5, fontWeight: 700, color: "white", lineHeight: 1.2, marginBottom: 2 }}>{agent.name}</div>
-                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.42)", lineHeight: 1.35, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{agent.desc}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "white", lineHeight: 1.25, marginBottom: 2 }}>{agent.name}</div>
+                    <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.42)", lineHeight: 1.35, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{agent.desc}</div>
                   </div>
-
-                  {/* play button */}
                   <div style={{
-                    width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                    width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
                     background: isPlaying ? "rgba(249,115,22,0.20)" : "rgba(255,255,255,0.08)",
                     border: isPlaying ? "1px solid rgba(249,115,22,0.55)" : "1px solid rgba(255,255,255,0.12)",
                     display: "flex", alignItems: "center", justifyContent: "center",
@@ -271,22 +270,21 @@ function AudioDemoSection({ ki: _ki }: { ki: any }) {
                       : <div style={{ width: 0, height: 0, borderTop: "5px solid transparent", borderBottom: "5px solid transparent", borderLeft: "8px solid rgba(255,255,255,0.65)", marginLeft: 2 }} />
                     }
                   </div>
-
-                  {/* progress bar at bottom */}
-                  {isPlaying && (
-                    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "rgba(255,255,255,0.06)" }}>
-                      <div style={{ height: "100%", width: `${progress}%`, background: "#f97316", transition: "width 0.3s linear", borderRadius: 2 }} />
-                    </div>
-                  )}
                 </div>
-              );
-            })}
-          </div>
+
+                {/* progress bar */}
+                {isPlaying && (
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "rgba(255,255,255,0.06)" }}>
+                    <div style={{ height: "100%", width: `${progress}%`, background: "#f97316", transition: "width 0.3s linear", borderRadius: 2 }} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Time display under active card area */}
         {playingIdx !== null && (
-          <div style={{ textAlign: "right", marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.35)", fontVariantNumeric: "tabular-nums" }}>
+          <div style={{ textAlign: "right", marginTop: 6, fontSize: 11, color: "rgba(255,255,255,0.35)", fontVariantNumeric: "tabular-nums" }}>
             {timeInfo.cur} / {timeInfo.dur}
           </div>
         )}
