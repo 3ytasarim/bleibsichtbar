@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
 import { useT } from "@/i18n";
-import { Brain, Bot, Zap, MessageSquare, RefreshCw, BarChart3, CheckCircle2, ArrowRight, Settings } from "lucide-react";
+import { Brain, Bot, Zap, MessageSquare, RefreshCw, BarChart3, CheckCircle2, ArrowRight, Settings, Mic, Phone, PhoneOff } from "lucide-react";
 
 // ─── Floating AI Brand Icons ─────────────────────────────────────────────────
 const AI_TOOLS = [
@@ -136,6 +136,85 @@ function FloatingAIIcons() {
   );
 }
 
+// ─── Voice Agent Components ───────────────────────────────────────────────────
+function SoundWaveBars() {
+  const heights = [4, 8, 14, 20, 14, 20, 14, 8, 4];
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 3, height: 28 }}>
+      {heights.map((h, i) => (
+        <motion.div
+          key={i}
+          animate={{ scaleY: [1, 1.6, 0.7, 1.3, 1] }}
+          transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.18, ease: "easeInOut" }}
+          style={{ width: 3, height: h, borderRadius: 2, background: "rgba(34,197,94,0.85)", transformOrigin: "center" }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function VoiceAgentPhoneKI() {
+  const { t } = useT();
+  const ph = t.home.phone;
+  return (
+    <div style={{
+      width: "100%", height: "100%",
+      background: "linear-gradient(170deg, #06080f 0%, #0c1020 60%, #060812 100%)",
+      display: "flex", flexDirection: "column", alignItems: "center",
+      paddingTop: 36, paddingBottom: 20,
+      position: "relative", overflow: "hidden",
+    }}>
+      <div style={{ color: "rgba(255,255,255,0.40)", fontSize: 9, letterSpacing: 1.5, fontWeight: 600, textTransform: "uppercase", marginBottom: 8 }}>
+        {ph.incomingCall}
+      </div>
+      <div style={{ position: "relative", width: 80, height: 80, marginBottom: 14 }}>
+        {[0, 1, 2].map(i => (
+          <motion.div key={i}
+            animate={{ scale: [1, 2.6], opacity: [0.35, 0] }}
+            transition={{ duration: 5.5, repeat: Infinity, delay: i * 1.85, ease: "easeOut" }}
+            style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1.5px solid rgba(249,115,22,0.55)" }}
+          />
+        ))}
+        <motion.div
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: "absolute", inset: 0, borderRadius: "50%",
+            background: "linear-gradient(135deg, #f97316 0%, #ef4444 100%)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            zIndex: 1, boxShadow: "0 0 28px rgba(249,115,22,0.55)",
+          }}>
+          <span style={{ fontSize: 20, fontWeight: 800, color: "white", letterSpacing: -0.5 }}>KI</span>
+        </motion.div>
+      </div>
+      <div style={{ color: "white", fontSize: 16, fontWeight: 700, marginBottom: 3 }}>{ph.voiceAgent}</div>
+      <div style={{ color: "rgba(255,255,255,0.40)", fontSize: 10, marginBottom: 14 }}>{ph.kiSubtitle}</div>
+      <SoundWaveBars />
+      <motion.div
+        animate={{ opacity: [1, 0.35, 1] }}
+        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+        style={{ color: "rgba(34,197,94,0.8)", fontSize: 10, fontWeight: 600, marginTop: 8, letterSpacing: 0.5 }}
+      >
+        {ph.connecting}
+      </motion.div>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 10, background: "rgba(255,255,255,0.06)", borderRadius: 20, padding: "5px 12px" }}>
+        <motion.div animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.8, repeat: Infinity }}
+          style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
+        <Mic size={10} color="rgba(255,255,255,0.5)" />
+        <span style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>{ph.kiSpeaks}</span>
+      </div>
+      <div style={{ display: "flex", gap: 24, marginTop: "auto", paddingTop: 16 }}>
+        <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#ef4444", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(239,68,68,0.45)" }}>
+          <PhoneOff size={20} color="white" />
+        </div>
+        <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(34,197,94,0.55)" }}>
+          <Phone size={20} color="white" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: "easeOut" } },
@@ -247,6 +326,70 @@ export default function KIAutomatisierungen() {
                   <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
                 </motion.div>
               ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* VOICE AGENT */}
+      <section className="py-24 bg-primary text-white relative overflow-hidden">
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%)" }} />
+        <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)" }} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
+            className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: text */}
+            <div>
+              <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">
+                {(ki as any).voiceLabel}
+              </motion.p>
+              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-bold leading-tight mb-6 text-white">
+                {(ki as any).voiceTitle1}{" "}
+                <span className="text-accent">{(ki as any).voiceTitle2}</span>
+              </motion.h2>
+              <motion.p variants={fadeUp} className="text-white/60 text-lg leading-relaxed mb-8">
+                {(ki as any).voiceSub}
+              </motion.p>
+              <motion.ul variants={stagger} className="space-y-4">
+                {((ki as any).voiceFeatures as string[]).map((f: string, i: number) => (
+                  <motion.li key={i} variants={fadeUp} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-white/80 font-medium">{f}</span>
+                  </motion.li>
+                ))}
+              </motion.ul>
+              <motion.div variants={fadeUp} className="mt-10">
+                <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold">
+                  <Link href="/kontakt">{ki.heroCta1} <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
+                </Button>
+              </motion.div>
+            </div>
+
+            {/* Right: phone mockup */}
+            <motion.div variants={fadeUp} className="flex justify-center">
+              <motion.div
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div style={{
+                  width: 252, height: 513,
+                  borderRadius: 38, border: "8px solid #1a1a1c", background: "#1a1a1c",
+                  overflow: "hidden", position: "relative", isolation: "isolate",
+                  boxShadow: "0 24px 56px rgba(0,0,0,0.55), 0 0 48px rgba(249,115,22,0.18), 0 0 0 1px rgba(255,255,255,0.10)",
+                }}>
+                  <div style={{ position: "absolute", inset: 0, borderRadius: 30, overflow: "hidden", background: "#06080f" }}>
+                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <div style={{ width: 64, height: 9, background: "#0a0a0a", borderRadius: 5 }} />
+                    </div>
+                    <div style={{ width: "100%", paddingTop: 24, height: "100%" }}>
+                      <VoiceAgentPhoneKI />
+                    </div>
+                    <div style={{ position: "absolute", bottom: 5, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 20 }}>
+                      <div style={{ width: 60, height: 4, background: "#333", borderRadius: 3 }} />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
