@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeroBackground, heroFadeUp } from "@/components/shared/AnimatedHero";
 import { useT } from "@/i18n";
-import { Brain, Bot, Zap, MessageSquare, RefreshCw, BarChart3, CheckCircle2, ArrowRight, Settings, Mic, Phone, PhoneOff } from "lucide-react";
+import { Brain, Bot, Zap, MessageSquare, RefreshCw, BarChart3, CheckCircle2, ArrowRight, Settings } from "lucide-react";
 
 // ─── Floating AI Brand Icons ─────────────────────────────────────────────────
 const AI_TOOLS = [
@@ -136,82 +136,112 @@ function FloatingAIIcons() {
   );
 }
 
-// ─── Voice Agent Components ───────────────────────────────────────────────────
-function SoundWaveBars() {
-  const heights = [4, 8, 14, 20, 14, 20, 14, 8, 4];
+// ─── Audio Demo Section ───────────────────────────────────────────────────────
+const VOICE_AGENTS = [
+  { industry: "Immobilien",       name: "Lukas",  desc: "Schnell, professionell und lead-orientiert",         grad: "linear-gradient(135deg,#f97316,#ef4444)" },
+  { industry: "Friseursalon",     name: "Anna",   desc: "Freundlich, hilfsbereit und terminorientiert",       grad: "linear-gradient(135deg,#a855f7,#ec4899)" },
+  { industry: "Anwaltskanzlei",   name: "Jonas",  desc: "Professionell, respektvoll und sorgfältig",          grad: "linear-gradient(135deg,#3b82f6,#6366f1)" },
+  { industry: "Zahnarztpraxis",   name: "Sophie", desc: "Ruhig, klar und vertrauensvoll",                     grad: "linear-gradient(135deg,#06b6d4,#3b82f6)" },
+  { industry: "Arztpraxis",       name: "Laura",  desc: "Professionell, ruhig und organisiert",               grad: "linear-gradient(135deg,#10b981,#06b6d4)" },
+  { industry: "Steuerberater",    name: "Felix",  desc: "Strukturiert, klar und detailorientiert",            grad: "linear-gradient(135deg,#f59e0b,#f97316)" },
+  { industry: "Kosmetikstudio",   name: "Clara",  desc: "Sanft, gepflegt und kundenorientiert",               grad: "linear-gradient(135deg,#ec4899,#a855f7)" },
+  { industry: "Handwerker",       name: "Max",    desc: "Offen, praktisch und lösungsorientiert",             grad: "linear-gradient(135deg,#64748b,#3b82f6)" },
+  { industry: "Kundenservice",    name: "Marie",  desc: "Genau, klar und lösungsorientiert",                  grad: "linear-gradient(135deg,#22c55e,#10b981)" },
+  { industry: "Vertrieb",         name: "Leon",   desc: "Selbstbewusst, freundlich und verkaufsorientiert",   grad: "linear-gradient(135deg,#f97316,#f59e0b)" },
+  { industry: "Ästhetische Klinik", name: "Emilia", desc: "Premium, ruhig und vertrauensbildend",             grad: "linear-gradient(135deg,#ec4899,#f97316)" },
+  { industry: "Terminverwaltung", name: "Lena",   desc: "Organisiert, freundlich und kalenderorientiert",     grad: "linear-gradient(135deg,#8b5cf6,#ec4899)" },
+];
+
+function PlayWave({ playing }: { playing: boolean }) {
+  const h = [5, 9, 14, 9, 5];
+  if (!playing) return null;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 3, height: 28 }}>
-      {heights.map((h, i) => (
-        <motion.div
-          key={i}
-          animate={{ scaleY: [1, 1.6, 0.7, 1.3, 1] }}
-          transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.18, ease: "easeInOut" }}
-          style={{ width: 3, height: h, borderRadius: 2, background: "rgba(34,197,94,0.85)", transformOrigin: "center" }}
+    <div style={{ display: "flex", alignItems: "center", gap: 2, height: 16 }}>
+      {h.map((ht, i) => (
+        <motion.div key={i}
+          animate={{ scaleY: [1, 1.8, 0.6, 1.4, 1] }}
+          transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.14, ease: "easeInOut" }}
+          style={{ width: 2.5, height: ht, borderRadius: 2, background: "rgba(249,115,22,0.9)", transformOrigin: "center" }}
         />
       ))}
     </div>
   );
 }
 
-function VoiceAgentPhoneKI() {
-  const { t } = useT();
-  const ph = t.home.phone;
+function AgentCard({ agent, playing, onToggle }: { agent: typeof VOICE_AGENTS[0]; playing: boolean; onToggle: () => void }) {
   return (
-    <div style={{
-      width: "100%", height: "100%",
-      background: "linear-gradient(170deg, #06080f 0%, #0c1020 60%, #060812 100%)",
-      display: "flex", flexDirection: "column", alignItems: "center",
-      paddingTop: 36, paddingBottom: 20,
-      position: "relative", overflow: "hidden",
-    }}>
-      <div style={{ color: "rgba(255,255,255,0.40)", fontSize: 9, letterSpacing: 1.5, fontWeight: 600, textTransform: "uppercase", marginBottom: 8 }}>
-        {ph.incomingCall}
+    <div
+      style={{
+        background: playing ? "rgba(249,115,22,0.07)" : "rgba(255,255,255,0.04)",
+        border: playing ? "1px solid rgba(249,115,22,0.35)" : "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 12, padding: "12px 14px",
+        display: "flex", alignItems: "center", gap: 12,
+        cursor: "pointer", transition: "all 0.2s ease",
+      }}
+      onClick={onToggle}
+    >
+      <div style={{
+        width: 42, height: 42, borderRadius: "50%", flexShrink: 0,
+        background: agent.grad,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontWeight: 800, fontSize: 15, color: "white",
+        boxShadow: playing ? "0 0 14px rgba(249,115,22,0.5)" : "none",
+      }}>
+        {agent.name[0]}
       </div>
-      <div style={{ position: "relative", width: 80, height: 80, marginBottom: 14 }}>
-        {[0, 1, 2].map(i => (
-          <motion.div key={i}
-            animate={{ scale: [1, 2.6], opacity: [0.35, 0] }}
-            transition={{ duration: 5.5, repeat: Infinity, delay: i * 1.85, ease: "easeOut" }}
-            style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1.5px solid rgba(249,115,22,0.55)" }}
-          />
-        ))}
-        <motion.div
-          animate={{ scale: [1, 1.04, 1] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          style={{
-            position: "absolute", inset: 0, borderRadius: "50%",
-            background: "linear-gradient(135deg, #f97316 0%, #ef4444 100%)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            zIndex: 1, boxShadow: "0 0 28px rgba(249,115,22,0.55)",
-          }}>
-          <span style={{ fontSize: 20, fontWeight: 800, color: "white", letterSpacing: -0.5 }}>KI</span>
-        </motion.div>
-      </div>
-      <div style={{ color: "white", fontSize: 16, fontWeight: 700, marginBottom: 3 }}>{ph.voiceAgent}</div>
-      <div style={{ color: "rgba(255,255,255,0.40)", fontSize: 10, marginBottom: 14 }}>{ph.kiSubtitle}</div>
-      <SoundWaveBars />
-      <motion.div
-        animate={{ opacity: [1, 0.35, 1] }}
-        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-        style={{ color: "rgba(34,197,94,0.8)", fontSize: 10, fontWeight: 600, marginTop: 8, letterSpacing: 0.5 }}
-      >
-        {ph.connecting}
-      </motion.div>
-      <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 10, background: "rgba(255,255,255,0.06)", borderRadius: 20, padding: "5px 12px" }}>
-        <motion.div animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.8, repeat: Infinity }}
-          style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} />
-        <Mic size={10} color="rgba(255,255,255,0.5)" />
-        <span style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>{ph.kiSpeaks}</span>
-      </div>
-      <div style={{ display: "flex", gap: 24, marginTop: "auto", paddingTop: 16 }}>
-        <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#ef4444", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(239,68,68,0.45)" }}>
-          <PhoneOff size={20} color="white" />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 1 }}>
+          {agent.industry}
         </div>
-        <div style={{ width: 48, height: 48, borderRadius: "50%", background: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(34,197,94,0.55)" }}>
-          <Phone size={20} color="white" />
-        </div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "white", marginBottom: 2 }}>{agent.name}</div>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", lineHeight: 1.3 }}>{agent.desc}</div>
+      </div>
+      <div style={{
+        width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+        background: playing ? "rgba(249,115,22,0.25)" : "rgba(255,255,255,0.10)",
+        border: playing ? "1px solid rgba(249,115,22,0.6)" : "1px solid rgba(255,255,255,0.15)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        transition: "all 0.2s ease",
+      }}>
+        {playing
+          ? <PlayWave playing />
+          : <div style={{ width: 0, height: 0, borderTop: "5px solid transparent", borderBottom: "5px solid transparent", borderLeft: "8px solid rgba(255,255,255,0.7)", marginLeft: 2 }} />
+        }
       </div>
     </div>
+  );
+}
+
+function AudioDemoSection({ ki }: { ki: any }) {
+  const [playingIdx, setPlayingIdx] = React.useState<number | null>(null);
+  const toggle = (i: number) => setPlayingIdx(prev => prev === i ? null : i);
+  return (
+    <section className="py-20 relative overflow-hidden" style={{ background: "#060d1f" }}>
+      <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.07) 0%, transparent 65%)" }} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid lg:grid-cols-[380px_1fr] gap-12 items-start">
+          {/* Left */}
+          <div className="lg:sticky lg:top-24">
+            <span style={{ display: "inline-block", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.6)", fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", borderRadius: 4, padding: "3px 10px", marginBottom: 20 }}>
+              Audio-Demos
+            </span>
+            <h2 className="font-display font-bold leading-tight text-white mb-5" style={{ fontSize: "clamp(26px,3.5vw,38px)" }}>
+              Hören Sie, wie Bleibsichtbar Anrufe beantworten könnte für{" "}
+              <span style={{ color: "#60a5fa" }}>verschiedene Unternehmen.</span>
+            </h2>
+            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.7 }}>
+              Dies sind Demo-Beispiele. Jeder KI Voice Agent wird individuell für das jeweilige Unternehmen entwickelt – mit spezifischen Dienstleistungen, Kundenfragen, Tonfall und Workflow.
+            </p>
+          </div>
+          {/* Right: grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
+            {VOICE_AGENTS.map((agent, i) => (
+              <AgentCard key={i} agent={agent} playing={playingIdx === i} onToggle={() => toggle(i)} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -331,69 +361,8 @@ export default function KIAutomatisierungen() {
         </div>
       </section>
 
-      {/* VOICE AGENT */}
-      <section className="py-24 bg-primary text-white relative overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%)" }} />
-        <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)" }} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}
-            className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left: text */}
-            <div>
-              <motion.p variants={fadeUp} className="text-accent font-semibold text-sm tracking-widest uppercase mb-4">
-                {(ki as any).voiceLabel}
-              </motion.p>
-              <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-bold leading-tight mb-6 text-white">
-                {(ki as any).voiceTitle1}{" "}
-                <span className="text-accent">{(ki as any).voiceTitle2}</span>
-              </motion.h2>
-              <motion.p variants={fadeUp} className="text-white/60 text-lg leading-relaxed mb-8">
-                {(ki as any).voiceSub}
-              </motion.p>
-              <motion.ul variants={stagger} className="space-y-4">
-                {((ki as any).voiceFeatures as string[]).map((f: string, i: number) => (
-                  <motion.li key={i} variants={fadeUp} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-white/80 font-medium">{f}</span>
-                  </motion.li>
-                ))}
-              </motion.ul>
-              <motion.div variants={fadeUp} className="mt-10">
-                <Button asChild size="lg" className="rounded-full px-8 bg-accent hover:bg-accent/90 text-white font-bold">
-                  <Link href="/kontakt">{ki.heroCta1} <ArrowRight className="ml-2 w-4 h-4 inline" /></Link>
-                </Button>
-              </motion.div>
-            </div>
-
-            {/* Right: phone mockup */}
-            <motion.div variants={fadeUp} className="flex justify-center">
-              <motion.div
-                animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <div style={{
-                  width: 252, height: 513,
-                  borderRadius: 38, border: "8px solid #1a1a1c", background: "#1a1a1c",
-                  overflow: "hidden", position: "relative", isolation: "isolate",
-                  boxShadow: "0 24px 56px rgba(0,0,0,0.55), 0 0 48px rgba(249,115,22,0.18), 0 0 0 1px rgba(255,255,255,0.10)",
-                }}>
-                  <div style={{ position: "absolute", inset: 0, borderRadius: 30, overflow: "hidden", background: "#06080f" }}>
-                    <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 24, zIndex: 20, background: "#1a1a1c", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <div style={{ width: 64, height: 9, background: "#0a0a0a", borderRadius: 5 }} />
-                    </div>
-                    <div style={{ width: "100%", paddingTop: 24, height: "100%" }}>
-                      <VoiceAgentPhoneKI />
-                    </div>
-                    <div style={{ position: "absolute", bottom: 5, left: 0, right: 0, display: "flex", justifyContent: "center", zIndex: 20 }}>
-                      <div style={{ width: 60, height: 4, background: "#333", borderRadius: 3 }} />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+      {/* AUDIO DEMOS */}
+      <AudioDemoSection ki={ki} />
 
       {/* PROZESS */}
       <section className="py-24 bg-white">
