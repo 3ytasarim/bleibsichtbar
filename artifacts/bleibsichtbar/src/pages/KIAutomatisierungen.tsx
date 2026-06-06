@@ -138,108 +138,158 @@ function FloatingAIIcons() {
 
 // ─── Audio Demo Section ───────────────────────────────────────────────────────
 const VOICE_AGENTS = [
-  { industry: "Immobilien",       name: "Lukas",  desc: "Schnell, professionell und lead-orientiert",         grad: "linear-gradient(135deg,#f97316,#ef4444)" },
-  { industry: "Friseursalon",     name: "Anna",   desc: "Freundlich, hilfsbereit und terminorientiert",       grad: "linear-gradient(135deg,#a855f7,#ec4899)" },
-  { industry: "Anwaltskanzlei",   name: "Jonas",  desc: "Professionell, respektvoll und sorgfältig",          grad: "linear-gradient(135deg,#3b82f6,#6366f1)" },
-  { industry: "Zahnarztpraxis",   name: "Sophie", desc: "Ruhig, klar und vertrauensvoll",                     grad: "linear-gradient(135deg,#06b6d4,#3b82f6)" },
-  { industry: "Arztpraxis",       name: "Laura",  desc: "Professionell, ruhig und organisiert",               grad: "linear-gradient(135deg,#10b981,#06b6d4)" },
-  { industry: "Steuerberater",    name: "Felix",  desc: "Strukturiert, klar und detailorientiert",            grad: "linear-gradient(135deg,#f59e0b,#f97316)" },
-  { industry: "Kosmetikstudio",   name: "Clara",  desc: "Sanft, gepflegt und kundenorientiert",               grad: "linear-gradient(135deg,#ec4899,#a855f7)" },
-  { industry: "Handwerker",       name: "Max",    desc: "Offen, praktisch und lösungsorientiert",             grad: "linear-gradient(135deg,#64748b,#3b82f6)" },
-  { industry: "Kundenservice",    name: "Marie",  desc: "Genau, klar und lösungsorientiert",                  grad: "linear-gradient(135deg,#22c55e,#10b981)" },
-  { industry: "Vertrieb",         name: "Leon",   desc: "Selbstbewusst, freundlich und verkaufsorientiert",   grad: "linear-gradient(135deg,#f97316,#f59e0b)" },
-  { industry: "Ästhetische Klinik", name: "Emilia", desc: "Premium, ruhig und vertrauensbildend",             grad: "linear-gradient(135deg,#ec4899,#f97316)" },
-  { industry: "Terminverwaltung", name: "Lena",   desc: "Organisiert, freundlich und kalenderorientiert",     grad: "linear-gradient(135deg,#8b5cf6,#ec4899)" },
+  { industry: "Immobilien",        name: "Lukas",  desc: "Schnell, professionell und lead-orientiert",        photo: "/voice-demos/photos/1-Lukas.jpg",   audio: "/voice-demos/1-lukas-immobilien.mp3" },
+  { industry: "Friseursalon",      name: "Anna",   desc: "Freundlich, hilfsbereit und terminorientiert",      photo: "/voice-demos/photos/2-Anna.jpg",    audio: "/voice-demos/2-anna-barber.mp3" },
+  { industry: "Anwaltskanzlei",    name: "Jonas",  desc: "Professionell, respektvoll und sorgfältig",         photo: "/voice-demos/photos/3-Jonas.jpg",   audio: "/voice-demos/3-Jonas-anwelt.mp3" },
+  { industry: "Zahnarztpraxis",    name: "Sophie", desc: "Ruhig, klar und vertrauensvoll",                    photo: "/voice-demos/photos/4-Sophie.jpg",  audio: "/voice-demos/4-sophie-zahnar.mp3" },
+  { industry: "Arztpraxis",        name: "Laura",  desc: "Professionell, ruhig und organisiert",              photo: "/voice-demos/photos/5-Laura.jpg",   audio: "/voice-demos/5-Laura-Cilinic.mp3" },
+  { industry: "Steuerberater",     name: "Felix",  desc: "Strukturiert, klar und detailorientiert",           photo: "/voice-demos/photos/6-Felix.jpg",   audio: "/voice-demos/6-felix-steur.mp3" },
+  { industry: "Kosmetikstudio",    name: "Clara",  desc: "Sanft, gepflegt und kundenorientiert",              photo: "/voice-demos/photos/7-Clara.jpg",   audio: "/voice-demos/7-clara-kosmetik.mp3" },
+  { industry: "Handwerker",        name: "Max",    desc: "Offen, praktisch und lösungsorientiert",            photo: "/voice-demos/photos/8-Max.png",     audio: "/voice-demos/8-max-handwerker.mp3" },
+  { industry: "Kundenservice",     name: "Marie",  desc: "Genau, klar und lösungsorientiert",                 photo: "/voice-demos/photos/9-Marie.jpg",   audio: "/voice-demos/9-marie-kunden.mp3" },
+  { industry: "Vertrieb",          name: "Leon",   desc: "Selbstbewusst, freundlich und verkaufsorientiert",  photo: "/voice-demos/photos/10-Leon.JPG",   audio: "/voice-demos/10_leon_vertrie.mp3" },
+  { industry: "Ästhetische Klinik",name: "Emilia", desc: "Premium, ruhig und vertrauensbildend",              photo: "/voice-demos/photos/11-Emilia.png", audio: "/voice-demos/11-emilia-klinik.mp3" },
+  { industry: "Terminverwaltung",  name: "Lena",   desc: "Organisiert, freundlich und kalenderorientiert",    photo: "/voice-demos/photos/12-Lena.jpg",   audio: "/voice-demos/12-lena-termin.mp3" },
 ];
 
-function PlayWave({ playing }: { playing: boolean }) {
-  const h = [5, 9, 14, 9, 5];
-  if (!playing) return null;
+function fmt(s: number) {
+  if (!s || isNaN(s)) return "0:00";
+  const m = Math.floor(s / 60);
+  const sec = String(Math.floor(s % 60)).padStart(2, "0");
+  return `${m}:${sec}`;
+}
+
+function WaveBars() {
+  const h = [4, 7, 11, 7, 4];
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 2, height: 16 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 1.5, height: 14 }}>
       {h.map((ht, i) => (
         <motion.div key={i}
-          animate={{ scaleY: [1, 1.8, 0.6, 1.4, 1] }}
-          transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.14, ease: "easeInOut" }}
-          style={{ width: 2.5, height: ht, borderRadius: 2, background: "rgba(249,115,22,0.9)", transformOrigin: "center" }}
+          animate={{ scaleY: [1, 1.9, 0.5, 1.5, 1] }}
+          transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.13, ease: "easeInOut" }}
+          style={{ width: 2, height: ht, borderRadius: 2, background: "#f97316", transformOrigin: "center" }}
         />
       ))}
     </div>
   );
 }
 
-function AgentCard({ agent, playing, onToggle }: { agent: typeof VOICE_AGENTS[0]; playing: boolean; onToggle: () => void }) {
-  return (
-    <div
-      style={{
-        background: playing ? "rgba(249,115,22,0.07)" : "rgba(255,255,255,0.04)",
-        border: playing ? "1px solid rgba(249,115,22,0.35)" : "1px solid rgba(255,255,255,0.08)",
-        borderRadius: 12, padding: "12px 14px",
-        display: "flex", alignItems: "center", gap: 12,
-        cursor: "pointer", transition: "all 0.2s ease",
-      }}
-      onClick={onToggle}
-    >
-      <div style={{
-        width: 42, height: 42, borderRadius: "50%", flexShrink: 0,
-        background: agent.grad,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontWeight: 800, fontSize: 15, color: "white",
-        boxShadow: playing ? "0 0 14px rgba(249,115,22,0.5)" : "none",
-      }}>
-        {agent.name[0]}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.35)", letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 1 }}>
-          {agent.industry}
-        </div>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "white", marginBottom: 2 }}>{agent.name}</div>
-        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", lineHeight: 1.3 }}>{agent.desc}</div>
-      </div>
-      <div style={{
-        width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-        background: playing ? "rgba(249,115,22,0.25)" : "rgba(255,255,255,0.10)",
-        border: playing ? "1px solid rgba(249,115,22,0.6)" : "1px solid rgba(255,255,255,0.15)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        transition: "all 0.2s ease",
-      }}>
-        {playing
-          ? <PlayWave playing />
-          : <div style={{ width: 0, height: 0, borderTop: "5px solid transparent", borderBottom: "5px solid transparent", borderLeft: "8px solid rgba(255,255,255,0.7)", marginLeft: 2 }} />
-        }
-      </div>
-    </div>
-  );
-}
-
-function AudioDemoSection({ ki }: { ki: any }) {
+function AudioDemoSection({ ki: _ki }: { ki: any }) {
   const [playingIdx, setPlayingIdx] = React.useState<number | null>(null);
-  const toggle = (i: number) => setPlayingIdx(prev => prev === i ? null : i);
+  const [progress, setProgress] = React.useState(0);
+  const [timeInfo, setTimeInfo] = React.useState({ cur: "0:00", dur: "0:00" });
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  React.useEffect(() => {
+    const audio = new Audio();
+    audioRef.current = audio;
+    const onTime = () => {
+      setProgress(audio.duration ? (audio.currentTime / audio.duration) * 100 : 0);
+      setTimeInfo({ cur: fmt(audio.currentTime), dur: fmt(audio.duration) });
+    };
+    const onEnd = () => { setPlayingIdx(null); setProgress(0); setTimeInfo({ cur: "0:00", dur: "0:00" }); };
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("ended", onEnd);
+    return () => { audio.pause(); audio.removeEventListener("timeupdate", onTime); audio.removeEventListener("ended", onEnd); };
+  }, []);
+
+  const toggle = (i: number) => {
+    const audio = audioRef.current!;
+    if (playingIdx === i) {
+      audio.pause();
+      setPlayingIdx(null);
+    } else {
+      audio.src = VOICE_AGENTS[i].audio;
+      audio.play();
+      setPlayingIdx(i);
+      setProgress(0);
+    }
+  };
+
   return (
     <section className="py-20 relative overflow-hidden" style={{ background: "#060d1f" }}>
       <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(249,115,22,0.07) 0%, transparent 65%)" }} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-[380px_1fr] gap-12 items-start">
-          {/* Left */}
+        <div className="grid lg:grid-cols-[360px_1fr] gap-14 items-start">
+
+          {/* Left: text */}
           <div className="lg:sticky lg:top-24">
-            <span style={{ display: "inline-block", border: "1px solid rgba(255,255,255,0.18)", color: "rgba(255,255,255,0.6)", fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", borderRadius: 4, padding: "3px 10px", marginBottom: 20 }}>
+            <span style={{ display: "inline-block", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.55)", fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", borderRadius: 4, padding: "3px 10px", marginBottom: 22 }}>
               Audio-Demos
             </span>
-            <h2 className="font-display font-bold leading-tight text-white mb-5" style={{ fontSize: "clamp(26px,3.5vw,38px)" }}>
+            <h2 className="font-display font-bold leading-tight text-white mb-5" style={{ fontSize: "clamp(24px,3.2vw,36px)" }}>
               Hören Sie, wie Bleibsichtbar Anrufe beantworten könnte für{" "}
               <span style={{ color: "#60a5fa" }}>verschiedene Unternehmen.</span>
             </h2>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.7 }}>
+            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 13.5, lineHeight: 1.75 }}>
               Dies sind Demo-Beispiele. Jeder KI Voice Agent wird individuell für das jeweilige Unternehmen entwickelt – mit spezifischen Dienstleistungen, Kundenfragen, Tonfall und Workflow.
             </p>
           </div>
-          {/* Right: grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
-            {VOICE_AGENTS.map((agent, i) => (
-              <AgentCard key={i} agent={agent} playing={playingIdx === i} onToggle={() => toggle(i)} />
-            ))}
+
+          {/* Right: 3-col card grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8 }}>
+            {VOICE_AGENTS.map((agent, i) => {
+              const isPlaying = playingIdx === i;
+              return (
+                <div key={i}
+                  onClick={() => toggle(i)}
+                  style={{
+                    position: "relative", overflow: "hidden",
+                    background: isPlaying ? "rgba(249,115,22,0.06)" : "rgba(255,255,255,0.035)",
+                    border: isPlaying ? "1px solid rgba(249,115,22,0.30)" : "1px solid rgba(255,255,255,0.07)",
+                    borderRadius: 10, padding: "10px 12px",
+                    display: "flex", alignItems: "center", gap: 10,
+                    cursor: "pointer", transition: "background 0.2s, border-color 0.2s",
+                  }}
+                >
+                  {/* photo */}
+                  <img
+                    src={agent.photo}
+                    alt={agent.name}
+                    style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: isPlaying ? "2px solid rgba(249,115,22,0.6)" : "2px solid rgba(255,255,255,0.10)" }}
+                  />
+
+                  {/* text */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 8, fontWeight: 700, color: "rgba(255,255,255,0.32)", letterSpacing: 1.3, textTransform: "uppercase", marginBottom: 2 }}>
+                      {agent.industry}
+                    </div>
+                    <div style={{ fontSize: 12.5, fontWeight: 700, color: "white", lineHeight: 1.2, marginBottom: 2 }}>{agent.name}</div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.42)", lineHeight: 1.35, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{agent.desc}</div>
+                  </div>
+
+                  {/* play button */}
+                  <div style={{
+                    width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                    background: isPlaying ? "rgba(249,115,22,0.20)" : "rgba(255,255,255,0.08)",
+                    border: isPlaying ? "1px solid rgba(249,115,22,0.55)" : "1px solid rgba(255,255,255,0.12)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    transition: "all 0.2s",
+                  }}>
+                    {isPlaying
+                      ? <WaveBars />
+                      : <div style={{ width: 0, height: 0, borderTop: "5px solid transparent", borderBottom: "5px solid transparent", borderLeft: "8px solid rgba(255,255,255,0.65)", marginLeft: 2 }} />
+                    }
+                  </div>
+
+                  {/* progress bar at bottom */}
+                  {isPlaying && (
+                    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "rgba(255,255,255,0.06)" }}>
+                      <div style={{ height: "100%", width: `${progress}%`, background: "#f97316", transition: "width 0.3s linear", borderRadius: 2 }} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
+
+        {/* Time display under active card area */}
+        {playingIdx !== null && (
+          <div style={{ textAlign: "right", marginTop: 8, fontSize: 11, color: "rgba(255,255,255,0.35)", fontVariantNumeric: "tabular-nums" }}>
+            {timeInfo.cur} / {timeInfo.dur}
+          </div>
+        )}
       </div>
     </section>
   );
