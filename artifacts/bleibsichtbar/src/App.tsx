@@ -23,6 +23,7 @@ const AGB = lazy(() => import("./pages/AGB"));
 const Onboarding = lazy(() => import("./pages/Onboarding"));
 const OnboardingAI = lazy(() => import("./pages/OnboardingAI"));
 const OnboardingWebseiten = lazy(() => import("./pages/OnboardingWebseiten"));
+const OnboardingSocialMedia = lazy(() => import("./pages/OnboardingSocialMedia"));
 const NotFound = lazy(() => import("./pages/not-found"));
 
 // Admin Pages — separate lazy chunk
@@ -96,6 +97,7 @@ function Router() {
         <Route path="/onboarding" component={Onboarding} />
         <Route path="/onboarding-ai" component={OnboardingAI} />
         <Route path="/onboarding-webseiten" component={OnboardingWebseiten} />
+        <Route path="/onboarding-social-media" component={OnboardingSocialMedia} />
 
         <Route component={NotFound} />
       </Switch>
