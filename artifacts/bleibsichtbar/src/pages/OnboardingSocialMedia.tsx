@@ -95,9 +95,23 @@ function OptionGrid({ options, selected, onChange, multi }: {
 function TextInput({ value, onChange, placeholder, required, type = "text" }: {
   value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean; type?: string;
 }) {
+  const handleInvalid = (e: React.InvalidEvent<HTMLInputElement>) => {
+    const el = e.currentTarget;
+    if (el.validity.valueMissing) {
+      el.setCustomValidity("Dieses Feld ist erforderlich.");
+    } else if (el.validity.typeMismatch) {
+      el.setCustomValidity("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+    } else {
+      el.setCustomValidity("Bitte füllen Sie dieses Feld korrekt aus.");
+    }
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.currentTarget.setCustomValidity("");
+    onChange(e.target.value);
+  };
   return (
     <input type={type} value={value} required={required}
-      onChange={e => onChange(e.target.value)} placeholder={placeholder}
+      onChange={handleChange} onInvalid={handleInvalid} placeholder={placeholder}
       className="w-full bg-white/5 border border-white/15 rounded-2xl px-5 py-3.5 text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/35 focus:bg-white/8 transition-all duration-200"
     />
   );
