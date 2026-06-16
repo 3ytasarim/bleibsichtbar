@@ -167,7 +167,6 @@ export default function OnboardingAI() {
     umsetzung: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const set = (k: string, v: unknown) => setF(p => ({ ...p, [k]: v }));
   const toggleMulti = (k: string, v: string) => {
@@ -371,22 +370,9 @@ export default function OnboardingAI() {
                 Ihre Bedarfsanalyse wurde erfolgreich übermittelt.
               </motion.p>
               <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}
-                className="text-white/55 text-base max-w-xl mx-auto leading-relaxed mb-10">
+                className="text-white/55 text-base max-w-xl mx-auto leading-relaxed">
                 Wir melden uns in Kürze bei Ihnen, um die passende KI-Lösung für Ihr Unternehmen zu besprechen.
               </motion.p>
-              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9, duration: 0.6 }} className="relative mx-auto max-w-2xl">
-                <div className="absolute -inset-3 bg-orange-500/10 rounded-3xl blur-2xl pointer-events-none" />
-                <div className="relative bg-[#0a1628]/90 border border-white/20 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-md">
-                  <div className="flex items-center gap-2 px-5 py-3 border-b border-white/10">
-                    <div className="flex gap-1.5">
-                      {["bg-red-500/70","bg-yellow-500/70","bg-green-500/70"].map(c => <div key={c} className={`w-3 h-3 rounded-full ${c}`} />)}
-                    </div>
-                    <span className="text-white/50 text-sm font-medium ml-2">Was passiert nach der Analyse?</span>
-                  </div>
-                  <video ref={videoRef} src="/onboarding-video.mp4" controls playsInline className="w-full aspect-video bg-black block" />
-                </div>
-              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
