@@ -807,7 +807,7 @@ export const translations = {
       websites: "Websites",
       marketingAds: "Marketing Ads",
       ki: "AI & Automation",
-      analyse: "Analytics & Reporting",
+      analyse: "LLC Services",
       contact: "Contact",
       whatsapp: "WhatsApp",
       contactUs: "Get in touch",
