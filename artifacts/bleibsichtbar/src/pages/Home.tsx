@@ -620,7 +620,7 @@ const stagger = {
 };
 
 // ─── Social Media Slider ───────────────────────────────────────────────────────
-const CARDS_PER_VIEW = 3;
+const CARDS_PER_VIEW = 4;
 
 // Deterministic "random" based on project id so same project always shows same stats
 function autoStat(seed: number, min: number, max: number): string {
@@ -666,6 +666,11 @@ function SocialMediaSlider() {
       imageUrl: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80&fit=crop",
       statFollowers: "37k", statLikes: "38k", statViews: "1.4M",
     },
+    {
+      id: -4, title: "Brand Identity & Content", clientName: "Corporate Branding", category: "Social Media",
+      imageUrl: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&q=80&fit=crop",
+      statFollowers: "62k", statLikes: "540k", statViews: "18M",
+    },
   ] as any[];
 
   const displayProjects = projects.length === 0 && !isLoading ? FALLBACK : (projects.length > 0 ? projects : []);
@@ -702,8 +707,8 @@ function SocialMediaSlider() {
 
         {/* Cards */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[0, 1, 2].map(i => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[0, 1, 2, 3].map(i => (
               <div key={i} className="rounded-3xl bg-white/5 animate-pulse" style={{ height: 420 }} />
             ))}
           </div>
@@ -716,7 +721,7 @@ function SocialMediaSlider() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -40 }}
                 transition={{ duration: 0.38, ease: "easeInOut" }}
-                className="grid grid-cols-1 md:grid-cols-3 gap-5"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
               >
                 {displayVisible.map((p: any, i: number) => {
                   const seed = Math.abs(p.id ?? i + 1);
