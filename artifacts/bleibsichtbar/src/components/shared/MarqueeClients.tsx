@@ -84,7 +84,7 @@ function PartnerLogos() {
 
   if (!loaded || partners.length === 0) return null;
 
-  const cols = partners.length === 1 ? 1 : partners.length === 2 ? 2 : 3;
+  const cols = partners.length === 1 ? 1 : partners.length === 2 ? 2 : partners.length === 3 ? 3 : 4;
 
   return (
     <div className="max-w-3xl mx-auto mt-16 px-4">
