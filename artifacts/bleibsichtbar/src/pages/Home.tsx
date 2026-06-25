@@ -555,7 +555,7 @@ const SERVICE_META = [
   { icon: Users,    color: "from-pink-500 to-rose-600",    link: "/social-media" },
   { icon: Brain,    color: "from-violet-500 to-purple-700", link: "/ki-automatisierungen" },
   { icon: Monitor,  color: "from-blue-500 to-indigo-700",  link: "/webseiten" },
-  { icon: Target,   color: "from-orange-400 to-amber-600", link: "/llc-grundung" },
+  { icon: Target,   color: "from-orange-400 to-amber-600", link: "/kontakt" },
   { icon: BarChart3,color: "from-green-500 to-emerald-700",link: "/marketing-ads" },
   { icon: Clock,    color: "from-slate-500 to-gray-700",   link: "/kontakt" },
 ];
