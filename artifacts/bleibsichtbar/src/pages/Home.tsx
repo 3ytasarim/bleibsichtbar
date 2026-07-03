@@ -738,9 +738,10 @@ function SocialMediaSlider() {
                       <div
                         className="relative overflow-hidden"
                         style={{
-                          height: 420,
-                          borderRadius: 24,
-                          boxShadow: "0 24px 64px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.08)",
+                          height: 380,
+                          borderRadius: 18,
+                          background: "#0a1628",
+                          boxShadow: "0 20px 48px rgba(0,0,0,0.55)",
                         }}
                       >
                         {/* Full-bleed photo */}
@@ -750,13 +751,13 @@ function SocialMediaSlider() {
                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
 
-                        {/* Hover tint */}
-                        <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-colors duration-300 z-10" />
+                        {/* Dark overlay */}
+                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300 z-10" />
 
                         {/* Bottom dark stat bar */}
                         <div
-                          className="absolute bottom-0 inset-x-0 z-20 flex items-center gap-6 px-5 py-4"
-                          style={{ background: "rgba(8,8,8,0.80)", backdropFilter: "blur(14px)" }}
+                          className="absolute bottom-0 inset-x-0 z-20 flex items-center gap-4 px-4 py-3"
+                          style={{ background: "rgba(4,4,4,0.85)", backdropFilter: "blur(12px)" }}
                         >
                           {/* Follower — user-plus icon */}
                           <div className="flex items-center gap-2">
