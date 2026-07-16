@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "4ULeu0ZJboa9aniV5mCQ6"
+uri = "file://bleibsichtbar_db.zip"
+type = "unspecified"
+title = "Veritabanı Export (ZIP)"
