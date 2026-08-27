@@ -19,29 +19,10 @@ if (isDev && !basePath) {
   throw new Error("BASE_PATH environment variable is required but was not provided.");
 }
 
-const useDevTools = isDev && process.env.REPL_ID !== undefined;
 
 export default defineConfig({
   base: basePath,
-  plugins: [
-    react(),
-    tailwindcss(),
-    ...(useDevTools
-      ? [
-          await import("@replit/vite-plugin-runtime-error-modal").then((m) =>
-            m.default()
-          ),
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer({
-              root: path.resolve(import.meta.dirname, ".."),
-            }),
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner(),
-          ),
-        ]
-      : []),
-  ],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),

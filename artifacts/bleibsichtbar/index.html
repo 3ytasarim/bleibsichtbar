@@ -58,9 +58,110 @@
       "sameAs": ["https://www.instagram.com/bleibsichtbarr/"]
     }
     </script>
-  </head>
+    <script defer src="/site-core.js" data-website-id="005f56e9-5d5b-49a0-a70c-a64d7205d7f6"></script>
+    <script defer src="/site-session.js" data-website-id="005f56e9-5d5b-49a0-a70c-a64d7205d7f6"></script>
+</head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-  </body>
+  
+  <script id="bleibsichtbar-umami-events">
+    (function () {
+      function track(name) {
+        if (window.umami && typeof window.umami.track === "function") {
+          window.umami.track(name);
+        }
+      }
+
+      document.addEventListener("click", function (event) {
+        var origin = event.target;
+        if (!(origin instanceof Element)) return;
+
+        var element = origin.closest("a, button");
+        if (!element) return;
+
+        var href = (element.getAttribute("href") || "").toLowerCase();
+        var text = (element.textContent || "").trim().toLowerCase();
+
+        if (href.indexOf("mailto:") === 0) {
+          track("email_clicked");
+          return;
+        }
+
+        if (href.indexOf("tel:") === 0) {
+          track("phone_clicked");
+          return;
+        }
+
+        if (
+          href.indexOf("wa.me") !== -1 ||
+          href.indexOf("whatsapp") !== -1
+        ) {
+          track("whatsapp_clicked");
+          return;
+        }
+
+        if (
+          href === "/kontakt" ||
+          href.indexOf("/kontakt?") === 0 ||
+          text.indexOf("kontakt") !== -1 ||
+          text.indexOf("erstgespräch") !== -1 ||
+          text.indexOf("beraten") !== -1 ||
+          text.indexOf("beratung") !== -1
+        ) {
+          track("contact_cta_clicked");
+          return;
+        }
+
+        if (
+          href.indexOf("#analysebogen") !== -1 ||
+          text.indexOf("analyse") !== -1
+        ) {
+          track("analysis_cta_clicked");
+          return;
+        }
+
+        if (href.indexOf("/projekte") === 0) {
+          track("projects_clicked");
+          return;
+        }
+
+        if (
+          element.tagName === "A" &&
+          element.getAttribute("target") === "_blank" &&
+          href.indexOf("bleibsichtbar.com") === -1
+        ) {
+          track("external_link_clicked");
+        }
+      });
+
+      document.addEventListener("submit", function () {
+        var path = window.location.pathname;
+
+        if (path === "/kontakt") {
+          track("contact_form_submitted");
+          return;
+        }
+
+        if (path.indexOf("/onboarding") === 0) {
+          track("onboarding_form_submitted");
+          return;
+        }
+
+        if (path === "/analyse") {
+          track("analysis_form_submitted");
+          return;
+        }
+
+        if (path === "/social-media") {
+          track("social_media_analysis_submitted");
+          return;
+        }
+
+        track("generic_form_submitted");
+      });
+    })();
+  </script>
+
+</body>
 </html>
