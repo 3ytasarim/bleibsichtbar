@@ -26,16 +26,31 @@ const OnboardingWebseiten = lazy(() => import("./pages/OnboardingWebseiten"));
 const OnboardingSocialMedia = lazy(() => import("./pages/OnboardingSocialMedia"));
 const NotFound = lazy(() => import("./pages/not-found"));
 
+// Unified Login (admin or customer, determined server-side)
+const Login = lazy(() => import("./pages/admin/Login"));
+
 // Admin Pages — separate lazy chunk
-const AdminLogin = lazy(() => import("./pages/admin/Login"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminProjects = lazy(() => import("./pages/admin/AdminProjects"));
-const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
 const AdminReferences = lazy(() => import("./pages/admin/AdminReferences"));
 const AdminOnboarding = lazy(() => import("./pages/admin/AdminOnboarding"));
-const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
 const AdminPartners = lazy(() => import("./pages/admin/AdminPartners"));
 const AdminSeo = lazy(() => import("./pages/admin/AdminSeo"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminInvoices = lazy(() => import("./pages/admin/AdminInvoices"));
+const AdminDocuments = lazy(() => import("./pages/admin/AdminDocuments"));
+const AdminArchive = lazy(() => import("./pages/admin/AdminArchive"));
+const AdminSupportTickets = lazy(() => import("./pages/admin/AdminSupportTickets"));
+
+// Customer Portal Pages — separate lazy chunk
+const CustomerDashboard = lazy(() => import("./pages/customer/Dashboard"));
+const CustomerInstagram = lazy(() => import("./pages/customer/Instagram"));
+const CustomerContentCalendar = lazy(() => import("./pages/customer/ContentCalendar"));
+const CustomerDokumente = lazy(() => import("./pages/customer/Dokumente"));
+const CustomerAnalysen = lazy(() => import("./pages/customer/Analysen"));
+const CustomerRechnungen = lazy(() => import("./pages/customer/Rechnungen"));
+const CustomerProfil = lazy(() => import("./pages/customer/Profil"));
+const CustomerSupportTickets = lazy(() => import("./pages/customer/SupportTickets"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,16 +82,31 @@ function Router() {
     <Suspense fallback={<PageFallback />}>
       <ScrollToTop />
       <Switch>
+        {/* Unified Login */}
+        <Route path="/login" component={Login} />
+
         {/* Admin Routes */}
-        <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin" component={AdminDashboard} />
         <Route path="/admin/projekte" component={AdminProjects} />
-        <Route path="/admin/blog" component={AdminBlog} />
         <Route path="/admin/referenzen" component={AdminReferences} />
         <Route path="/admin/onboarding" component={AdminOnboarding} />
-        <Route path="/admin/kunden" component={AdminClients} />
         <Route path="/admin/partner" component={AdminPartners} />
         <Route path="/admin/seo" component={AdminSeo} />
+        <Route path="/admin/benutzer" component={AdminUsers} />
+        <Route path="/admin/rechnungen" component={AdminInvoices} />
+        <Route path="/admin/dokumente" component={AdminDocuments} />
+        <Route path="/admin/archiv" component={AdminArchive} />
+        <Route path="/admin/support-tickets" component={AdminSupportTickets} />
+
+        {/* Customer Portal — completely separate from Admin (own dashboard, shares /login) */}
+        <Route path="/dashboard" component={CustomerDashboard} />
+        <Route path="/dashboard/instagram" component={CustomerInstagram} />
+        <Route path="/dashboard/content-calendar" component={CustomerContentCalendar} />
+        <Route path="/dashboard/dokumente" component={CustomerDokumente} />
+        <Route path="/dashboard/dateien" component={CustomerAnalysen} />
+        <Route path="/dashboard/rechnungen" component={CustomerRechnungen} />
+        <Route path="/dashboard/profil" component={CustomerProfil} />
+        <Route path="/dashboard/support" component={CustomerSupportTickets} />
 
         {/* Public Routes */}
         <Route path="/" component={Home} />

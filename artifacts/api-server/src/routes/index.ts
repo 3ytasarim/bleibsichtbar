@@ -11,6 +11,10 @@ import partnersRouter from "./partners.js";
 import gcsRouter from "./gcs.js";
 import seoRouter from "./seo.js";
 import analyseRouter from "./analyse.js";
+import customersRouter from "./customers.js";
+import customerAuthRouter from "./customerAuth.js";
+import portalRouter from "./portal.js";
+import supportTicketsRouter from "./supportTickets.js";
 import { db, projectsTable, blogPostsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 
@@ -28,6 +32,10 @@ router.use("/partners", partnersRouter);
 router.use("/gcs", gcsRouter);
 router.use("/seo", seoRouter);
 router.use("/analyse", analyseRouter);
+router.use("/customers", customersRouter);
+router.use("/customer-auth", customerAuthRouter);
+router.use("/portal", portalRouter);
+router.use("/support-tickets", supportTicketsRouter);
 
 router.get("/sitemap.xml", async (_req: Request, res: Response) => {
   try {

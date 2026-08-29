@@ -15,16 +15,17 @@ export const HealthCheckResponse = zod.object({
 });
 
 /**
- * @summary Admin login
+ * @summary Unified login (admin or customer)
  */
-export const AdminLoginBody = zod.object({
+export const LoginBody = zod.object({
   username: zod.string(),
   password: zod.string(),
 });
 
-export const AdminLoginResponse = zod.object({
+export const LoginResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
+  role: zod.string().optional(),
 });
 
 /**
@@ -322,6 +323,906 @@ export const DeleteReferenceResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
 });
+
+/**
+ * @summary Get all customer accounts (admin)
+ */
+export const GetCustomersResponseItem = zod.object({
+  id: zod.number(),
+  companyName: zod.string(),
+  username: zod.string(),
+  role: zod.string(),
+  status: zod.string(),
+  contactPerson: zod.string().nullish(),
+  email: zod.string().nullish(),
+  phone: zod.string().nullish(),
+  startDate: zod.date().nullish(),
+  quickbooksId: zod.string().nullish(),
+  crmId: zod.string().nullish(),
+  instagramAccountId: zod.string().nullish(),
+  instagramUsername: zod.string().nullish(),
+  instagramFollowerCount: zod.number().nullish(),
+  facebookPageId: zod.string().nullish(),
+  instagramConnectedAt: zod.date().nullish(),
+  instagramTokenExpiresAt: zod.date().nullish(),
+  nextcloudShareLink: zod.string().nullish(),
+  bufferChannelName: zod.string().nullish(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const GetCustomersResponse = zod.array(GetCustomersResponseItem);
+
+/**
+ * @summary Create a customer account (admin)
+ */
+export const CreateCustomerBody = zod.object({
+  companyName: zod.string(),
+  username: zod.string(),
+  password: zod.string(),
+  passwordConfirm: zod.string().optional(),
+  status: zod.string(),
+  contactPerson: zod.string().nullish(),
+  email: zod.string().nullish(),
+  phone: zod.string().nullish(),
+  startDate: zod.date().nullish(),
+  quickbooksId: zod.string().nullish(),
+  crmId: zod.string().nullish(),
+  instagramAccountId: zod.string().nullish(),
+  instagramUsername: zod.string().nullish(),
+  instagramFollowerCount: zod.number().nullish(),
+  facebookPageId: zod.string().nullish(),
+  metaAccessToken: zod.string().nullish(),
+  nextcloudShareLink: zod.string().nullish(),
+  bufferChannelName: zod.string().nullish(),
+});
+
+/**
+ * @summary Test an Instagram/Meta API connection (admin)
+ */
+export const TestInstagramConnectionBody = zod.object({
+  instagramAccountId: zod.string(),
+  metaAccessToken: zod.string(),
+});
+
+export const TestInstagramConnectionResponse = zod.object({
+  success: zod.boolean(),
+  username: zod.string().nullish(),
+  followers: zod.number().nullish(),
+  error: zod.string().nullish(),
+});
+
+/**
+ * @summary Update a customer account (admin)
+ */
+export const UpdateCustomerParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateCustomerBody = zod.object({
+  companyName: zod.string().optional(),
+  username: zod.string().optional(),
+  password: zod.string().optional(),
+  passwordConfirm: zod.string().optional(),
+  status: zod.string().optional(),
+  contactPerson: zod.string().nullish(),
+  email: zod.string().nullish(),
+  phone: zod.string().nullish(),
+  startDate: zod.date().nullish(),
+  quickbooksId: zod.string().nullish(),
+  crmId: zod.string().nullish(),
+  instagramAccountId: zod.string().nullish(),
+  instagramUsername: zod.string().nullish(),
+  instagramFollowerCount: zod.number().nullish(),
+  facebookPageId: zod.string().nullish(),
+  metaAccessToken: zod.string().nullish(),
+  nextcloudShareLink: zod.string().nullish(),
+  bufferChannelName: zod.string().nullish(),
+});
+
+export const UpdateCustomerResponse = zod.object({
+  id: zod.number(),
+  companyName: zod.string(),
+  username: zod.string(),
+  role: zod.string(),
+  status: zod.string(),
+  contactPerson: zod.string().nullish(),
+  email: zod.string().nullish(),
+  phone: zod.string().nullish(),
+  startDate: zod.date().nullish(),
+  quickbooksId: zod.string().nullish(),
+  crmId: zod.string().nullish(),
+  instagramAccountId: zod.string().nullish(),
+  instagramUsername: zod.string().nullish(),
+  instagramFollowerCount: zod.number().nullish(),
+  facebookPageId: zod.string().nullish(),
+  instagramConnectedAt: zod.date().nullish(),
+  instagramTokenExpiresAt: zod.date().nullish(),
+  nextcloudShareLink: zod.string().nullish(),
+  bufferChannelName: zod.string().nullish(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+/**
+ * @summary Delete a customer account (admin)
+ */
+export const DeleteCustomerParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteCustomerResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary List monthly metrics for a customer (admin)
+ */
+export const GetCustomerMonthlyMetricsParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetCustomerMonthlyMetricsResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  yearMonth: zod.string(),
+  source: zod.string(),
+  followers: zod.number().nullish(),
+  reach: zod.number().nullish(),
+  totalInteractions: zod.number().nullish(),
+  profileViews: zod.number().nullish(),
+  accountsEngaged: zod.number().nullish(),
+  note: zod.string().nullish(),
+  createdAt: zod.date().optional(),
+  updatedAt: zod.date().optional(),
+});
+export const GetCustomerMonthlyMetricsResponse = zod.array(
+  GetCustomerMonthlyMetricsResponseItem,
+);
+
+/**
+ * @summary Manually add a monthly metrics entry (admin)
+ */
+export const CreateCustomerMonthlyMetricParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const CreateCustomerMonthlyMetricBody = zod.object({
+  yearMonth: zod.string().describe("Format: YYYY-MM"),
+  followers: zod.number().nullish(),
+  reach: zod.number().nullish(),
+  totalInteractions: zod.number().nullish(),
+  profileViews: zod.number().nullish(),
+  accountsEngaged: zod.number().nullish(),
+  note: zod.string().nullish(),
+});
+
+/**
+ * @summary Update a monthly metrics entry — numbers only editable when manually sourced (admin)
+ */
+export const UpdateCustomerMonthlyMetricParams = zod.object({
+  id: zod.coerce.number(),
+  yearMonth: zod.coerce.string(),
+});
+
+export const UpdateCustomerMonthlyMetricBody = zod.object({
+  followers: zod.number().nullish(),
+  reach: zod.number().nullish(),
+  totalInteractions: zod.number().nullish(),
+  profileViews: zod.number().nullish(),
+  accountsEngaged: zod.number().nullish(),
+  note: zod.string().nullish(),
+});
+
+export const UpdateCustomerMonthlyMetricResponse = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  yearMonth: zod.string(),
+  source: zod.string(),
+  followers: zod.number().nullish(),
+  reach: zod.number().nullish(),
+  totalInteractions: zod.number().nullish(),
+  profileViews: zod.number().nullish(),
+  accountsEngaged: zod.number().nullish(),
+  note: zod.string().nullish(),
+  createdAt: zod.date().optional(),
+  updatedAt: zod.date().optional(),
+});
+
+/**
+ * @summary Delete a manually-entered monthly metrics entry (admin)
+ */
+export const DeleteCustomerMonthlyMetricParams = zod.object({
+  id: zod.coerce.number(),
+  yearMonth: zod.coerce.string(),
+});
+
+export const DeleteCustomerMonthlyMetricResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary List content calendar entries for a customer (admin)
+ */
+export const GetCustomerContentCalendarParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetCustomerContentCalendarResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  date: zod.string().describe("Format: YYYY-MM-DD"),
+  title: zod.string(),
+  contentType: zod.string().describe("post | story | reel | campaign"),
+  status: zod.string().describe("planned | published"),
+  note: zod.string().nullish(),
+  caption: zod
+    .string()
+    .nullish()
+    .describe("Full post text actually sent to Buffer"),
+  mediaUrl: zod.string().nullish(),
+  scheduledAt: zod.date().nullish(),
+  bufferPostId: zod.string().nullish(),
+  bufferStatus: zod
+    .string()
+    .nullish()
+    .describe("scheduled | published | failed"),
+  bufferError: zod.string().nullish(),
+  createdAt: zod.date().optional(),
+  updatedAt: zod.date().optional(),
+});
+export const GetCustomerContentCalendarResponse = zod.array(
+  GetCustomerContentCalendarResponseItem,
+);
+
+/**
+ * @summary Add a content calendar entry (admin)
+ */
+export const CreateCustomerContentCalendarEntryParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const CreateCustomerContentCalendarEntryBody = zod.object({
+  date: zod.string().describe("Format: YYYY-MM-DD"),
+  title: zod.string(),
+  contentType: zod
+    .string()
+    .optional()
+    .describe("post | story | reel | campaign"),
+  status: zod.string().optional().describe("planned | published"),
+  note: zod.string().nullish(),
+  caption: zod.string().nullish(),
+  mediaUrl: zod.string().nullish(),
+  scheduledAt: zod.date().nullish(),
+});
+
+/**
+ * @summary Update a content calendar entry (admin)
+ */
+export const UpdateCustomerContentCalendarEntryParams = zod.object({
+  id: zod.coerce.number(),
+  entryId: zod.coerce.number(),
+});
+
+export const UpdateCustomerContentCalendarEntryBody = zod.object({
+  date: zod.string().optional(),
+  title: zod.string().optional(),
+  contentType: zod.string().optional(),
+  status: zod.string().optional(),
+  note: zod.string().nullish(),
+  caption: zod.string().nullish(),
+  mediaUrl: zod.string().nullish(),
+  scheduledAt: zod.date().nullish(),
+});
+
+export const UpdateCustomerContentCalendarEntryResponse = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  date: zod.string().describe("Format: YYYY-MM-DD"),
+  title: zod.string(),
+  contentType: zod.string().describe("post | story | reel | campaign"),
+  status: zod.string().describe("planned | published"),
+  note: zod.string().nullish(),
+  caption: zod
+    .string()
+    .nullish()
+    .describe("Full post text actually sent to Buffer"),
+  mediaUrl: zod.string().nullish(),
+  scheduledAt: zod.date().nullish(),
+  bufferPostId: zod.string().nullish(),
+  bufferStatus: zod
+    .string()
+    .nullish()
+    .describe("scheduled | published | failed"),
+  bufferError: zod.string().nullish(),
+  createdAt: zod.date().optional(),
+  updatedAt: zod.date().optional(),
+});
+
+/**
+ * @summary Delete a content calendar entry (admin)
+ */
+export const DeleteCustomerContentCalendarEntryParams = zod.object({
+  id: zod.coerce.number(),
+  entryId: zod.coerce.number(),
+});
+
+export const DeleteCustomerContentCalendarEntryResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary List channels connected to the shared Buffer account (admin)
+ */
+export const GetBufferChannelsResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  displayName: zod.string(),
+  service: zod.string(),
+  avatar: zod.string().nullish(),
+  isQueuePaused: zod.boolean(),
+});
+export const GetBufferChannelsResponse = zod.array(
+  GetBufferChannelsResponseItem,
+);
+
+/**
+ * @summary Schedule a content calendar entry for publishing via Buffer (admin)
+ */
+export const ScheduleContentCalendarEntryViaBufferParams = zod.object({
+  id: zod.coerce.number(),
+  entryId: zod.coerce.number(),
+});
+
+export const ScheduleContentCalendarEntryViaBufferResponse = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  date: zod.string().describe("Format: YYYY-MM-DD"),
+  title: zod.string(),
+  contentType: zod.string().describe("post | story | reel | campaign"),
+  status: zod.string().describe("planned | published"),
+  note: zod.string().nullish(),
+  caption: zod
+    .string()
+    .nullish()
+    .describe("Full post text actually sent to Buffer"),
+  mediaUrl: zod.string().nullish(),
+  scheduledAt: zod.date().nullish(),
+  bufferPostId: zod.string().nullish(),
+  bufferStatus: zod
+    .string()
+    .nullish()
+    .describe("scheduled | published | failed"),
+  bufferError: zod.string().nullish(),
+  createdAt: zod.date().optional(),
+  updatedAt: zod.date().optional(),
+});
+
+/**
+ * @summary The authenticated customer's real, live Buffer calendar (read-only) — whatever is actually scheduled/published for their channel, not this portal's internal admin drafts
+ */
+export const GetPortalContentCalendarResponse = zod.object({
+  enabled: zod.boolean(),
+  entries: zod.array(
+    zod.object({
+      id: zod.string(),
+      date: zod
+        .string()
+        .describe("Format: YYYY-MM-DD, derived from Buffer's dueAt"),
+      text: zod.string(),
+      status: zod.string().describe("scheduled | sent"),
+      thumbnailUrl: zod.string().nullable(),
+    }),
+  ),
+});
+
+/**
+ * @summary List invoices for a customer (admin)
+ */
+export const GetCustomerInvoicesParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetCustomerInvoicesResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  invoiceNumber: zod.string(),
+  invoiceDate: zod.date(),
+  dueDate: zod.date().nullish(),
+  amount: zod.string().nullish(),
+  currency: zod.string(),
+  status: zod.string(),
+  pdfFileReference: zod.string().nullish(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const GetCustomerInvoicesResponse = zod.array(
+  GetCustomerInvoicesResponseItem,
+);
+
+/**
+ * @summary Add an invoice for a customer (admin)
+ */
+export const CreateCustomerInvoiceParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const CreateCustomerInvoiceBody = zod.object({
+  invoiceNumber: zod.string(),
+  invoiceDate: zod.date(),
+  dueDate: zod.date().nullish(),
+  amount: zod.string(),
+  currency: zod.string().optional(),
+  status: zod.string().optional(),
+});
+
+/**
+ * @summary Update an invoice (admin)
+ */
+export const UpdateCustomerInvoiceParams = zod.object({
+  id: zod.coerce.number(),
+  invoiceId: zod.coerce.number(),
+});
+
+export const UpdateCustomerInvoiceBody = zod.object({
+  invoiceNumber: zod.string().optional(),
+  invoiceDate: zod.date().optional(),
+  dueDate: zod.date().nullish(),
+  amount: zod.string().nullish(),
+  currency: zod.string().optional(),
+  status: zod.string().optional(),
+});
+
+export const UpdateCustomerInvoiceResponse = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  invoiceNumber: zod.string(),
+  invoiceDate: zod.date(),
+  dueDate: zod.date().nullish(),
+  amount: zod.string().nullish(),
+  currency: zod.string(),
+  status: zod.string(),
+  pdfFileReference: zod.string().nullish(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+/**
+ * @summary Delete an invoice, including its stored PDF if any (admin)
+ */
+export const DeleteCustomerInvoiceParams = zod.object({
+  id: zod.coerce.number(),
+  invoiceId: zod.coerce.number(),
+});
+
+export const DeleteCustomerInvoiceResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary List documents for a customer (admin)
+ */
+export const GetCustomerDocumentsParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetCustomerDocumentsResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  title: zod.string(),
+  category: zod.string().describe("briefing | strategy | brand | other"),
+  fileReference: zod.string(),
+  fileName: zod.string(),
+  createdAt: zod.date(),
+});
+export const GetCustomerDocumentsResponse = zod.array(
+  GetCustomerDocumentsResponseItem,
+);
+
+/**
+ * @summary Delete a customer document, including its stored file (admin)
+ */
+export const DeleteCustomerDocumentParams = zod.object({
+  id: zod.coerce.number(),
+  documentId: zod.coerce.number(),
+});
+
+export const DeleteCustomerDocumentResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary List the authenticated customer's documents (read-only)
+ */
+export const GetPortalDocumentsResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  title: zod.string(),
+  category: zod.string().describe("briefing | strategy | brand | other"),
+  fileReference: zod.string(),
+  fileName: zod.string(),
+  createdAt: zod.date(),
+});
+export const GetPortalDocumentsResponse = zod.array(
+  GetPortalDocumentsResponseItem,
+);
+
+/**
+ * @summary List the authenticated customer's notifications
+ */
+export const GetPortalNotificationsResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  type: zod.string().describe("invoice | monthly_report | support_ticket"),
+  title: zod.string(),
+  message: zod.string().nullish(),
+  link: zod.string().nullish(),
+  read: zod.boolean(),
+  createdAt: zod.date(),
+});
+export const GetPortalNotificationsResponse = zod.array(
+  GetPortalNotificationsResponseItem,
+);
+
+/**
+ * @summary Mark one notification as read
+ */
+export const MarkPortalNotificationReadParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const MarkPortalNotificationReadResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary Mark all of the authenticated customer's notifications as read
+ */
+export const MarkAllPortalNotificationsReadResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary List the authenticated customer's own support tickets, newest first
+ */
+export const GetPortalSupportTicketsResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  category: zod.string().describe("invoice | social_media | website | other"),
+  subject: zod.string(),
+  message: zod.string(),
+  status: zod
+    .string()
+    .describe("open | in_progress | in_review | resolved | closed"),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const GetPortalSupportTicketsResponse = zod.array(
+  GetPortalSupportTicketsResponseItem,
+);
+
+/**
+ * @summary Open a new support ticket
+ */
+export const CreatePortalSupportTicketBody = zod.object({
+  category: zod.string().describe("invoice | social_media | website | other"),
+  subject: zod.string(),
+  message: zod.string(),
+});
+
+/**
+ * @summary The reply thread for one of the authenticated customer's own tickets
+ */
+export const GetPortalSupportTicketMessagesParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetPortalSupportTicketMessagesResponseItem = zod.object({
+  id: zod.number(),
+  ticketId: zod.number(),
+  senderType: zod.string().describe("customer | admin"),
+  message: zod.string(),
+  createdAt: zod.date(),
+});
+export const GetPortalSupportTicketMessagesResponse = zod.array(
+  GetPortalSupportTicketMessagesResponseItem,
+);
+
+/**
+ * @summary Reply to one of the authenticated customer's own tickets — reopens it if it was resolved/closed
+ */
+export const CreatePortalSupportTicketMessageParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const CreatePortalSupportTicketMessageBody = zod.object({
+  message: zod.string(),
+});
+
+/**
+ * @summary List all support tickets across every customer, newest first (admin)
+ */
+export const GetSupportTicketsResponseItem = zod
+  .object({
+    id: zod.number(),
+    customerId: zod.number(),
+    category: zod.string().describe("invoice | social_media | website | other"),
+    subject: zod.string(),
+    message: zod.string(),
+    status: zod
+      .string()
+      .describe("open | in_progress | in_review | resolved | closed"),
+    createdAt: zod.date(),
+    updatedAt: zod.date(),
+  })
+  .and(
+    zod.object({
+      customerCompanyName: zod.string(),
+      customerUsername: zod.string(),
+      unread: zod
+        .boolean()
+        .describe(
+          "True when the customer has the last word — a new ticket nobody has actioned yet, or a reply since the admin's last message\/status change",
+        ),
+    }),
+  )
+  .describe(
+    "A SupportTicket with the owning customer's name attached, as returned by the admin listing endpoint",
+  );
+export const GetSupportTicketsResponse = zod.array(
+  GetSupportTicketsResponseItem,
+);
+
+/**
+ * @summary Update a ticket's status (and optionally leave a response) — notifies the customer (admin)
+ */
+export const UpdateSupportTicketParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateSupportTicketBody = zod.object({
+  status: zod
+    .string()
+    .describe("open | in_progress | in_review | resolved | closed"),
+});
+
+export const UpdateSupportTicketResponse = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  category: zod.string().describe("invoice | social_media | website | other"),
+  subject: zod.string(),
+  message: zod.string(),
+  status: zod
+    .string()
+    .describe("open | in_progress | in_review | resolved | closed"),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+/**
+ * @summary The reply thread for one ticket (admin)
+ */
+export const GetSupportTicketMessagesParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetSupportTicketMessagesResponseItem = zod.object({
+  id: zod.number(),
+  ticketId: zod.number(),
+  senderType: zod.string().describe("customer | admin"),
+  message: zod.string(),
+  createdAt: zod.date(),
+});
+export const GetSupportTicketMessagesResponse = zod.array(
+  GetSupportTicketMessagesResponseItem,
+);
+
+/**
+ * @summary Reply to a ticket — notifies the customer (admin)
+ */
+export const CreateSupportTicketMessageParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const CreateSupportTicketMessageBody = zod.object({
+  message: zod.string(),
+});
+
+/**
+ * @summary Customer login
+ */
+export const CustomerLoginBody = zod.object({
+  username: zod.string(),
+  password: zod.string(),
+});
+
+export const CustomerLoginResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+  role: zod.string().optional(),
+});
+
+/**
+ * @summary Customer logout
+ */
+export const CustomerLogoutResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary Get current customer
+ */
+export const GetCustomerMeResponse = zod.object({
+  id: zod.number(),
+  companyName: zod.string(),
+  username: zod.string(),
+  status: zod.string(),
+  startDate: zod.date().nullish(),
+});
+
+/**
+ * @summary Get the authenticated customer's Instagram profile
+ */
+export const GetPortalInstagramQueryParams = zod.object({
+  days: zod.coerce
+    .number()
+    .optional()
+    .describe(
+      'Relative date-range filter for the Entwicklung\/Muster charts — e.g. 5 for \"letzte 5 Tage\". Ignored if since is set. Defaults to the real current calendar month.',
+    ),
+  since: zod.coerce
+    .string()
+    .optional()
+    .describe("Format: YYYY-MM-DD — start of an absolute custom date range."),
+  until: zod.coerce
+    .string()
+    .optional()
+    .describe(
+      "Format: YYYY-MM-DD — end of an absolute custom date range (defaults to today if since is set but until isn't).",
+    ),
+});
+
+export const GetPortalInstagramResponse = zod.object({
+  connected: zod.boolean(),
+  username: zod.string().nullish(),
+  profilePictureUrl: zod.string().nullish(),
+  followers: zod.number().nullish(),
+  mediaCount: zod.number().nullish(),
+  insights: zod
+    .object({
+      reach: zod.number().nullish(),
+      accountsEngaged: zod.number().nullish(),
+      totalInteractions: zod.number().nullish(),
+      profileViews: zod.number().nullish(),
+      websiteClicks: zod.number().nullish(),
+      likes: zod.number().nullish(),
+      comments: zod.number().nullish(),
+      shares: zod.number().nullish(),
+      saves: zod.number().nullish(),
+      replies: zod.number().nullish(),
+      reachSeries: zod
+        .array(
+          zod.object({
+            date: zod.string(),
+            value: zod.number(),
+          }),
+        )
+        .nullish(),
+      followerSeries: zod
+        .array(
+          zod.object({
+            date: zod.string(),
+            value: zod.number(),
+          }),
+        )
+        .nullish(),
+      totalInteractionsSeries: zod
+        .array(
+          zod.object({
+            date: zod.string(),
+            value: zod.number(),
+          }),
+        )
+        .nullish(),
+      profileViewsSeries: zod
+        .array(
+          zod.object({
+            date: zod.string(),
+            value: zod.number(),
+          }),
+        )
+        .nullish(),
+      accountsEngagedSeries: zod
+        .array(
+          zod.object({
+            date: zod.string(),
+            value: zod.number(),
+          }),
+        )
+        .nullish(),
+    })
+    .nullish(),
+  monthlyHistory: zod
+    .array(
+      zod.object({
+        yearMonth: zod.string(),
+        source: zod.string(),
+        followers: zod.number().nullish(),
+        reach: zod.number().nullish(),
+        totalInteractions: zod.number().nullish(),
+        profileViews: zod.number().nullish(),
+        accountsEngaged: zod.number().nullish(),
+        note: zod.string().nullish(),
+      }),
+    )
+    .nullish(),
+  topMedia: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        caption: zod.string().nullish(),
+        mediaType: zod.string(),
+        mediaProductType: zod.string().nullish(),
+        thumbnailUrl: zod.string().nullish(),
+        permalink: zod.string(),
+        timestamp: zod.date(),
+        likeCount: zod.number(),
+        commentsCount: zod.number(),
+      }),
+    )
+    .nullish(),
+  topReels: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        caption: zod.string().nullish(),
+        mediaType: zod.string(),
+        mediaProductType: zod.string().nullish(),
+        thumbnailUrl: zod.string().nullish(),
+        permalink: zod.string(),
+        timestamp: zod.date(),
+        likeCount: zod.number(),
+        commentsCount: zod.number(),
+      }),
+    )
+    .nullish(),
+  error: zod.string().nullish(),
+});
+
+/**
+ * @summary Get the authenticated customer's Nextcloud share link, if configured
+ */
+export const GetPortalFilesResponse = zod.object({
+  enabled: zod.boolean(),
+  shareLink: zod.string().nullable(),
+});
+
+/**
+ * @summary List the authenticated customer's invoices
+ */
+export const GetPortalInvoicesResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  invoiceNumber: zod.string(),
+  invoiceDate: zod.date(),
+  dueDate: zod.date().nullish(),
+  amount: zod.string().nullish(),
+  currency: zod.string(),
+  status: zod.string(),
+  pdfFileReference: zod.string().nullish(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const GetPortalInvoicesResponse = zod.array(
+  GetPortalInvoicesResponseItem,
+);
 
 /**
  * @summary Submit contact form

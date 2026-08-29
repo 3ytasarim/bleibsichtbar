@@ -22,16 +22,16 @@
 
   --color-primary: hsl(var(--primary));
   --color-primary-foreground: hsl(var(--primary-foreground));
-  
+
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
-  
+
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
-  
+
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
-  
+
   --color-destructive: hsl(var(--destructive));
   --color-destructive-foreground: hsl(var(--destructive-foreground));
 
@@ -42,73 +42,82 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-star-btn: star-btn calc(var(--duration)*1s) linear infinite;
+  @keyframes star-btn {
+  0% {
+    offset-distance: 0%;
+    }
+  100% {
+    offset-distance: 100%;
+    }
+  }
 }
 
 :root {
   /* Clean corporate professional: White bg, Navy text, vibrant accent */
   --background: 0 0% 100%;
   --foreground: 222 47% 11%;
-  
+
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
   --card-border: 214 32% 91%;
-  
+
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
   --popover-border: 214 32% 91%;
-  
+
   /* Primary: Deep Navy */
   --primary: 222 47% 11%;
   --primary-foreground: 210 40% 98%;
-  
+
   /* Secondary: Soft Gray */
   --secondary: 210 40% 96%;
   --secondary-foreground: 222 47% 11%;
-  
+
   /* Accent: Vibrant Orange for CTA/Highlights */
   --accent: 24 95% 53%;
   --accent-foreground: 210 40% 98%;
-  
+
   --muted: 210 40% 96%;
   --muted-foreground: 215 16% 47%;
-  
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
-  
+
   --border: 214 32% 91%;
   --input: 214 32% 91%;
   --ring: 222 47% 11%;
-  
+
   --radius: 0.75rem;
 }
 
 .dark {
   --background: 222 47% 11%;
   --foreground: 210 40% 98%;
-  
+
   --card: 222 47% 11%;
   --card-foreground: 210 40% 98%;
   --card-border: 216 34% 17%;
-  
+
   --popover: 222 47% 11%;
   --popover-foreground: 210 40% 98%;
   --popover-border: 216 34% 17%;
-  
+
   --primary: 210 40% 98%;
   --primary-foreground: 222 47% 11%;
-  
+
   --secondary: 217 32% 17%;
   --secondary-foreground: 210 40% 98%;
-  
+
   --accent: 24 95% 53%;
   --accent-foreground: 210 40% 98%;
-  
+
   --muted: 217 32% 17%;
   --muted-foreground: 215 20.2% 65.1%;
-  
+
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
-  
+
   --border: 216 34% 17%;
   --input: 216 34% 17%;
   --ring: 210 40% 98%;

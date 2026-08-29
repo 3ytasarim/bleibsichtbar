@@ -67,7 +67,7 @@ function baseTemplate(title: string, accentColor: string, badgeLabel: string, bo
           <tr>
             <td style="padding:24px 40px 8px;text-align:center;">
               <p style="margin:0;color:#94a3b8;font-size:12px;line-height:1.6;">
-                Diese E-Mail wurde automatisch durch das Kontaktformular auf <a href="https://bleibsichtbar.com" style="color:#f97316;text-decoration:none;">bleibsichtbar.com</a> generiert.<br>
+                Diese E-Mail wurde automatisch von <a href="https://bleibsichtbar.com" style="color:#f97316;text-decoration:none;">bleibsichtbar.com</a> generiert.<br>
                 © ${new Date().getFullYear()} Bleibsichtbar – Agentur für Social Media Marketing
               </p>
             </td>
@@ -270,5 +270,128 @@ export async function sendOnboardingEmail(data: {
       "Onboarding",
       body
     ),
+  });
+}
+
+/* ─────────────────────────────────────────────────────── */
+/*  4. SUPPORT TICKET (Kundenportal → Admin)               */
+/* ─────────────────────────────────────────────────────── */
+const CATEGORY_LABELS: Record<string, string> = {
+  invoice: "Rechnung",
+  social_media: "Social Media",
+  website: "Website",
+  other: "Sonstiges",
+};
+
+export async function sendSupportTicketEmail(data: {
+  companyName: string;
+  username: string;
+  category: string;
+  subject: string;
+  message: string;
+}) {
+  const categoryLabel = CATEGORY_LABELS[data.category] || data.category;
+
+  const body = `
+    <p style="margin:0 0 24px;color:#475569;font-size:15px;line-height:1.6;">
+      <strong style="color:#1e293b;">${escHtml(data.companyName)}</strong> (${escHtml(data.username)}) hat ein neues <strong style="color:#1e293b;">Support-Ticket</strong> im Kundenportal eröffnet.
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0">
+      ${sectionHeader("Ticket")}
+      ${field("Kunde", `${data.companyName} (${data.username})`)}
+      ${field("Kategorie", categoryLabel)}
+      ${field("Betreff", data.subject)}
+      ${sectionHeader("Nachricht")}
+      ${field("Nachricht", data.message, true)}
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
+      <tr>
+        <td>
+          <a href="https://bleibsichtbar.com/admin/support-tickets" style="display:inline-block;background:#f97316;color:#fff;font-size:14px;font-weight:700;padding:13px 28px;border-radius:999px;text-decoration:none;">
+            Ticket im Admin-Panel öffnen
+          </a>
+        </td>
+      </tr>
+    </table>`;
+
+  const transport = createTransport();
+  await transport.sendMail({
+    from: FROM_EMAIL,
+    to: TO_EMAIL,
+    subject: `🎫 Neues Support-Ticket: ${data.subject} (${data.companyName})`,
+    html: baseTemplate(`Neues Support-Ticket`, "#f97316", "Support", body),
+  });
+}
+
+export async function sendSupportTicketReplyEmail(data: {
+  companyName: string;
+  username: string;
+  subject: string;
+  message: string;
+}) {
+  const body = `
+    <p style="margin:0 0 24px;color:#475569;font-size:15px;line-height:1.6;">
+      <strong style="color:#1e293b;">${escHtml(data.companyName)}</strong> (${escHtml(data.username)}) hat auf ein <strong style="color:#1e293b;">Support-Ticket</strong> geantwortet.
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0">
+      ${sectionHeader("Ticket")}
+      ${field("Betreff", data.subject)}
+      ${sectionHeader("Antwort")}
+      ${field("Nachricht", data.message, true)}
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
+      <tr>
+        <td>
+          <a href="https://bleibsichtbar.com/admin/support-tickets" style="display:inline-block;background:#f97316;color:#fff;font-size:14px;font-weight:700;padding:13px 28px;border-radius:999px;text-decoration:none;">
+            Ticket im Admin-Panel öffnen
+          </a>
+        </td>
+      </tr>
+    </table>`;
+
+  const transport = createTransport();
+  await transport.sendMail({
+    from: FROM_EMAIL,
+    to: TO_EMAIL,
+    subject: `💬 Neue Antwort auf Ticket: ${data.subject} (${data.companyName})`,
+    html: baseTemplate(`Neue Ticket-Antwort`, "#f97316", "Support", body),
+  });
+}
+
+/* ─────────────────────────────────────────────────────── */
+/*  5. CUSTOMER PORTAL NOTIFICATION (Kundenportal)         */
+/* ─────────────────────────────────────────────────────── */
+export async function sendCustomerNotificationEmail(data: {
+  toEmail: string;
+  companyName: string;
+  title: string;
+  message: string;
+  link?: string;
+}) {
+  const linkUrl = data.link ? `https://bleibsichtbar.com${data.link}` : "https://bleibsichtbar.com/login";
+
+  const body = `
+    <p style="margin:0 0 24px;color:#475569;font-size:15px;line-height:1.6;">
+      Hallo <strong style="color:#1e293b;">${escHtml(data.companyName)}</strong>, es gibt Neuigkeiten in Ihrem Kundenportal.
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0">
+      ${field(data.title, data.message, true)}
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
+      <tr>
+        <td>
+          <a href="${linkUrl}" style="display:inline-block;background:#f97316;color:#fff;font-size:14px;font-weight:700;padding:13px 28px;border-radius:999px;text-decoration:none;">
+            Im Kundenportal ansehen
+          </a>
+        </td>
+      </tr>
+    </table>`;
+
+  const transport = createTransport();
+  await transport.sendMail({
+    from: FROM_EMAIL,
+    to: data.toEmail,
+    subject: `🔔 ${data.title}`,
+    html: baseTemplate(data.title, "#f97316", "Kundenportal", body),
   });
 }

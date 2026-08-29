@@ -19,6 +19,12 @@ tags:
     description: Contact form
   - name: auth
     description: Admin authentication
+  - name: customers
+    description: Customer account management (admin)
+  - name: customer-auth
+    description: Customer authentication
+  - name: portal
+    description: Customer portal (Instagram, files, invoices)
 paths:
   /healthz:
     get:
@@ -35,9 +41,9 @@ paths:
 
   /auth/login:
     post:
-      operationId: adminLogin
+      operationId: login
       tags: [auth]
-      summary: Admin login
+      summary: Unified login (admin or customer)
       requestBody:
         required: true
         content:
@@ -50,7 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginResponse"
+                $ref: "#/components/schemas/AuthResponse"
         "401":
           description: Invalid credentials
           content:
@@ -361,6 +367,970 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
+  /customers:
+    get:
+      operationId: getCustomers
+      tags: [customers]
+      summary: Get all customer accounts (admin)
+      responses:
+        "200":
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Customer"
+    post:
+      operationId: createCustomer
+      tags: [customers]
+      summary: Create a customer account (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCustomer"
+      responses:
+        "201":
+          description: Created customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "409":
+          description: Username already taken
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/instagram-test:
+    post:
+      operationId: testInstagramConnection
+      tags: [customers]
+      summary: Test an Instagram/Meta API connection (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramTestRequest"
+      responses:
+        "200":
+          description: Connection successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramTestResult"
+        "400":
+          description: Connection failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramTestResult"
+
+  /customers/{id}:
+    put:
+      operationId: updateCustomer
+      tags: [customers]
+      summary: Update a customer account (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCustomer"
+      responses:
+        "200":
+          description: Updated customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Username already taken
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteCustomer
+      tags: [customers]
+      summary: Delete a customer account (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /customers/{id}/monthly-metrics:
+    get:
+      operationId: getCustomerMonthlyMetrics
+      tags: [customers]
+      summary: List monthly metrics for a customer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Monthly metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdminMonthlyMetric"
+    post:
+      operationId: createCustomerMonthlyMetric
+      tags: [customers]
+      summary: Manually add a monthly metrics entry (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMonthlyMetric"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminMonthlyMetric"
+        "409":
+          description: Month already has an entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/{id}/monthly-metrics/{yearMonth}:
+    put:
+      operationId: updateCustomerMonthlyMetric
+      tags: [customers]
+      summary: Update a monthly metrics entry — numbers only editable when manually sourced (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: yearMonth
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMonthlyMetric"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminMonthlyMetric"
+        "400":
+          description: Cannot overwrite API-sourced numbers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteCustomerMonthlyMetric
+      tags: [customers]
+      summary: Delete a manually-entered monthly metrics entry (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: yearMonth
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Cannot delete API-sourced entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/{id}/content-calendar:
+    get:
+      operationId: getCustomerContentCalendar
+      tags: [customers]
+      summary: List content calendar entries for a customer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Content calendar entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContentCalendarEntry"
+    post:
+      operationId: createCustomerContentCalendarEntry
+      tags: [customers]
+      summary: Add a content calendar entry (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContentCalendarEntry"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentCalendarEntry"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/{id}/content-calendar/{entryId}:
+    put:
+      operationId: updateCustomerContentCalendarEntry
+      tags: [customers]
+      summary: Update a content calendar entry (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContentCalendarEntry"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentCalendarEntry"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteCustomerContentCalendarEntry
+      tags: [customers]
+      summary: Delete a content calendar entry (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /customers/buffer-channels:
+    get:
+      operationId: getBufferChannels
+      tags: [customers]
+      summary: List channels connected to the shared Buffer account (admin)
+      responses:
+        "200":
+          description: Buffer channels
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BufferChannel"
+        "502":
+          description: Buffer connection failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/{id}/content-calendar/{entryId}/buffer-schedule:
+    post:
+      operationId: scheduleContentCalendarEntryViaBuffer
+      tags: [customers]
+      summary: Schedule a content calendar entry for publishing via Buffer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Scheduled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentCalendarEntry"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: Buffer request failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /portal/content-calendar:
+    get:
+      operationId: getPortalContentCalendar
+      tags: [portal]
+      summary: The authenticated customer's real, live Buffer calendar (read-only) — whatever is actually scheduled/published for their channel, not this portal's internal admin drafts
+      responses:
+        "200":
+          description: Buffer calendar
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalContentCalendar"
+        "502":
+          description: Buffer connection failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/{id}/invoices:
+    get:
+      operationId: getCustomerInvoices
+      tags: [customers]
+      summary: List invoices for a customer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Invoices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invoice"
+    post:
+      operationId: createCustomerInvoice
+      tags: [customers]
+      summary: Add an invoice for a customer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInvoice"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/{id}/invoices/{invoiceId}:
+    put:
+      operationId: updateCustomerInvoice
+      tags: [customers]
+      summary: Update an invoice (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateInvoice"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteCustomerInvoice
+      tags: [customers]
+      summary: Delete an invoice, including its stored PDF if any (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /customers/{id}/documents:
+    get:
+      operationId: getCustomerDocuments
+      tags: [customers]
+      summary: List documents for a customer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerDocument"
+
+  /customers/{id}/documents/{documentId}:
+    delete:
+      operationId: deleteCustomerDocument
+      tags: [customers]
+      summary: Delete a customer document, including its stored file (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /portal/documents:
+    get:
+      operationId: getPortalDocuments
+      tags: [portal]
+      summary: List the authenticated customer's documents (read-only)
+      responses:
+        "200":
+          description: Documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerDocument"
+
+  /portal/notifications:
+    get:
+      operationId: getPortalNotifications
+      tags: [portal]
+      summary: List the authenticated customer's notifications
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+
+  /portal/notifications/{id}/read:
+    put:
+      operationId: markPortalNotificationRead
+      tags: [portal]
+      summary: Mark one notification as read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Marked as read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /portal/notifications/read-all:
+    put:
+      operationId: markAllPortalNotificationsRead
+      tags: [portal]
+      summary: Mark all of the authenticated customer's notifications as read
+      responses:
+        "200":
+          description: Marked as read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /portal/support-tickets:
+    get:
+      operationId: getPortalSupportTickets
+      tags: [portal]
+      summary: List the authenticated customer's own support tickets, newest first
+      responses:
+        "200":
+          description: Support tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportTicket"
+    post:
+      operationId: createPortalSupportTicket
+      tags: [portal]
+      summary: Open a new support ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSupportTicket"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicket"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /portal/support-tickets/{id}/messages:
+    get:
+      operationId: getPortalSupportTicketMessages
+      tags: [portal]
+      summary: The reply thread for one of the authenticated customer's own tickets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportTicketMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: createPortalSupportTicketMessage
+      tags: [portal]
+      summary: Reply to one of the authenticated customer's own tickets — reopens it if it was resolved/closed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSupportTicketMessage"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicketMessage"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /support-tickets:
+    get:
+      operationId: getSupportTickets
+      tags: [support-tickets]
+      summary: List all support tickets across every customer, newest first (admin)
+      responses:
+        "200":
+          description: Support tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportTicketAdmin"
+
+  /support-tickets/{id}:
+    put:
+      operationId: updateSupportTicket
+      tags: [support-tickets]
+      summary: Update a ticket's status (and optionally leave a response) — notifies the customer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSupportTicket"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicket"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /support-tickets/{id}/messages:
+    get:
+      operationId: getSupportTicketMessages
+      tags: [support-tickets]
+      summary: The reply thread for one ticket (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportTicketMessage"
+    post:
+      operationId: createSupportTicketMessage
+      tags: [support-tickets]
+      summary: Reply to a ticket — notifies the customer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSupportTicketMessage"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportTicketMessage"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customer-auth/login:
+    post:
+      operationId: customerLogin
+      tags: [customer-auth]
+      summary: Customer login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customer-auth/logout:
+    post:
+      operationId: customerLogout
+      tags: [customer-auth]
+      summary: Customer logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /customer-auth/me:
+    get:
+      operationId: getCustomerMe
+      tags: [customer-auth]
+      summary: Get current customer
+      responses:
+        "200":
+          description: Current customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerMe"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /portal/instagram:
+    get:
+      operationId: getPortalInstagram
+      tags: [portal]
+      summary: Get the authenticated customer's Instagram profile
+      parameters:
+        - name: days
+          in: query
+          description: "Relative date-range filter for the Entwicklung/Muster charts — e.g. 5 for \"letzte 5 Tage\". Ignored if since is set. Defaults to the real current calendar month."
+          schema:
+            type: integer
+        - name: since
+          in: query
+          description: "Format: YYYY-MM-DD — start of an absolute custom date range."
+          schema:
+            type: string
+        - name: until
+          in: query
+          description: "Format: YYYY-MM-DD — end of an absolute custom date range (defaults to today if since is set but until isn't)."
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Instagram profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalInstagramProfile"
+
+  /portal/files:
+    get:
+      operationId: getPortalFiles
+      tags: [portal]
+      summary: Get the authenticated customer's Nextcloud share link, if configured
+      responses:
+        "200":
+          description: Nextcloud share link status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalFilesResponse"
+
+  /portal/invoices:
+    get:
+      operationId: getPortalInvoices
+      tags: [portal]
+      summary: List the authenticated customer's invoices
+      responses:
+        "200":
+          description: List of invoices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invoice"
+
   /contact:
     post:
       operationId: submitContact
@@ -419,12 +1389,14 @@ components:
         - username
         - password
 
-    LoginResponse:
+    AuthResponse:
       type: object
       properties:
         success:
           type: boolean
         message:
+          type: string
+        role:
           type: string
       required:
         - success
@@ -648,6 +1620,938 @@ components:
         - company
         - published
         - sortOrder
+
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+        companyName:
+          type: string
+        username:
+          type: string
+        role:
+          type: string
+        status:
+          type: string
+        contactPerson:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        quickbooksId:
+          type: string
+          nullable: true
+        crmId:
+          type: string
+          nullable: true
+        instagramAccountId:
+          type: string
+          nullable: true
+        instagramUsername:
+          type: string
+          nullable: true
+        instagramFollowerCount:
+          type: integer
+          nullable: true
+        facebookPageId:
+          type: string
+          nullable: true
+        instagramConnectedAt:
+          type: string
+          format: date-time
+          nullable: true
+        instagramTokenExpiresAt:
+          type: string
+          format: date-time
+          nullable: true
+        nextcloudShareLink:
+          type: string
+          nullable: true
+        bufferChannelName:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - companyName
+        - username
+        - role
+        - status
+        - createdAt
+        - updatedAt
+
+    CreateCustomer:
+      type: object
+      properties:
+        companyName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        passwordConfirm:
+          type: string
+        status:
+          type: string
+        contactPerson:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        quickbooksId:
+          type: string
+          nullable: true
+        crmId:
+          type: string
+          nullable: true
+        instagramAccountId:
+          type: string
+          nullable: true
+        instagramUsername:
+          type: string
+          nullable: true
+        instagramFollowerCount:
+          type: integer
+          nullable: true
+        facebookPageId:
+          type: string
+          nullable: true
+        metaAccessToken:
+          type: string
+          nullable: true
+        nextcloudShareLink:
+          type: string
+          nullable: true
+        bufferChannelName:
+          type: string
+          nullable: true
+      required:
+        - companyName
+        - username
+        - password
+        - status
+
+    UpdateCustomer:
+      type: object
+      properties:
+        companyName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        passwordConfirm:
+          type: string
+        status:
+          type: string
+        contactPerson:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        quickbooksId:
+          type: string
+          nullable: true
+        crmId:
+          type: string
+          nullable: true
+        instagramAccountId:
+          type: string
+          nullable: true
+        instagramUsername:
+          type: string
+          nullable: true
+        instagramFollowerCount:
+          type: integer
+          nullable: true
+        facebookPageId:
+          type: string
+          nullable: true
+        metaAccessToken:
+          type: string
+          nullable: true
+        nextcloudShareLink:
+          type: string
+          nullable: true
+        bufferChannelName:
+          type: string
+          nullable: true
+
+    PortalContentCalendarPost:
+      type: object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+          description: "Format: YYYY-MM-DD, derived from Buffer's dueAt"
+        text:
+          type: string
+        status:
+          type: string
+          description: "scheduled | sent"
+        thumbnailUrl:
+          type: string
+          nullable: true
+      required:
+        - id
+        - date
+        - text
+        - status
+        - thumbnailUrl
+
+    PortalContentCalendar:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortalContentCalendarPost"
+      required:
+        - enabled
+        - entries
+
+    BufferChannel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        displayName:
+          type: string
+        service:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+        isQueuePaused:
+          type: boolean
+      required:
+        - id
+        - name
+        - displayName
+        - service
+        - isQueuePaused
+
+    CustomerDocument:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        title:
+          type: string
+        category:
+          type: string
+          description: "briefing | strategy | brand | other"
+        fileReference:
+          type: string
+        fileName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - customerId
+        - title
+        - category
+        - fileReference
+        - fileName
+        - createdAt
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        type:
+          type: string
+          description: "invoice | monthly_report | support_ticket"
+        title:
+          type: string
+        message:
+          type: string
+          nullable: true
+        link:
+          type: string
+          nullable: true
+        read:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - customerId
+        - type
+        - title
+        - read
+        - createdAt
+
+    SupportTicket:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        category:
+          type: string
+          description: "invoice | social_media | website | other"
+        subject:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+          description: "open | in_progress | in_review | resolved | closed"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - customerId
+        - category
+        - subject
+        - message
+        - status
+        - createdAt
+        - updatedAt
+
+    SupportTicketMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        ticketId:
+          type: integer
+        senderType:
+          type: string
+          description: "customer | admin"
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - ticketId
+        - senderType
+        - message
+        - createdAt
+
+    CreateSupportTicketMessage:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    SupportTicketAdmin:
+      description: A SupportTicket with the owning customer's name attached, as returned by the admin listing endpoint
+      allOf:
+        - $ref: "#/components/schemas/SupportTicket"
+        - type: object
+          properties:
+            customerCompanyName:
+              type: string
+            customerUsername:
+              type: string
+            unread:
+              type: boolean
+              description: True when the customer has the last word — a new ticket nobody has actioned yet, or a reply since the admin's last message/status change
+          required:
+            - customerCompanyName
+            - customerUsername
+            - unread
+
+    CreateSupportTicket:
+      type: object
+      properties:
+        category:
+          type: string
+          description: "invoice | social_media | website | other"
+        subject:
+          type: string
+        message:
+          type: string
+      required:
+        - category
+        - subject
+        - message
+
+    UpdateSupportTicket:
+      type: object
+      properties:
+        status:
+          type: string
+          description: "open | in_progress | in_review | resolved | closed"
+      required:
+        - status
+
+    CreateInvoice:
+      type: object
+      properties:
+        invoiceNumber:
+          type: string
+        invoiceDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        amount:
+          type: string
+        currency:
+          type: string
+        status:
+          type: string
+      required:
+        - invoiceNumber
+        - invoiceDate
+        - amount
+
+    UpdateInvoice:
+      type: object
+      properties:
+        invoiceNumber:
+          type: string
+        invoiceDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        amount:
+          type: string
+          nullable: true
+        currency:
+          type: string
+        status:
+          type: string
+
+    ContentCalendarEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        date:
+          type: string
+          description: "Format: YYYY-MM-DD"
+        title:
+          type: string
+        contentType:
+          type: string
+          description: "post | story | reel | campaign"
+        status:
+          type: string
+          description: "planned | published"
+        note:
+          type: string
+          nullable: true
+        caption:
+          type: string
+          nullable: true
+          description: "Full post text actually sent to Buffer"
+        mediaUrl:
+          type: string
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+          nullable: true
+        bufferPostId:
+          type: string
+          nullable: true
+        bufferStatus:
+          type: string
+          nullable: true
+          description: "scheduled | published | failed"
+        bufferError:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - customerId
+        - date
+        - title
+        - contentType
+        - status
+
+    CreateContentCalendarEntry:
+      type: object
+      properties:
+        date:
+          type: string
+          description: "Format: YYYY-MM-DD"
+        title:
+          type: string
+        contentType:
+          type: string
+          description: "post | story | reel | campaign"
+        status:
+          type: string
+          description: "planned | published"
+        note:
+          type: string
+          nullable: true
+        caption:
+          type: string
+          nullable: true
+        mediaUrl:
+          type: string
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - date
+        - title
+
+    UpdateContentCalendarEntry:
+      type: object
+      properties:
+        date:
+          type: string
+        title:
+          type: string
+        contentType:
+          type: string
+        status:
+          type: string
+        note:
+          type: string
+          nullable: true
+        caption:
+          type: string
+          nullable: true
+        mediaUrl:
+          type: string
+          nullable: true
+        scheduledAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    AdminMonthlyMetric:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        yearMonth:
+          type: string
+        source:
+          type: string
+        followers:
+          type: integer
+          nullable: true
+        reach:
+          type: integer
+          nullable: true
+        totalInteractions:
+          type: integer
+          nullable: true
+        profileViews:
+          type: integer
+          nullable: true
+        accountsEngaged:
+          type: integer
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - customerId
+        - yearMonth
+        - source
+
+    CreateMonthlyMetric:
+      type: object
+      properties:
+        yearMonth:
+          type: string
+          description: "Format: YYYY-MM"
+        followers:
+          type: integer
+          nullable: true
+        reach:
+          type: integer
+          nullable: true
+        totalInteractions:
+          type: integer
+          nullable: true
+        profileViews:
+          type: integer
+          nullable: true
+        accountsEngaged:
+          type: integer
+          nullable: true
+        note:
+          type: string
+          nullable: true
+      required:
+        - yearMonth
+
+    UpdateMonthlyMetric:
+      type: object
+      properties:
+        followers:
+          type: integer
+          nullable: true
+        reach:
+          type: integer
+          nullable: true
+        totalInteractions:
+          type: integer
+          nullable: true
+        profileViews:
+          type: integer
+          nullable: true
+        accountsEngaged:
+          type: integer
+          nullable: true
+        note:
+          type: string
+          nullable: true
+
+
+    PortalInstagramProfile:
+      type: object
+      properties:
+        connected:
+          type: boolean
+        username:
+          type: string
+          nullable: true
+        profilePictureUrl:
+          type: string
+          nullable: true
+        followers:
+          type: integer
+          nullable: true
+        mediaCount:
+          type: integer
+          nullable: true
+        insights:
+          allOf:
+            - $ref: '#/components/schemas/PortalInstagramInsights'
+          nullable: true
+        monthlyHistory:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PortalMonthlyMetric'
+        topMedia:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PortalInstagramMedia'
+        topReels:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PortalInstagramMedia'
+        error:
+          type: string
+          nullable: true
+      required:
+        - connected
+
+    PortalInstagramMedia:
+      type: object
+      properties:
+        id:
+          type: string
+        caption:
+          type: string
+          nullable: true
+        mediaType:
+          type: string
+        mediaProductType:
+          type: string
+          nullable: true
+        thumbnailUrl:
+          type: string
+          nullable: true
+        permalink:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        likeCount:
+          type: integer
+        commentsCount:
+          type: integer
+      required:
+        - id
+        - mediaType
+        - permalink
+        - timestamp
+        - likeCount
+        - commentsCount
+
+    PortalMonthlyMetric:
+      type: object
+      properties:
+        yearMonth:
+          type: string
+        source:
+          type: string
+        followers:
+          type: integer
+          nullable: true
+        reach:
+          type: integer
+          nullable: true
+        totalInteractions:
+          type: integer
+          nullable: true
+        profileViews:
+          type: integer
+          nullable: true
+        accountsEngaged:
+          type: integer
+          nullable: true
+        note:
+          type: string
+          nullable: true
+      required:
+        - yearMonth
+        - source
+
+    PortalInstagramInsights:
+      type: object
+      properties:
+        reach:
+          type: integer
+          nullable: true
+        accountsEngaged:
+          type: integer
+          nullable: true
+        totalInteractions:
+          type: integer
+          nullable: true
+        profileViews:
+          type: integer
+          nullable: true
+        websiteClicks:
+          type: integer
+          nullable: true
+        likes:
+          type: integer
+          nullable: true
+        comments:
+          type: integer
+          nullable: true
+        shares:
+          type: integer
+          nullable: true
+        saves:
+          type: integer
+          nullable: true
+        replies:
+          type: integer
+          nullable: true
+        reachSeries:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PortalInstagramTimeSeriesPoint'
+        followerSeries:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PortalInstagramTimeSeriesPoint'
+        totalInteractionsSeries:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PortalInstagramTimeSeriesPoint'
+        profileViewsSeries:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PortalInstagramTimeSeriesPoint'
+        accountsEngagedSeries:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/PortalInstagramTimeSeriesPoint'
+
+    PortalInstagramTimeSeriesPoint:
+      type: object
+      properties:
+        date:
+          type: string
+        value:
+          type: integer
+      required:
+        - date
+        - value
+
+    PortalFilesResponse:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        shareLink:
+          type: string
+          nullable: true
+      required:
+        - enabled
+        - shareLink
+
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        invoiceNumber:
+          type: string
+        invoiceDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        amount:
+          type: string
+          nullable: true
+        currency:
+          type: string
+        status:
+          type: string
+        pdfFileReference:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - customerId
+        - invoiceNumber
+        - invoiceDate
+        - currency
+        - status
+        - createdAt
+        - updatedAt
+
+    InstagramTestRequest:
+      type: object
+      properties:
+        instagramAccountId:
+          type: string
+        metaAccessToken:
+          type: string
+      required:
+        - instagramAccountId
+        - metaAccessToken
+
+    InstagramTestResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        username:
+          type: string
+          nullable: true
+        followers:
+          type: integer
+          nullable: true
+        error:
+          type: string
+          nullable: true
+      required:
+        - success
+
+    CustomerMe:
+      type: object
+      properties:
+        id:
+          type: integer
+        companyName:
+          type: string
+        username:
+          type: string
+        status:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - companyName
+        - username
+        - status
 
     ContactRequest:
       type: object

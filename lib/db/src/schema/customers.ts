@@ -1,0 +1,38 @@
+import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod/v4";
+
+export const customersTable = pgTable("customers", {
+  id: serial("id").primaryKey(),
+  companyName: text("company_name").notNull(),
+  username: text("username").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  role: text("role").notNull().default("customer"),
+  status: text("status").notNull().default("active"),
+  contactPerson: text("contact_person"),
+  email: text("email"),
+  phone: text("phone"),
+  startDate: timestamp("start_date"),
+  quickbooksId: text("quickbooks_id"),
+  crmId: text("crm_id"),
+  instagramAccountId: text("instagram_account_id"),
+  instagramUsername: text("instagram_username"),
+  instagramFollowerCount: integer("instagram_follower_count"),
+  facebookPageId: text("facebook_page_id"),
+  metaAccessTokenEncrypted: text("meta_access_token_encrypted"),
+  instagramConnectedAt: timestamp("instagram_connected_at"),
+  instagramTokenExpiresAt: timestamp("instagram_token_expires_at"),
+  nextcloudShareLink: text("nextcloud_share_link"),
+  /** Exact Buffer channel "name" (e.g. Instagram handle) as shown in Buffer's channel list — resolved to a real channelId at publish time. */
+  bufferChannelName: text("buffer_channel_name"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertCustomerSchema = createInsertSchema(customersTable).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type InsertCustomer = z.infer<typeof insertCustomerSchema>;
+export type Customer = typeof customersTable.$inferSelect;

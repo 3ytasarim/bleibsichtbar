@@ -1,20 +1,23 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
-import { useGetMe, useAdminLogout } from "@workspace/api-client-react";
+import { useGetMe, useAdminLogout, useGetSupportTickets } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboard, FileText, Image, MessageSquare, LogOut, Loader2, Menu, X, ClipboardList, Users, Search, Handshake } from "lucide-react";
+import { LayoutDashboard, Image, MessageSquare, LogOut, Loader2, Menu, X, ClipboardList, Users, Search, Handshake, Receipt, FileStack, FolderOpen, LifeBuoy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const adminLinks = [
   { name: "Dashboard", path: "/admin", icon: <LayoutDashboard className="w-5 h-5" /> },
   { name: "Projekte", path: "/admin/projekte", icon: <Image className="w-5 h-5" /> },
-  { name: "Blog", path: "/admin/blog", icon: <FileText className="w-5 h-5" /> },
   { name: "Referenzen", path: "/admin/referenzen", icon: <MessageSquare className="w-5 h-5" /> },
-  { name: "Kunden", path: "/admin/kunden", icon: <Users className="w-5 h-5" /> },
   { name: "Partner", path: "/admin/partner", icon: <Handshake className="w-5 h-5" /> },
   { name: "Onboarding", path: "/admin/onboarding", icon: <ClipboardList className="w-5 h-5" /> },
   { name: "SEO", path: "/admin/seo", icon: <Search className="w-5 h-5" /> },
+  { name: "Kunden", path: "/admin/benutzer", icon: <Users className="w-5 h-5" /> },
+  { name: "Support-Tickets", path: "/admin/support-tickets", icon: <LifeBuoy className="w-5 h-5" /> },
+  { name: "Rechnungen", path: "/admin/rechnungen", icon: <Receipt className="w-5 h-5" /> },
+  { name: "Dokumente", path: "/admin/dokumente", icon: <FileStack className="w-5 h-5" /> },
+  { name: "Archiv", path: "/admin/archiv", icon: <FolderOpen className="w-5 h-5" /> },
 ];
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -24,9 +27,14 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const { mutate: logout } = useAdminLogout();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
+  // Unread-ticket count badge on the "Support-Tickets" nav item — mirrors
+  // the customer-side inbox badge so a new/replied ticket is hard to miss.
+  const { data: tickets = [] } = useGetSupportTickets({ query: { refetchInterval: 60_000, enabled: !!user } });
+  const unreadTicketCount = tickets.filter((t) => t.unread).length;
+
   React.useEffect(() => {
     if (!isLoading && (error || !user)) {
-      setLocation("/admin/login");
+      setLocation("/login");
     }
   }, [user, isLoading, error, setLocation]);
 
@@ -40,8 +48,11 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
     logout(undefined, {
       onSuccess: () => {
         localStorage.removeItem("bs_auth_token");
-        queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
-        setLocation("/admin/login");
+        // Drop the cached query entirely (not just invalidate) so the next
+        // mount of /login starts a clean fetch instead of racing an
+        // in-flight request cancelled by this component unmounting.
+        queryClient.removeQueries({ queryKey: ["/api/auth/me"] });
+        setLocation("/login");
       }
     });
   };
@@ -79,7 +90,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                 )}
               >
                 {link.icon}
-                <span>{link.name}</span>
+                <span className="flex-1">{link.name}</span>
+                {link.path === "/admin/support-tickets" && unreadTicketCount > 0 && (
+                  <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-white text-accent text-[11px] font-bold">
+                    {unreadTicketCount > 9 ? "9+" : unreadTicketCount}
+                  </span>
+                )}
               </Link>
             );
           })}

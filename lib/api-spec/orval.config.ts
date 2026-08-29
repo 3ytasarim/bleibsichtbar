@@ -40,6 +40,16 @@ export default defineConfig({
       },
     },
   },
+  // NOTE: orval's "zod" client always writes lib/api-zod/src/index.ts as a
+  // fixed 3-line barrel (`./generated/api`, `./generated/types`,
+  // `./generated/api.schemas`) regardless of what this config actually
+  // produces — with `mode: "split"` and no `schemas.path` override, only
+  // `generated/api.ts` (which is self-contained) really gets written, so
+  // that barrel is permanently broken/ambiguous no matter how this config
+  // is tuned. lib/api-zod/package.json's export map points straight at
+  // generated/api.ts instead of the barrel, and lib/api-zod/tsconfig.json
+  // excludes src/index.ts from typecheck — don't "fix" index.ts by hand,
+  // orval overwrites it (clean: true) on every run.
   zod: {
     input: {
       target: "./openapi.yaml",
@@ -51,7 +61,6 @@ export default defineConfig({
       workspace: apiZodSrc,
       client: "zod",
       target: "generated",
-      schemas: { path: "generated/types", type: "typescript" },
       mode: "split",
       clean: true,
       prettier: true,

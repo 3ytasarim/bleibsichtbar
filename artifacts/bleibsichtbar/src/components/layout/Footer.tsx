@@ -311,7 +311,7 @@ export function Footer() {
             <p className="text-white/25 text-xs tracking-wide">
               © Bleibsichtbar {new Date().getFullYear()}, {t.footer.copyright}
             </p>
-            <Link href="/admin/login" className="text-white/10 text-xs hover:text-white/30 transition-colors">
+            <Link href="/login" className="text-white/10 text-xs hover:text-white/30 transition-colors">
               Admin
             </Link>
           </div>

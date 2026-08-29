@@ -67,7 +67,8 @@ const sessions = new Map<string, { isAdmin: boolean; username: string }>();
 
 app.use((req: Request, _res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"];
-  if (authHeader?.startsWith("Bearer ") && !(req.session as any).isAdmin) {
+  // Never let a stale admin bearer token promote an active customer session (or vice versa).
+  if (authHeader?.startsWith("Bearer ") && !(req.session as any).isAdmin && !(req.session as any).customerId) {
     const token = authHeader.slice(7);
     const data = sessions.get(token);
     if (data) {

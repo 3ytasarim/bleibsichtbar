@@ -13,6 +13,19 @@ export function formatDate(dateString: string) {
   });
 }
 
+export function formatFileSize(bytes: number | null | undefined): string {
+  if (bytes === null || bytes === undefined) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  const units = ["KB", "MB", "GB"];
+  let value = bytes / 1024;
+  let unitIndex = 0;
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex++;
+  }
+  return `${value.toFixed(1)} ${units[unitIndex]}`;
+}
+
 export type LangOption = "de" | "en" | "nl-be" | "fr" | "nl-nl";
 
 export function getLocalizedField(

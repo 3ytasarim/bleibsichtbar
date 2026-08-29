@@ -23,9 +23,10 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface LoginResponse {
+export interface AuthResponse {
   success: boolean;
   message?: string;
+  role?: string;
 }
 
 export interface AuthUser {
@@ -107,6 +108,366 @@ export interface CreateReference {
   sortOrder: number;
 }
 
+export interface Customer {
+  id: number;
+  companyName: string;
+  username: string;
+  role: string;
+  status: string;
+  contactPerson?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  startDate?: string | null;
+  quickbooksId?: string | null;
+  crmId?: string | null;
+  instagramAccountId?: string | null;
+  instagramUsername?: string | null;
+  instagramFollowerCount?: number | null;
+  facebookPageId?: string | null;
+  instagramConnectedAt?: string | null;
+  instagramTokenExpiresAt?: string | null;
+  nextcloudShareLink?: string | null;
+  bufferChannelName?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCustomer {
+  companyName: string;
+  username: string;
+  password: string;
+  passwordConfirm?: string;
+  status: string;
+  contactPerson?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  startDate?: string | null;
+  quickbooksId?: string | null;
+  crmId?: string | null;
+  instagramAccountId?: string | null;
+  instagramUsername?: string | null;
+  instagramFollowerCount?: number | null;
+  facebookPageId?: string | null;
+  metaAccessToken?: string | null;
+  nextcloudShareLink?: string | null;
+  bufferChannelName?: string | null;
+}
+
+export interface UpdateCustomer {
+  companyName?: string;
+  username?: string;
+  password?: string;
+  passwordConfirm?: string;
+  status?: string;
+  contactPerson?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  startDate?: string | null;
+  quickbooksId?: string | null;
+  crmId?: string | null;
+  instagramAccountId?: string | null;
+  instagramUsername?: string | null;
+  instagramFollowerCount?: number | null;
+  facebookPageId?: string | null;
+  metaAccessToken?: string | null;
+  nextcloudShareLink?: string | null;
+  bufferChannelName?: string | null;
+}
+
+export interface PortalContentCalendarPost {
+  id: string;
+  /** Format: YYYY-MM-DD, derived from Buffer's dueAt */
+  date: string;
+  text: string;
+  /** scheduled | sent */
+  status: string;
+  thumbnailUrl: string | null;
+}
+
+export interface PortalContentCalendar {
+  enabled: boolean;
+  entries: PortalContentCalendarPost[];
+}
+
+export interface BufferChannel {
+  id: string;
+  name: string;
+  displayName: string;
+  service: string;
+  avatar?: string | null;
+  isQueuePaused: boolean;
+}
+
+export interface CustomerDocument {
+  id: number;
+  customerId: number;
+  title: string;
+  /** briefing | strategy | brand | other */
+  category: string;
+  fileReference: string;
+  fileName: string;
+  createdAt: string;
+}
+
+export interface Notification {
+  id: number;
+  customerId: number;
+  /** invoice | monthly_report | support_ticket */
+  type: string;
+  title: string;
+  message?: string | null;
+  link?: string | null;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface SupportTicket {
+  id: number;
+  customerId: number;
+  /** invoice | social_media | website | other */
+  category: string;
+  subject: string;
+  message: string;
+  /** open | in_progress | in_review | resolved | closed */
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SupportTicketMessage {
+  id: number;
+  ticketId: number;
+  /** customer | admin */
+  senderType: string;
+  message: string;
+  createdAt: string;
+}
+
+export interface CreateSupportTicketMessage {
+  message: string;
+}
+
+/**
+ * A SupportTicket with the owning customer's name attached, as returned by the admin listing endpoint
+ */
+export type SupportTicketAdmin = SupportTicket & {
+  customerCompanyName: string;
+  customerUsername: string;
+  /** True when the customer has the last word — a new ticket nobody has actioned yet, or a reply since the admin's last message/status change */
+  unread: boolean;
+};
+
+export interface CreateSupportTicket {
+  /** invoice | social_media | website | other */
+  category: string;
+  subject: string;
+  message: string;
+}
+
+export interface UpdateSupportTicket {
+  /** open | in_progress | in_review | resolved | closed */
+  status: string;
+}
+
+export interface CreateInvoice {
+  invoiceNumber: string;
+  invoiceDate: string;
+  dueDate?: string | null;
+  amount: string;
+  currency?: string;
+  status?: string;
+}
+
+export interface UpdateInvoice {
+  invoiceNumber?: string;
+  invoiceDate?: string;
+  dueDate?: string | null;
+  amount?: string | null;
+  currency?: string;
+  status?: string;
+}
+
+export interface ContentCalendarEntry {
+  id: number;
+  customerId: number;
+  /** Format: YYYY-MM-DD */
+  date: string;
+  title: string;
+  /** post | story | reel | campaign */
+  contentType: string;
+  /** planned | published */
+  status: string;
+  note?: string | null;
+  /** Full post text actually sent to Buffer */
+  caption?: string | null;
+  mediaUrl?: string | null;
+  scheduledAt?: string | null;
+  bufferPostId?: string | null;
+  /** scheduled | published | failed */
+  bufferStatus?: string | null;
+  bufferError?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateContentCalendarEntry {
+  /** Format: YYYY-MM-DD */
+  date: string;
+  title: string;
+  /** post | story | reel | campaign */
+  contentType?: string;
+  /** planned | published */
+  status?: string;
+  note?: string | null;
+  caption?: string | null;
+  mediaUrl?: string | null;
+  scheduledAt?: string | null;
+}
+
+export interface UpdateContentCalendarEntry {
+  date?: string;
+  title?: string;
+  contentType?: string;
+  status?: string;
+  note?: string | null;
+  caption?: string | null;
+  mediaUrl?: string | null;
+  scheduledAt?: string | null;
+}
+
+export interface AdminMonthlyMetric {
+  id: number;
+  customerId: number;
+  yearMonth: string;
+  source: string;
+  followers?: number | null;
+  reach?: number | null;
+  totalInteractions?: number | null;
+  profileViews?: number | null;
+  accountsEngaged?: number | null;
+  note?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CreateMonthlyMetric {
+  /** Format: YYYY-MM */
+  yearMonth: string;
+  followers?: number | null;
+  reach?: number | null;
+  totalInteractions?: number | null;
+  profileViews?: number | null;
+  accountsEngaged?: number | null;
+  note?: string | null;
+}
+
+export interface UpdateMonthlyMetric {
+  followers?: number | null;
+  reach?: number | null;
+  totalInteractions?: number | null;
+  profileViews?: number | null;
+  accountsEngaged?: number | null;
+  note?: string | null;
+}
+
+export interface PortalInstagramTimeSeriesPoint {
+  date: string;
+  value: number;
+}
+
+export interface PortalInstagramInsights {
+  reach?: number | null;
+  accountsEngaged?: number | null;
+  totalInteractions?: number | null;
+  profileViews?: number | null;
+  websiteClicks?: number | null;
+  likes?: number | null;
+  comments?: number | null;
+  shares?: number | null;
+  saves?: number | null;
+  replies?: number | null;
+  reachSeries?: PortalInstagramTimeSeriesPoint[] | null;
+  followerSeries?: PortalInstagramTimeSeriesPoint[] | null;
+  totalInteractionsSeries?: PortalInstagramTimeSeriesPoint[] | null;
+  profileViewsSeries?: PortalInstagramTimeSeriesPoint[] | null;
+  accountsEngagedSeries?: PortalInstagramTimeSeriesPoint[] | null;
+}
+
+export interface PortalMonthlyMetric {
+  yearMonth: string;
+  source: string;
+  followers?: number | null;
+  reach?: number | null;
+  totalInteractions?: number | null;
+  profileViews?: number | null;
+  accountsEngaged?: number | null;
+  note?: string | null;
+}
+
+export interface PortalInstagramMedia {
+  id: string;
+  caption?: string | null;
+  mediaType: string;
+  mediaProductType?: string | null;
+  thumbnailUrl?: string | null;
+  permalink: string;
+  timestamp: string;
+  likeCount: number;
+  commentsCount: number;
+}
+
+export interface PortalInstagramProfile {
+  connected: boolean;
+  username?: string | null;
+  profilePictureUrl?: string | null;
+  followers?: number | null;
+  mediaCount?: number | null;
+  insights?: PortalInstagramInsights | null;
+  monthlyHistory?: PortalMonthlyMetric[] | null;
+  topMedia?: PortalInstagramMedia[] | null;
+  topReels?: PortalInstagramMedia[] | null;
+  error?: string | null;
+}
+
+export interface PortalFilesResponse {
+  enabled: boolean;
+  shareLink: string | null;
+}
+
+export interface Invoice {
+  id: number;
+  customerId: number;
+  invoiceNumber: string;
+  invoiceDate: string;
+  dueDate?: string | null;
+  amount?: string | null;
+  currency: string;
+  status: string;
+  pdfFileReference?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InstagramTestRequest {
+  instagramAccountId: string;
+  metaAccessToken: string;
+}
+
+export interface InstagramTestResult {
+  success: boolean;
+  username?: string | null;
+  followers?: number | null;
+  error?: string | null;
+}
+
+export interface CustomerMe {
+  id: number;
+  companyName: string;
+  username: string;
+  status: string;
+  startDate?: string | null;
+}
+
 export interface ContactRequest {
   name: string;
   email: string;
@@ -126,4 +487,19 @@ export type GetBlogPostsParams = {
 
 export type GetReferencesParams = {
   published?: boolean;
+};
+
+export type GetPortalInstagramParams = {
+  /**
+   * Relative date-range filter for the Entwicklung/Muster charts — e.g. 5 for "letzte 5 Tage". Ignored if since is set. Defaults to the real current calendar month.
+   */
+  days?: number;
+  /**
+   * Format: YYYY-MM-DD — start of an absolute custom date range.
+   */
+  since?: string;
+  /**
+   * Format: YYYY-MM-DD — end of an absolute custom date range (defaults to today if since is set but until isn't).
+   */
+  until?: string;
 };

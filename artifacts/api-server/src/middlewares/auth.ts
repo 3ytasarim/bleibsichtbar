@@ -7,3 +7,11 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction) {
     res.status(401).json({ message: "Nicht autorisiert" });
   }
 }
+
+export function requireCustomer(req: Request, res: Response, next: NextFunction) {
+  if ((req.session as any).customerId && (req.session as any).customerRole === "customer") {
+    next();
+  } else {
+    res.status(401).json({ message: "Nicht autorisiert" });
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { StarfieldOverlay } from "./StarfieldOverlay";
 
 function useMotionPrefs() {
@@ -99,10 +99,10 @@ export function AnimatedHeroBackground() {
   );
 }
 
-export const heroFadeUp = {
+export const heroFadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
   visible: (i = 0) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.65, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.65, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] as const },
   }),
 };

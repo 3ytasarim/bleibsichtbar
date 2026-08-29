@@ -2,6 +2,12 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import { existsSync } from "fs";
+
+const localEnvPath = path.resolve(import.meta.dirname, ".env");
+if (existsSync(localEnvPath)) {
+  process.loadEnvFile(localEnvPath);
+}
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -68,6 +74,14 @@ export default defineConfig({
     port,
     host: "0.0.0.0",
     allowedHosts: true,
+    proxy: isDev
+      ? {
+          "/api": {
+            target: `http://localhost:${process.env.API_PORT || 3001}`,
+            changeOrigin: true,
+          },
+        }
+      : undefined,
     fs: {
       strict: true,
       deny: ["**/.*"],

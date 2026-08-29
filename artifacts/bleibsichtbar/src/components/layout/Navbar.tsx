@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ContactModal } from "@/components/shared/ContactModal";
 import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
+import { StarButton } from "@/components/star-button";
 import { useT } from "@/i18n";
 
 const NAV_PATHS = [
@@ -31,7 +32,7 @@ function WhatsAppSVG({ className }: { className?: string }) {
 
 export function Navbar() {
   const { t } = useT();
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -106,7 +107,17 @@ export function Navbar() {
                 <LanguageSwitcher />
               </motion.div>
 
-              <div className="hidden lg:flex items-center shrink-0">
+              <div className="hidden lg:flex items-center gap-2.5 shrink-0">
+                <StarButton
+                  onClick={() => navigate("/login")}
+                  lightColor="#ff6b35"
+                  backgroundColor="#ffffff"
+                  duration={2.5}
+                  className="h-auto px-5 py-2.5 rounded-full text-[13px] font-bold whitespace-nowrap"
+                >
+                  {t.nav.login}
+                </StarButton>
+
                 <Link href="/kontakt">
                   <motion.span
                     whileHover={{ scale: 1.06, boxShadow: "0 10px 34px rgba(255,107,53,0.5)" }}
@@ -286,6 +297,20 @@ export function Navbar() {
                       <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
                     )}
                     {t.nav.contact}
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.08 + (NAV_PATHS.length + 1) * 0.06, ease: [0.22, 1, 0.36, 1], duration: 0.35 }}
+                >
+                  <Link
+                    href="/login"
+                    className="flex items-center gap-3 px-3 py-3.5 rounded-xl font-semibold text-[15px] text-white/75 hover:text-white hover:bg-white/06 transition-all"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    {t.nav.login}
                   </Link>
                 </motion.div>
               </nav>
