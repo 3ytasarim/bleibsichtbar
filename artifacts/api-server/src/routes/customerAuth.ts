@@ -60,6 +60,7 @@ router.get("/me", async (req: Request, res: Response) => {
       username: customer.username,
       status: customer.status,
       startDate: customer.startDate,
+      serviceTypes: customer.serviceTypes,
     });
     return;
   } catch (err) {

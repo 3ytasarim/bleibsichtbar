@@ -128,6 +128,8 @@ export interface Customer {
   instagramTokenExpiresAt?: string | null;
   nextcloudShareLink?: string | null;
   bufferChannelName?: string | null;
+  /** social_media | website | ki_automatisierungen */
+  serviceTypes: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -151,6 +153,8 @@ export interface CreateCustomer {
   metaAccessToken?: string | null;
   nextcloudShareLink?: string | null;
   bufferChannelName?: string | null;
+  /** social_media | website | ki_automatisierungen — defaults to [social_media] if omitted */
+  serviceTypes?: string[];
 }
 
 export interface UpdateCustomer {
@@ -172,6 +176,8 @@ export interface UpdateCustomer {
   metaAccessToken?: string | null;
   nextcloudShareLink?: string | null;
   bufferChannelName?: string | null;
+  /** social_media | website | ki_automatisierungen */
+  serviceTypes?: string[];
 }
 
 export interface PortalContentCalendarPost {
@@ -466,6 +472,8 @@ export interface CustomerMe {
   username: string;
   status: string;
   startDate?: string | null;
+  /** social_media | website | ki_automatisierungen — determines which dashboard variant is shown */
+  serviceTypes: string[];
 }
 
 export interface ContactRequest {

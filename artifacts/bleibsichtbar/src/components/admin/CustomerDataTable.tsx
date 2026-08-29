@@ -48,6 +48,12 @@ const statusBadgeVariants = cva(
   }
 );
 
+const SERVICE_TYPE_LABELS: Record<string, string> = {
+  social_media: "Social",
+  website: "Web",
+  ki_automatisierungen: "KI",
+};
+
 function initials(name: string) {
   const parts = name.split(/\s+/).filter(Boolean).slice(0, 2);
   return parts.map((p) => p[0]?.toUpperCase()).join("") || "?";
@@ -127,6 +133,7 @@ export function CustomerDataTable({
             <SortableHead label="Status" column="status" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
             <SortableHead label="Instagram" column="instagramUsername" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
             <SortableHead label="Buffer-Kanal" column="bufferChannelName" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+            <TableHead className="p-4 font-semibold text-sm">Bereich</TableHead>
             <TableHead className="p-4 font-semibold text-sm">QuickBooks</TableHead>
             <TableHead className="p-4 font-semibold text-sm text-right">Aktionen</TableHead>
           </TableRow>
@@ -180,6 +187,15 @@ export function CustomerDataTable({
                 </TableCell>
                 <TableCell className="p-4 text-muted-foreground">{c.bufferChannelName || "—"}</TableCell>
                 <TableCell className="p-4">
+                  <div className="flex flex-wrap gap-1">
+                    {(c.serviceTypes ?? []).map((t) => (
+                      <span key={t} className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-accent/10 text-accent">
+                        {SERVICE_TYPE_LABELS[t] ?? t}
+                      </span>
+                    ))}
+                  </div>
+                </TableCell>
+                <TableCell className="p-4">
                   <span
                     className={cn(
                       "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
@@ -203,7 +219,7 @@ export function CustomerDataTable({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
+              <TableCell colSpan={10} className="h-24 text-center text-muted-foreground">
                 Kein Kunde gefunden.
               </TableCell>
             </TableRow>

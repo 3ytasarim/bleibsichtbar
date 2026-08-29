@@ -11,6 +11,15 @@ import { notifyCustomer } from "../lib/notifications.js";
 import { listBufferChannels } from "../lib/buffer.js";
 
 const router: IRouter = Router();
+
+const SERVICE_TYPES = ["social_media", "website", "ki_automatisierungen"] as const;
+function sanitizeServiceTypes(value: unknown): string[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) return ["social_media"];
+  const filtered = value.filter((v): v is string => typeof v === "string" && (SERVICE_TYPES as readonly string[]).includes(v));
+  return filtered.length > 0 ? filtered : ["social_media"];
+}
+
 const pdfUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 15 * 1024 * 1024 } });
 const documentUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
@@ -82,6 +91,7 @@ router.post("/", requireAdmin, async (req: Request, res: Response) => {
       metaAccessToken,
       nextcloudShareLink,
       bufferChannelName,
+      serviceTypes,
     } = req.body;
 
     if (!companyName || !username || !password) {
@@ -129,6 +139,7 @@ router.post("/", requireAdmin, async (req: Request, res: Response) => {
         instagramTokenExpiresAt,
         nextcloudShareLink: nextcloudShareLink || null,
         bufferChannelName: bufferChannelName || null,
+        serviceTypes: sanitizeServiceTypes(serviceTypes) ?? ["social_media"],
       })
       .returning();
 
@@ -162,6 +173,7 @@ router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
       metaAccessToken,
       nextcloudShareLink,
       bufferChannelName,
+      serviceTypes,
     } = req.body;
 
     if (password !== undefined && password !== passwordConfirm) {
@@ -203,6 +215,8 @@ router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
     }
     if (nextcloudShareLink !== undefined) updates.nextcloudShareLink = nextcloudShareLink || null;
     if (bufferChannelName !== undefined) updates.bufferChannelName = bufferChannelName || null;
+    const sanitizedServiceTypes = sanitizeServiceTypes(serviceTypes);
+    if (sanitizedServiceTypes !== undefined) updates.serviceTypes = sanitizedServiceTypes;
 
     const [updated] = await db.update(customersTable).set(updates).where(eq(customersTable.id, id)).returning();
     if (!updated) {

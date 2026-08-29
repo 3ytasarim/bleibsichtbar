@@ -347,6 +347,9 @@ export const GetCustomersResponseItem = zod.object({
   instagramTokenExpiresAt: zod.date().nullish(),
   nextcloudShareLink: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
+  serviceTypes: zod
+    .array(zod.string())
+    .describe("social_media | website | ki_automatisierungen"),
   createdAt: zod.date(),
   updatedAt: zod.date(),
 });
@@ -374,6 +377,12 @@ export const CreateCustomerBody = zod.object({
   metaAccessToken: zod.string().nullish(),
   nextcloudShareLink: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
+  serviceTypes: zod
+    .array(zod.string())
+    .optional()
+    .describe(
+      "social_media | website | ki_automatisierungen — defaults to [social_media] if omitted",
+    ),
 });
 
 /**
@@ -417,6 +426,10 @@ export const UpdateCustomerBody = zod.object({
   metaAccessToken: zod.string().nullish(),
   nextcloudShareLink: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
+  serviceTypes: zod
+    .array(zod.string())
+    .optional()
+    .describe("social_media | website | ki_automatisierungen"),
 });
 
 export const UpdateCustomerResponse = zod.object({
@@ -439,6 +452,9 @@ export const UpdateCustomerResponse = zod.object({
   instagramTokenExpiresAt: zod.date().nullish(),
   nextcloudShareLink: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
+  serviceTypes: zod
+    .array(zod.string())
+    .describe("social_media | website | ki_automatisierungen"),
   createdAt: zod.date(),
   updatedAt: zod.date(),
 });
@@ -1065,6 +1081,11 @@ export const GetCustomerMeResponse = zod.object({
   username: zod.string(),
   status: zod.string(),
   startDate: zod.date().nullish(),
+  serviceTypes: zod
+    .array(zod.string())
+    .describe(
+      "social_media | website | ki_automatisierungen — determines which dashboard variant is shown",
+    ),
 });
 
 /**

@@ -1679,6 +1679,11 @@ components:
         bufferChannelName:
           type: string
           nullable: true
+        serviceTypes:
+          type: array
+          items:
+            type: string
+          description: "social_media | website | ki_automatisierungen"
         createdAt:
           type: string
           format: date-time
@@ -1691,6 +1696,7 @@ components:
         - username
         - role
         - status
+        - serviceTypes
         - createdAt
         - updatedAt
 
@@ -1747,6 +1753,11 @@ components:
         bufferChannelName:
           type: string
           nullable: true
+        serviceTypes:
+          type: array
+          items:
+            type: string
+          description: "social_media | website | ki_automatisierungen — defaults to [social_media] if omitted"
       required:
         - companyName
         - username
@@ -1806,6 +1817,11 @@ components:
         bufferChannelName:
           type: string
           nullable: true
+        serviceTypes:
+          type: array
+          items:
+            type: string
+          description: "social_media | website | ki_automatisierungen"
 
     PortalContentCalendarPost:
       type: object
@@ -2547,11 +2563,17 @@ components:
           type: string
           format: date-time
           nullable: true
+        serviceTypes:
+          type: array
+          items:
+            type: string
+          description: "social_media | website | ki_automatisierungen — determines which dashboard variant is shown"
       required:
         - id
         - companyName
         - username
         - status
+        - serviceTypes
 
     ContactRequest:
       type: object

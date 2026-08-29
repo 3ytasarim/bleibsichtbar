@@ -2,11 +2,20 @@ import React from "react";
 import { Link, useLocation } from "wouter";
 import { useGetCustomerMe, useCustomerLogout, useGetPortalNotifications, getGetCustomerMeQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboard, Instagram, FolderOpen, Receipt, UserRound, LogOut, Menu, X, Loader2, CalendarDays, FileStack, LifeBuoy } from "lucide-react";
+import { LayoutDashboard, Instagram, FolderOpen, Receipt, UserRound, LogOut, Menu, X, Loader2, CalendarDays, FileStack, LifeBuoy, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/customer/NotificationBell";
 
-const NAV_ITEMS = [
+export interface CustomerNavItem {
+  name: string;
+  path: string;
+  icon: LucideIcon;
+}
+
+// The full Instagram-centric nav — used for social_media customers (the
+// original/default portal). Other service-type dashboards (e.g. KI &
+// Automatisierungen) pass their own `navItems` instead — see DashboardKI.
+export const DEFAULT_NAV_ITEMS: CustomerNavItem[] = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { name: "Instagram", path: "/dashboard/instagram", icon: Instagram },
   { name: "Content Calendar", path: "/dashboard/content-calendar", icon: CalendarDays },
@@ -17,7 +26,7 @@ const NAV_ITEMS = [
   { name: "Support-Tickets", path: "/dashboard/support", icon: LifeBuoy },
 ];
 
-export function CustomerPortalLayout({ children }: { children: React.ReactNode }) {
+export function CustomerPortalLayout({ children, navItems = DEFAULT_NAV_ITEMS }: { children: React.ReactNode; navItems?: CustomerNavItem[] }) {
   const [location, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const { data: customer, isLoading, error } = useGetCustomerMe({ query: { retry: false, queryKey: getGetCustomerMeQueryKey() } });
@@ -88,7 +97,7 @@ export function CustomerPortalLayout({ children }: { children: React.ReactNode }
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const active = location === item.path;
             const Icon = item.icon;
             return (

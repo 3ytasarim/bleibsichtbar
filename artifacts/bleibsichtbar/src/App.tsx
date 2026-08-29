@@ -43,7 +43,7 @@ const AdminArchive = lazy(() => import("./pages/admin/AdminArchive"));
 const AdminSupportTickets = lazy(() => import("./pages/admin/AdminSupportTickets"));
 
 // Customer Portal Pages — separate lazy chunk
-const CustomerDashboard = lazy(() => import("./pages/customer/Dashboard"));
+const CustomerDashboardRouter = lazy(() => import("./pages/customer/DashboardRouter"));
 const CustomerInstagram = lazy(() => import("./pages/customer/Instagram"));
 const CustomerContentCalendar = lazy(() => import("./pages/customer/ContentCalendar"));
 const CustomerDokumente = lazy(() => import("./pages/customer/Dokumente"));
@@ -99,7 +99,7 @@ function Router() {
         <Route path="/admin/support-tickets" component={AdminSupportTickets} />
 
         {/* Customer Portal — completely separate from Admin (own dashboard, shares /login) */}
-        <Route path="/dashboard" component={CustomerDashboard} />
+        <Route path="/dashboard" component={CustomerDashboardRouter} />
         <Route path="/dashboard/instagram" component={CustomerInstagram} />
         <Route path="/dashboard/content-calendar" component={CustomerContentCalendar} />
         <Route path="/dashboard/dokumente" component={CustomerDokumente} />

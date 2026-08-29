@@ -1,4 +1,5 @@
 import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -25,6 +26,14 @@ export const customersTable = pgTable("customers", {
   nextcloudShareLink: text("nextcloud_share_link"),
   /** Exact Buffer channel "name" (e.g. Instagram handle) as shown in Buffer's channel list — resolved to a real channelId at publish time. */
   bufferChannelName: text("buffer_channel_name"),
+  /**
+   * Which service(s) this customer is booked for — "social_media" | "website" | "ki_automatisierungen".
+   * Drives which dashboard variant they see after login: social_media (alone
+   * or combined with anything) gets the existing Instagram-centric
+   * CustomerDashboard; website-only is a placeholder for now; ki_automatisierungen-only
+   * gets its own dashboard (same portal shell, different nav — TBD).
+   */
+  serviceTypes: text("service_types").array().notNull().default(sql`ARRAY['social_media']::text[]`),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

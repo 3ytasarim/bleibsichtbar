@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, XCircle, Loader2, Instagram, UserPlus, HardDrive, CalendarDays, Search, Users } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, Instagram, UserPlus, HardDrive, CalendarDays, Search, Users, Layers } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CustomerDataTable, type CustomerSortKey } from "@/components/admin/CustomerDataTable";
 import {
@@ -24,6 +24,48 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 
 type SortKey = CustomerSortKey;
+
+/**
+ * Which service(s) a customer is booked for — decides which dashboard
+ * variant they land on after login. "social_media" (alone or combined with
+ * anything) → the existing Instagram-centric dashboard; "website"-only is a
+ * placeholder for now; "ki_automatisierungen"-only gets its own dashboard.
+ */
+const SERVICE_TYPE_OPTIONS = [
+  { value: "social_media", label: "Social Media" },
+  { value: "website", label: "Website" },
+  { value: "ki_automatisierungen", label: "KI & Automatisierungen" },
+] as const;
+
+function ServiceTypesField({ value, onChange }: { value: string[]; onChange: (next: string[]) => void }) {
+  const toggle = (v: string) => {
+    if (value.includes(v)) {
+      const next = value.filter((x) => x !== v);
+      onChange(next.length > 0 ? next : [v]); // keep at least one selected
+    } else {
+      onChange([...value, v]);
+    }
+  };
+  return (
+    <div className="flex flex-wrap gap-2">
+      {SERVICE_TYPE_OPTIONS.map((opt) => {
+        const active = value.includes(opt.value);
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => toggle(opt.value)}
+            className={`px-3.5 py-2 rounded-xl text-sm font-medium border transition-colors ${
+              active ? "bg-accent text-white border-accent" : "bg-white text-muted-foreground border-border hover:border-accent/40"
+            }`}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 const customerSchema = z.object({
   companyName: z.string().min(1, "Firmenname erforderlich"),
@@ -43,6 +85,7 @@ const customerSchema = z.object({
   metaAccessToken: z.string().optional(),
   nextcloudShareLink: z.string().optional(),
   bufferChannelName: z.string().optional(),
+  serviceTypes: z.array(z.string()).min(1, "Mindestens ein Bereich erforderlich"),
 }).refine((data) => data.password === data.passwordConfirm, {
   message: "Passwörter stimmen nicht überein",
   path: ["passwordConfirm"],
@@ -68,6 +111,7 @@ const editSchema = z.object({
   metaAccessToken: z.string().optional(),
   nextcloudShareLink: z.string().optional(),
   bufferChannelName: z.string().optional(),
+  serviceTypes: z.array(z.string()).min(1, "Mindestens ein Bereich erforderlich"),
 }).refine((data) => !data.password || data.password === data.passwordConfirm, {
   message: "Passwörter stimmen nicht überein",
   path: ["passwordConfirm"],
@@ -121,7 +165,7 @@ export default function AdminUsers() {
 
   const { register, handleSubmit, reset, getValues, setValue, watch, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(customerSchema),
-    defaultValues: { status: "active" },
+    defaultValues: { status: "active", serviceTypes: ["social_media"] },
   });
 
   const editForm = useForm<EditFormValues>({
@@ -177,7 +221,7 @@ export default function AdminUsers() {
       {
         onSuccess: () => {
           invalidateCustomers();
-          reset({ companyName: "", username: "", password: "", passwordConfirm: "", status: "active", contactPerson: "", email: "", phone: "", startDate: "", quickbooksId: "", crmId: "", instagramAccountId: "", instagramUsername: "", facebookPageId: "", metaAccessToken: "", nextcloudShareLink: "", bufferChannelName: "" });
+          reset({ companyName: "", username: "", password: "", passwordConfirm: "", status: "active", contactPerson: "", email: "", phone: "", startDate: "", quickbooksId: "", crmId: "", instagramAccountId: "", instagramUsername: "", facebookPageId: "", metaAccessToken: "", nextcloudShareLink: "", bufferChannelName: "", serviceTypes: ["social_media"] });
           setTestResult(null);
         },
         onError: (err: any) => {
@@ -209,6 +253,7 @@ export default function AdminUsers() {
       metaAccessToken: "",
       nextcloudShareLink: customer.nextcloudShareLink || "",
       bufferChannelName: customer.bufferChannelName || "",
+      serviceTypes: customer.serviceTypes && customer.serviceTypes.length > 0 ? customer.serviceTypes : ["social_media"],
     });
   };
 
@@ -230,6 +275,7 @@ export default function AdminUsers() {
       facebookPageId: data.facebookPageId,
       nextcloudShareLink: data.nextcloudShareLink,
       bufferChannelName: data.bufferChannelName,
+      serviceTypes: data.serviceTypes,
     };
     if (data.password) {
       payload.password = data.password;
@@ -358,6 +404,13 @@ export default function AdminUsers() {
                 <SelectItem value="inactive">Inaktiv</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <Label className="mb-1.5 block">Bereich</Label>
+            <ServiceTypesField value={watch("serviceTypes") || ["social_media"]} onChange={(v) => setValue("serviceTypes", v)} />
+            {errors.serviceTypes && <p className="text-xs text-destructive mt-1">{errors.serviceTypes.message}</p>}
+            <p className="text-xs text-muted-foreground mt-1.5">Bestimmt, welches Dashboard der Kunde nach dem Login sieht.</p>
           </div>
         </div>
 
@@ -570,6 +623,18 @@ export default function AdminUsers() {
                     <SelectItem value="inactive">Inaktiv</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div>
+                <Label className="mb-1.5 block">Bereich</Label>
+                <ServiceTypesField
+                  value={editForm.watch("serviceTypes") || ["social_media"]}
+                  onChange={(v) => editForm.setValue("serviceTypes", v)}
+                />
+                {editForm.formState.errors.serviceTypes && (
+                  <p className="text-xs text-destructive mt-1">{editForm.formState.errors.serviceTypes.message}</p>
+                )}
+                <p className="text-xs text-muted-foreground mt-1.5">Bestimmt, welches Dashboard der Kunde nach dem Login sieht.</p>
               </div>
             </div>
 
