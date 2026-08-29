@@ -346,6 +346,7 @@ export const GetCustomersResponseItem = zod.object({
   instagramConnectedAt: zod.date().nullish(),
   instagramTokenExpiresAt: zod.date().nullish(),
   nextcloudShareLink: zod.string().nullish(),
+  nextcloudShareLinkKi: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
   serviceTypes: zod
     .array(zod.string())
@@ -376,6 +377,7 @@ export const CreateCustomerBody = zod.object({
   facebookPageId: zod.string().nullish(),
   metaAccessToken: zod.string().nullish(),
   nextcloudShareLink: zod.string().nullish(),
+  nextcloudShareLinkKi: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
   serviceTypes: zod
     .array(zod.string())
@@ -425,6 +427,7 @@ export const UpdateCustomerBody = zod.object({
   facebookPageId: zod.string().nullish(),
   metaAccessToken: zod.string().nullish(),
   nextcloudShareLink: zod.string().nullish(),
+  nextcloudShareLinkKi: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
   serviceTypes: zod
     .array(zod.string())
@@ -451,6 +454,7 @@ export const UpdateCustomerResponse = zod.object({
   instagramConnectedAt: zod.date().nullish(),
   instagramTokenExpiresAt: zod.date().nullish(),
   nextcloudShareLink: zod.string().nullish(),
+  nextcloudShareLinkKi: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
   serviceTypes: zod
     .array(zod.string())
@@ -852,6 +856,99 @@ export const DeleteCustomerDocumentResponse = zod.object({
 });
 
 /**
+ * @summary List a customer's roadmap ("Update" Kanban) items (admin)
+ */
+export const GetCustomerRoadmapParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetCustomerRoadmapResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.string().describe("in_progress | preparing | completed"),
+  sortOrder: zod.number(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const GetCustomerRoadmapResponse = zod.array(
+  GetCustomerRoadmapResponseItem,
+);
+
+/**
+ * @summary Add a roadmap item for a customer (admin)
+ */
+export const CreateCustomerRoadmapItemParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const CreateCustomerRoadmapItemBody = zod.object({
+  title: zod.string(),
+  description: zod.string().nullish(),
+  status: zod
+    .string()
+    .optional()
+    .describe("in_progress | preparing | completed — defaults to in_progress"),
+});
+
+/**
+ * @summary Update a roadmap item (e.g. move it to a new status) — notifies the customer on status change (admin)
+ */
+export const UpdateCustomerRoadmapItemParams = zod.object({
+  id: zod.coerce.number(),
+  itemId: zod.coerce.number(),
+});
+
+export const UpdateCustomerRoadmapItemBody = zod.object({
+  title: zod.string().optional(),
+  description: zod.string().nullish(),
+  status: zod
+    .string()
+    .optional()
+    .describe("in_progress | preparing | completed"),
+});
+
+export const UpdateCustomerRoadmapItemResponse = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.string().describe("in_progress | preparing | completed"),
+  sortOrder: zod.number(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+
+/**
+ * @summary Delete a roadmap item (admin)
+ */
+export const DeleteCustomerRoadmapItemParams = zod.object({
+  id: zod.coerce.number(),
+  itemId: zod.coerce.number(),
+});
+
+export const DeleteCustomerRoadmapItemResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * @summary The authenticated customer's own roadmap ("Update" Kanban) items, read-only
+ */
+export const GetPortalRoadmapResponseItem = zod.object({
+  id: zod.number(),
+  customerId: zod.number(),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.string().describe("in_progress | preparing | completed"),
+  sortOrder: zod.number(),
+  createdAt: zod.date(),
+  updatedAt: zod.date(),
+});
+export const GetPortalRoadmapResponse = zod.array(GetPortalRoadmapResponseItem);
+
+/**
  * @summary List the authenticated customer's documents (read-only)
  */
 export const GetPortalDocumentsResponseItem = zod.object({
@@ -873,7 +970,9 @@ export const GetPortalDocumentsResponse = zod.array(
 export const GetPortalNotificationsResponseItem = zod.object({
   id: zod.number(),
   customerId: zod.number(),
-  type: zod.string().describe("invoice | monthly_report | support_ticket"),
+  type: zod
+    .string()
+    .describe("invoice | monthly_report | support_ticket | roadmap_update"),
   title: zod.string(),
   message: zod.string().nullish(),
   link: zod.string().nullish(),
@@ -910,7 +1009,11 @@ export const MarkAllPortalNotificationsReadResponse = zod.object({
 export const GetPortalSupportTicketsResponseItem = zod.object({
   id: zod.number(),
   customerId: zod.number(),
-  category: zod.string().describe("invoice | social_media | website | other"),
+  category: zod
+    .string()
+    .describe(
+      "invoice | social_media | website | ki_automatisierungen | other",
+    ),
   subject: zod.string(),
   message: zod.string(),
   status: zod
@@ -927,7 +1030,11 @@ export const GetPortalSupportTicketsResponse = zod.array(
  * @summary Open a new support ticket
  */
 export const CreatePortalSupportTicketBody = zod.object({
-  category: zod.string().describe("invoice | social_media | website | other"),
+  category: zod
+    .string()
+    .describe(
+      "invoice | social_media | website | ki_automatisierungen | other",
+    ),
   subject: zod.string(),
   message: zod.string(),
 });
@@ -968,7 +1075,11 @@ export const GetSupportTicketsResponseItem = zod
   .object({
     id: zod.number(),
     customerId: zod.number(),
-    category: zod.string().describe("invoice | social_media | website | other"),
+    category: zod
+      .string()
+      .describe(
+        "invoice | social_media | website | ki_automatisierungen | other",
+      ),
     subject: zod.string(),
     message: zod.string(),
     status: zod
@@ -1011,7 +1122,11 @@ export const UpdateSupportTicketBody = zod.object({
 export const UpdateSupportTicketResponse = zod.object({
   id: zod.number(),
   customerId: zod.number(),
-  category: zod.string().describe("invoice | social_media | website | other"),
+  category: zod
+    .string()
+    .describe(
+      "invoice | social_media | website | ki_automatisierungen | other",
+    ),
   subject: zod.string(),
   message: zod.string(),
   status: zod
@@ -1221,6 +1336,14 @@ export const GetPortalInstagramResponse = zod.object({
  * @summary Get the authenticated customer's Nextcloud share link, if configured
  */
 export const GetPortalFilesResponse = zod.object({
+  enabled: zod.boolean(),
+  shareLink: zod.string().nullable(),
+});
+
+/**
+ * @summary Get the authenticated customer's KI & Automatisierungen ("Datenbank") Nextcloud share link, if configured — kept separate from the Social Media one
+ */
+export const GetPortalFilesKiResponse = zod.object({
   enabled: zod.boolean(),
   shareLink: zod.string().nullable(),
 });

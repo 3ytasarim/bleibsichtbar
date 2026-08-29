@@ -1,7 +1,7 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import multer from "multer";
-import { db, customersTable, monthlyMetricsTable, invoicesTable, customerDocumentsTable } from "@workspace/db";
-import { eq, desc, and, like } from "drizzle-orm";
+import { db, customersTable, monthlyMetricsTable, invoicesTable, customerDocumentsTable, roadmapItemsTable } from "@workspace/db";
+import { eq, desc, and, like, asc } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { requireAdmin } from "../middlewares/auth.js";
 import { encryptToken } from "../lib/tokenCrypto.js";
@@ -90,6 +90,7 @@ router.post("/", requireAdmin, async (req: Request, res: Response) => {
       facebookPageId,
       metaAccessToken,
       nextcloudShareLink,
+      nextcloudShareLinkKi,
       bufferChannelName,
       serviceTypes,
     } = req.body;
@@ -138,6 +139,7 @@ router.post("/", requireAdmin, async (req: Request, res: Response) => {
         instagramConnectedAt: metaAccessTokenEncrypted ? new Date() : null,
         instagramTokenExpiresAt,
         nextcloudShareLink: nextcloudShareLink || null,
+        nextcloudShareLinkKi: nextcloudShareLinkKi || null,
         bufferChannelName: bufferChannelName || null,
         serviceTypes: sanitizeServiceTypes(serviceTypes) ?? ["social_media"],
       })
@@ -172,6 +174,7 @@ router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
       facebookPageId,
       metaAccessToken,
       nextcloudShareLink,
+      nextcloudShareLinkKi,
       bufferChannelName,
       serviceTypes,
     } = req.body;
@@ -214,6 +217,7 @@ router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
       updates.instagramConnectedAt = metaAccessToken ? new Date() : null;
     }
     if (nextcloudShareLink !== undefined) updates.nextcloudShareLink = nextcloudShareLink || null;
+    if (nextcloudShareLinkKi !== undefined) updates.nextcloudShareLinkKi = nextcloudShareLinkKi || null;
     if (bufferChannelName !== undefined) updates.bufferChannelName = bufferChannelName || null;
     const sanitizedServiceTypes = sanitizeServiceTypes(serviceTypes);
     if (sanitizedServiceTypes !== undefined) updates.serviceTypes = sanitizedServiceTypes;
@@ -699,5 +703,112 @@ router.delete("/:id/documents/:documentId", requireAdmin, async (req: Request, r
 // Archive/file browsing for admin is no longer WebDAV-backed — admin sees
 // and edits nextcloudShareLink through the regular customer record (GET /,
 // POST /, PUT /:id above) and opens the same public share link directly.
+
+// ─── Roadmap ("Update" Kanban board) ────────────────────────
+
+const ROADMAP_STATUSES = ["in_progress", "preparing", "completed"] as const;
+type RoadmapStatus = (typeof ROADMAP_STATUSES)[number];
+const ROADMAP_STATUS_LABELS: Record<RoadmapStatus, string> = {
+  in_progress: "Im Prozess",
+  preparing: "Wird vorbereitet",
+  completed: "Abgeschlossen",
+};
+
+router.get("/:id/roadmap", requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const customerId = parseInt(req.params.id as string);
+    const rows = await db
+      .select()
+      .from(roadmapItemsTable)
+      .where(eq(roadmapItemsTable.customerId, customerId))
+      .orderBy(asc(roadmapItemsTable.sortOrder), asc(roadmapItemsTable.createdAt));
+    res.json(rows);
+    return;
+  } catch (err) {
+    res.status(500).json({ message: "Serverfehler" });
+    return;
+  }
+});
+
+router.post("/:id/roadmap", requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const customerId = parseInt(req.params.id as string);
+    const { title, description, status } = req.body ?? {};
+    if (typeof title !== "string" || !title.trim()) {
+      res.status(400).json({ message: "Titel ist erforderlich." });
+      return;
+    }
+    const initialStatus: RoadmapStatus = ROADMAP_STATUSES.includes(status) ? status : "in_progress";
+
+    const [created] = await db
+      .insert(roadmapItemsTable)
+      .values({ customerId, title: title.trim(), description: description || null, status: initialStatus })
+      .returning();
+
+    res.status(201).json(created);
+    return;
+  } catch (err) {
+    res.status(500).json({ message: "Serverfehler" });
+    return;
+  }
+});
+
+router.put("/:id/roadmap/:itemId", requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const customerId = parseInt(req.params.id as string);
+    const itemId = parseInt(req.params.itemId as string);
+    const { title, description, status } = req.body ?? {};
+
+    const [existing] = await db
+      .select()
+      .from(roadmapItemsTable)
+      .where(and(eq(roadmapItemsTable.id, itemId), eq(roadmapItemsTable.customerId, customerId)));
+    if (!existing) {
+      res.status(404).json({ message: "Eintrag nicht gefunden." });
+      return;
+    }
+
+    const updates: Partial<typeof roadmapItemsTable.$inferInsert> = { updatedAt: new Date() };
+    if (typeof title === "string" && title.trim()) updates.title = title.trim();
+    if (description !== undefined) updates.description = description || null;
+    if (typeof status === "string" && ROADMAP_STATUSES.includes(status as RoadmapStatus)) updates.status = status;
+
+    const [updated] = await db
+      .update(roadmapItemsTable)
+      .set(updates)
+      .where(eq(roadmapItemsTable.id, itemId))
+      .returning();
+
+    if (updates.status && updates.status !== existing.status) {
+      const statusLabel = ROADMAP_STATUS_LABELS[updates.status as RoadmapStatus];
+      notifyCustomer({
+        customerId: existing.customerId,
+        type: "roadmap_update",
+        title: `Update: ${existing.title}`,
+        message: `Status geändert zu „${statusLabel}“.`,
+        link: "/dashboard/update",
+      }).catch((err) => console.error("notifyCustomer (roadmap_update) failed", err));
+    }
+
+    res.json(updated);
+    return;
+  } catch (err) {
+    res.status(500).json({ message: "Serverfehler" });
+    return;
+  }
+});
+
+router.delete("/:id/roadmap/:itemId", requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const customerId = parseInt(req.params.id as string);
+    const itemId = parseInt(req.params.itemId as string);
+    await db.delete(roadmapItemsTable).where(and(eq(roadmapItemsTable.id, itemId), eq(roadmapItemsTable.customerId, customerId)));
+    res.json({ success: true, message: "Eintrag gelöscht" });
+    return;
+  } catch (err) {
+    res.status(500).json({ message: "Serverfehler" });
+    return;
+  }
+});
 
 export default router;

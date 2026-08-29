@@ -10,7 +10,7 @@ import { sendCustomerNotificationEmail } from "./mailer.js";
  */
 export async function notifyCustomer(params: {
   customerId: number;
-  type: "invoice" | "monthly_report" | "support_ticket";
+  type: "invoice" | "monthly_report" | "support_ticket" | "roadmap_update";
   title: string;
   message: string;
   link?: string;

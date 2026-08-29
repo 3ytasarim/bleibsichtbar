@@ -947,6 +947,129 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
+  /customers/{id}/roadmap:
+    get:
+      operationId: getCustomerRoadmap
+      tags: [customers]
+      summary: List a customer's roadmap ("Update" Kanban) items (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Roadmap items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoadmapItem"
+    post:
+      operationId: createCustomerRoadmapItem
+      tags: [customers]
+      summary: Add a roadmap item for a customer (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRoadmapItem"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadmapItem"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /customers/{id}/roadmap/{itemId}:
+    put:
+      operationId: updateCustomerRoadmapItem
+      tags: [customers]
+      summary: Update a roadmap item (e.g. move it to a new status) — notifies the customer on status change (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRoadmapItem"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadmapItem"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteCustomerRoadmapItem
+      tags: [customers]
+      summary: Delete a roadmap item (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /portal/roadmap:
+    get:
+      operationId: getPortalRoadmap
+      tags: [portal]
+      summary: The authenticated customer's own roadmap ("Update" Kanban) items, read-only
+      responses:
+        "200":
+          description: Roadmap items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoadmapItem"
+
   /portal/documents:
     get:
       operationId: getPortalDocuments
@@ -1316,6 +1439,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/PortalFilesResponse"
 
+  /portal/files-ki:
+    get:
+      operationId: getPortalFilesKi
+      tags: [portal]
+      summary: Get the authenticated customer's KI & Automatisierungen ("Datenbank") Nextcloud share link, if configured — kept separate from the Social Media one
+      responses:
+        "200":
+          description: Nextcloud share link status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalFilesResponse"
+
   /portal/invoices:
     get:
       operationId: getPortalInvoices
@@ -1676,6 +1812,9 @@ components:
         nextcloudShareLink:
           type: string
           nullable: true
+        nextcloudShareLinkKi:
+          type: string
+          nullable: true
         bufferChannelName:
           type: string
           nullable: true
@@ -1750,6 +1889,9 @@ components:
         nextcloudShareLink:
           type: string
           nullable: true
+        nextcloudShareLinkKi:
+          type: string
+          nullable: true
         bufferChannelName:
           type: string
           nullable: true
@@ -1812,6 +1954,9 @@ components:
           type: string
           nullable: true
         nextcloudShareLink:
+          type: string
+          nullable: true
+        nextcloudShareLinkKi:
           type: string
           nullable: true
         bufferChannelName:
@@ -1910,6 +2055,64 @@ components:
         - fileName
         - createdAt
 
+    RoadmapItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        customerId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          description: "in_progress | preparing | completed"
+        sortOrder:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - customerId
+        - title
+        - status
+        - sortOrder
+        - createdAt
+        - updatedAt
+
+    CreateRoadmapItem:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          description: "in_progress | preparing | completed — defaults to in_progress"
+      required:
+        - title
+
+    UpdateRoadmapItem:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          description: "in_progress | preparing | completed"
+
     Notification:
       type: object
       properties:
@@ -1919,7 +2122,7 @@ components:
           type: integer
         type:
           type: string
-          description: "invoice | monthly_report | support_ticket"
+          description: "invoice | monthly_report | support_ticket | roadmap_update"
         title:
           type: string
         message:
@@ -1950,7 +2153,7 @@ components:
           type: integer
         category:
           type: string
-          description: "invoice | social_media | website | other"
+          description: "invoice | social_media | website | ki_automatisierungen | other"
         subject:
           type: string
         message:
@@ -2027,7 +2230,7 @@ components:
       properties:
         category:
           type: string
-          description: "invoice | social_media | website | other"
+          description: "invoice | social_media | website | ki_automatisierungen | other"
         subject:
           type: string
         message:

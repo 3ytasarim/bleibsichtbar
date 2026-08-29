@@ -24,6 +24,8 @@ export const customersTable = pgTable("customers", {
   instagramConnectedAt: timestamp("instagram_connected_at"),
   instagramTokenExpiresAt: timestamp("instagram_token_expires_at"),
   nextcloudShareLink: text("nextcloud_share_link"),
+  /** Separate Nextcloud share link for the "Datenbank" area shown to KI & Automatisierungen customers — kept independent from the Social Media one above so a customer booked for both services gets two distinct file areas. */
+  nextcloudShareLinkKi: text("nextcloud_share_link_ki"),
   /** Exact Buffer channel "name" (e.g. Instagram handle) as shown in Buffer's channel list — resolved to a real channelId at publish time. */
   bufferChannelName: text("buffer_channel_name"),
   /**

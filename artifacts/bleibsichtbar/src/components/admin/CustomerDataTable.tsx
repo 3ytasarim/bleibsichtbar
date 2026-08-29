@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowUp, ArrowUpDown, Edit2, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Edit2, Trash2, Kanban } from "lucide-react";
 import type { Customer } from "@workspace/api-client-react";
 
 export type CustomerSortKey =
@@ -32,6 +32,7 @@ interface CustomerDataTableProps {
   onRowClick: (customer: Customer) => void;
   onToggleStatus: (customer: Customer) => void;
   onDelete: (customer: Customer) => void;
+  onOpenRoadmap: (customer: Customer) => void;
   togglePending?: boolean;
 }
 
@@ -119,6 +120,7 @@ export function CustomerDataTable({
   onRowClick,
   onToggleStatus,
   onDelete,
+  onOpenRoadmap,
   togglePending,
 }: CustomerDataTableProps) {
   return (
@@ -207,6 +209,9 @@ export function CustomerDataTable({
                 </TableCell>
                 <TableCell className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
                   <div className="inline-flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => onOpenRoadmap(c)} title="Update / Roadmap">
+                      <Kanban className="w-4 h-4" />
+                    </Button>
                     <Button variant="outline" size="sm" onClick={() => onRowClick(c)}>
                       <Edit2 className="w-4 h-4" />
                     </Button>

@@ -14,4 +14,5 @@ export * from "./contentCalendar";
 export * from "./customerDocuments";
 export * from "./notifications";
 export * from "./supportTickets";
+export * from "./roadmapItems";
 

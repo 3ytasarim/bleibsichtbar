@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCreatePortalSupportTicket, getGetPortalSupportTicketsQueryKey } from "@workspace/api-client-react";
+import { useCreatePortalSupportTicket, useGetCustomerMe, getGetPortalSupportTicketsQueryKey, getGetCustomerMeQueryKey } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ export const TICKET_CATEGORIES = [
   { value: "invoice", label: "Rechnung" },
   { value: "social_media", label: "Social Media" },
   { value: "website", label: "Website" },
+  { value: "ki_automatisierungen", label: "KI & Automatisierungen" },
   { value: "other", label: "Sonstiges" },
 ] as const;
 
@@ -31,6 +32,22 @@ export function CreateTicketModal({ open, onOpenChange }: CreateTicketModalProps
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const createMut = useCreatePortalSupportTicket();
+  const { data: customer } = useGetCustomerMe({ query: { retry: false, queryKey: getGetCustomerMeQueryKey() } });
+
+  // Only show topics for the service(s) a customer is actually booked for —
+  // "Rechnung" and "Sonstiges" stay universal since they apply regardless of
+  // which services a customer holds. Falls back to Social Media (the DB
+  // default) while customer.me is still loading / for legacy rows with no
+  // serviceTypes set.
+  const serviceTypes = customer?.serviceTypes ?? ["social_media"];
+  const availableCategories = TICKET_CATEGORIES.filter(
+    (c) => c.value === "invoice" || c.value === "other" || serviceTypes.includes(c.value)
+  );
+  // Only auto-fix the topic to a single value when there's truly just one
+  // service-tied category to choose from (e.g. KI-only customers) — once a
+  // customer holds 2+ services, "Rechnung"/"Sonstiges" already make that 3+,
+  // so this stays false for any multi-service combination.
+  const fixedCategory = availableCategories.length === 1 ? availableCategories[0].value : null;
 
   const [category, setCategory] = useState<string>("");
   const [subject, setSubject] = useState("");
@@ -38,11 +55,18 @@ export function CreateTicketModal({ open, onOpenChange }: CreateTicketModalProps
   const [error, setError] = useState<string | null>(null);
 
   const reset = () => {
-    setCategory("");
+    setCategory(fixedCategory ?? "");
     setSubject("");
     setMessage("");
     setError(null);
   };
+
+  // customer.me can still be loading at the exact moment the dialog opens
+  // (fixedCategory null for that first render), so `reset()` alone isn't
+  // reliable — keep category in sync whenever fixedCategory becomes known while open.
+  useEffect(() => {
+    if (open && fixedCategory) setCategory(fixedCategory);
+  }, [open, fixedCategory]);
 
   const handleOpenChange = (next: boolean) => {
     if (next) reset();
@@ -85,16 +109,22 @@ export function CreateTicketModal({ open, onOpenChange }: CreateTicketModalProps
         <div className="space-y-4">
           <div>
             <Label className="mb-1.5 block">Thema</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Thema auswählen..." />
-              </SelectTrigger>
-              <SelectContent>
-                {TICKET_CATEGORIES.map((c) => (
-                  <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {fixedCategory ? (
+              <div className="flex h-10 items-center rounded-md border border-input bg-muted/40 px-3 text-sm text-foreground">
+                {categoryLabel(fixedCategory)}
+              </div>
+            ) : (
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Thema auswählen..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableCategories.map((c) => (
+                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
           <div>

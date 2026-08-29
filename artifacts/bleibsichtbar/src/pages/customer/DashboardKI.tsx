@@ -1,26 +1,17 @@
 import { useGetCustomerMe, getGetCustomerMeQueryKey } from "@workspace/api-client-react";
-import { CustomerPortalLayout, type CustomerNavItem } from "@/components/layout/CustomerPortalLayout";
+import { CustomerPortalLayout } from "@/components/layout/CustomerPortalLayout";
 import { LightTrustBackground } from "@/components/shared/LightTrustBackground";
 import { DaysWithUsCounter } from "@/components/customer/DaysWithUsCounter";
 import { SupportTicketSection } from "@/components/customer/SupportTicketSection";
-import { LayoutDashboard, UserRound, LifeBuoy, Sparkles, Sun, Moon } from "lucide-react";
+import { Sparkles, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Temporary nav for KI & Automatisierungen customers — deliberately minimal
-// (only what's true regardless of service type) until the real set of
-// sections for this dashboard is defined.
-const KI_NAV_ITEMS: CustomerNavItem[] = [
-  { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-  { name: "Support-Tickets", path: "/dashboard/support", icon: LifeBuoy },
-  { name: "Profil", path: "/dashboard/profil", icon: UserRound },
-];
 
 /**
  * Dashboard for customers booked only for "KI & Automatisierungen" (no
  * Social Media) — same portal shell/infrastructure as the main
- * CustomerDashboard, but without any Instagram-specific content. Content
- * cards for this dashboard are still to be defined; the nav above is a
- * placeholder for the same reason.
+ * CustomerDashboard (Rechnungen/Dateien/Support-Tickets/Profil pages are
+ * reused as-is), plus its own "Update" roadmap board. No Instagram-specific
+ * content.
  */
 export default function CustomerDashboardKI() {
   const { data: customer } = useGetCustomerMe({ query: { retry: false, queryKey: getGetCustomerMeQueryKey() } });
@@ -31,7 +22,7 @@ export default function CustomerDashboardKI() {
   const GreetingIcon = isEvening ? Moon : Sun;
 
   return (
-    <CustomerPortalLayout navItems={KI_NAV_ITEMS}>
+    <CustomerPortalLayout>
       <div className="w-full">
         <div className="relative overflow-hidden rounded-3xl p-8 sm:p-10 bg-white border border-slate-200">
           <LightTrustBackground />

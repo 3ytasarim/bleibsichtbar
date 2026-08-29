@@ -127,6 +127,7 @@ export interface Customer {
   instagramConnectedAt?: string | null;
   instagramTokenExpiresAt?: string | null;
   nextcloudShareLink?: string | null;
+  nextcloudShareLinkKi?: string | null;
   bufferChannelName?: string | null;
   /** social_media | website | ki_automatisierungen */
   serviceTypes: string[];
@@ -152,6 +153,7 @@ export interface CreateCustomer {
   facebookPageId?: string | null;
   metaAccessToken?: string | null;
   nextcloudShareLink?: string | null;
+  nextcloudShareLinkKi?: string | null;
   bufferChannelName?: string | null;
   /** social_media | website | ki_automatisierungen — defaults to [social_media] if omitted */
   serviceTypes?: string[];
@@ -175,6 +177,7 @@ export interface UpdateCustomer {
   facebookPageId?: string | null;
   metaAccessToken?: string | null;
   nextcloudShareLink?: string | null;
+  nextcloudShareLinkKi?: string | null;
   bufferChannelName?: string | null;
   /** social_media | website | ki_automatisierungen */
   serviceTypes?: string[];
@@ -215,10 +218,36 @@ export interface CustomerDocument {
   createdAt: string;
 }
 
+export interface RoadmapItem {
+  id: number;
+  customerId: number;
+  title: string;
+  description?: string | null;
+  /** in_progress | preparing | completed */
+  status: string;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateRoadmapItem {
+  title: string;
+  description?: string | null;
+  /** in_progress | preparing | completed — defaults to in_progress */
+  status?: string;
+}
+
+export interface UpdateRoadmapItem {
+  title?: string;
+  description?: string | null;
+  /** in_progress | preparing | completed */
+  status?: string;
+}
+
 export interface Notification {
   id: number;
   customerId: number;
-  /** invoice | monthly_report | support_ticket */
+  /** invoice | monthly_report | support_ticket | roadmap_update */
   type: string;
   title: string;
   message?: string | null;
@@ -230,7 +259,7 @@ export interface Notification {
 export interface SupportTicket {
   id: number;
   customerId: number;
-  /** invoice | social_media | website | other */
+  /** invoice | social_media | website | ki_automatisierungen | other */
   category: string;
   subject: string;
   message: string;
@@ -264,7 +293,7 @@ export type SupportTicketAdmin = SupportTicket & {
 };
 
 export interface CreateSupportTicket {
-  /** invoice | social_media | website | other */
+  /** invoice | social_media | website | ki_automatisierungen | other */
   category: string;
   subject: string;
   message: string;

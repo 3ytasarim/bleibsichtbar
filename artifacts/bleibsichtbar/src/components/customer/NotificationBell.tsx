@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { de } from "date-fns/locale";
-import { Bell, Receipt, BarChart3, CheckCheck, LifeBuoy } from "lucide-react";
+import { Bell, Receipt, BarChart3, CheckCheck, LifeBuoy, Kanban } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   useGetPortalNotifications,
@@ -17,6 +17,7 @@ function notificationIcon(type: string) {
   if (type === "invoice") return Receipt;
   if (type === "monthly_report") return BarChart3;
   if (type === "support_ticket") return LifeBuoy;
+  if (type === "roadmap_update") return Kanban;
   return Bell;
 }
 

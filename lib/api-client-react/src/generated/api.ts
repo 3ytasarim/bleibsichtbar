@@ -31,6 +31,7 @@ import type {
   CreateMonthlyMetric,
   CreateProject,
   CreateReference,
+  CreateRoadmapItem,
   CreateSupportTicket,
   CreateSupportTicketMessage,
   Customer,
@@ -52,6 +53,7 @@ import type {
   PortalInstagramProfile,
   Project,
   Reference,
+  RoadmapItem,
   SuccessResponse,
   SupportTicket,
   SupportTicketAdmin,
@@ -60,6 +62,7 @@ import type {
   UpdateCustomer,
   UpdateInvoice,
   UpdateMonthlyMetric,
+  UpdateRoadmapItem,
   UpdateSupportTicket,
 } from "./api.schemas";
 
@@ -3551,6 +3554,431 @@ export const useDeleteCustomerDocument = <
 };
 
 /**
+ * @summary List a customer's roadmap ("Update" Kanban) items (admin)
+ */
+export const getGetCustomerRoadmapUrl = (id: number) => {
+  return `/api/customers/${id}/roadmap`;
+};
+
+export const getCustomerRoadmap = async (
+  id: number,
+  options?: RequestInit,
+): Promise<RoadmapItem[]> => {
+  return customFetch<RoadmapItem[]>(getGetCustomerRoadmapUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetCustomerRoadmapQueryKey = (id: number) => {
+  return [`/api/customers/${id}/roadmap`] as const;
+};
+
+export const getGetCustomerRoadmapQueryOptions = <
+  TData = Awaited<ReturnType<typeof getCustomerRoadmap>>,
+  TError = ErrorType<unknown>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getCustomerRoadmap>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetCustomerRoadmapQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getCustomerRoadmap>>
+  > = ({ signal }) => getCustomerRoadmap(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getCustomerRoadmap>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetCustomerRoadmapQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCustomerRoadmap>>
+>;
+export type GetCustomerRoadmapQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List a customer's roadmap ("Update" Kanban) items (admin)
+ */
+
+export function useGetCustomerRoadmap<
+  TData = Awaited<ReturnType<typeof getCustomerRoadmap>>,
+  TError = ErrorType<unknown>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getCustomerRoadmap>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetCustomerRoadmapQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Add a roadmap item for a customer (admin)
+ */
+export const getCreateCustomerRoadmapItemUrl = (id: number) => {
+  return `/api/customers/${id}/roadmap`;
+};
+
+export const createCustomerRoadmapItem = async (
+  id: number,
+  createRoadmapItem: CreateRoadmapItem,
+  options?: RequestInit,
+): Promise<RoadmapItem> => {
+  return customFetch<RoadmapItem>(getCreateCustomerRoadmapItemUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createRoadmapItem),
+  });
+};
+
+export const getCreateCustomerRoadmapItemMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createCustomerRoadmapItem>>,
+    TError,
+    { id: number; data: BodyType<CreateRoadmapItem> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createCustomerRoadmapItem>>,
+  TError,
+  { id: number; data: BodyType<CreateRoadmapItem> },
+  TContext
+> => {
+  const mutationKey = ["createCustomerRoadmapItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createCustomerRoadmapItem>>,
+    { id: number; data: BodyType<CreateRoadmapItem> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return createCustomerRoadmapItem(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateCustomerRoadmapItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createCustomerRoadmapItem>>
+>;
+export type CreateCustomerRoadmapItemMutationBody = BodyType<CreateRoadmapItem>;
+export type CreateCustomerRoadmapItemMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Add a roadmap item for a customer (admin)
+ */
+export const useCreateCustomerRoadmapItem = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createCustomerRoadmapItem>>,
+    TError,
+    { id: number; data: BodyType<CreateRoadmapItem> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createCustomerRoadmapItem>>,
+  TError,
+  { id: number; data: BodyType<CreateRoadmapItem> },
+  TContext
+> => {
+  return useMutation(getCreateCustomerRoadmapItemMutationOptions(options));
+};
+
+/**
+ * @summary Update a roadmap item (e.g. move it to a new status) — notifies the customer on status change (admin)
+ */
+export const getUpdateCustomerRoadmapItemUrl = (id: number, itemId: number) => {
+  return `/api/customers/${id}/roadmap/${itemId}`;
+};
+
+export const updateCustomerRoadmapItem = async (
+  id: number,
+  itemId: number,
+  updateRoadmapItem: UpdateRoadmapItem,
+  options?: RequestInit,
+): Promise<RoadmapItem> => {
+  return customFetch<RoadmapItem>(getUpdateCustomerRoadmapItemUrl(id, itemId), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateRoadmapItem),
+  });
+};
+
+export const getUpdateCustomerRoadmapItemMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateCustomerRoadmapItem>>,
+    TError,
+    { id: number; itemId: number; data: BodyType<UpdateRoadmapItem> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateCustomerRoadmapItem>>,
+  TError,
+  { id: number; itemId: number; data: BodyType<UpdateRoadmapItem> },
+  TContext
+> => {
+  const mutationKey = ["updateCustomerRoadmapItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateCustomerRoadmapItem>>,
+    { id: number; itemId: number; data: BodyType<UpdateRoadmapItem> }
+  > = (props) => {
+    const { id, itemId, data } = props ?? {};
+
+    return updateCustomerRoadmapItem(id, itemId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateCustomerRoadmapItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateCustomerRoadmapItem>>
+>;
+export type UpdateCustomerRoadmapItemMutationBody = BodyType<UpdateRoadmapItem>;
+export type UpdateCustomerRoadmapItemMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Update a roadmap item (e.g. move it to a new status) — notifies the customer on status change (admin)
+ */
+export const useUpdateCustomerRoadmapItem = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateCustomerRoadmapItem>>,
+    TError,
+    { id: number; itemId: number; data: BodyType<UpdateRoadmapItem> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateCustomerRoadmapItem>>,
+  TError,
+  { id: number; itemId: number; data: BodyType<UpdateRoadmapItem> },
+  TContext
+> => {
+  return useMutation(getUpdateCustomerRoadmapItemMutationOptions(options));
+};
+
+/**
+ * @summary Delete a roadmap item (admin)
+ */
+export const getDeleteCustomerRoadmapItemUrl = (id: number, itemId: number) => {
+  return `/api/customers/${id}/roadmap/${itemId}`;
+};
+
+export const deleteCustomerRoadmapItem = async (
+  id: number,
+  itemId: number,
+  options?: RequestInit,
+): Promise<SuccessResponse> => {
+  return customFetch<SuccessResponse>(
+    getDeleteCustomerRoadmapItemUrl(id, itemId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+export const getDeleteCustomerRoadmapItemMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteCustomerRoadmapItem>>,
+    TError,
+    { id: number; itemId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteCustomerRoadmapItem>>,
+  TError,
+  { id: number; itemId: number },
+  TContext
+> => {
+  const mutationKey = ["deleteCustomerRoadmapItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteCustomerRoadmapItem>>,
+    { id: number; itemId: number }
+  > = (props) => {
+    const { id, itemId } = props ?? {};
+
+    return deleteCustomerRoadmapItem(id, itemId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteCustomerRoadmapItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteCustomerRoadmapItem>>
+>;
+
+export type DeleteCustomerRoadmapItemMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete a roadmap item (admin)
+ */
+export const useDeleteCustomerRoadmapItem = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteCustomerRoadmapItem>>,
+    TError,
+    { id: number; itemId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteCustomerRoadmapItem>>,
+  TError,
+  { id: number; itemId: number },
+  TContext
+> => {
+  return useMutation(getDeleteCustomerRoadmapItemMutationOptions(options));
+};
+
+/**
+ * @summary The authenticated customer's own roadmap ("Update" Kanban) items, read-only
+ */
+export const getGetPortalRoadmapUrl = () => {
+  return `/api/portal/roadmap`;
+};
+
+export const getPortalRoadmap = async (
+  options?: RequestInit,
+): Promise<RoadmapItem[]> => {
+  return customFetch<RoadmapItem[]>(getGetPortalRoadmapUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetPortalRoadmapQueryKey = () => {
+  return [`/api/portal/roadmap`] as const;
+};
+
+export const getGetPortalRoadmapQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPortalRoadmap>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalRoadmap>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetPortalRoadmapQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getPortalRoadmap>>
+  > = ({ signal }) => getPortalRoadmap({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalRoadmap>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPortalRoadmapQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPortalRoadmap>>
+>;
+export type GetPortalRoadmapQueryError = ErrorType<unknown>;
+
+/**
+ * @summary The authenticated customer's own roadmap ("Update" Kanban) items, read-only
+ */
+
+export function useGetPortalRoadmap<
+  TData = Awaited<ReturnType<typeof getPortalRoadmap>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalRoadmap>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPortalRoadmapQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
  * @summary List the authenticated customer's documents (read-only)
  */
 export const getGetPortalDocumentsUrl = () => {
@@ -4969,6 +5397,81 @@ export function useGetPortalFiles<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetPortalFilesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Get the authenticated customer's KI & Automatisierungen ("Datenbank") Nextcloud share link, if configured — kept separate from the Social Media one
+ */
+export const getGetPortalFilesKiUrl = () => {
+  return `/api/portal/files-ki`;
+};
+
+export const getPortalFilesKi = async (
+  options?: RequestInit,
+): Promise<PortalFilesResponse> => {
+  return customFetch<PortalFilesResponse>(getGetPortalFilesKiUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetPortalFilesKiQueryKey = () => {
+  return [`/api/portal/files-ki`] as const;
+};
+
+export const getGetPortalFilesKiQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPortalFilesKi>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalFilesKi>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetPortalFilesKiQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getPortalFilesKi>>
+  > = ({ signal }) => getPortalFilesKi({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalFilesKi>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPortalFilesKiQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPortalFilesKi>>
+>;
+export type GetPortalFilesKiQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get the authenticated customer's KI & Automatisierungen ("Datenbank") Nextcloud share link, if configured — kept separate from the Social Media one
+ */
+
+export function useGetPortalFilesKi<
+  TData = Awaited<ReturnType<typeof getPortalFilesKi>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalFilesKi>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPortalFilesKiQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

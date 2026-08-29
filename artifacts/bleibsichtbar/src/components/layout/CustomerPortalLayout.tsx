@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "wouter";
 import { useGetCustomerMe, useCustomerLogout, useGetPortalNotifications, getGetCustomerMeQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboard, Instagram, FolderOpen, Receipt, UserRound, LogOut, Menu, X, Loader2, CalendarDays, FileStack, LifeBuoy, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Instagram, FolderOpen, Receipt, UserRound, LogOut, Menu, X, Loader2, CalendarDays, FileStack, LifeBuoy, Kanban, Database, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/customer/NotificationBell";
 
@@ -12,9 +12,8 @@ export interface CustomerNavItem {
   icon: LucideIcon;
 }
 
-// The full Instagram-centric nav — used for social_media customers (the
-// original/default portal). Other service-type dashboards (e.g. KI &
-// Automatisierungen) pass their own `navItems` instead — see DashboardKI.
+// The full Instagram-centric nav — used for customers booked for Social
+// Media only.
 export const DEFAULT_NAV_ITEMS: CustomerNavItem[] = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { name: "Instagram", path: "/dashboard/instagram", icon: Instagram },
@@ -26,7 +25,49 @@ export const DEFAULT_NAV_ITEMS: CustomerNavItem[] = [
   { name: "Support-Tickets", path: "/dashboard/support", icon: LifeBuoy },
 ];
 
-export function CustomerPortalLayout({ children, navItems = DEFAULT_NAV_ITEMS }: { children: React.ReactNode; navItems?: CustomerNavItem[] }) {
+const UPDATE_NAV_ITEM: CustomerNavItem = { name: "Update", path: "/dashboard/update", icon: Kanban };
+const DATENBANK_NAV_ITEM: CustomerNavItem = { name: "Datenbank", path: "/dashboard/datenbank", icon: Database };
+
+// Used for customers booked for KI & Automatisierungen only (no Social
+// Media) — same portal shell/infrastructure, no Instagram-specific content.
+export const KI_NAV_ITEMS: CustomerNavItem[] = [
+  { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+  UPDATE_NAV_ITEM,
+  DATENBANK_NAV_ITEM,
+  { name: "Rechnungen & Zahlungen", path: "/dashboard/rechnungen", icon: Receipt },
+  { name: "Support-Tickets", path: "/dashboard/support", icon: LifeBuoy },
+  { name: "Profil", path: "/dashboard/profil", icon: UserRound },
+];
+
+// Used for customers booked for BOTH Social Media and KI & Automatisierungen
+// — the Social Media nav with the KI-only additions (Update, Datenbank)
+// merged in.
+const SOCIAL_AND_KI_NAV_ITEMS: CustomerNavItem[] = [
+  DEFAULT_NAV_ITEMS[0], // Dashboard
+  UPDATE_NAV_ITEM,
+  DEFAULT_NAV_ITEMS[1], // Instagram
+  DEFAULT_NAV_ITEMS[2], // Content Calendar
+  DEFAULT_NAV_ITEMS[3], // Dateien (Social Media)
+  DATENBANK_NAV_ITEM,
+  ...DEFAULT_NAV_ITEMS.slice(4), // Rechnungen, Dokumente, Profil, Support-Tickets
+];
+
+/**
+ * Picks the right nav set for a customer's serviceTypes. Centralized here
+ * (rather than left to each page) so every customer sub-page — not just the
+ * two dashboard home pages — automatically shows the correct sidebar for
+ * that customer, with no risk of a page forgetting to pass the right one.
+ */
+function resolveNavItems(serviceTypes: string[] | undefined | null): CustomerNavItem[] {
+  const types = serviceTypes ?? ["social_media"];
+  const hasSocial = types.includes("social_media");
+  const hasKi = types.includes("ki_automatisierungen");
+  if (hasKi && hasSocial) return SOCIAL_AND_KI_NAV_ITEMS;
+  if (hasKi) return KI_NAV_ITEMS;
+  return DEFAULT_NAV_ITEMS;
+}
+
+export function CustomerPortalLayout({ children, navItems }: { children: React.ReactNode; navItems?: CustomerNavItem[] }) {
   const [location, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const { data: customer, isLoading, error } = useGetCustomerMe({ query: { retry: false, queryKey: getGetCustomerMeQueryKey() } });
@@ -58,6 +99,8 @@ export function CustomerPortalLayout({ children, navItems = DEFAULT_NAV_ITEMS }:
   }
 
   if (!customer) return null;
+
+  const resolvedNavItems = navItems ?? resolveNavItems(customer.serviceTypes);
 
   const handleLogout = () => {
     logout(undefined, {
@@ -97,7 +140,7 @@ export function CustomerPortalLayout({ children, navItems = DEFAULT_NAV_ITEMS }:
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
-          {navItems.map((item) => {
+          {resolvedNavItems.map((item) => {
             const active = location === item.path;
             const Icon = item.icon;
             return (

@@ -1,5 +1,5 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { db, customersTable, invoicesTable, instagramDailySnapshotsTable, monthlyMetricsTable, customerDocumentsTable, notificationsTable, supportTicketsTable, supportTicketMessagesTable } from "@workspace/db";
+import { db, customersTable, invoicesTable, instagramDailySnapshotsTable, monthlyMetricsTable, customerDocumentsTable, notificationsTable, supportTicketsTable, supportTicketMessagesTable, roadmapItemsTable } from "@workspace/db";
 import { eq, desc, asc, and, gte, like } from "drizzle-orm";
 import { requireCustomer } from "../middlewares/auth.js";
 import { decryptToken, encryptToken } from "../lib/tokenCrypto.js";
@@ -7,7 +7,7 @@ import { getInstagramProfile, refreshLongLivedToken, getHistoricalMonthlyBackfil
 import { resolveBufferChannelId, listBufferPosts } from "../lib/buffer.js";
 import { sendSupportTicketEmail, sendSupportTicketReplyEmail } from "../lib/mailer.js";
 
-const SUPPORT_TICKET_CATEGORIES = ["invoice", "social_media", "website", "other"] as const;
+const SUPPORT_TICKET_CATEGORIES = ["invoice", "social_media", "website", "ki_automatisierungen", "other"] as const;
 
 const router: IRouter = Router();
 
@@ -275,6 +275,25 @@ router.get("/files", requireCustomer, async (req: Request, res: Response) => {
     res.json({
       enabled: !!customer.nextcloudShareLink,
       shareLink: customer.nextcloudShareLink ?? null,
+    });
+    return;
+  } catch (err) {
+    res.status(500).json({ message: "Serverfehler" });
+    return;
+  }
+});
+
+// Separate Nextcloud share link for the KI & Automatisierungen "Datenbank"
+// area — independent from the Social Media one above so a customer booked
+// for both services gets two distinct file areas.
+router.get("/files-ki", requireCustomer, async (req: Request, res: Response) => {
+  try {
+    const customer = await getSessionCustomer(req);
+    if (!customer) return res.status(401).json({ message: "Nicht angemeldet" });
+
+    res.json({
+      enabled: !!customer.nextcloudShareLinkKi,
+      shareLink: customer.nextcloudShareLinkKi ?? null,
     });
     return;
   } catch (err) {
@@ -557,6 +576,27 @@ router.post("/support-tickets/:id/messages", requireCustomer, async (req: Reques
     }
 
     res.status(201).json(created);
+    return;
+  } catch (err) {
+    res.status(500).json({ message: "Serverfehler" });
+    return;
+  }
+});
+
+// ─── Roadmap ("Update" Kanban board) — read-only for the customer ────
+
+router.get("/roadmap", requireCustomer, async (req: Request, res: Response) => {
+  try {
+    const customer = await getSessionCustomer(req);
+    if (!customer) return res.status(401).json({ message: "Nicht angemeldet" });
+
+    const rows = await db
+      .select()
+      .from(roadmapItemsTable)
+      .where(eq(roadmapItemsTable.customerId, customer.id))
+      .orderBy(asc(roadmapItemsTable.sortOrder), asc(roadmapItemsTable.createdAt));
+
+    res.json(rows);
     return;
   } catch (err) {
     res.status(500).json({ message: "Serverfehler" });

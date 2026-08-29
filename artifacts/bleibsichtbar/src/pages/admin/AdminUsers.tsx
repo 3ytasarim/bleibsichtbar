@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CheckCircle2, XCircle, Loader2, Instagram, UserPlus, HardDrive, CalendarDays, Search, Users, Layers } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CustomerDataTable, type CustomerSortKey } from "@/components/admin/CustomerDataTable";
+import { AdminRoadmapBoard } from "@/components/admin/AdminRoadmapBoard";
 import {
   useGetCustomers,
   useCreateCustomer,
@@ -84,6 +85,7 @@ const customerSchema = z.object({
   facebookPageId: z.string().optional(),
   metaAccessToken: z.string().optional(),
   nextcloudShareLink: z.string().optional(),
+  nextcloudShareLinkKi: z.string().optional(),
   bufferChannelName: z.string().optional(),
   serviceTypes: z.array(z.string()).min(1, "Mindestens ein Bereich erforderlich"),
 }).refine((data) => data.password === data.passwordConfirm, {
@@ -110,6 +112,7 @@ const editSchema = z.object({
   facebookPageId: z.string().optional(),
   metaAccessToken: z.string().optional(),
   nextcloudShareLink: z.string().optional(),
+  nextcloudShareLinkKi: z.string().optional(),
   bufferChannelName: z.string().optional(),
   serviceTypes: z.array(z.string()).min(1, "Mindestens ein Bereich erforderlich"),
 }).refine((data) => !data.password || data.password === data.passwordConfirm, {
@@ -133,6 +136,7 @@ export default function AdminUsers() {
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [editTestResult, setEditTestResult] = useState<InstagramTestResult | null>(null);
   const [editError, setEditError] = useState<string | null>(null);
+  const [roadmapCustomer, setRoadmapCustomer] = useState<Customer | null>(null);
 
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("companyName");
@@ -221,7 +225,7 @@ export default function AdminUsers() {
       {
         onSuccess: () => {
           invalidateCustomers();
-          reset({ companyName: "", username: "", password: "", passwordConfirm: "", status: "active", contactPerson: "", email: "", phone: "", startDate: "", quickbooksId: "", crmId: "", instagramAccountId: "", instagramUsername: "", facebookPageId: "", metaAccessToken: "", nextcloudShareLink: "", bufferChannelName: "", serviceTypes: ["social_media"] });
+          reset({ companyName: "", username: "", password: "", passwordConfirm: "", status: "active", contactPerson: "", email: "", phone: "", startDate: "", quickbooksId: "", crmId: "", instagramAccountId: "", instagramUsername: "", facebookPageId: "", metaAccessToken: "", nextcloudShareLink: "", nextcloudShareLinkKi: "", bufferChannelName: "", serviceTypes: ["social_media"] });
           setTestResult(null);
         },
         onError: (err: any) => {
@@ -252,6 +256,7 @@ export default function AdminUsers() {
       facebookPageId: customer.facebookPageId || "",
       metaAccessToken: "",
       nextcloudShareLink: customer.nextcloudShareLink || "",
+      nextcloudShareLinkKi: customer.nextcloudShareLinkKi || "",
       bufferChannelName: customer.bufferChannelName || "",
       serviceTypes: customer.serviceTypes && customer.serviceTypes.length > 0 ? customer.serviceTypes : ["social_media"],
     });
@@ -274,6 +279,7 @@ export default function AdminUsers() {
       instagramUsername: data.instagramUsername,
       facebookPageId: data.facebookPageId,
       nextcloudShareLink: data.nextcloudShareLink,
+      nextcloudShareLinkKi: data.nextcloudShareLinkKi,
       bufferChannelName: data.bufferChannelName,
       serviceTypes: data.serviceTypes,
     };
@@ -312,6 +318,17 @@ export default function AdminUsers() {
       deleteMut.mutate({ id: customer.id }, { onSuccess: () => invalidateCustomers() });
     }
   };
+
+  // Which service-specific sections to show — Instagram/Meta API and Content
+  // Calendar/Buffer are Social-Media-only integrations, and the Nextcloud
+  // section shows one field per selected service (tabs only when both apply).
+  const createTypes = watch("serviceTypes") || ["social_media"];
+  const createHasSocial = createTypes.includes("social_media");
+  const createHasKi = createTypes.includes("ki_automatisierungen");
+
+  const editTypes = editForm.watch("serviceTypes") || ["social_media"];
+  const editHasSocial = editTypes.includes("social_media");
+  const editHasKi = editTypes.includes("ki_automatisierungen");
 
   return (
     <AdminLayout>
@@ -415,6 +432,7 @@ export default function AdminUsers() {
         </div>
 
         <div className="flex flex-col gap-6">
+        {createHasSocial && (
         <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
           <h2 className="font-semibold text-lg font-display flex items-center gap-2">
             <Instagram className="w-5 h-5 text-accent" /> Instagram / Meta API
@@ -466,19 +484,46 @@ export default function AdminUsers() {
             </div>
           )}
         </div>
+        )}
 
         <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
           <h2 className="font-semibold text-lg font-display flex items-center gap-2">
             <HardDrive className="w-5 h-5 text-accent" /> Dateispeicher / Nextcloud
           </h2>
 
-          <div>
-            <Label className="mb-1.5 block">Nextcloud-Freigabelink</Label>
-            <Input {...register("nextcloudShareLink")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
-            <p className="text-xs text-muted-foreground mt-1.5">Öffentlicher Nextcloud-Freigabelink für diesen Kunden — leer lassen, um den Dateibereich zu deaktivieren.</p>
-          </div>
+          {createHasSocial && createHasKi ? (
+            <Tabs defaultValue="social_media">
+              <TabsList>
+                <TabsTrigger value="social_media">Social Media</TabsTrigger>
+                <TabsTrigger value="ki_automatisierungen">KI & Automatisierungen</TabsTrigger>
+              </TabsList>
+              <TabsContent value="social_media" className="pt-2">
+                <Label className="mb-1.5 block">Nextcloud-Freigabelink (Social Media)</Label>
+                <Input {...register("nextcloudShareLink")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
+                <p className="text-xs text-muted-foreground mt-1.5">Öffentlicher Nextcloud-Freigabelink für den Social-Media-Dateibereich — leer lassen, um ihn zu deaktivieren.</p>
+              </TabsContent>
+              <TabsContent value="ki_automatisierungen" className="pt-2">
+                <Label className="mb-1.5 block">Nextcloud-Freigabelink (Datenbank / KI)</Label>
+                <Input {...register("nextcloudShareLinkKi")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
+                <p className="text-xs text-muted-foreground mt-1.5">Eigener Nextcloud-Freigabelink für den KI-&-Automatisierungen-Bereich „Datenbank" — leer lassen, um ihn zu deaktivieren.</p>
+              </TabsContent>
+            </Tabs>
+          ) : createHasKi ? (
+            <div>
+              <Label className="mb-1.5 block">Nextcloud-Freigabelink (Datenbank / KI)</Label>
+              <Input {...register("nextcloudShareLinkKi")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
+              <p className="text-xs text-muted-foreground mt-1.5">Eigener Nextcloud-Freigabelink für den KI-&-Automatisierungen-Bereich „Datenbank" — leer lassen, um ihn zu deaktivieren.</p>
+            </div>
+          ) : (
+            <div>
+              <Label className="mb-1.5 block">Nextcloud-Freigabelink</Label>
+              <Input {...register("nextcloudShareLink")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
+              <p className="text-xs text-muted-foreground mt-1.5">Öffentlicher Nextcloud-Freigabelink für diesen Kunden — leer lassen, um den Dateibereich zu deaktivieren.</p>
+            </div>
+          )}
         </div>
 
+        {createHasSocial && (
         <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
           <h2 className="font-semibold text-lg font-display flex items-center gap-2">
             <CalendarDays className="w-5 h-5 text-accent" /> Content Calendar / Buffer
@@ -496,6 +541,7 @@ export default function AdminUsers() {
             <p className="text-xs text-muted-foreground mt-1.5">Verbundener Buffer-Kanal dieses Kunden — steuert, wohin Content-Calendar-Beiträge veröffentlicht werden.</p>
           </div>
         </div>
+        )}
         </div>
         </div>
 
@@ -538,11 +584,21 @@ export default function AdminUsers() {
               onRowClick={openEdit}
               onToggleStatus={handleToggleStatus}
               onDelete={handleDelete}
+              onOpenRoadmap={setRoadmapCustomer}
               togglePending={updateMut.isPending}
             />
           )}
         </TabsContent>
       </Tabs>
+
+      <SimpleModal
+        isOpen={!!roadmapCustomer}
+        onClose={() => setRoadmapCustomer(null)}
+        title={`Update: ${roadmapCustomer?.companyName ?? ""}`}
+        widthClassName="max-w-4xl"
+      >
+        {roadmapCustomer && <AdminRoadmapBoard customerId={roadmapCustomer.id} />}
+      </SimpleModal>
 
       <SimpleModal
         isOpen={!!editingCustomer}
@@ -551,7 +607,7 @@ export default function AdminUsers() {
         widthClassName="max-w-6xl"
       >
         <form noValidate onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-6">
-          <div className="grid lg:grid-cols-3 gap-6 items-start">
+          <div className="grid lg:grid-cols-2 gap-6 items-start">
             <div className="space-y-4">
               <h3 className="font-semibold text-lg font-display">Kundendaten</h3>
 
@@ -638,6 +694,8 @@ export default function AdminUsers() {
               </div>
             </div>
 
+            <div className="flex flex-col gap-6">
+            {editHasSocial && (
             <div className="space-y-4">
               <h3 className="font-semibold text-lg font-display flex items-center gap-2"><Instagram className="w-5 h-5 text-accent" /> Instagram / Meta API</h3>
               {editingCustomer?.instagramTokenExpiresAt && (
@@ -690,17 +748,44 @@ export default function AdminUsers() {
                 </div>
               )}
             </div>
+            )}
 
             <div className="space-y-4">
               <h3 className="font-semibold text-lg font-display flex items-center gap-2"><HardDrive className="w-5 h-5 text-accent" /> Dateispeicher / Nextcloud</h3>
 
-              <div>
-                <Label className="mb-1.5 block">Nextcloud-Freigabelink</Label>
-                <Input {...editForm.register("nextcloudShareLink")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
-                <p className="text-xs text-muted-foreground mt-1.5">Öffentlicher Nextcloud-Freigabelink für diesen Kunden — leer lassen, um den Dateibereich zu deaktivieren.</p>
-              </div>
+              {editHasSocial && editHasKi ? (
+                <Tabs defaultValue="social_media">
+                  <TabsList>
+                    <TabsTrigger value="social_media">Social Media</TabsTrigger>
+                    <TabsTrigger value="ki_automatisierungen">KI & Automatisierungen</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="social_media" className="pt-2">
+                    <Label className="mb-1.5 block">Nextcloud-Freigabelink (Social Media)</Label>
+                    <Input {...editForm.register("nextcloudShareLink")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
+                    <p className="text-xs text-muted-foreground mt-1.5">Öffentlicher Nextcloud-Freigabelink für den Social-Media-Dateibereich — leer lassen, um ihn zu deaktivieren.</p>
+                  </TabsContent>
+                  <TabsContent value="ki_automatisierungen" className="pt-2">
+                    <Label className="mb-1.5 block">Nextcloud-Freigabelink (Datenbank / KI)</Label>
+                    <Input {...editForm.register("nextcloudShareLinkKi")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
+                    <p className="text-xs text-muted-foreground mt-1.5">Eigener Nextcloud-Freigabelink für den KI-&-Automatisierungen-Bereich „Datenbank" — leer lassen, um ihn zu deaktivieren.</p>
+                  </TabsContent>
+                </Tabs>
+              ) : editHasKi ? (
+                <div>
+                  <Label className="mb-1.5 block">Nextcloud-Freigabelink (Datenbank / KI)</Label>
+                  <Input {...editForm.register("nextcloudShareLinkKi")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
+                  <p className="text-xs text-muted-foreground mt-1.5">Eigener Nextcloud-Freigabelink für den KI-&-Automatisierungen-Bereich „Datenbank" — leer lassen, um ihn zu deaktivieren.</p>
+                </div>
+              ) : (
+                <div>
+                  <Label className="mb-1.5 block">Nextcloud-Freigabelink</Label>
+                  <Input {...editForm.register("nextcloudShareLink")} placeholder="https://speicher.bleibsichtbar.com/s/..." />
+                  <p className="text-xs text-muted-foreground mt-1.5">Öffentlicher Nextcloud-Freigabelink für diesen Kunden — leer lassen, um den Dateibereich zu deaktivieren.</p>
+                </div>
+              )}
             </div>
 
+            {editHasSocial && (
             <div className="space-y-4">
               <h3 className="font-semibold text-lg font-display flex items-center gap-2"><CalendarDays className="w-5 h-5 text-accent" /> Content Calendar / Buffer</h3>
               <div>
@@ -715,6 +800,8 @@ export default function AdminUsers() {
                 </Select>
                 <p className="text-xs text-muted-foreground mt-1.5">Verbundener Buffer-Kanal dieses Kunden — steuert, wohin Content-Calendar-Beiträge veröffentlicht werden.</p>
               </div>
+            </div>
+            )}
             </div>
           </div>
 

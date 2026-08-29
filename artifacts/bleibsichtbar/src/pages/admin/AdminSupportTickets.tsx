@@ -21,6 +21,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   invoice: "Rechnung",
   social_media: "Social Media",
   website: "Website",
+  ki_automatisierungen: "KI & Automatisierungen",
   other: "Sonstiges",
 };
 
