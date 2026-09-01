@@ -374,7 +374,7 @@ export default function AdminUsers() {
 
         <TabsContent value="create">
       <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid lg:grid-cols-2 gap-6 items-start">
+        <div className="grid lg:grid-cols-3 gap-6 items-start">
         <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
           <h2 className="font-semibold text-lg font-display">Kundendaten</h2>
 
@@ -513,6 +513,28 @@ export default function AdminUsers() {
         </div>
         )}
 
+        {createHasSocial && (
+        <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
+          <h2 className="font-semibold text-lg font-display flex items-center gap-2">
+            <CalendarDays className="w-5 h-5 text-accent" /> Content Calendar / Buffer
+          </h2>
+          <div>
+            <Label className="mb-1.5 block">Buffer-Kanal</Label>
+            <Select value={watch("bufferChannelName") || ""} onValueChange={(v) => setValue("bufferChannelName", v)}>
+              <SelectTrigger className="w-full"><SelectValue placeholder="Kanal auswählen..." /></SelectTrigger>
+              <SelectContent>
+                {bufferChannels.map((c) => (
+                  <SelectItem key={c.id} value={c.name}>{c.displayName} (@{c.name}) — {c.service}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground mt-1.5">Verbundener Buffer-Kanal dieses Kunden — steuert, wohin Content-Calendar-Beiträge veröffentlicht werden.</p>
+          </div>
+        </div>
+        )}
+        </div>
+
+        <div className="flex flex-col gap-6">
         <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
           <h2 className="font-semibold text-lg font-display flex items-center gap-2">
             <HardDrive className="w-5 h-5 text-accent" /> Dateispeicher / Nextcloud
@@ -549,26 +571,6 @@ export default function AdminUsers() {
             </div>
           )}
         </div>
-
-        {createHasSocial && (
-        <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
-          <h2 className="font-semibold text-lg font-display flex items-center gap-2">
-            <CalendarDays className="w-5 h-5 text-accent" /> Content Calendar / Buffer
-          </h2>
-          <div>
-            <Label className="mb-1.5 block">Buffer-Kanal</Label>
-            <Select value={watch("bufferChannelName") || ""} onValueChange={(v) => setValue("bufferChannelName", v)}>
-              <SelectTrigger className="w-full"><SelectValue placeholder="Kanal auswählen..." /></SelectTrigger>
-              <SelectContent>
-                {bufferChannels.map((c) => (
-                  <SelectItem key={c.id} value={c.name}>{c.displayName} (@{c.name}) — {c.service}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground mt-1.5">Verbundener Buffer-Kanal dieses Kunden — steuert, wohin Content-Calendar-Beiträge veröffentlicht werden.</p>
-          </div>
-        </div>
-        )}
 
         {createHasSocial && (
         <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
@@ -649,7 +651,7 @@ export default function AdminUsers() {
         widthClassName="max-w-6xl"
       >
         <form noValidate onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-6">
-          <div className="grid lg:grid-cols-2 gap-6 items-start">
+          <div className="grid lg:grid-cols-3 gap-6 items-start">
             <div className="space-y-4">
               <h3 className="font-semibold text-lg font-display">Kundendaten</h3>
 
@@ -792,6 +794,26 @@ export default function AdminUsers() {
             </div>
             )}
 
+            {editHasSocial && (
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg font-display flex items-center gap-2"><CalendarDays className="w-5 h-5 text-accent" /> Content Calendar / Buffer</h3>
+              <div>
+                <Label className="mb-1.5 block">Buffer-Kanal</Label>
+                <Select value={editForm.watch("bufferChannelName") || ""} onValueChange={(v) => editForm.setValue("bufferChannelName", v)}>
+                  <SelectTrigger className="w-full"><SelectValue placeholder="Kanal auswählen..." /></SelectTrigger>
+                  <SelectContent>
+                    {bufferChannels.map((c) => (
+                      <SelectItem key={c.id} value={c.name}>{c.displayName} (@{c.name}) — {c.service}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground mt-1.5">Verbundener Buffer-Kanal dieses Kunden — steuert, wohin Content-Calendar-Beiträge veröffentlicht werden.</p>
+              </div>
+            </div>
+            )}
+            </div>
+
+            <div className="flex flex-col gap-6">
             <div className="space-y-4">
               <h3 className="font-semibold text-lg font-display flex items-center gap-2"><HardDrive className="w-5 h-5 text-accent" /> Dateispeicher / Nextcloud</h3>
 
@@ -826,24 +848,6 @@ export default function AdminUsers() {
                 </div>
               )}
             </div>
-
-            {editHasSocial && (
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg font-display flex items-center gap-2"><CalendarDays className="w-5 h-5 text-accent" /> Content Calendar / Buffer</h3>
-              <div>
-                <Label className="mb-1.5 block">Buffer-Kanal</Label>
-                <Select value={editForm.watch("bufferChannelName") || ""} onValueChange={(v) => editForm.setValue("bufferChannelName", v)}>
-                  <SelectTrigger className="w-full"><SelectValue placeholder="Kanal auswählen..." /></SelectTrigger>
-                  <SelectContent>
-                    {bufferChannels.map((c) => (
-                      <SelectItem key={c.id} value={c.name}>{c.displayName} (@{c.name}) — {c.service}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground mt-1.5">Verbundener Buffer-Kanal dieses Kunden — steuert, wohin Content-Calendar-Beiträge veröffentlicht werden.</p>
-              </div>
-            </div>
-            )}
 
             {editHasSocial && (
             <div className="space-y-4">
