@@ -117,13 +117,16 @@ export interface BufferPost {
   status: string;
   channelId: string;
   /**
-   * `Asset.thumbnail` — the only image-bearing field the Post→assets read
-   * path actually exposes (confirmed empirically via introspection;
-   * ImageAsset.image/ImageMetadata has no `url` field at all, only
-   * dimensions/altText). Real S3-hosted thumbnail, good enough for a
-   * calendar preview.
+   * `Asset.thumbnail` is a small preview image (also used as the video
+   * poster frame). `Asset.source` is the full-quality original — for images
+   * a bigger version of the same file, for videos the actual playable
+   * .mp4 — confirmed via introspection (the nested ImageAsset.image /
+   * VideoAsset.video metadata objects expose no URL, only dimensions/
+   * altText, but the top-level `source` string field on the Asset
+   * interface itself does). Used for the calendar's click-to-enlarge /
+   * autoplay popup.
    */
-  assets: { thumbnail: string; type: string }[];
+  assets: { thumbnail: string; source: string; type: string; mimeType: string }[];
 }
 
 /**
@@ -151,7 +154,7 @@ export async function listBufferPosts(channelId: string): Promise<BufferPost[]> 
             dueAt
             status
             channelId
-            assets { thumbnail type }
+            assets { thumbnail source type mimeType }
           }
         }
       }

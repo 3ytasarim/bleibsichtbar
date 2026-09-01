@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { db, customersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, ilike, or } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
 const router: IRouter = Router();
@@ -32,9 +32,14 @@ router.post("/login", async (req: Request, res: Response) => {
     return;
   }
 
-  // Not an admin — check whether it's a customer account.
+  // Not an admin — check whether it's a customer account. Accepts either the
+  // username or the email address in the same field — email match is
+  // case-insensitive since email addresses conventionally are.
   try {
-    const [customer] = await db.select().from(customersTable).where(eq(customersTable.username, username));
+    const [customer] = await db
+      .select()
+      .from(customersTable)
+      .where(or(eq(customersTable.username, username), ilike(customersTable.email, username)));
     if (customer && customer.status === "active" && (await bcrypt.compare(password, customer.passwordHash))) {
       (req.session as any).isAdmin = false;
       (req.session as any).customerId = customer.id;

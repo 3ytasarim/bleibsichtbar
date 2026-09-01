@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { db, customersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, ilike, or } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 
 const router: IRouter = Router();
@@ -12,7 +12,12 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 
   try {
-    const [customer] = await db.select().from(customersTable).where(eq(customersTable.username, username));
+    // Accepts either the username or the email address in the same field —
+    // email match is case-insensitive since email addresses conventionally are.
+    const [customer] = await db
+      .select()
+      .from(customersTable)
+      .where(or(eq(customersTable.username, username), ilike(customersTable.email, username)));
     if (!customer || customer.status !== "active") {
       return res.status(401).json({ message: "Ungültige Anmeldedaten" });
     }

@@ -28,6 +28,8 @@ export const customersTable = pgTable("customers", {
   nextcloudShareLinkKi: text("nextcloud_share_link_ki"),
   /** Exact Buffer channel "name" (e.g. Instagram handle) as shown in Buffer's channel list — resolved to a real channelId at publish time. */
   bufferChannelName: text("buffer_channel_name"),
+  /** Canonical dashed-UUID Notion page ID for this customer's "Content Planung" tab — content is fetched live server-side via the Notion API (one shared integration token) and rendered in our own UI, never publicly embedded. Social Media customers only. */
+  notionPageId: text("notion_page_id"),
   /**
    * Which service(s) this customer is booked for — "social_media" | "website" | "ki_automatisierungen".
    * Drives which dashboard variant they see after login: social_media (alone

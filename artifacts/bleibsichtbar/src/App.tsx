@@ -53,6 +53,7 @@ const CustomerProfil = lazy(() => import("./pages/customer/Profil"));
 const CustomerSupportTickets = lazy(() => import("./pages/customer/SupportTickets"));
 const CustomerUpdate = lazy(() => import("./pages/customer/Update"));
 const CustomerDatenbank = lazy(() => import("./pages/customer/Datenbank"));
+const CustomerContentPlanung = lazy(() => import("./pages/customer/ContentPlanung"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -111,6 +112,7 @@ function Router() {
         <Route path="/dashboard/support" component={CustomerSupportTickets} />
         <Route path="/dashboard/update" component={CustomerUpdate} />
         <Route path="/dashboard/datenbank" component={CustomerDatenbank} />
+        <Route path="/dashboard/content-planung" component={CustomerContentPlanung} />
 
         {/* Public Routes */}
         <Route path="/" component={Home} />

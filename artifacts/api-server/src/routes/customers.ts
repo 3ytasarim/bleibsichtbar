@@ -8,6 +8,7 @@ import { encryptToken } from "../lib/tokenCrypto.js";
 import { testInstagramConnection, exchangeForLongLivedToken } from "../lib/instagram.js";
 import { uploadBufferToGCS, deleteGCSObject } from "../lib/gcsUpload.js";
 import { notifyCustomer } from "../lib/notifications.js";
+import { parseNotionPageId } from "../lib/notion.js";
 import { listBufferChannels } from "../lib/buffer.js";
 
 const router: IRouter = Router();
@@ -92,6 +93,7 @@ router.post("/", requireAdmin, async (req: Request, res: Response) => {
       nextcloudShareLink,
       nextcloudShareLinkKi,
       bufferChannelName,
+      notionPageId,
       serviceTypes,
     } = req.body;
 
@@ -141,6 +143,7 @@ router.post("/", requireAdmin, async (req: Request, res: Response) => {
         nextcloudShareLink: nextcloudShareLink || null,
         nextcloudShareLinkKi: nextcloudShareLinkKi || null,
         bufferChannelName: bufferChannelName || null,
+        notionPageId: notionPageId ? parseNotionPageId(notionPageId) : null,
         serviceTypes: sanitizeServiceTypes(serviceTypes) ?? ["social_media"],
       })
       .returning();
@@ -176,6 +179,7 @@ router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
       nextcloudShareLink,
       nextcloudShareLinkKi,
       bufferChannelName,
+      notionPageId,
       serviceTypes,
     } = req.body;
 
@@ -219,6 +223,7 @@ router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
     if (nextcloudShareLink !== undefined) updates.nextcloudShareLink = nextcloudShareLink || null;
     if (nextcloudShareLinkKi !== undefined) updates.nextcloudShareLinkKi = nextcloudShareLinkKi || null;
     if (bufferChannelName !== undefined) updates.bufferChannelName = bufferChannelName || null;
+    if (notionPageId !== undefined) updates.notionPageId = notionPageId ? parseNotionPageId(notionPageId) : null;
     const sanitizedServiceTypes = sanitizeServiceTypes(serviceTypes);
     if (sanitizedServiceTypes !== undefined) updates.serviceTypes = sanitizedServiceTypes;
 

@@ -794,6 +794,25 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /portal/content-planning:
+    get:
+      operationId: getPortalContentPlanning
+      tags: [portal]
+      summary: The authenticated customer's own Notion "Content Planung" page, fetched live server-side and rendered read-only — private, never publicly embedded. Social Media customers only.
+      responses:
+        "200":
+          description: Notion page content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalContentPlanning"
+        "502":
+          description: Notion connection failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /customers/{id}/invoices:
     get:
       operationId: getCustomerInvoices
@@ -1818,6 +1837,9 @@ components:
         bufferChannelName:
           type: string
           nullable: true
+        notionPageId:
+          type: string
+          nullable: true
         serviceTypes:
           type: array
           items:
@@ -1895,6 +1917,9 @@ components:
         bufferChannelName:
           type: string
           nullable: true
+        notionPageId:
+          type: string
+          nullable: true
         serviceTypes:
           type: array
           items:
@@ -1962,6 +1987,9 @@ components:
         bufferChannelName:
           type: string
           nullable: true
+        notionPageId:
+          type: string
+          nullable: true
         serviceTypes:
           type: array
           items:
@@ -1984,12 +2012,22 @@ components:
         thumbnailUrl:
           type: string
           nullable: true
+        mediaUrl:
+          type: string
+          nullable: true
+          description: "Full-quality original from Buffer — a bigger image, or the actual playable video file. Used for the click-to-enlarge/autoplay popup."
+        mediaType:
+          type: string
+          nullable: true
+          description: "image | video | document"
       required:
         - id
         - date
         - text
         - status
         - thumbnailUrl
+        - mediaUrl
+        - mediaType
 
     PortalContentCalendar:
       type: object
@@ -2003,6 +2041,72 @@ components:
       required:
         - enabled
         - entries
+
+    NotionRichText:
+      type: object
+      properties:
+        text:
+          type: string
+        bold:
+          type: boolean
+        italic:
+          type: boolean
+        strikethrough:
+          type: boolean
+        code:
+          type: boolean
+        href:
+          type: string
+          nullable: true
+      required:
+        - text
+
+    NotionBlockNode:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          description: "paragraph | heading_1 | heading_2 | heading_3 | bulleted_list_item | numbered_list_item | to_do | quote | callout | divider | image | code | toggle | unsupported"
+        richText:
+          type: array
+          items:
+            $ref: "#/components/schemas/NotionRichText"
+        checked:
+          type: boolean
+        imageUrl:
+          type: string
+        caption:
+          type: string
+        language:
+          type: string
+        icon:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: "#/components/schemas/NotionBlockNode"
+      required:
+        - id
+        - type
+
+    PortalContentPlanning:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        title:
+          type: string
+          nullable: true
+        blocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/NotionBlockNode"
+      required:
+        - enabled
+        - title
+        - blocks
 
     BufferChannel:
       type: object

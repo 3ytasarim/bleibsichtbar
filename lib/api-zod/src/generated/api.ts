@@ -348,6 +348,7 @@ export const GetCustomersResponseItem = zod.object({
   nextcloudShareLink: zod.string().nullish(),
   nextcloudShareLinkKi: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
+  notionPageId: zod.string().nullish(),
   serviceTypes: zod
     .array(zod.string())
     .describe("social_media | website | ki_automatisierungen"),
@@ -379,6 +380,7 @@ export const CreateCustomerBody = zod.object({
   nextcloudShareLink: zod.string().nullish(),
   nextcloudShareLinkKi: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
+  notionPageId: zod.string().nullish(),
   serviceTypes: zod
     .array(zod.string())
     .optional()
@@ -429,6 +431,7 @@ export const UpdateCustomerBody = zod.object({
   nextcloudShareLink: zod.string().nullish(),
   nextcloudShareLinkKi: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
+  notionPageId: zod.string().nullish(),
   serviceTypes: zod
     .array(zod.string())
     .optional()
@@ -456,6 +459,7 @@ export const UpdateCustomerResponse = zod.object({
   nextcloudShareLink: zod.string().nullish(),
   nextcloudShareLinkKi: zod.string().nullish(),
   bufferChannelName: zod.string().nullish(),
+  notionPageId: zod.string().nullish(),
   serviceTypes: zod
     .array(zod.string())
     .describe("social_media | website | ki_automatisierungen"),
@@ -734,6 +738,49 @@ export const GetPortalContentCalendarResponse = zod.object({
       text: zod.string(),
       status: zod.string().describe("scheduled | sent"),
       thumbnailUrl: zod.string().nullable(),
+      mediaUrl: zod
+        .string()
+        .nullable()
+        .describe(
+          "Full-quality original from Buffer — a bigger image, or the actual playable video file. Used for the click-to-enlarge\/autoplay popup.",
+        ),
+      mediaType: zod.string().nullable().describe("image | video | document"),
+    }),
+  ),
+});
+
+/**
+ * @summary The authenticated customer's own Notion "Content Planung" page, fetched live server-side and rendered read-only — private, never publicly embedded. Social Media customers only.
+ */
+export const GetPortalContentPlanningResponse = zod.object({
+  enabled: zod.boolean(),
+  title: zod.string().nullable(),
+  blocks: zod.array(
+    zod.object({
+      id: zod.string(),
+      type: zod
+        .string()
+        .describe(
+          "paragraph | heading_1 | heading_2 | heading_3 | bulleted_list_item | numbered_list_item | to_do | quote | callout | divider | image | code | toggle | unsupported",
+        ),
+      richText: zod
+        .array(
+          zod.object({
+            text: zod.string(),
+            bold: zod.boolean().optional(),
+            italic: zod.boolean().optional(),
+            strikethrough: zod.boolean().optional(),
+            code: zod.boolean().optional(),
+            href: zod.string().nullish(),
+          }),
+        )
+        .optional(),
+      checked: zod.boolean().optional(),
+      imageUrl: zod.string().optional(),
+      caption: zod.string().optional(),
+      language: zod.string().optional(),
+      icon: zod.string().optional(),
+      children: zod.array(zod.unknown()).optional(),
     }),
   ),
 });

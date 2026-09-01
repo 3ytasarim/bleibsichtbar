@@ -129,6 +129,7 @@ export interface Customer {
   nextcloudShareLink?: string | null;
   nextcloudShareLinkKi?: string | null;
   bufferChannelName?: string | null;
+  notionPageId?: string | null;
   /** social_media | website | ki_automatisierungen */
   serviceTypes: string[];
   createdAt: string;
@@ -155,6 +156,7 @@ export interface CreateCustomer {
   nextcloudShareLink?: string | null;
   nextcloudShareLinkKi?: string | null;
   bufferChannelName?: string | null;
+  notionPageId?: string | null;
   /** social_media | website | ki_automatisierungen — defaults to [social_media] if omitted */
   serviceTypes?: string[];
 }
@@ -179,6 +181,7 @@ export interface UpdateCustomer {
   nextcloudShareLink?: string | null;
   nextcloudShareLinkKi?: string | null;
   bufferChannelName?: string | null;
+  notionPageId?: string | null;
   /** social_media | website | ki_automatisierungen */
   serviceTypes?: string[];
 }
@@ -191,11 +194,43 @@ export interface PortalContentCalendarPost {
   /** scheduled | sent */
   status: string;
   thumbnailUrl: string | null;
+  /** Full-quality original from Buffer — a bigger image, or the actual playable video file. Used for the click-to-enlarge/autoplay popup. */
+  mediaUrl: string | null;
+  /** image | video | document */
+  mediaType: string | null;
 }
 
 export interface PortalContentCalendar {
   enabled: boolean;
   entries: PortalContentCalendarPost[];
+}
+
+export interface NotionRichText {
+  text: string;
+  bold?: boolean;
+  italic?: boolean;
+  strikethrough?: boolean;
+  code?: boolean;
+  href?: string | null;
+}
+
+export interface NotionBlockNode {
+  id: string;
+  /** paragraph | heading_1 | heading_2 | heading_3 | bulleted_list_item | numbered_list_item | to_do | quote | callout | divider | image | code | toggle | unsupported */
+  type: string;
+  richText?: NotionRichText[];
+  checked?: boolean;
+  imageUrl?: string;
+  caption?: string;
+  language?: string;
+  icon?: string;
+  children?: NotionBlockNode[];
+}
+
+export interface PortalContentPlanning {
+  enabled: boolean;
+  title: string | null;
+  blocks: NotionBlockNode[];
 }
 
 export interface BufferChannel {

@@ -6,6 +6,7 @@ import { decryptToken, encryptToken } from "../lib/tokenCrypto.js";
 import { getInstagramProfile, refreshLongLivedToken, getHistoricalMonthlyBackfill, getCurrentMonthReachSeries } from "../lib/instagram.js";
 import { resolveBufferChannelId, listBufferPosts } from "../lib/buffer.js";
 import { sendSupportTicketEmail, sendSupportTicketReplyEmail } from "../lib/mailer.js";
+import { getNotionPageBlocks, getNotionPageTitle } from "../lib/notion.js";
 
 const SUPPORT_TICKET_CATEGORIES = ["invoice", "social_media", "website", "ki_automatisierungen", "other"] as const;
 
@@ -325,6 +326,27 @@ router.get("/invoices", requireCustomer, async (req: Request, res: Response) => 
 
 // ─── Content Calendar (read-only — admin manages entries) ──
 
+// Buffer's `dueAt` is a UTC ISO timestamp (e.g. "2026-09-07T22:30:00.000Z").
+// Naively slicing the first 10 chars gives the UTC calendar date, which is
+// WRONG for any post scheduled late evening/early morning German time — e.g.
+// 00:30 CEST on Sep 8 is 22:30 UTC on Sep 7, so a raw slice would misfile it
+// under Sep 7 instead of Sep 8, making it look like nothing is scheduled on
+// the real day (and bunching posts onto the wrong day in the calendar grid).
+// Format in Europe/Berlin so the calendar always reflects the customer's own
+// local date, correctly handling the CET/CEST DST switch too.
+const berlinDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Europe/Berlin",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+function toBerlinDateKey(isoUtc: string | null): string {
+  if (!isoUtc) return "";
+  const d = new Date(isoUtc);
+  if (Number.isNaN(d.getTime())) return "";
+  return berlinDateFormatter.format(d); // en-CA formats as YYYY-MM-DD
+}
+
 // The customer's Content Calendar shows real, live Buffer data — whatever
 // the team has actually scheduled/published for their channel, whether it
 // went through this portal's admin tool or was entered directly in Buffer's
@@ -350,16 +372,49 @@ router.get("/content-calendar", requireCustomer, async (req: Request, res: Respo
     const posts = await listBufferPosts(channelId);
     const entries = posts.map((p) => ({
       id: p.id,
-      date: (p.dueAt ?? "").slice(0, 10),
+      date: toBerlinDateKey(p.dueAt),
       text: p.text,
       status: p.status,
       thumbnailUrl: p.assets[0]?.thumbnail ?? null,
+      // Full-quality original — bigger image or the actual playable video —
+      // used by the customer-facing calendar's click-to-enlarge/autoplay popup.
+      mediaUrl: p.assets[0]?.source ?? null,
+      mediaType: p.assets[0]?.type ?? null,
     }));
 
     res.json({ enabled: true, entries });
     return;
   } catch (err) {
     res.status(502).json({ message: err instanceof Error ? err.message : "Buffer-Verbindung fehlgeschlagen." });
+    return;
+  }
+});
+
+// ─── Content Planung (Notion — read-only, Social Media customers only) ──
+
+// The customer's own Notion page, fetched live server-side with the shared
+// integration token and rendered in our own UI (never publicly embedded, so
+// the content stays private even though Notion itself has no per-customer
+// scoping).
+router.get("/content-planning", requireCustomer, async (req: Request, res: Response) => {
+  try {
+    const customer = await getSessionCustomer(req);
+    if (!customer) return res.status(401).json({ message: "Nicht angemeldet" });
+
+    if (!customer.notionPageId) {
+      res.json({ enabled: false, title: null, blocks: [] });
+      return;
+    }
+
+    const [title, blocks] = await Promise.all([
+      getNotionPageTitle(customer.notionPageId),
+      getNotionPageBlocks(customer.notionPageId),
+    ]);
+
+    res.json({ enabled: true, title, blocks });
+    return;
+  } catch (err) {
+    res.status(502).json({ message: err instanceof Error ? err.message : "Notion-Verbindung fehlgeschlagen." });
     return;
   }
 });

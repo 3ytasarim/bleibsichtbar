@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle2, XCircle, Loader2, Instagram, UserPlus, HardDrive, CalendarDays, Search, Users, Layers } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, Instagram, UserPlus, HardDrive, CalendarDays, Search, Users, Layers, Eye, EyeOff, NotebookText } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CustomerDataTable, type CustomerSortKey } from "@/components/admin/CustomerDataTable";
 import { AdminRoadmapBoard } from "@/components/admin/AdminRoadmapBoard";
@@ -68,6 +69,28 @@ function ServiceTypesField({ value, onChange }: { value: string[]; onChange: (ne
   );
 }
 
+/** Password input with a show/hide toggle — so an admin can check what they typed before saving. */
+const PasswordInput = React.forwardRef<HTMLInputElement, React.ComponentPropsWithoutRef<typeof Input>>(
+  ({ className, ...props }, ref) => {
+    const [visible, setVisible] = useState(false);
+    return (
+      <div className="relative">
+        <Input ref={ref} type={visible ? "text" : "password"} className={cn("pr-11", className)} {...props} />
+        <button
+          type="button"
+          tabIndex={-1}
+          onClick={() => setVisible((v) => !v)}
+          className="absolute right-0 top-0 h-12 w-11 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          aria-label={visible ? "Passwort verbergen" : "Passwort anzeigen"}
+        >
+          {visible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+        </button>
+      </div>
+    );
+  }
+);
+PasswordInput.displayName = "PasswordInput";
+
 const customerSchema = z.object({
   companyName: z.string().min(1, "Firmenname erforderlich"),
   username: z.string().min(1, "Benutzername erforderlich"),
@@ -87,6 +110,7 @@ const customerSchema = z.object({
   nextcloudShareLink: z.string().optional(),
   nextcloudShareLinkKi: z.string().optional(),
   bufferChannelName: z.string().optional(),
+  notionPageId: z.string().optional(),
   serviceTypes: z.array(z.string()).min(1, "Mindestens ein Bereich erforderlich"),
 }).refine((data) => data.password === data.passwordConfirm, {
   message: "Passwörter stimmen nicht überein",
@@ -114,6 +138,7 @@ const editSchema = z.object({
   nextcloudShareLink: z.string().optional(),
   nextcloudShareLinkKi: z.string().optional(),
   bufferChannelName: z.string().optional(),
+  notionPageId: z.string().optional(),
   serviceTypes: z.array(z.string()).min(1, "Mindestens ein Bereich erforderlich"),
 }).refine((data) => !data.password || data.password === data.passwordConfirm, {
   message: "Passwörter stimmen nicht überein",
@@ -225,7 +250,7 @@ export default function AdminUsers() {
       {
         onSuccess: () => {
           invalidateCustomers();
-          reset({ companyName: "", username: "", password: "", passwordConfirm: "", status: "active", contactPerson: "", email: "", phone: "", startDate: "", quickbooksId: "", crmId: "", instagramAccountId: "", instagramUsername: "", facebookPageId: "", metaAccessToken: "", nextcloudShareLink: "", nextcloudShareLinkKi: "", bufferChannelName: "", serviceTypes: ["social_media"] });
+          reset({ companyName: "", username: "", password: "", passwordConfirm: "", status: "active", contactPerson: "", email: "", phone: "", startDate: "", quickbooksId: "", crmId: "", instagramAccountId: "", instagramUsername: "", facebookPageId: "", metaAccessToken: "", nextcloudShareLink: "", nextcloudShareLinkKi: "", bufferChannelName: "", notionPageId: "", serviceTypes: ["social_media"] });
           setTestResult(null);
         },
         onError: (err: any) => {
@@ -258,6 +283,7 @@ export default function AdminUsers() {
       nextcloudShareLink: customer.nextcloudShareLink || "",
       nextcloudShareLinkKi: customer.nextcloudShareLinkKi || "",
       bufferChannelName: customer.bufferChannelName || "",
+      notionPageId: customer.notionPageId || "",
       serviceTypes: customer.serviceTypes && customer.serviceTypes.length > 0 ? customer.serviceTypes : ["social_media"],
     });
   };
@@ -281,6 +307,7 @@ export default function AdminUsers() {
       nextcloudShareLink: data.nextcloudShareLink,
       nextcloudShareLinkKi: data.nextcloudShareLinkKi,
       bufferChannelName: data.bufferChannelName,
+      notionPageId: data.notionPageId,
       serviceTypes: data.serviceTypes,
     };
     if (data.password) {
@@ -400,12 +427,12 @@ export default function AdminUsers() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label className="mb-1.5 block">Passwort</Label>
-              <Input type="password" {...register("password")} className={errors.password ? "border-destructive" : ""} />
+              <PasswordInput {...register("password")} className={errors.password ? "border-destructive" : ""} />
               {errors.password && <p className="text-xs text-destructive mt-1">{errors.password.message}</p>}
             </div>
             <div>
               <Label className="mb-1.5 block">Passwort bestätigen</Label>
-              <Input type="password" {...register("passwordConfirm")} className={errors.passwordConfirm ? "border-destructive" : ""} />
+              <PasswordInput {...register("passwordConfirm")} className={errors.passwordConfirm ? "border-destructive" : ""} />
               {errors.passwordConfirm && <p className="text-xs text-destructive mt-1">{errors.passwordConfirm.message}</p>}
             </div>
           </div>
@@ -542,6 +569,21 @@ export default function AdminUsers() {
           </div>
         </div>
         )}
+
+        {createHasSocial && (
+        <div className="bg-white rounded-2xl shadow-sm border border-border p-6 space-y-4">
+          <h2 className="font-semibold text-lg font-display flex items-center gap-2">
+            <NotebookText className="w-5 h-5 text-accent" /> Content Planung / Notion
+          </h2>
+          <div>
+            <Label className="mb-1.5 block">Notion-Seiten-Link oder ID</Label>
+            <Input {...register("notionPageId")} placeholder="https://www.notion.so/..." />
+            <p className="text-xs text-muted-foreground mt-1.5">
+              Die Notion-Integration muss unter „Connections" auf dieser Seite freigegeben sein, sonst kann der Kunde sie nicht sehen. Leer lassen, um den Bereich zu deaktivieren.
+            </p>
+          </div>
+        </div>
+        )}
         </div>
         </div>
 
@@ -659,11 +701,11 @@ export default function AdminUsers() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="mb-1.5 block">Neues Passwort (optional)</Label>
-                  <Input type="password" {...editForm.register("password")} className={editForm.formState.errors.password ? "border-destructive" : ""} />
+                  <PasswordInput {...editForm.register("password")} className={editForm.formState.errors.password ? "border-destructive" : ""} />
                 </div>
                 <div>
                   <Label className="mb-1.5 block">Passwort bestätigen</Label>
-                  <Input type="password" {...editForm.register("passwordConfirm")} className={editForm.formState.errors.passwordConfirm ? "border-destructive" : ""} />
+                  <PasswordInput {...editForm.register("passwordConfirm")} className={editForm.formState.errors.passwordConfirm ? "border-destructive" : ""} />
                   {editForm.formState.errors.passwordConfirm && <p className="text-xs text-destructive mt-1">{editForm.formState.errors.passwordConfirm.message}</p>}
                 </div>
               </div>
@@ -799,6 +841,19 @@ export default function AdminUsers() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground mt-1.5">Verbundener Buffer-Kanal dieses Kunden — steuert, wohin Content-Calendar-Beiträge veröffentlicht werden.</p>
+              </div>
+            </div>
+            )}
+
+            {editHasSocial && (
+            <div className="space-y-4">
+              <h3 className="font-semibold text-lg font-display flex items-center gap-2"><NotebookText className="w-5 h-5 text-accent" /> Content Planung / Notion</h3>
+              <div>
+                <Label className="mb-1.5 block">Notion-Seiten-Link oder ID</Label>
+                <Input {...editForm.register("notionPageId")} placeholder="https://www.notion.so/..." />
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  Die Notion-Integration muss unter „Connections" auf dieser Seite freigegeben sein, sonst kann der Kunde sie nicht sehen. Leer lassen, um den Bereich zu deaktivieren.
+                </p>
               </div>
             </div>
             )}

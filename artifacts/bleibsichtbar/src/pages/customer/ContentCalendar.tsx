@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { CustomerPortalLayout } from "@/components/layout/CustomerPortalLayout";
 import { useGetPortalContentCalendar, type PortalContentCalendarPost } from "@workspace/api-client-react";
-import { CalendarDays, Loader2, ChevronLeft, ChevronRight, CheckCircle2, Clock } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { CalendarDays, Loader2, ChevronLeft, ChevronRight, CheckCircle2, Clock, Maximize2, Play } from "lucide-react";
 
 const WEEKDAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 
@@ -35,6 +36,7 @@ export default function CustomerContentCalendar() {
   const { data, isLoading, isError } = useGetPortalContentCalendar();
   const [viewMonth, setViewMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [lightboxPost, setLightboxPost] = useState<PortalContentCalendarPost | null>(null);
 
   const entries = data?.entries ?? [];
   const todayKey = dateKey(new Date());
@@ -152,7 +154,21 @@ export default function CustomerContentCalendar() {
                   {selectedPosts.map((p) => (
                     <div key={p.id} className="bg-card rounded-xl border border-border p-4 flex gap-4">
                       {p.thumbnailUrl && (
-                        <img src={p.thumbnailUrl} alt="" className="w-20 h-20 rounded-lg object-cover shrink-0 border border-border" />
+                        <button
+                          type="button"
+                          onClick={() => setLightboxPost(p)}
+                          className="relative w-28 h-28 rounded-lg shrink-0 border border-border overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563eb]"
+                          aria-label={p.mediaType === "video" ? "Video abspielen" : "Bild vergrößern"}
+                        >
+                          <img src={p.thumbnailUrl} alt="" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                            {p.mediaType === "video" ? (
+                              <Play className="w-7 h-7 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white" />
+                            ) : (
+                              <Maximize2 className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                            )}
+                          </div>
+                        </button>
                       )}
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 mb-2">
@@ -183,6 +199,30 @@ export default function CustomerContentCalendar() {
           )}
         </div>
       </div>
+
+      <Dialog open={!!lightboxPost} onOpenChange={(open) => !open && setLightboxPost(null)}>
+        <DialogContent className="max-w-3xl w-auto bg-transparent border-none shadow-none p-0 [&>button]:bg-black/50 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:hover:bg-black/70">
+          <DialogTitle className="sr-only">{lightboxPost?.mediaType === "video" ? "Video" : "Bild"}</DialogTitle>
+          {lightboxPost?.mediaType === "video" ? (
+            <video
+              key={lightboxPost.id}
+              src={lightboxPost.mediaUrl ?? lightboxPost.thumbnailUrl ?? undefined}
+              poster={lightboxPost.thumbnailUrl ?? undefined}
+              controls
+              autoPlay
+              className="max-h-[85vh] w-auto max-w-full rounded-xl mx-auto block"
+            />
+          ) : (
+            lightboxPost && (
+              <img
+                src={lightboxPost.mediaUrl ?? lightboxPost.thumbnailUrl ?? undefined}
+                alt=""
+                className="max-h-[85vh] w-auto max-w-full rounded-xl mx-auto block"
+              />
+            )
+          )}
+        </DialogContent>
+      </Dialog>
     </CustomerPortalLayout>
   );
 }

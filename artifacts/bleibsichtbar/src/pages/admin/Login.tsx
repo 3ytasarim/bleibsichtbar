@@ -81,7 +81,7 @@ export default function AdminLogin() {
 
         <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-600">Benutzername</label>
+            <label className="text-sm font-medium text-slate-600">Benutzername oder E-Mail</label>
             <input
               {...register("username")}
               className={`w-full px-4 py-2.5 rounded-xl text-slate-900 bg-slate-50 outline-none transition-colors border ${errors.username ? "border-red-400" : "border-slate-200"} focus:border-sky-500`}

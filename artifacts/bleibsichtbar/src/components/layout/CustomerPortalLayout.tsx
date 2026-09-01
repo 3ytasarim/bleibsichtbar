@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "wouter";
 import { useGetCustomerMe, useCustomerLogout, useGetPortalNotifications, getGetCustomerMeQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { LayoutDashboard, Instagram, FolderOpen, Receipt, UserRound, LogOut, Menu, X, Loader2, CalendarDays, FileStack, LifeBuoy, Kanban, Database, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Instagram, FolderOpen, Receipt, UserRound, LogOut, Menu, X, Loader2, CalendarDays, FileStack, LifeBuoy, Kanban, Database, NotebookText, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/customer/NotificationBell";
 
@@ -18,6 +18,7 @@ export const DEFAULT_NAV_ITEMS: CustomerNavItem[] = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
   { name: "Instagram", path: "/dashboard/instagram", icon: Instagram },
   { name: "Content Calendar", path: "/dashboard/content-calendar", icon: CalendarDays },
+  { name: "Content Planung", path: "/dashboard/content-planung", icon: NotebookText },
   { name: "Dateien", path: "/dashboard/dateien", icon: FolderOpen },
   { name: "Rechnungen & Zahlungen", path: "/dashboard/rechnungen", icon: Receipt },
   { name: "Dokumente", path: "/dashboard/dokumente", icon: FileStack },
@@ -47,9 +48,10 @@ const SOCIAL_AND_KI_NAV_ITEMS: CustomerNavItem[] = [
   UPDATE_NAV_ITEM,
   DEFAULT_NAV_ITEMS[1], // Instagram
   DEFAULT_NAV_ITEMS[2], // Content Calendar
-  DEFAULT_NAV_ITEMS[3], // Dateien (Social Media)
+  DEFAULT_NAV_ITEMS[3], // Content Planung (Social Media)
+  DEFAULT_NAV_ITEMS[4], // Dateien (Social Media)
   DATENBANK_NAV_ITEM,
-  ...DEFAULT_NAV_ITEMS.slice(4), // Rechnungen, Dokumente, Profil, Support-Tickets
+  ...DEFAULT_NAV_ITEMS.slice(5), // Rechnungen, Dokumente, Profil, Support-Tickets
 ];
 
 /**

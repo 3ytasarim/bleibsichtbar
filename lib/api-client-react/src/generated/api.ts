@@ -49,6 +49,7 @@ import type {
   LoginRequest,
   Notification,
   PortalContentCalendar,
+  PortalContentPlanning,
   PortalFilesResponse,
   PortalInstagramProfile,
   Project,
@@ -3016,6 +3017,82 @@ export function useGetPortalContentCalendar<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetPortalContentCalendarQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary The authenticated customer's own Notion "Content Planung" page, fetched live server-side and rendered read-only — private, never publicly embedded. Social Media customers only.
+ */
+export const getGetPortalContentPlanningUrl = () => {
+  return `/api/portal/content-planning`;
+};
+
+export const getPortalContentPlanning = async (
+  options?: RequestInit,
+): Promise<PortalContentPlanning> => {
+  return customFetch<PortalContentPlanning>(getGetPortalContentPlanningUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetPortalContentPlanningQueryKey = () => {
+  return [`/api/portal/content-planning`] as const;
+};
+
+export const getGetPortalContentPlanningQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPortalContentPlanning>>,
+  TError = ErrorType<ErrorResponse>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalContentPlanning>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetPortalContentPlanningQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getPortalContentPlanning>>
+  > = ({ signal }) => getPortalContentPlanning({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalContentPlanning>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPortalContentPlanningQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPortalContentPlanning>>
+>;
+export type GetPortalContentPlanningQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary The authenticated customer's own Notion "Content Planung" page, fetched live server-side and rendered read-only — private, never publicly embedded. Social Media customers only.
+ */
+
+export function useGetPortalContentPlanning<
+  TData = Awaited<ReturnType<typeof getPortalContentPlanning>>,
+  TError = ErrorType<ErrorResponse>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPortalContentPlanning>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPortalContentPlanningQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
