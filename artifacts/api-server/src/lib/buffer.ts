@@ -135,17 +135,31 @@ export interface BufferPost {
  * actual state, not just what was created through this portal's own
  * "Buffer'a Zamanla" button, so anything the team schedules directly in
  * Buffer's own UI shows up here too.
+ *
+ * Paginates through ALL of Buffer's results (`first`/`after` + `pageInfo`) —
+ * a channel with more scheduled posts than fit on one page previously came
+ * back truncated, silently dropping whichever posts fell past the first
+ * page (confirmed empirically: a heavily-scheduled channel's early-month
+ * posts were missing from the customer calendar while Buffer's own
+ * calendar showed them fine).
  */
 export async function listBufferPosts(channelId: string): Promise<BufferPost[]> {
   const organizationId = await getOrganizationId();
-  const data = await bufferGraphQL<{ posts: { edges: { node: BufferPost }[] } }>(
-    `query GetPosts($organizationId: OrganizationId!, $channelIds: [ChannelId!], $statuses: [PostStatus!]) {
+  const all: BufferPost[] = [];
+  let after: string | null = null;
+
+  do {
+    const data: { posts: { edges: { node: BufferPost }[]; pageInfo: { endCursor: string | null; hasNextPage: boolean } } } =
+      await bufferGraphQL(
+        `query GetPosts($organizationId: OrganizationId!, $channelIds: [ChannelId!], $statuses: [PostStatus!], $after: String) {
       posts(
         input: {
           organizationId: $organizationId
           filter: { channelIds: $channelIds, status: $statuses }
           sort: [{ field: dueAt, direction: desc }]
         }
+        first: 100
+        after: $after
       ) {
         edges {
           node {
@@ -157,10 +171,15 @@ export async function listBufferPosts(channelId: string): Promise<BufferPost[]> 
             assets { thumbnail source type mimeType }
           }
         }
+        pageInfo { endCursor hasNextPage }
       }
     }`,
-    { organizationId, channelIds: [channelId], statuses: ["scheduled", "sent"] }
-  );
-  return data.posts.edges.map((e) => e.node);
+        { organizationId, channelIds: [channelId], statuses: ["scheduled", "sent"], after }
+      );
+    all.push(...data.posts.edges.map((e) => e.node));
+    after = data.posts.pageInfo.hasNextPage ? data.posts.pageInfo.endCursor : null;
+  } while (after);
+
+  return all;
 }
 
