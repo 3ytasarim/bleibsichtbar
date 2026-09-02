@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
@@ -12,8 +11,6 @@ import {
 import { CustomerPortalLayout } from "@/components/layout/CustomerPortalLayout";
 import { LightTrustBackground } from "@/components/shared/LightTrustBackground";
 import { DaysWithUsCounter } from "@/components/customer/DaysWithUsCounter";
-import { ConfettiBurst } from "@/components/shared/ConfettiBurst";
-import { TrophyPop } from "@/components/shared/TrophyPop";
 import { SupportTicketSection } from "@/components/customer/SupportTicketSection";
 import { heroFadeUp } from "@/components/shared/AnimatedHero";
 import {
@@ -25,8 +22,6 @@ import {
   Users,
   Image as ImageIcon,
   CheckCircle2,
-  TrendingUp,
-  TrendingDown,
   Radar,
   Sun,
   Moon,
@@ -34,47 +29,11 @@ import {
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import { cn } from "@/lib/utils";
 
-interface MonthlyDelta {
-  pct: number | null;
-  diff: number;
-  positive: boolean;
-}
+// Neutral trend-line color — the sparkline shows the data's shape only, no
+// good/bad judgment attached (no percentage badge, no red/green coding).
+const SPARKLINE_COLOR = "#2563eb";
 
-/**
- * Real month-over-month change (latest vs. previous entry in monthlyHistory).
- * Returns undefined when there isn't yet a second month to compare against —
- * never invents a comparison out of a single data point.
- */
-function computeMonthlyDelta(
-  history: PortalMonthlyMetric[] | null | undefined,
-  key: "followers" | "reach"
-): MonthlyDelta | undefined {
-  if (!history || history.length < 2) return undefined;
-  const latest = history[history.length - 1][key];
-  const prev = history[history.length - 2][key];
-  if (latest == null || prev == null) return undefined;
-  const diff = latest - prev;
-  const pct = prev !== 0 ? Math.round((diff / prev) * 1000) / 10 : null;
-  return { pct, diff, positive: diff >= 0 };
-}
-
-function DeltaBadge({ delta }: { delta: MonthlyDelta }) {
-  const Icon = delta.positive ? TrendingUp : TrendingDown;
-  const text = delta.pct !== null ? `${delta.positive ? "+" : ""}${delta.pct}%` : `${delta.positive ? "+" : ""}${delta.diff}`;
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full",
-        delta.positive ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-[#7F9287]/10 text-[#7F9287]"
-      )}
-    >
-      <Icon className="w-3 h-3" /> {text}
-    </span>
-  );
-}
-
-function GrowthSparkline({ id, data, positive }: { id: string; data: number[]; positive: boolean }) {
-  const color = positive ? "hsl(160 84% 39%)" : "#7F9287";
+function GrowthSparkline({ id, data }: { id: string; data: number[] }) {
   const points = data.map((v, i) => ({ i, v }));
   return (
     <div className="h-12 mt-3">
@@ -82,11 +41,11 @@ function GrowthSparkline({ id, data, positive }: { id: string; data: number[]; p
         <AreaChart data={points} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.35} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
+              <stop offset="0%" stopColor={SPARKLINE_COLOR} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={SPARKLINE_COLOR} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <Area dataKey="v" type="monotone" stroke={color} strokeWidth={2} fill={`url(#${id})`} isAnimationActive={false} />
+          <Area dataKey="v" type="monotone" stroke={SPARKLINE_COLOR} strokeWidth={2} fill={`url(#${id})`} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -108,9 +67,6 @@ function GrowthCard({
 }) {
   const points = (history ?? []).filter((h) => h[dataKey] != null);
   const latest = points.length ? points[points.length - 1][dataKey] : null;
-  const delta = computeMonthlyDelta(history, dataKey);
-  const [inView, setInView] = useState(false);
-  const celebrate = inView && delta?.positive === true;
 
   return (
     <motion.div
@@ -118,20 +74,14 @@ function GrowthCard({
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
-      onViewportEnter={() => setInView(true)}
       variants={heroFadeUp}
       className="relative overflow-hidden bg-card border border-border rounded-2xl p-6"
     >
-      {celebrate && <ConfettiBurst active={celebrate} />}
-      {celebrate && <TrophyPop active={celebrate} />}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-[#2563eb]/10 text-[#2563eb] flex items-center justify-center shrink-0">
-            <Icon className="w-4 h-4" />
-          </div>
-          <p className="text-sm font-semibold text-foreground">{title}</p>
+      <div className="flex items-center gap-2.5">
+        <div className="w-9 h-9 rounded-lg bg-[#2563eb]/10 text-[#2563eb] flex items-center justify-center shrink-0">
+          <Icon className="w-4 h-4" />
         </div>
-        {delta && <DeltaBadge delta={delta} />}
+        <p className="text-sm font-semibold text-foreground">{title}</p>
       </div>
 
       {latest !== null ? (
@@ -141,7 +91,7 @@ function GrowthCard({
             <span className="text-sm font-medium text-muted-foreground ml-1.5">{suffix}</span>
           </p>
           {points.length >= 2 ? (
-            <GrowthSparkline id={`grow-${dataKey}`} data={points.map((p) => p[dataKey] as number)} positive={delta?.positive ?? true} />
+            <GrowthSparkline id={`grow-${dataKey}`} data={points.map((p) => p[dataKey] as number)} />
           ) : (
             <p className="text-xs text-muted-foreground mt-3">Erster Monat erfasst — Trend ab dem nächsten Monat sichtbar.</p>
           )}
@@ -165,7 +115,6 @@ export default function CustomerDashboard() {
   const GreetingIcon = isEvening ? Moon : Sun;
 
   const openInvoiceCount = invoices?.filter((i) => i.status === "open" || i.status === "overdue").length ?? 0;
-  const followerDelta = computeMonthlyDelta(instagram?.monthlyHistory, "followers");
 
   return (
     <CustomerPortalLayout>

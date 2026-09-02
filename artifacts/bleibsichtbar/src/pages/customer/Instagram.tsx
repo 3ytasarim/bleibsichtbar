@@ -38,60 +38,17 @@ import {
   Image as ImageIcon,
   Handshake,
   UserCheck,
-  TrendingUp,
-  TrendingDown,
   Trophy,
   Sparkles,
   CalendarRange,
 } from "lucide-react";
 
-interface Delta {
-  pct: number | null;
-  diff: number;
-  positive: boolean;
-}
+// Neutral trend-line color — the sparkline shows the data's shape only, no
+// good/bad judgment attached (no percentage badge, no red/green coding).
+const SPARKLINE_COLOR = "#2563eb";
 
-/**
- * Real % change between the latest series point and the point closest to
- * `lookbackDays` before it. Returns undefined (no badge shown) when the
- * series doesn't yet span that far back — never fabricates a comparison.
- */
-function computeDelta(series: PortalInstagramTimeSeriesPoint[] | null | undefined, lookbackDays: number): Delta | undefined {
-  if (!series || series.length < 2) return undefined;
-  const latest = series[series.length - 1];
-  const targetDate = new Date(latest.date + "T00:00:00");
-  targetDate.setDate(targetDate.getDate() - lookbackDays);
-  const targetIso = targetDate.toISOString().slice(0, 10);
-
-  let base = series[0];
-  for (const point of series) {
-    if (point.date <= targetIso) base = point;
-    else break;
-  }
-  if (base.date === latest.date) return undefined;
-
-  const diff = latest.value - base.value;
-  const pct = base.value !== 0 ? Math.round((diff / base.value) * 1000) / 10 : null;
-  return { pct, diff, positive: diff >= 0 };
-}
-
-function DeltaBadge({ delta }: { delta: Delta }) {
-  const Icon = delta.positive ? TrendingUp : TrendingDown;
-  const text = delta.pct !== null ? `${delta.positive ? "+" : ""}${delta.pct}%` : `${delta.positive ? "+" : ""}${delta.diff}`;
-  return (
-    <span
-      className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
-        delta.positive ? "bg-emerald-500/10 text-emerald-600" : "bg-[#7F9287]/10 text-[#7F9287]"
-      }`}
-    >
-      <Icon className="w-2.5 h-2.5" /> {text}
-    </span>
-  );
-}
-
-function MiniSparkline({ id, data, positive }: { id: string; data: number[]; positive: boolean }) {
+function MiniSparkline({ id, data }: { id: string; data: number[] }) {
   if (data.length < 2) return null;
-  const color = positive ? "hsl(160 84% 39%)" : "#7F9287";
   const points = data.map((v, i) => ({ i, v }));
 
   return (
@@ -100,11 +57,11 @@ function MiniSparkline({ id, data, positive }: { id: string; data: number[]; pos
         <AreaChart data={points} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.3} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
+              <stop offset="0%" stopColor={SPARKLINE_COLOR} stopOpacity={0.3} />
+              <stop offset="100%" stopColor={SPARKLINE_COLOR} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <Area dataKey="v" type="monotone" stroke={color} strokeWidth={1.5} fill={`url(#${id})`} isAnimationActive={false} />
+          <Area dataKey="v" type="monotone" stroke={SPARKLINE_COLOR} strokeWidth={1.5} fill={`url(#${id})`} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -116,44 +73,21 @@ interface KpiCardProps {
   label: string;
   value: number | null | undefined;
   hint: string;
-  delta?: Delta;
   sparkline?: number[];
 }
 
-function KpiCard({ icon: Icon, label, value, hint, delta, sparkline }: KpiCardProps) {
-  // Automatic celebration rule: any card whose own delta badge is green
-  // (genuinely positive) gets the confetti + trophy pop once it's actually
-  // seen — no per-card opt-in needed, this just follows the same signal the
-  // badge itself already renders from.
-  const { ref, entered } = useEnteredView<HTMLDivElement>();
-  const celebrate = entered && delta?.positive === true;
-
+function KpiCard({ icon: Icon, label, value, hint, sparkline }: KpiCardProps) {
   return (
-    <div ref={ref} className="relative overflow-hidden bg-card rounded-2xl border border-border p-5 hover:border-[#2563eb]/30 hover:shadow-sm transition-all">
-      {celebrate && <ConfettiBurst active={celebrate} />}
-      {celebrate && <TrophyPop active={celebrate} />}
-      <div className="flex items-center justify-between">
-        <div className="w-10 h-10 rounded-xl bg-[#2563eb]/10 text-[#2563eb] flex items-center justify-center">
-          <Icon className="w-[18px] h-[18px]" />
-        </div>
-        {delta ? (
-          <DeltaBadge delta={delta} />
-        ) : (
-          value != null && (
-            <span className="text-[10px] font-medium uppercase tracking-wide text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">
-              Live
-            </span>
-          )
-        )}
+    <div className="relative overflow-hidden bg-card rounded-2xl border border-border p-5 hover:border-[#2563eb]/30 hover:shadow-sm transition-all">
+      <div className="w-10 h-10 rounded-xl bg-[#2563eb]/10 text-[#2563eb] flex items-center justify-center">
+        <Icon className="w-[18px] h-[18px]" />
       </div>
       <p className="text-2xl font-bold font-display mt-3 leading-none tabular-nums">
         {value != null ? value.toLocaleString("de-DE") : "—"}
       </p>
       <p className="text-sm font-medium text-foreground mt-1.5">{label}</p>
       <p className="text-xs text-muted-foreground mt-0.5">{hint}</p>
-      {sparkline && sparkline.length > 1 && (
-        <MiniSparkline id={`spark-${label}`} data={sparkline} positive={delta ? delta.positive : true} />
-      )}
+      {sparkline && sparkline.length > 1 && <MiniSparkline id={`spark-${label}`} data={sparkline} />}
     </div>
   );
 }
@@ -216,7 +150,7 @@ function rangeToParams(sel: RangeSelection): GetPortalInstagramParams | undefine
   return undefined;
 }
 
-/** How many days this selection actually spans — feeds both the KPI delta lookback and the display label. */
+/** How many days this selection actually spans — feeds the display label. */
 function rangeLookbackDays(sel: RangeSelection): number {
   if (sel.mode === "days") return sel.days;
   if (sel.mode === "custom" && sel.from) {
@@ -242,7 +176,7 @@ function pillClass(active: boolean) {
 }
 
 /**
- * Shared date-range control for the Kennzahlen deltas + Entwicklung/Muster
+ * Shared date-range control for the Kennzahlen KPIs + Entwicklung/Muster
  * charts below it — they all read from the same insights.reachSeries /
  * followerSeries, so one filter drives all of them consistently.
  */
@@ -608,20 +542,6 @@ function formatYearMonthLabel(yearMonth: string) {
   return d.toLocaleDateString("de-DE", { month: "long", year: "numeric" });
 }
 
-/** Real month-over-month change vs. the chronologically preceding entry that also has this metric. */
-function computeSeriesDelta(data: PortalMonthlyMetric[], index: number, key: MonthlyMetricKey): Delta | undefined {
-  const current = data[index][key];
-  if (current == null) return undefined;
-  for (let i = index - 1; i >= 0; i--) {
-    const previous = data[i][key];
-    if (previous == null) continue;
-    const diff = current - previous;
-    const pct = previous !== 0 ? Math.round((diff / previous) * 1000) / 10 : null;
-    return { pct, diff, positive: diff >= 0 };
-  }
-  return undefined;
-}
-
 /**
  * Same metric across every recorded year, one line per year, aligned on
  * month (Jan–Dez) so e.g. this August lines up with last August. Builds
@@ -702,22 +622,15 @@ function YearComparisonChart({ data }: { data: PortalMonthlyMetric[] | null | un
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Monat für Monat</p>
             <div className="space-y-1.5">
               {data!
-                .map((entry, i) => ({ entry, i }))
-                .filter(({ entry }) => entry[metric] != null)
+                .filter((entry) => entry[metric] != null)
                 .slice()
                 .reverse()
-                .map(({ entry, i }) => {
-                  const delta = computeSeriesDelta(data!, i, metric);
-                  return (
-                    <div key={entry.yearMonth} className="flex items-center justify-between py-1.5 px-1 rounded-lg hover:bg-muted/40 transition-colors">
-                      <span className="text-sm text-foreground">{formatYearMonthLabel(entry.yearMonth)}</span>
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-sm font-semibold tabular-nums text-foreground">{(entry[metric] as number).toLocaleString("de-DE")}</span>
-                        {delta ? <DeltaBadge delta={delta} /> : <span className="text-[10px] text-muted-foreground">Erster Eintrag</span>}
-                      </div>
-                    </div>
-                  );
-                })}
+                .map((entry) => (
+                  <div key={entry.yearMonth} className="flex items-center justify-between py-1.5 px-1 rounded-lg hover:bg-muted/40 transition-colors">
+                    <span className="text-sm text-foreground">{formatYearMonthLabel(entry.yearMonth)}</span>
+                    <span className="text-sm font-semibold tabular-nums text-foreground">{(entry[metric] as number).toLocaleString("de-DE")}</span>
+                  </div>
+                ))}
             </div>
           </div>
         </>
@@ -759,10 +672,7 @@ export default function CustomerInstagram() {
     { name: "Shares", value: insights?.shares ?? 0 },
   ].filter((d) => d.value > 0);
 
-  const rangeDays = rangeLookbackDays(range);
   const rangeText = rangeLabel(range);
-  const followerDelta = computeDelta(insights?.followerSeries, rangeDays);
-  const reachDelta = computeDelta(insights?.reachSeries, rangeDays);
 
   return (
     <CustomerPortalLayout>
@@ -806,9 +716,9 @@ export default function CustomerInstagram() {
 
             <Section title="Kennzahlen">
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                <KpiCard icon={Users} label="Follower" value={data.followers} hint={rangeText} delta={followerDelta} sparkline={insights?.followerSeries?.map((p) => p.value)} />
+                <KpiCard icon={Users} label="Follower" value={data.followers} hint={rangeText} sparkline={insights?.followerSeries?.map((p) => p.value)} />
                 <KpiCard icon={ImageIcon} label="Beiträge" value={data.mediaCount} hint="Veröffentlicht" />
-                <KpiCard icon={Handshake} label="Reichweite" value={insights?.reach} hint={rangeText} delta={reachDelta} sparkline={insights?.reachSeries?.map((p) => p.value)} />
+                <KpiCard icon={Handshake} label="Reichweite" value={insights?.reach} hint={rangeText} sparkline={insights?.reachSeries?.map((p) => p.value)} />
                 <KpiCard icon={UserCheck} label="Profilaktivität" value={insights?.profileViews} hint="Profilbesuche heute" />
                 <KpiCard icon={Users} label="Engagierte Konten" value={insights?.accountsEngaged} hint="Heute interagiert" />
                 <KpiCard icon={Handshake} label="Website-Klicks" value={insights?.websiteClicks} hint="Heute" />
