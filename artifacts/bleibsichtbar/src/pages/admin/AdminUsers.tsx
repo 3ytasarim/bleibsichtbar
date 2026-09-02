@@ -69,6 +69,50 @@ function ServiceTypesField({ value, onChange }: { value: string[]; onChange: (ne
   );
 }
 
+/**
+ * Internal-only CRM tags for the admin team's own tracking — never sent to
+ * the customer, never shown anywhere in the customer portal. Purely a
+ * scanning/organizing aid for the agency (e.g. spotting churn risk at a
+ * glance in the customer list).
+ */
+export const INTERNAL_TAG_OPTIONS = [
+  { value: "potenzialkunde", label: "Potenzialkunde", activeClass: "bg-sky-500 text-white border-sky-500" },
+  { value: "zuverlaessig", label: "Zuverlässig", activeClass: "bg-emerald-500 text-white border-emerald-500" },
+  { value: "vip", label: "VIP", activeClass: "bg-amber-500 text-white border-amber-500" },
+  { value: "unzufrieden", label: "Unzufrieden", activeClass: "bg-orange-500 text-white border-orange-500" },
+  { value: "kuendigungsrisiko", label: "Kündigungsrisiko", activeClass: "bg-red-500 text-white border-red-500" },
+  { value: "zahlungsverzug", label: "Zahlungsverzug", activeClass: "bg-red-500 text-white border-red-500" },
+] as const;
+
+export function internalTagLabel(value: string) {
+  return INTERNAL_TAG_OPTIONS.find((t) => t.value === value)?.label ?? value;
+}
+
+function InternalTagsField({ value, onChange }: { value: string[]; onChange: (next: string[]) => void }) {
+  const toggle = (v: string) => {
+    onChange(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
+  };
+  return (
+    <div className="flex flex-wrap gap-2">
+      {INTERNAL_TAG_OPTIONS.map((opt) => {
+        const active = value.includes(opt.value);
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => toggle(opt.value)}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+              active ? opt.activeClass : "bg-white text-muted-foreground border-border hover:border-accent/40"
+            }`}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /** Password input with a show/hide toggle — so an admin can check what they typed before saving. */
 const PasswordInput = React.forwardRef<HTMLInputElement, React.ComponentPropsWithoutRef<typeof Input>>(
   ({ className, ...props }, ref) => {
@@ -112,6 +156,7 @@ const customerSchema = z.object({
   bufferChannelName: z.string().optional(),
   notionPageId: z.string().optional(),
   serviceTypes: z.array(z.string()).min(1, "Mindestens ein Bereich erforderlich"),
+  internalTags: z.array(z.string()).optional(),
 }).refine((data) => data.password === data.passwordConfirm, {
   message: "Passwörter stimmen nicht überein",
   path: ["passwordConfirm"],
@@ -140,6 +185,7 @@ const editSchema = z.object({
   bufferChannelName: z.string().optional(),
   notionPageId: z.string().optional(),
   serviceTypes: z.array(z.string()).min(1, "Mindestens ein Bereich erforderlich"),
+  internalTags: z.array(z.string()).optional(),
 }).refine((data) => !data.password || data.password === data.passwordConfirm, {
   message: "Passwörter stimmen nicht überein",
   path: ["passwordConfirm"],
@@ -250,7 +296,7 @@ export default function AdminUsers() {
       {
         onSuccess: () => {
           invalidateCustomers();
-          reset({ companyName: "", username: "", password: "", passwordConfirm: "", status: "active", contactPerson: "", email: "", phone: "", startDate: "", quickbooksId: "", crmId: "", instagramAccountId: "", instagramUsername: "", facebookPageId: "", metaAccessToken: "", nextcloudShareLink: "", nextcloudShareLinkKi: "", bufferChannelName: "", notionPageId: "", serviceTypes: ["social_media"] });
+          reset({ companyName: "", username: "", password: "", passwordConfirm: "", status: "active", contactPerson: "", email: "", phone: "", startDate: "", quickbooksId: "", crmId: "", instagramAccountId: "", instagramUsername: "", facebookPageId: "", metaAccessToken: "", nextcloudShareLink: "", nextcloudShareLinkKi: "", bufferChannelName: "", notionPageId: "", serviceTypes: ["social_media"], internalTags: [] });
           setTestResult(null);
         },
         onError: (err: any) => {
@@ -285,6 +331,7 @@ export default function AdminUsers() {
       bufferChannelName: customer.bufferChannelName || "",
       notionPageId: customer.notionPageId || "",
       serviceTypes: customer.serviceTypes && customer.serviceTypes.length > 0 ? customer.serviceTypes : ["social_media"],
+      internalTags: customer.internalTags ?? [],
     });
   };
 
@@ -309,6 +356,7 @@ export default function AdminUsers() {
       bufferChannelName: data.bufferChannelName,
       notionPageId: data.notionPageId,
       serviceTypes: data.serviceTypes,
+      internalTags: data.internalTags,
     };
     if (data.password) {
       payload.password = data.password;
@@ -455,6 +503,12 @@ export default function AdminUsers() {
             <ServiceTypesField value={watch("serviceTypes") || ["social_media"]} onChange={(v) => setValue("serviceTypes", v)} />
             {errors.serviceTypes && <p className="text-xs text-destructive mt-1">{errors.serviceTypes.message}</p>}
             <p className="text-xs text-muted-foreground mt-1.5">Bestimmt, welches Dashboard der Kunde nach dem Login sieht.</p>
+          </div>
+
+          <div>
+            <Label className="mb-1.5 block">Interne Kennzeichnung</Label>
+            <InternalTagsField value={watch("internalTags") || []} onChange={(v) => setValue("internalTags", v)} />
+            <p className="text-xs text-muted-foreground mt-1.5">Nur für das Team sichtbar — der Kunde sieht diese Kennzeichnung nirgendwo.</p>
           </div>
         </div>
 
@@ -735,6 +789,15 @@ export default function AdminUsers() {
                   <p className="text-xs text-destructive mt-1">{editForm.formState.errors.serviceTypes.message}</p>
                 )}
                 <p className="text-xs text-muted-foreground mt-1.5">Bestimmt, welches Dashboard der Kunde nach dem Login sieht.</p>
+              </div>
+
+              <div>
+                <Label className="mb-1.5 block">Interne Kennzeichnung</Label>
+                <InternalTagsField
+                  value={editForm.watch("internalTags") || []}
+                  onChange={(v) => editForm.setValue("internalTags", v)}
+                />
+                <p className="text-xs text-muted-foreground mt-1.5">Nur für das Team sichtbar — der Kunde sieht diese Kennzeichnung nirgendwo.</p>
               </div>
             </div>
 

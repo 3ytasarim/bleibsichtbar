@@ -1845,6 +1845,11 @@ components:
           items:
             type: string
           description: "social_media | website | ki_automatisierungen"
+        internalTags:
+          type: array
+          items:
+            type: string
+          description: "Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug"
         createdAt:
           type: string
           format: date-time
@@ -1858,6 +1863,7 @@ components:
         - role
         - status
         - serviceTypes
+        - internalTags
         - createdAt
         - updatedAt
 
@@ -1925,6 +1931,11 @@ components:
           items:
             type: string
           description: "social_media | website | ki_automatisierungen — defaults to [social_media] if omitted"
+        internalTags:
+          type: array
+          items:
+            type: string
+          description: "Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug"
       required:
         - companyName
         - username
@@ -1995,6 +2006,11 @@ components:
           items:
             type: string
           description: "social_media | website | ki_automatisierungen"
+        internalTags:
+          type: array
+          items:
+            type: string
+          description: "Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug"
 
     PortalContentCalendarPost:
       type: object

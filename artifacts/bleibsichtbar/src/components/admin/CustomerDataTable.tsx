@@ -55,6 +55,19 @@ const SERVICE_TYPE_LABELS: Record<string, string> = {
   ki_automatisierungen: "KI",
 };
 
+// Mirrors AdminUsers.tsx's INTERNAL_TAG_OPTIONS — small colored dots here
+// (rather than full labels) keep the already-wide table scannable; the full
+// name shows on hover via the title attribute. Internal-only, never shown
+// to the customer.
+const INTERNAL_TAG_META: Record<string, { label: string; dotClass: string }> = {
+  potenzialkunde: { label: "Potenzialkunde", dotClass: "bg-sky-500" },
+  zuverlaessig: { label: "Zuverlässig", dotClass: "bg-emerald-500" },
+  vip: { label: "VIP", dotClass: "bg-amber-500" },
+  unzufrieden: { label: "Unzufrieden", dotClass: "bg-orange-500" },
+  kuendigungsrisiko: { label: "Kündigungsrisiko", dotClass: "bg-red-500" },
+  zahlungsverzug: { label: "Zahlungsverzug", dotClass: "bg-red-500" },
+};
+
 function initials(name: string) {
   const parts = name.split(/\s+/).filter(Boolean).slice(0, 2);
   return parts.map((p) => p[0]?.toUpperCase()).join("") || "?";
@@ -158,7 +171,16 @@ export function CustomerDataTable({
                       <AvatarFallback className="text-xs bg-accent/10 text-accent">{initials(c.companyName)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      {c.companyName}
+                      <div className="flex items-center gap-1.5">
+                        {c.companyName}
+                        {(c.internalTags ?? []).length > 0 && (
+                          <span className="inline-flex items-center gap-0.5" title={(c.internalTags ?? []).map((t) => INTERNAL_TAG_META[t]?.label ?? t).join(", ")}>
+                            {(c.internalTags ?? []).map((t) => (
+                              <span key={t} className={cn("w-2 h-2 rounded-full", INTERNAL_TAG_META[t]?.dotClass ?? "bg-gray-400")} />
+                            ))}
+                          </span>
+                        )}
+                      </div>
                       <div className="text-xs font-normal text-muted-foreground">{c.username}</div>
                     </div>
                   </div>

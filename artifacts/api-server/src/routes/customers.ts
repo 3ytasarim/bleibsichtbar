@@ -21,6 +21,16 @@ function sanitizeServiceTypes(value: unknown): string[] | undefined {
   return filtered.length > 0 ? filtered : ["social_media"];
 }
 
+// Internal-only CRM tags for the admin team's own tracking — never sent to
+// any customer-facing endpoint (customerAuth.ts's /me hand-picks its
+// response fields and never includes this one).
+export const INTERNAL_TAGS = ["potenzialkunde", "zuverlaessig", "vip", "unzufrieden", "kuendigungsrisiko", "zahlungsverzug"] as const;
+function sanitizeInternalTags(value: unknown): string[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) return [];
+  return value.filter((v): v is string => typeof v === "string" && (INTERNAL_TAGS as readonly string[]).includes(v));
+}
+
 const pdfUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 15 * 1024 * 1024 } });
 const documentUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
@@ -95,6 +105,7 @@ router.post("/", requireAdmin, async (req: Request, res: Response) => {
       bufferChannelName,
       notionPageId,
       serviceTypes,
+      internalTags,
     } = req.body;
 
     if (!companyName || !username || !password) {
@@ -145,6 +156,7 @@ router.post("/", requireAdmin, async (req: Request, res: Response) => {
         bufferChannelName: bufferChannelName || null,
         notionPageId: notionPageId ? parseNotionPageId(notionPageId) : null,
         serviceTypes: sanitizeServiceTypes(serviceTypes) ?? ["social_media"],
+        internalTags: sanitizeInternalTags(internalTags) ?? [],
       })
       .returning();
 
@@ -181,6 +193,7 @@ router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
       bufferChannelName,
       notionPageId,
       serviceTypes,
+      internalTags,
     } = req.body;
 
     if (password !== undefined && password !== passwordConfirm) {
@@ -226,6 +239,8 @@ router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
     if (notionPageId !== undefined) updates.notionPageId = notionPageId ? parseNotionPageId(notionPageId) : null;
     const sanitizedServiceTypes = sanitizeServiceTypes(serviceTypes);
     if (sanitizedServiceTypes !== undefined) updates.serviceTypes = sanitizedServiceTypes;
+    const sanitizedInternalTags = sanitizeInternalTags(internalTags);
+    if (sanitizedInternalTags !== undefined) updates.internalTags = sanitizedInternalTags;
 
     const [updated] = await db.update(customersTable).set(updates).where(eq(customersTable.id, id)).returning();
     if (!updated) {

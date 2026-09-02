@@ -38,6 +38,8 @@ export const customersTable = pgTable("customers", {
    * gets its own dashboard (same portal shell, different nav — TBD).
    */
   serviceTypes: text("service_types").array().notNull().default(sql`ARRAY['social_media']::text[]`),
+  /** Internal-only CRM tags (e.g. "VIP", "Kündigungsrisiko") — for the admin team's own tracking, never exposed to the customer via any customer-facing endpoint. */
+  internalTags: text("internal_tags").array().notNull().default(sql`ARRAY[]::text[]`),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

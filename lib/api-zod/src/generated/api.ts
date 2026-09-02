@@ -352,6 +352,11 @@ export const GetCustomersResponseItem = zod.object({
   serviceTypes: zod
     .array(zod.string())
     .describe("social_media | website | ki_automatisierungen"),
+  internalTags: zod
+    .array(zod.string())
+    .describe(
+      "Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug",
+    ),
   createdAt: zod.date(),
   updatedAt: zod.date(),
 });
@@ -386,6 +391,12 @@ export const CreateCustomerBody = zod.object({
     .optional()
     .describe(
       "social_media | website | ki_automatisierungen — defaults to [social_media] if omitted",
+    ),
+  internalTags: zod
+    .array(zod.string())
+    .optional()
+    .describe(
+      "Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug",
     ),
 });
 
@@ -436,6 +447,12 @@ export const UpdateCustomerBody = zod.object({
     .array(zod.string())
     .optional()
     .describe("social_media | website | ki_automatisierungen"),
+  internalTags: zod
+    .array(zod.string())
+    .optional()
+    .describe(
+      "Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug",
+    ),
 });
 
 export const UpdateCustomerResponse = zod.object({
@@ -463,6 +480,11 @@ export const UpdateCustomerResponse = zod.object({
   serviceTypes: zod
     .array(zod.string())
     .describe("social_media | website | ki_automatisierungen"),
+  internalTags: zod
+    .array(zod.string())
+    .describe(
+      "Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug",
+    ),
   createdAt: zod.date(),
   updatedAt: zod.date(),
 });

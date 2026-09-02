@@ -132,6 +132,8 @@ export interface Customer {
   notionPageId?: string | null;
   /** social_media | website | ki_automatisierungen */
   serviceTypes: string[];
+  /** Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug */
+  internalTags: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -159,6 +161,8 @@ export interface CreateCustomer {
   notionPageId?: string | null;
   /** social_media | website | ki_automatisierungen — defaults to [social_media] if omitted */
   serviceTypes?: string[];
+  /** Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug */
+  internalTags?: string[];
 }
 
 export interface UpdateCustomer {
@@ -184,6 +188,8 @@ export interface UpdateCustomer {
   notionPageId?: string | null;
   /** social_media | website | ki_automatisierungen */
   serviceTypes?: string[];
+  /** Internal-only CRM tags for the admin team — never exposed via any customer-facing endpoint. potenzialkunde | zuverlaessig | vip | unzufrieden | kuendigungsrisiko | zahlungsverzug */
+  internalTags?: string[];
 }
 
 export interface PortalContentCalendarPost {

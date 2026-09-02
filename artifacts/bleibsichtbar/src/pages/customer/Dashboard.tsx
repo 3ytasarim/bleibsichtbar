@@ -28,7 +28,6 @@ import {
   TrendingUp,
   TrendingDown,
   Radar,
-  Sparkles,
   Sun,
   Moon,
 } from "lucide-react";
@@ -69,7 +68,7 @@ function DeltaBadge({ delta }: { delta: MonthlyDelta }) {
         delta.positive ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-[#7F9287]/10 text-[#7F9287]"
       )}
     >
-      <Icon className="w-3 h-3" /> {text} ggü. Vormonat
+      <Icon className="w-3 h-3" /> {text}
     </span>
   );
 }
@@ -186,19 +185,6 @@ export default function CustomerDashboard() {
               <p className="text-slate-600 mt-3 max-w-lg">
                 Ihr Kundenportal auf einen Blick — Instagram-Performance, Dateien und Rechnungen.
               </p>
-
-              {followerDelta && (
-                <motion.p
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                  className="inline-flex items-center gap-1.5 mt-5 text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full px-3.5 py-1.5"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-                  Follower sind diesen Monat um {followerDelta.positive ? "+" : ""}
-                  {followerDelta.pct !== null ? `${followerDelta.pct}%` : followerDelta.diff} gewachsen.
-                </motion.p>
-              )}
             </div>
 
             <DaysWithUsCounter startDate={customer?.startDate} />
