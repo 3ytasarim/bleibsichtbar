@@ -81,7 +81,7 @@ function DeltaBadge({ delta }: { delta: Delta }) {
   return (
     <span
       className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
-        delta.positive ? "bg-emerald-500/10 text-emerald-600" : "bg-destructive/10 text-destructive"
+        delta.positive ? "bg-emerald-500/10 text-emerald-600" : "bg-[#7F9287]/10 text-[#7F9287]"
       }`}
     >
       <Icon className="w-2.5 h-2.5" /> {text}
@@ -91,7 +91,7 @@ function DeltaBadge({ delta }: { delta: Delta }) {
 
 function MiniSparkline({ id, data, positive }: { id: string; data: number[]; positive: boolean }) {
   if (data.length < 2) return null;
-  const color = positive ? "hsl(160 84% 39%)" : "hsl(0 72% 51%)";
+  const color = positive ? "hsl(160 84% 39%)" : "#7F9287";
   const points = data.map((v, i) => ({ i, v }));
 
   return (

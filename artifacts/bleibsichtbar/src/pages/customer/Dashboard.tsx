@@ -66,7 +66,7 @@ function DeltaBadge({ delta }: { delta: MonthlyDelta }) {
     <span
       className={cn(
         "inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full",
-        delta.positive ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-destructive/10 text-destructive"
+        delta.positive ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-[#7F9287]/10 text-[#7F9287]"
       )}
     >
       <Icon className="w-3 h-3" /> {text} ggü. Vormonat
@@ -75,7 +75,7 @@ function DeltaBadge({ delta }: { delta: MonthlyDelta }) {
 }
 
 function GrowthSparkline({ id, data, positive }: { id: string; data: number[]; positive: boolean }) {
-  const color = positive ? "hsl(160 84% 39%)" : "hsl(0 72% 51%)";
+  const color = positive ? "hsl(160 84% 39%)" : "#7F9287";
   const points = data.map((v, i) => ({ i, v }));
   return (
     <div className="h-12 mt-3">
